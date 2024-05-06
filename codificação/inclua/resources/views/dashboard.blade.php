@@ -1,7 +1,7 @@
 @extends('layouts.app', ['pageSlug' => 'dashboard','class'=>'dashboard'])
 
 @section('content')
-    @if(\Illuminate\Support\Facades\Auth::user()->tipouser ==='V')
+    @if(\Illuminate\Support\Facades\Auth::user()->tipouser ==='R')
     <div class="row">
         <div class="col-12">
             <div class="card card-chart">

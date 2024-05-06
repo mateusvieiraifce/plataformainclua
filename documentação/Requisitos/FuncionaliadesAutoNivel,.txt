@@ -1,0 +1,34 @@
+Clinicas  -> Pacientes,
+	  -> Medicos,
+	  -> Consultas,
+	  -> Prontuarios
+	  -> Agenda
+	  -> Configuração de PagSeguro
+	  -> Dashboard com recebimentos
+	  -> Consultas/Por Mes
+	  -> Cancelamentos Por/Mes
+	  -> Pagamento Médico			
+		
+Usuários  -> Pacientes
+	  -> Especialistas
+	  -> Admin Clinica
+	  -> Root
+
+Pacientes -> Consultas 
+	  -> Prontuario
+	  -> Exames
+	  -> Marcação de Consulta
+		
+Médicos -> Especialidades
+	-> clinicas que ele atende			-> Agenda
+	-> Consultas
+	-> Alimenta os Prontuários
+
+Especialidades -> Descrição
+
+Relatórios: Recibo
+	    Declaração de recebidos para IR
+	    Atestado.
+	    Receita Padrão.		
+			
+ 	
