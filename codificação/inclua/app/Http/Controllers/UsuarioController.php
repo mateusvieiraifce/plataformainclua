@@ -128,9 +128,8 @@ class UsuarioController extends Controller
                 return redirect(session('nextview'));
             }
             $usuario = Auth::user();
-            $compras = Vendas::where('comprador_id','=',$usuario->id)->orderBy('created_at','desc')->get();
-
-            return redirect()->intended('index',['compras'=>$compras]);
+            return view('dashboard',[] );
+            #return redirect()->intended('dashboard',['compras'=>[]]);
         } else{
 
             $msg = ['valor'=>'Usuário/Senha inválido','tipo'=>'danger'];

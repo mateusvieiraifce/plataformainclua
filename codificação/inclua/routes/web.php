@@ -24,20 +24,6 @@ Route::get('/sobre', function () {
 })->name('home.sobre');
 
 
-/*Route::get('/index', function () {
-    return view('frente/index');
-})->name('index');*/
-
-Route::any('/', [\App\Http\Controllers\SiteController::class,"index"]);
-Route::any('/index', [\App\Http\Controllers\SiteController::class,"index"])->name('index');
-Route::get('/search', [\App\Http\Controllers\SiteController::class,"search"])->name('search');
-Route::get('/produtos', [\App\Http\Controllers\SiteController::class,"produtos"])->name('produtos');
-
-/*
-Route::get('/produtos', function () {
-    return view('frente/produtos');
-})->name('produtos');
-*/
 Route::get('/contato', function () {
     return view('frente/contato');
 })->name('contato');
@@ -45,6 +31,9 @@ Route::get('/contato', function () {
 Route::get('/checkout', [\App\Http\Controllers\CheckoutControler::class,"checkout"])->name('finalizar');
 
 Route::post('/mail',[\App\Http\Controllers\MailController::class,"sendMail"])->name('sendmail');
+
+Route::any("/",[\App\Http\Controllers\UsuarioController::class,'preLogin'])->name('login');
+
 
 Route::get("/app",[\App\Http\Controllers\UsuarioController::class,'preLogin'])->name('login');
 Route::get("/registre",[\App\Http\Controllers\UsuarioController::class,'registreUser'])->name('registre');
@@ -132,9 +121,9 @@ Route::post("/sales/send/do/{id}",[\App\Http\Controllers\VendasController::class
 Route::get("/send/mail",[\App\Http\Controllers\MailController::class,'sendMenssagem'])->name('sales.send.do.email');
 
 
-Route::get('/minhaarea', function () {
+Route::get('/index', function () {
     return view('dashboard');
-})->middleware('auth');;
+})->name('index')->middleware('auth');;
 
 Route::get('/home', function () {
     $usuario = Auth::user();

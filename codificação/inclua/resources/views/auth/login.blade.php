@@ -51,7 +51,9 @@
 
             <div class="card card-login card-white">
                 <div class="card-header">
-                    <img src="/assets/img/logo-01.png" alt="">
+                    <img src="/assets/img/logo-01.png" alt=""
+                         style="width: 250px; height: auto;
+                          margin-left: 25%; margin-top:10%" >
                     <h2 class="card-title"></h2>
                 </div>
                 <div class="card-body">
