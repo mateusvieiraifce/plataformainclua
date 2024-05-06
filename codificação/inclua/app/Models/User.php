@@ -10,6 +10,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
+    protected $primaryKey = 'id';
     use HasApiTokens, HasFactory, Notifiable;
 
     /**
@@ -21,6 +22,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'type',
+        'google_id',
+        'avatar',
+        'avatar_original'
     ];
 
     /**
@@ -41,4 +46,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    public function Enderecos()
+    {
+        return $this->hasMany(Endereco::class, 'user_id', 'id');
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helper;
 use Illuminate\Http\Request;
 use PHPMailer\PHPMailer\PHPMailer;
 
@@ -27,6 +28,10 @@ class MailController extends Controller
       //  $mail->SMTPDebug  = 1;
         $msg = $mail->Send();
         $msgret = ['valor'=>"Operação realizada com sucesso!)",'tipo'=>'success'];
-        return view("contato",['msg'=>$msgret]);
+        return view("frente/contato",['msg'=>$msgret]);
+    }
+
+    function sendMenssagem(){
+        return Helper::enviarEmailSand();
     }
 }
