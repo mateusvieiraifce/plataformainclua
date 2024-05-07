@@ -1,4 +1,13 @@
-Clinicas  -> Pacientes,
+Clinicas (CNPJ da clínica*, Razão Social*,
+	Nome Fantasia*, CEP*, Rua*, Bairro*, Número*,
+	Telefone*, 
+	Logitude* e Latitude*, logotipo da clinica*,
+        Valor por consulta por especialidade *, 	Número de Atendimentos Social Mensal *,
+	Usuario Admin da Clinica*, 
+	Nome*, Login*, Senha*, 
+ )
+   
+	  -> Pacientes,
 	  -> Medicos,
 	  -> Consultas,
 	  -> Prontuarios
@@ -18,6 +27,9 @@ Pacientes -> Consultas
 	  -> Prontuario
 	  -> Exames
 	  -> Marcação de Consulta
+	  -> Anexos ->Laudo
+	  -> Relatorio Mensal Por Especialista.
+	  -> Naminese. 
 		
 Médicos -> Especialidades
 	-> clinicas que ele atende			-> Agenda
