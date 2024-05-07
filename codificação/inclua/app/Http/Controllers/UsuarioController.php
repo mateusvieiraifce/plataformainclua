@@ -26,9 +26,12 @@ class UsuarioController extends Controller
     function  findAdress($id=0){
         return Endereco::find($id);
     }
-    function preLogin(){
-        return view('auth/login',['pageSlug'=>'']);
+    
+    public function index()
+    {
+        return view('auth.login', ['pageSlug' => '']);
     }
+
     function recover($id=null){
         return view('auth/passwords/email',['pageSlug'=>'']);
     }
@@ -147,11 +150,11 @@ class UsuarioController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/index');
+        return redirect()->route('index');
     }
 
     public function registreUser(){
-        return view('auth/register',['field'=>'']);
+        return view('auth.register', ['field' => '']);
     }
 
     public function registreUserDo(Request $request){
@@ -178,8 +181,6 @@ class UsuarioController extends Controller
     }
 
     function valida(Request  $request, $tipo){
-
-
         if ($tipo) {
 
             $variable = $request->password;
@@ -199,41 +200,36 @@ class UsuarioController extends Controller
 
     public function handleProviderCallback()
     {
+        //TENTATIVA DE REALIZAÇÃO DE AUTENTICAÇÃO COM O GOOGLE
         try {
-            $user = Socialite::driver('google')->stateless()->user();
+            $providerUser = Socialite::driver('google')->stateless()->user();
         } catch (\Exception $e) {
-            return redirect('/app');
+            return redirect()->route("index");
         }
-        // check if they're an existing user
-        $existingUser = User::where('email', $user->email)->first();
-        if($existingUser){
+        
+        $user = User::updateOrCreate([
+            'email' => $providerUser->getEmail()
+        ], [
+            'name' => $providerUser->getName(),
+            'google_id' => $providerUser->getId(),
+            'avatar' => $providerUser->getAvatar(),
+            'type' => 2,
+        ]);
 
-            auth()->login($existingUser, true);
+        if ($user && $user->docucumento != null) {
+            return redirect()->route('home');
         } else {
-
-            $userName = explode("@", $user->email)[0];
-            $newUser                  = new User;
-            $newUser->name            = $user->user['given_name']." ".$user->user['family_name'] ;
-            $newUser->email           = $user->email;
-            $newUser->google_id       = $user->id;
-            $newUser->avatar          = $user->avatar;
-            $newUser->avatar_original = $user->avatar_original;
-            $newUser->type=2;
-            $newUser->password=bcrypt('123456');
-            $newUser->save();
-
-            $this->sendEmailCreate($newUser);
-
-            auth()->login($newUser, true);
+            auth()->login($user, true);
+            return redirect()->route('home');
+            dd('direcionar para continuação do cadastro');
         }
 
-        if (session()->has('nextview')) {
-           //dd(session('nextview'));
-            return redirect()->to(session('nextview'));//view(session('nextview'));
+        //ANALIZAR A NECESSIDADE DE MANTER ESTE TRECHO DE CODIGO
+        /* if (session()->has('nextview')) {
+            return redirect()->to(session('nextview'));
         } else{
-
-        return redirect()->to('/index');
-        }
+            return redirect()->route('home');
+        } */
     }
 
     private function sendEmailCreate($user){
@@ -245,7 +241,7 @@ class UsuarioController extends Controller
 
     public function redirectToProvider()
     {
-
+        //REDIREDIONANDO PARA O TRATAMENTO DE AUTENTICAÇÃO DO GOOGLE
         return Socialite::driver('google')->redirect();
     }
 

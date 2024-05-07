@@ -16,7 +16,6 @@ class Userdatagoogle extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->string('google_id')->nullable();
             $table->string('avatar')->nullable();
-            $table->string('avatar_original')->nullable();
 
         });
     }
@@ -31,7 +30,6 @@ class Userdatagoogle extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('google_id');
             $table->dropColumn('avatar');
-            $table->dropColumn('avatar_original');
         });
     }
 }

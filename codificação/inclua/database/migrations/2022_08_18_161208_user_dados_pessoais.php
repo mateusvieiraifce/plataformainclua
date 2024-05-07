@@ -14,7 +14,7 @@ class UserDadosPessoais extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('nomecompleto')->nullable();
+            $table->string('nome_completo')->nullable();
             $table->string('documento')->nullable();
             $table->string('nacionalidade')->nullable();
             $table->string('telefone')->nullable();
@@ -35,7 +35,7 @@ class UserDadosPessoais extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('nomecompleto');
+            $table->dropColumn('nome_completo');
             $table->dropColumn('documento');
             $table->dropColumn('nacionalidade');
             $table->dropColumn('telefone');
