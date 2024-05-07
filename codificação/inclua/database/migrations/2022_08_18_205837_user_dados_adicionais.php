@@ -14,8 +14,8 @@ class UserDadosAdicionais extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('sexo',1)->nullable();
-            $table->string('tipopessoa',1)->nullable();
+            $table->string('sexo', 1)->nullable();
+            $table->string('tipo_pessoa',1)->nullable();
         });
     }
 
@@ -28,7 +28,7 @@ class UserDadosAdicionais extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('sexo');
-            $table->dropColumn('tipopessoa');
+            $table->dropColumn('tipo_pessoa');
         });
     }
 }

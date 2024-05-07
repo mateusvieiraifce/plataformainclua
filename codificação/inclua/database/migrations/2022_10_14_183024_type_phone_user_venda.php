@@ -14,9 +14,8 @@ class TypePhoneUserVenda extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('tipouser',1)->default('C');
+            $table->string('tipo_user', 1)->default('C');
         });
-        //
     }
 
     /**
@@ -27,7 +26,7 @@ class TypePhoneUserVenda extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('tipouser');
+            $table->dropColumn('tipo_user');
         });    //
     }
 }

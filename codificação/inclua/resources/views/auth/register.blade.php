@@ -12,7 +12,7 @@
                     <img class="card-img" src="/assets/img/logo-01.png" alt="Card image"
                          style="max-width:200px;    max-height:150px;     width: auto;     height: auto;">
                 </div>
-                <form class="form" method="post" action="{{route('registre')}}">
+                <form class="form" method="post" action="{{ route('user.registre') }}">
                     @csrf
 
                     <div class="card-body">

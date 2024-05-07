@@ -46,7 +46,7 @@
         <h3 class="mb-5"></h3>
     </div>
     <div class="col-lg-4 col-md-6 ml-auto mr-auto">
-        <form class="form" method="post" action="{{ route('login') }}">
+        <form class="form" method="post" action="{{ route('login.do') }}">
             @csrf
 
             <div class="card card-login card-white">
@@ -84,7 +84,7 @@
                             <a href="{{route('registre')}}" class="link footer-link">{{ __('Criar uma conta') }}</a>
                         </h6>
                         <h6>
-                            <a href="{{route('google.redi')}}" class="link footer-link">{{ __('Entrar com google') }}</a>
+                            <a href="{{route('google.redirect')}}" class="link footer-link">{{ __('Entrar com google') }}</a>
                         </h6>
                     </div>
                     <div class="pull-right">

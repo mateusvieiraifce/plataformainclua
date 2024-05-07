@@ -24,7 +24,7 @@
                     </a>
                 </li>
                 <li class="nav-item ">
-                    <a href="{{route('login')}}" class="nav-link">
+                    <a href="{{route('index')}}" class="nav-link">
                         <i class="tim-icons icon-single-02"></i> {{ __('Entrar') }}
                     </a>
                 </li>
