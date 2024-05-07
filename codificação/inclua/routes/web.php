@@ -147,3 +147,30 @@ Route::get('/users/', function () {
 Route::get('/users/index', function () {
     return view('users/index');
 })->name('user.index');
+
+
+//rotas sistema inclua - 
+
+Route::get("/especialidade/list",[\App\Http\Controllers\EspecialidadeController::class,'list'])->name('especialidade.list')->middleware('auth');
+Route::get("/especialidade/new",[\App\Http\Controllers\EspecialidadeController::class,'new'])->name('especialidade.new')->middleware('auth');
+Route::post("/especialidade/search",[\App\Http\Controllers\EspecialidadeController::class,'search'])->name('especialidade.search')->middleware('auth');
+Route::post("/especialidade/save",[\App\Http\Controllers\EspecialidadeController::class,'save'])->name('especialidade.save')->middleware('auth');
+Route::get("/especialidade/delete/{id}",[\App\Http\Controllers\EspecialidadeController::class,'delete'])->name('especialidade.delete')->middleware('auth');
+Route::get("/especialidade/edit/{id}",[\App\Http\Controllers\EspecialidadeController::class,'edit'])->name('especialidade.edit')->middleware('auth');
+
+
+Route::get("/formapagamento/list",[\App\Http\Controllers\FormapagamentoController::class,'list'])->name('formapagamento.list')->middleware('auth');
+Route::get("/formapagamento/new",[\App\Http\Controllers\FormapagamentoController::class,'new'])->name('formapagamento.new')->middleware('auth');
+Route::post("/formapagamento/search",[\App\Http\Controllers\FormapagamentoController::class,'search'])->name('formapagamento.search')->middleware('auth');
+Route::post("/formapagamento/save",[\App\Http\Controllers\FormapagamentoController::class,'save'])->name('formapagamento.save')->middleware('auth');
+Route::get("/formapagamento/delete/{id}",[\App\Http\Controllers\FormapagamentoController::class,'delete'])->name('formapagamento.delete')->middleware('auth');
+Route::get("/formapagamento/edit/{id}",[\App\Http\Controllers\FormapagamentoController::class,'edit'])->name('formapagamento.edit')->middleware('auth');
+
+Route::get("/clinica/list",[\App\Http\Controllers\ClinicaController::class,'list'])->name('clinica.list')->middleware('auth');
+Route::get("/clinica/new",[\App\Http\Controllers\ClinicaController::class,'new'])->name('clinica.new')->middleware('auth');
+Route::post("/clinica/search",[\App\Http\Controllers\ClinicaController::class,'search'])->name('clinica.search')->middleware('auth');
+Route::post("/clinica/save",[\App\Http\Controllers\ClinicaController::class,'save'])->name('clinica.save')->middleware('auth');
+Route::get("/clinica/delete/{id}",[\App\Http\Controllers\ClinicaController::class,'delete'])->name('clinica.delete')->middleware('auth');
+Route::get("/clinica/edit/{id}",[\App\Http\Controllers\ClinicaController::class,'edit'])->name('clinica.edit')->middleware('auth');
+
+

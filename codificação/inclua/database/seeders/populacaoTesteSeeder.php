@@ -1,0 +1,30 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\Permission;
+use App\Models\User;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+
+class populacaoTesteSeeder extends Seeder
+{
+    /**
+     * Seed the application's database.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        DB::table('users')->insert([
+            'name'=>"Gerente master - Teste",
+            'password'=>bcrypt("1"),
+            'email'=>"a@a.com",
+            'created_at'=>now(),
+            'updated_at'=>now(),
+            'telefone'=>"88888888",
+            'tipouser' => 'R',
+        ]);
+    }
+}

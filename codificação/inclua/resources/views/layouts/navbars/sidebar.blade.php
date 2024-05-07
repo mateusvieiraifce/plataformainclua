@@ -161,6 +161,32 @@
                     </div>
                 </li>
                 <li>
+                    <a data-toggle="collapse" href="#adminitracao" aria-expanded="true">
+                        <i class="tim-icons icon-chart-bar-32" ></i>
+                        <span class="nav-link-text" >{{ __('Administração') }}</span>
+                        <b class="caret mt-1"></b>
+                    </a>
+
+                    <div class="collapse" id="adminitracao">
+                        <ul class="nav pl-4">
+                            <li @if ($pageSlug == 'compras' ) class="active " @endif>
+                                <a href="{{route('clinica.list')}}">
+                                    <i class="tim-icons icon-bank"></i>
+                                    <p>{{ __('Clinicas cadastradas') }}</p>
+                                </a>
+                            </li>
+
+
+                        </ul>
+                    </div>
+                 
+                </li>
+
+
+
+
+
+                <li>
                     <a data-toggle="collapse" href="#config" aria-expanded="true">
                         <i class="tim-icons icon-atom" ></i>
                         <span class="nav-link-text" >{{ __('Configuração') }}</span>
@@ -170,7 +196,7 @@
                     <div class="collapse" id="config">
                         <ul class="nav pl-4">
                             <li @if ($pageSlug == 'compras' ) class="active " @endif>
-                                <a href="{{route('user.compras')}}">
+                                <a href="{{route('especialidade.list')}}">
                                     <i class="tim-icons icon-components"></i>
                                     <p>{{ __('Especialidades') }}</p>
                                 </a>
@@ -182,7 +208,7 @@
                     <div class="collapse" id="config">
                         <ul class="nav pl-4">
                             <li @if ($pageSlug == 'compras' ) class="active " @endif>
-                                <a href="{{route('user.compras')}}">
+                                <a href="{{route('formapagamento.list')}}">
                                     <i class="tim-icons icon-money-coins"></i>
                                     <p>{{ __('Formas de Pagamento') }}</p>
                                 </a>

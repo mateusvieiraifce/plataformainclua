@@ -16,5 +16,7 @@ class DatabaseSeeder extends Seeder
         $this->call(start_populate::class);
         $this->call(TamanhoSeeder::class);
         $this->call(userSeeder::class);
+        $this->call(populacaoTesteSeeder::class);
+        
     }
 }
