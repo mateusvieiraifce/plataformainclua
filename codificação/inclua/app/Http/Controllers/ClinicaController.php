@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Clinica;
+use App\Models\Especialidadeclinica;
 use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -15,7 +16,11 @@ class ClinicaController extends Controller
       if (isset($_GET['filtro'])) {
          $filter = $_GET['filtro'];
       }
-      $lista = Clinica::where('nome', 'like', "%" . "%")->orderBy('id', 'desc')->paginate(10);
+      $lista = Clinica::join('users', 'users.id', '=', 'usuario_id')->
+      where('nome', 'like', "%" . "%")->
+      orderBy('nome', 'asc')->
+      select('clinicas.id','users.name as nome_responsavel', 'nome', 'cnpj', 'clinicas.telefone')->
+      paginate(10);
       return view('clinica/list', ['lista' => $lista, 'filtro' => $filter, 'msg' => $msg]);
    }
    function new()
@@ -24,9 +29,13 @@ class ClinicaController extends Controller
    }
    function search(Request $request)
    {
-      $filter = $request->query('filtro');
-      $lista = Clinica::where('nome', 'like', "%" . $request->filtro . "%")->orderBy('id', 'desc')->paginate(10);
-      return view('clinica/list', ['lista' => $lista, 'filtro' => $request->filtro])->with('filter', $filter);
+      $filter = $request->filtro;     
+      $lista = Clinica::join('users', 'users.id', '=', 'usuario_id')->
+      where('nome', 'like', "%".$filter . "%")->
+      orderBy('nome', 'asc')->
+      select('clinicas.id','users.name as nome_responsavel', 'nome', 'cnpj', 'clinicas.telefone')->
+      paginate(10);
+      return view('clinica/list', ['lista' => $lista, 'filtro' => $request->filtro])->with('filtro', $filter);
    }
    function save(Request $request)
    {
@@ -38,6 +47,7 @@ class ClinicaController extends Controller
          $ent->nome = $request->nome;
          $ent->razaosocial = $request->razaosocial;
          $ent->cnpj = $request->cnpj;
+         $ent->estado = $request->estado;
          $ent->cep = $request->cep;
          $ent->rua = $request->rua;
          $ent->cidade = $request->cidade;
@@ -67,6 +77,7 @@ class ClinicaController extends Controller
             'razaosocial' => $request->razaosocial,
             'cnpj' => $request->cnpj,
             'cep' => $request->cep,
+            'estado' => $request->estado,
             'rua' => $request->rua,
             'cidade' => $request->cidade,
             'bairro' => $request->bairro,
@@ -98,8 +109,14 @@ class ClinicaController extends Controller
       try {
          $entidade = Clinica::find($id);
          if ($entidade) {
+            //deletando das as especialidades da clinica
+            $lista = Especialidadeclinica::where('clinica_id', '=', $id)->get();
+            foreach ($lista as $ent) {
+               $ent->delete();
+            }
             $entidadeUsuario = User::find($entidade->usuario_id);           
             $entidade->delete();
+            //deletando o usuario da clinica
             $entidadeUsuario->delete();
             $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
          } else {

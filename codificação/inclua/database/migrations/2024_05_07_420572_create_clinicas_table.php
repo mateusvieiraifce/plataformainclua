@@ -13,6 +13,7 @@ class CreateClinicasTable extends Migration
       $table->string('razaosocial')->nullable();
       $table->string('cnpj')->nullable();
       $table->string('cep')->nullable();
+      $table->string('estado')->nullable();
       $table->string('cidade')->nullable();
       $table->string('rua')->nullable();
       $table->string('bairro')->nullable();

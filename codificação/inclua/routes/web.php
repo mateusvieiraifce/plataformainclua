@@ -137,6 +137,15 @@ Route::middleware('auth')->group(function() {
     Route::post("/clinica/save",[\App\Http\Controllers\ClinicaController::class,'save'])->name('clinica.save');
     Route::get("/clinica/delete/{id}",[\App\Http\Controllers\ClinicaController::class,'delete'])->name('clinica.delete');
     Route::get("/clinica/edit/{id}",[\App\Http\Controllers\ClinicaController::class,'edit'])->name('clinica.edit');
+
+    #ESPECIALIDADE_CLINICA
+    Route::get("/especialidadeclinica/list/{clinica_id}",[\App\Http\Controllers\EspecialidadeclinicaController::class,'list'])->name('especialidadeclinica.list')->middleware('auth');
+    Route::get("/especialidadeclinica/new/{clinica_id}",[\App\Http\Controllers\EspecialidadeclinicaController::class,'new'])->name('especialidadeclinica.new')->middleware('auth');
+    Route::get("/especialidadeclinica/search/{clinica_id}",[\App\Http\Controllers\EspecialidadeclinicaController::class,'search'])->name('especialidadeclinica.search')->middleware('auth');
+    Route::post("/especialidadeclinica/save/{clinica_id}",[\App\Http\Controllers\EspecialidadeclinicaController::class,'save'])->name('especialidadeclinica.save')->middleware('auth');
+    Route::get("/especialidadeclinica/delete/{id}",[\App\Http\Controllers\EspecialidadeclinicaController::class,'delete'])->name('especialidadeclinica.delete')->middleware('auth');
+    Route::get("/especialidadeclinica/edit/{id}",[\App\Http\Controllers\EspecialidadeclinicaController::class,'edit'])->name('especialidadeclinica.edit')->middleware('auth');
+    
 });
 
 /* ROTAS PARA SEREM ANALISADAS */

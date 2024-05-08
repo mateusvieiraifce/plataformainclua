@@ -83,9 +83,7 @@
                             <a onclick="if (confirm('Deseja realmente excluir?')){getElementById('formremove').submit()}" href="#" class="nav-item dropdown-item">{{ __('Excluir') }}</a>
                         </li>
 
-                        <li class="nav-link">
-                            <a href="{{route('index')}}" class="nav-item dropdown-item" >{{ __('Continuar comprando') }}</a>
-                        </li>
+                      
                         <li class="dropdown-divider"></li>
                         <li class="nav-link">
                             <a href="{{route('logout')}}" class="nav-item dropdown-item" >{{ __('Sair') }}</a>
@@ -101,10 +99,24 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <input type="text" class="form-control" id="inlineFormInputGroup" placeholder="{{ __('SEARCH') }}">
-                <button type="button" class="close" data-dismiss="modal" aria-label="{{ __('Close') }}">
-                    <i class="tim-icons icon-simple-remove"></i>
-              </button>
+
+              <!--AQUI VOU PASSAR A ROTA PELOS CLASSES QUE HERDAR DELA -->
+                @php
+                    $rota = "home";
+                    if(isset($rotaPesquisa))
+                    {
+                        $rota =$rotaPesquisa;
+                    }
+                @endphp
+
+                <form id="formPesquisar" method="post" action="{{route($rota)}}">
+                    @csrf
+                    <input type="text" class="form-control" id="filtro" name="filtro"
+                           placeholder="{{ __('PESQUISAR') }}">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="{{ __('Close') }}">
+                        <i class="tim-icons icon-simple-remove"></i>
+                    </button>
+                </form>
             </div>
         </div>
     </div>
