@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Clinica;
+use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,7 +20,7 @@ class ClinicaController extends Controller
    }
    function new()
    {
-      return view('clinica/form', ['entidade' => new Clinica()]);
+      return view('clinica/form', ['entidade' => new Clinica(),'usuario' => new User()]);
    }
    function search(Request $request)
    {
@@ -30,6 +31,9 @@ class ClinicaController extends Controller
    function save(Request $request)
    {
       if ($request->id) {
+         $input = $request->validate([
+            'email' => 'required|unique:users,email,' . $request->id,
+        ]);
          $ent = Clinica::find($request->id);
          $ent->nome = $request->nome;
          $ent->razaosocial = $request->razaosocial;
@@ -46,7 +50,18 @@ class ClinicaController extends Controller
          $ent->numero_atendimento_social_mensal = $request->numero_atendimento_social_mensal;
          $ent->usuario_id = $request->usuario_id;
          $ent->save();
+
+         $entUsuario = User::find($request->usuario_id);
+         $entUsuario->name = $request->nome_login;
+         $entUsuario->email = $request->email;
+         $entUsuario->password =  bcrypt($request->password);
+         $entUsuario->telefone = $request->telefone;
+         $entUsuario->save();
+
       } else {
+         $input = $request->validate([
+            'email' => 'required|unique:users,email,' . $request->id,
+        ]);
          $entidade = Clinica::create([
             'nome' => $request->nome,
             'razaosocial' => $request->razaosocial,
@@ -63,6 +78,17 @@ class ClinicaController extends Controller
             'numero_atendimento_social_mensal' => $request->numero_atendimento_social_mensal,
             'usuario_id' => $request->usuario_id
          ]);
+
+         $usuario = User::create([
+            'name' => $request->nome_login,
+            'password' => bcrypt($request->password),
+            'email' => $request->email,
+            'telefone' => $request->telefone,
+            'tipouser' => 'C', //c eh clinica
+        ]);
+      
+        $entidade->usuario_id = $usuario->id;
+        $entidade->save();
       }
       $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
       return $this->list($msg);
@@ -72,7 +98,9 @@ class ClinicaController extends Controller
       try {
          $entidade = Clinica::find($id);
          if ($entidade) {
+            $entidadeUsuario = User::find($entidade->usuario_id);           
             $entidade->delete();
+            $entidadeUsuario->delete();
             $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
          } else {
             $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
@@ -85,6 +113,8 @@ class ClinicaController extends Controller
    function edit($id)
    {
       $entidade = Clinica::find($id);
-      return view('clinica/form', ['entidade' => $entidade]);
+
+      $usuario = User::find($entidade->usuario_id);
+      return view('clinica/form', ['entidade' => $entidade,'usuario' => $usuario]);
    }
 } ?>
