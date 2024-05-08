@@ -169,26 +169,42 @@
   </form>
           
       <div class="col-md-3">
-      <div class="card card-user">
-          <div class="card-body">
-              <p class="card-text">
-                  <div class="author">
-                      <div class="block block-one"></div>
-                      <div class="block block-two"></div>
-                      <div class="block block-three"></div>
-                      <div class="block block-four"></div>
-                      <a href="#">
-                          <img class="avatar" src="{{ auth()->user()->avatar }}" alt="">
-                          <h5 class="title">Logo da clínica</h5>
-                      </a>
-
-                  </div>
-              </p>
-
-          </div>
-         
-      </div>
-      </div>     
+           <div class="card card-user">
+              <div class="card-body">
+                  <p class="card-text">
+                      <div class="author">
+                          <div class="block block-one"></div>
+                          <div class="block block-two"></div>
+                          <div class="block block-three"></div>
+                        
+                          <h3 class="title">Logo da clínica</h3>
+                          
+                          <form method="POST" action="#" enctype="multipart/form-data">
+                              @csrf
+                          <a href="#">
+                              <img  src={{"/assets/img/logo-01.png"}}  style="max-width: 200px; max-height: 200px;" id="preview" alt="">                              
+                              </br>
+                            </a>
+                          </br>
+                              <input class="btn" type="file"  style="max-width: 200px; max-height: 200px;" id="imagem" name="imagem" onchange="visualizarImagem(event)">
+                          </form>
+                          <script>
+                              function visualizarImagem(event) {
+                                  var input = event.target;
+                                  var reader = new FileReader();
+                                  reader.onload = function(){
+                                      var preview = document.getElementById('preview');
+                                      preview.src = reader.result;
+                                      preview.style.display = 'block';
+                                  };
+                                  reader.readAsDataURL(input.files[0]);
+                              }
+                          </script>                     
+                      </div>
+                  </p>
+              </div>         
+            </div>
+       </div>     
    </div>
  
 
