@@ -21,7 +21,7 @@
               <div class="table-responsive">
 <table class="table"> 
   <thead>
-     <th> Descricao </th>
+     <th> Descrição </th>
      <th>    </th>
   </thead>
   <tbody>
