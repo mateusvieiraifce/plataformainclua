@@ -17,32 +17,42 @@ class ClinicaController extends Controller
          $filter = $_GET['filtro'];
       }
       $lista = Clinica::join('users', 'users.id', '=', 'usuario_id')->
-      where('nome', 'like', "%" . "%")->
-      orderBy('nome', 'asc')->
-      select('clinicas.id','users.name as nome_responsavel', 'nome', 'cnpj', 'clinicas.telefone')->
-      paginate(10);
+         where('nome', 'like', "%" . "%")->
+         orderBy('nome', 'asc')->
+         select('clinicas.id', 'users.name as nome_responsavel', 'nome', 'cnpj', 'clinicas.telefone')->
+         paginate(10);
       return view('clinica/list', ['lista' => $lista, 'filtro' => $filter, 'msg' => $msg]);
    }
    function new()
    {
-      return view('clinica/form', ['entidade' => new Clinica(),'usuario' => new User()]);
+      return view('clinica/form', ['entidade' => new Clinica(), 'usuario' => new User()]);
    }
    function search(Request $request)
    {
-      $filter = $request->filtro;     
+      $filter = $request->filtro;
       $lista = Clinica::join('users', 'users.id', '=', 'usuario_id')->
-      where('nome', 'like', "%".$filter . "%")->
-      orderBy('nome', 'asc')->
-      select('clinicas.id','users.name as nome_responsavel', 'nome', 'cnpj', 'clinicas.telefone')->
-      paginate(10);
+         where('nome', 'like', "%" . $filter . "%")->
+         orderBy('nome', 'asc')->
+         select('clinicas.id', 'users.name as nome_responsavel', 'nome', 'cnpj', 'clinicas.telefone')->
+         paginate(10);
       return view('clinica/list', ['lista' => $lista, 'filtro' => $request->filtro])->with('filtro', $filter);
    }
    function save(Request $request)
    {
+        $imageName = "";       
+        //salvando a logo na clinica
+        if ($request->hasFile('image') && $request->file('image')->isValid()) {
+         // Recupera a extensão do arquivo       
+         $requestImage = $request->image;
+         $extension = $requestImage->extension();
+         $imageName = md5($requestImage->getClientOriginalName() . strtotime("now")) . "." . $extension;
+         $request->image->move(public_path('images/logosclinicas'), $imageName);
+      }
+
       if ($request->id) {
          $input = $request->validate([
             'email' => 'required|unique:users,email,' . $request->id,
-        ]);
+         ]);
          $ent = Clinica::find($request->id);
          $ent->nome = $request->nome;
          $ent->razaosocial = $request->razaosocial;
@@ -56,22 +66,32 @@ class ClinicaController extends Controller
          $ent->telefone = $request->telefone;
          $ent->longitude = $request->longitude;
          $ent->latitude = $request->latitude;
-         $ent->logotipo = $request->logotipo;
          $ent->numero_atendimento_social_mensal = $request->numero_atendimento_social_mensal;
          $ent->usuario_id = $request->usuario_id;
+          //salvando o nome da imagem
+         $ent->logotipo = $imageName;
          $ent->save();
 
          $entUsuario = User::find($request->usuario_id);
          $entUsuario->name = $request->nome_login;
          $entUsuario->email = $request->email;
-         $entUsuario->password =  bcrypt($request->password);
+         $entUsuario->password = bcrypt($request->password);
          $entUsuario->telefone = $request->telefone;
          $entUsuario->save();
 
       } else {
          $input = $request->validate([
             'email' => 'required|unique:users,email,' . $request->id,
-        ]);
+         ]);
+
+         $usuario = User::create([
+            'name' => $request->nome_login,
+            'password' => bcrypt($request->password),
+            'email' => $request->email,
+            'telefone' => $request->telefone,
+            'tipouser' => 'C', //c eh clinica
+         ]);
+
          $entidade = Clinica::create([
             'nome' => $request->nome,
             'razaosocial' => $request->razaosocial,
@@ -85,22 +105,20 @@ class ClinicaController extends Controller
             'telefone' => $request->telefone,
             'longitude' => $request->longitude,
             'latitude' => $request->latitude,
-            'logotipo' => $request->logotipo,
             'numero_atendimento_social_mensal' => $request->numero_atendimento_social_mensal,
             'usuario_id' => $request->usuario_id
          ]);
-
-         $usuario = User::create([
-            'name' => $request->nome_login,
-            'password' => bcrypt($request->password),
-            'email' => $request->email,
-            'telefone' => $request->telefone,
-            'tipouser' => 'C', //c eh clinica
-        ]);
-      
-        $entidade->usuario_id = $usuario->id;
-        $entidade->save();
+        
+         //salvando o id do usuario na clinica
+         $entidade->usuario_id = $usuario->id;
+         //salvando o nome da imagem
+         $entidade->logotipo = $imageName;
+         $entidade->save();
       }
+
+
+
+
       $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
       return $this->list($msg);
    }
@@ -114,7 +132,7 @@ class ClinicaController extends Controller
             foreach ($lista as $ent) {
                $ent->delete();
             }
-            $entidadeUsuario = User::find($entidade->usuario_id);           
+            $entidadeUsuario = User::find($entidade->usuario_id);
             $entidade->delete();
             //deletando o usuario da clinica
             $entidadeUsuario->delete();
@@ -132,6 +150,9 @@ class ClinicaController extends Controller
       $entidade = Clinica::find($id);
 
       $usuario = User::find($entidade->usuario_id);
-      return view('clinica/form', ['entidade' => $entidade,'usuario' => $usuario]);
+      return view('clinica/form', ['entidade' => $entidade, 'usuario' => $usuario]);
    }
+
+
+
 } ?>
