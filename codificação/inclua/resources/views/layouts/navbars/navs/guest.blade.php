@@ -19,7 +19,7 @@
             <ul class="navbar-nav ml-auto">
 
                 <li class="nav-item ">
-                    <a href="{{route('registre')}}" class="nav-link">
+                    <a href="{{ route('usuario.create') }}" class="nav-link">
                         <i class="tim-icons icon-laptop"></i> {{ __('Criar conta') }}
                     </a>
                 </li>

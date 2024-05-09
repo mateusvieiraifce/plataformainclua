@@ -7,10 +7,11 @@
 
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Black Dashboard') }}</title>
+        <!--<title>{{ config('app.name', 'Black Dashboard') }}</title> -->
+        <title>@yield('title') | Inclua</title>
         <!-- Favicon -->
         <link rel="apple-touch-icon" sizes="76x76" href="/assets/img/apple-icon.png">
-        <link rel="icon" type="image/png" href=/assets/img/favicon.png">
+        <link rel="icon" type="image/png" href="/assets/img/favicon.png">
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,600,700,800" rel="stylesheet" />
         <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
@@ -19,65 +20,66 @@
         <!-- CSS -->
         <link href="/assets/css/black-dashboard.css" rel="stylesheet" />
         <link href="/assets/css/theme.css" rel="stylesheet" />
+        <link href="/assets/css/custom.css" rel="stylesheet" />
+        <script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
     </head>
     <body class="{{ $class ?? '' }}">
+        <div class="wrapper">
+            @include('layouts.navbars.sidebar')
+            <div class="main-panel">
+                @include('layouts.navbars.navbar')
 
-            <div class="wrapper">
-                    @include('layouts.navbars.sidebar')
-                <div class="main-panel">
-                    @include('layouts.navbars.navbar')
-
-                    <div class="content">
-
-                        @yield('content')
-                    </div>
-
-                    @include('layouts.footer')
+                <div class="content">
+                    @yield('content')
                 </div>
+
+                @include('layouts.footer')
             </div>
-            <form id="logout-form" action="" method="POST" style="display: none;">
-                @csrf
-            </form>
+        </div>
+        <form id="logout-form" action="" method="POST" style="display: none;">
+            @csrf
+        </form>
+        @php
+            $msg = Session::get('msg') ?? $msg ?? '';
+        @endphp
+        @if(!empty($msg))
 
-            @if(isset($msg))
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js"></script>
 
-                <script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js"></script>
+            <script>
+                nowuiDashboard = {
+                    misc: {
+                        navbar_menu_visible: 0
+                    },
 
-                <script>
-                    nowuiDashboard = {
-                        misc: {
-                            navbar_menu_visible: 0
-                        },
+                    showNotification: function(from, align, msg, type) {
+                        color = type;
 
-                        showNotification: function(from, align, msg, type) {
-                            color = type;
+                        $.notify({
+                            icon: "now-ui-icons ui-1_bell-53",
+                            message: msg
 
-                            $.notify({
-                                icon: "now-ui-icons ui-1_bell-53",
-                                message: msg
-
-                            }, {
-                                type: color,
-                                timer: 8000,
-                                placement: {
-                                    from: from,
-                                    align: align
-                                }
-                            });
-                        }
+                        }, {
+                            type: color,
+                            timer: 8000,
+                            placement: {
+                                from: from,
+                                align: align
+                            }
+                        });
+                    }
 
 
-                    };
-                </script>
+                };
+            </script>
 
-                <script>
-                    $(document).ready(function() {
-                        nowuiDashboard.showNotification('top','right','{{$msg["valor"]}}','{{$msg["tipo"]}}');
-                    });
-                </script>
+            <script>
+                $(document).ready(function() {
+                    nowuiDashboard.showNotification('top','right','{{$msg["valor"]}}','{{$msg["tipo"]}}');
+                });
+            </script>
 
-            @endif
+        @endif
         <script src="/assets/js/core/jquery.min.js"></script>
         <script src="/assets/js/core/popper.min.js"></script>
         <script src="/assets/js/core/bootstrap.min.js"></script>
@@ -94,6 +96,7 @@
         <script src="/assets/js/theme.js"></script>
 
         @stack('js')
+        @include('layouts.functions')
 
         <script>
             $(document).ready(function() {
@@ -193,7 +196,5 @@
             });
         </script>
         @stack('js')
-
-
     </body>
 </html>

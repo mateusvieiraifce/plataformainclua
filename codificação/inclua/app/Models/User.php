@@ -19,7 +19,6 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
         'email',
         'password',
         'google_id',
@@ -30,6 +29,12 @@ class User extends Authenticatable
         'nacionalidade',
         'telefone',
         'celular',
+        'codigo_validacao',
+        'celular_validado',
+        'rg',
+        'data_nascimento',
+        'estado_civil',
+        'consentimento',
         'email_alternativo',
         'facebook',
         'twitter',
