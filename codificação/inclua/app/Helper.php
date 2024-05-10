@@ -1,10 +1,32 @@
 <?php
 
 namespace App;
+use Illuminate\Support\Facades\Http;
 use PHPMailer\PHPMailer\PHPMailer;
 
 class Helper
 {
+
+    public static function sendSms($phone, $msg){
+        error_log('aqui');
+        $mensagem = urlencode($msg);
+        $url_api = "https://api.iagentesms.com.br/webservices/http.php?metodo=envio&usuario=mentrixmax@gmail.com&senha=Windows2000@&celular={$phone}&mensagem={$mensagem}";
+        error_log($url_api);
+        $response = Http::get($url_api);
+        error_log($response);
+    }
+
+    public static function generateRandomNumberString($length) {
+        $characters = '0123456789';
+        $randomString = '';
+
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, strlen($characters) - 1)];
+        }
+
+        return $randomString;
+    }
+
     public static function removeMascaraTelefone($fone)
     {
         if ($fone) {
@@ -24,8 +46,8 @@ class Helper
         return trim($documento);
     }
 
-    
-    public static function removeMascaraCep($cep) 
+
+    public static function removeMascaraCep($cep)
     {
         $cep = preg_replace('/\W/', '', $cep);
         return trim($cep);

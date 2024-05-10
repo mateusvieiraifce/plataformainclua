@@ -15,7 +15,7 @@ class AlterTableUser extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('name');
-            $table->string('codigo_validacao', 1)->nullable()->after('celular');
+            $table->string('codigo_validacao', 5)->nullable()->after('celular');
             $table->string('celular_validado', 1)->nullable()->after('codigo_validacao');
             $table->string('rg', 255)->nullable()->after('celular_validado');
             $table->date('data_nascimento')->nullable()->after('rg');

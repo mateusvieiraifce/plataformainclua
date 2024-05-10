@@ -26,7 +26,7 @@ class UsuarioController extends Controller
     function  findAdress($id=0){
         return Endereco::find($id);
     }
-    
+
     public function index()
     {
         return view('auth.login', ['pageSlug' => '']);
@@ -234,17 +234,19 @@ class UsuarioController extends Controller
             $user->consentimento = $request->consentimento;
             $user->tipo_pessoa = $request->tipo_pessoa;
             $user->tipo_user = $request->tipo_user;
+            $user->codigo_validacao = Helper::generateRandomNumberString(5);
             $user->save();
-            
+            Helper::sendSms($user->celular, $user->codigo_validacao);
             $msg = ['valor' => trans("Cadastro de dados pessoais realizado com sucesso!"), 'tipo' => 'success'];
             session()->flash('msg', $msg);
         } catch (QueryException $e) {
+            dd($e->getMessage());
             $msg = ['valor' => trans("Erro ao executar a operação!"), 'tipo' => 'danger'];
             session()->flash('msg', $msg);
 
             return back();
         }
-        
+
         return redirect()->route('usuario.verificar_telefone', ['id_usuario' => $user->id]);
     }
 
@@ -274,7 +276,7 @@ class UsuarioController extends Controller
             } else {
                 $msg = ['valor' => trans("O código informado esta incorreto!"), 'tipo' => 'danger'];
                 session()->flash('msg', $msg);
-                
+
                 return back();
             }
         } catch(QueryException $e) {
@@ -295,7 +297,7 @@ class UsuarioController extends Controller
         } catch (\Exception $e) {
             return redirect()->route("index");
         }
-        
+
         $user = User::updateOrCreate([
             'email' => $providerUser->getEmail()
         ], [
