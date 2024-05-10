@@ -1,9 +1,7 @@
 @extends('layouts.app',['page' => __('especialidade'),'rotaPesquisa' => 'especialidade.search', 'pageSlug' => 'especialidade','class'=>'especialidade'])
 @section('content')
 <section class="bg0 p-t-104 p-b-116">
-   <div class="container">
-  <div class="row">
-
+     <div class="row">
      <div class="col-md-10">
          <div class="card">
             <div class="card-header">
@@ -27,12 +25,16 @@
 
   </div>
  </div>
+
+    <div class="card-footer">
     <input type="hidden" name ="id" value="{{$entidade->id}}">
-    <a href="{{route('especialidade.list')}}" class="btn btn-primary"><i class="fa fa-reply"></i><span> Voltar</span></a>
-    <button class="btn btn-success" onclick="$('#send').click(); "><i class="fa fa-save"></i><span> Salvar</span></button>
+    <a href="{{route('especialidade.list')}}" class="btn btn-primary"></i><span> Voltar</span></a>
+    <button class="btn btn-success" onclick="$('#send').click(); "></i><span> Salvar</span></button>
   </div>
 </form>
            </div>
             </div>
      </div>
+     </div>
+
 @endsection
