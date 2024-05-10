@@ -27,8 +27,15 @@ Route::get('/checkout', [\App\Http\Controllers\CheckoutControler::class, "checko
 
 Route::post('/mail',[\App\Http\Controllers\MailController::class,"sendMail"])->name('sendmail');
 
-Route::get("/registre",[\App\Http\Controllers\UsuarioController::class,'registreUser'])->name('registre');
-Route::post("/registre",[\App\Http\Controllers\UsuarioController::class,'registreUserDo'])->name('user.registre');
+Route::get("/cadastrar/usuario/create",[\App\Http\Controllers\UsuarioController::class,'createUser'])->name('usuario.create');
+Route::post("/cadastrar/usuario/store",[\App\Http\Controllers\UsuarioController::class,'storeUser'])->name('usuario.store');
+Route::get("/cadastrar/dados/create/{id_usuario}",[\App\Http\Controllers\UsuarioController::class,'createDadosPessoais'])->name('usuario.dados.create');
+Route::post("/cadastrar/dados/store",[\App\Http\Controllers\UsuarioController::class,'storeDadosPessoais'])->name('usuario.dados.pessoais');
+Route::get("/telefone/verificar/{id_usuario}",[\App\Http\Controllers\UsuarioController::class,'verificarTelefone'])->name('usuario.verificar_telefone');
+Route::post("/telefone/validar",[\App\Http\Controllers\UsuarioController::class,'validarTelefone'])->name('usuario.validar_telefone');
+Route::get("/cadastrar/endereço/create/{id_usuario}",[\App\Http\Controllers\EnderecoController::class,'createEndereco'])->name('endereco.create');
+Route::post("/cadastrar/endereço/store",[\App\Http\Controllers\EnderecoController::class,'storeEndereco'])->name('endereco.store');
+
 Route::post("/auth/user",[\App\Http\Controllers\UsuarioController::class,'logar'])->name('login.do');
 Route::get("/logout",[\App\Http\Controllers\UsuarioController::class,'logout'])->name('logout');
 Route::get("/recuperar",[\App\Http\Controllers\UsuarioController::class,'recover'])->name('recover');

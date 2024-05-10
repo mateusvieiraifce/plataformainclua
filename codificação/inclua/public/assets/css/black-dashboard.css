@@ -2169,6 +2169,7 @@ textarea.form-control {
 .was-validated .form-control:invalid~.invalid-feedback,
 .was-validated .form-control:invalid~.invalid-tooltip,
 .form-control.is-invalid~.invalid-feedback,
+.form-check-label.is-invalid~.invalid-feedback,
 .form-control.is-invalid~.invalid-tooltip,
 .was-validated .custom-select:invalid~.invalid-feedback,
 .was-validated .custom-select:invalid~.invalid-tooltip,
@@ -17815,11 +17816,11 @@ Copyright (c) 2015 Daniel Eden
     text-decoration: none;
 }
 
-.card-register .card-header {
+/* .card-register .card-header {
     padding: 0 0 65px;
     overflow: hidden;
     z-index: 1;
-}
+} */
 
 .card-register .form-check {
     margin-top: 20px;
@@ -17845,12 +17846,12 @@ Copyright (c) 2015 Daniel Eden
     z-index: 1;
 }
 
-.card-register .card-img {
+/* .card-register .card-img {
     position: absolute;
     left: 0;
     top: -15%;
     width: 70%;
-}
+} */
 
 .full-page.register-page .info-horizontal {
     text-align: left !important;

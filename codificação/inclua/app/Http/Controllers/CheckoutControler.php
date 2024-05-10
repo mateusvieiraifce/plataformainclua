@@ -370,9 +370,9 @@ class CheckoutControler extends Controller
             $endereco->complemento = $request->complemento;
             $endereco->informacoes = $request->informacoes;
             if ($request->principal){
-                $endereco->princial = $request->principal;
+                $endereco->principal = $request->principal;
             }else{
-                $endereco->princial=false;
+                $endereco->principal=false;
             }
 
 

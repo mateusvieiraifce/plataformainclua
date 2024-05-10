@@ -5,7 +5,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 
 class Helper
 {
-    public static function removeMascFone($fone)
+    public static function removeMascaraTelefone($fone)
     {
         if ($fone) {
             $cep = str_replace("-", "", $fone);
@@ -16,6 +16,20 @@ class Helper
             return trim($cep);
         }
         return "";
+    }
+
+    public static function removeMascaraDocumento($documento)
+    {
+        $documento = preg_replace('/\W/', '', $documento);
+        return trim($documento);
+    }
+
+    
+    public static function removeMascaraCep($cep) 
+    {
+        $cep = preg_replace('/\W/', '', $cep);
+        return trim($cep);
+
     }
 
     public  static function sendEmail($assunto, $text, $emissor, $name=null)

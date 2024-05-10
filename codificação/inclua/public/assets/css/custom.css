@@ -1,0 +1,96 @@
+.card-img {
+    padding: 15px;
+}
+
+.card-img > .img-card {
+    max-width:200px;
+    max-height:150px;
+    width: auto;
+    height: auto;
+}
+
+.card-register .card-header > h2.title {
+    margin-bottom: 15px;
+}
+
+.card-register .card-body {
+    padding: 0 15px;
+}
+
+.card-white .card-header > .title {
+    color: #344675;
+}
+
+.custom-radio {
+    display: flex;
+    margin: 5px;
+}
+
+.custom-radio input {
+    display: none;
+}
+
+.custom-radio input + label::before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #FFFFFF;
+    border: 1px solid #434343;
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0 8px 0 0;
+}
+
+.custom-radio input:checked + label:before {
+    width: 6px;
+    height: 6px;
+    box-sizing: border-box;
+    background-color: #8977f9;
+    margin-right: 10px;
+    margin-left: 2px;
+    box-shadow: 0px 0px 0px 2px #FFFFFF, 0px 0px 0px 3px #8977f9;
+    border: none;
+}
+
+.custom-radio label {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}
+
+.custom-radio label {
+    font-family: 'Inter';
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 10px;
+    color: #11181C;
+}
+
+#formPaciente, #formEspecialista, #formClinica {
+    display: none;
+}
+
+.input-medium {
+    width: 50%;
+}
+
+.card.card-white .form-control.border-full {
+    color: #222a42;
+    border: solid 1px rgba(29, 37, 59, 0.2);
+}
+
+.card.card-white .form-control:focus {
+    border-color: rgb(137, 119, 249);
+}
+
+.card-register .form-check {
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .input-medium {
+        width: 100%;
+    }
+}
