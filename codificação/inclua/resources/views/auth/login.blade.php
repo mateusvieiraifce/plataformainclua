@@ -1,5 +1,5 @@
 @extends('layouts.app', ['class' => 'login-page', 'page' => __(''), 'contentClass' => 'login-page'])
-
+@section('title', 'Login')
 @section('content')
 
     <style>
@@ -81,7 +81,7 @@
                     <button type="submit" href="" class="btn btn-primary btn-lg btn-block mb-3">{{ __('Entrar') }}</button>
                     <div class="pull-left">
                         <h6>
-                            <a href="{{route('registre')}}" class="link footer-link">{{ __('Criar uma conta') }}</a>
+                            <a href="{{route('usuario.create')}}" class="link footer-link">{{ __('Criar uma conta') }}</a>
                         </h6>
                         <h6>
                             <a href="{{route('google.redirect')}}" class="link footer-link">{{ __('Entrar com google') }}</a>

@@ -26,7 +26,7 @@ class UsuarioController extends Controller
     function  findAdress($id=0){
         return Endereco::find($id);
     }
-    
+
     public function index()
     {
         return view('auth.login', ['pageSlug' => '']);
@@ -153,49 +153,140 @@ class UsuarioController extends Controller
         return redirect()->route('index');
     }
 
-    public function registreUser(){
-        return view('auth.register', ['field' => '']);
+    public function createUser()
+    {
+        return view('cadastro.usuario');
     }
 
-    public function registreUserDo(Request $request){
+    public function storeUser(Request $request)
+    {
+        $rules = [
+            "email" => "required|unique:users,email",
+            'password' => 'required|confirmed|between:5,15',
+            'password_confirmation' => 'required',
+        ];
+        $feedbacks = [
+            "email.required" => "O campo Email é obrigatório.",
+            "email.unique" => "O email utilizado já foi cadastrado.",
+            "password.required" => "O campo Senha é obrigatório.",
+            "password.confirmed" => "As senhas não são correspondentes.",
+            "password.between" => "O campo senha deve ter no mínimo 5 e no máximo 15 caracteres.",
+            "password_confirmation.required" => "O campo Confirmar a senha é obrigatório."
+        ];
+        $request->validate($rules, $feedbacks);
+
         try {
-            if ($this->valida($request,true)){
-                $usuario = new User();
-                $usuario->name = $request->name;
-                $usuario->email = $request->email;
-                $usuario->password = bcrypt($request->password);
-                $usuario->save();
-                $this->sendEmailCreate($usuario);
-                Session::put(['status'=>'Operação realizada com sucesso!']);
-                $dados =['email' => $request->email,'password' => $request->password];
-                if (Auth::attempt($dados, false)) {
-                    $request->session()->regenerate();
+            $user = new User();
+            $user->email = $request->email;
+            $user->password = bcrypt($request->password);
+            $user->save();
 
-                    return redirect()->intended('index');
-                }
-            }
-        }catch (QueryException $exp){
+            $msg = ['valor' => trans("Cadastro do usuário realizado com sucesso!"), 'tipo' => 'success'];
+            session()->flash('msg', $msg);
+        } catch (QueryException $e) {
+            $msg = ['valor' => trans("Erro ao executar a operação!"), 'tipo' => 'danger'];
+            session()->flash('msg', $msg);
 
+            return back();
         }
-        return view('auth/register',['field'=>'']);
+
+        return redirect()->route('usuario.dados.create', ['id_usuario' => $user->id]);
     }
 
-    function valida(Request  $request, $tipo){
-        if ($tipo) {
+    public function createDadosPessoais($id_usuario)
+    {
+        return view('cadastro.dados_pessoais', ['id_usuario' => $id_usuario]);
+    }
 
-            $variable = $request->password;
-            $input = $request->validate([
-                'name' => 'required|between :5,15',
-                'password' => 'required|between :5,15',
-                'password_confirmation' => 'required|between :5,15|in:'.$variable,
-                'email' => 'required|unique:users,email',
-                'aceito'=>'required',
+    public function storeDadosPessoais(Request $request)
+    {
+        $rules = [
+            "cpf" => "required",
+            "nome" => "required|between:5,255",
+            "telefone" => "required",
+            "rg" => "required",
+            "data_nascimento" => "required",
+            "estado_civil" => "required",
+            "sexo" => "required",
+            'consentimento'=>'required',
+        ];
+        $feedbacks = [
+            "cpf.required" => "O campo CPF é obrigatório.",
+            "nome.required" => "O campo CPF é obrigatório.",
+            "nome.between" => "O campo nome deve ter no mínomo 5 caracteres.",
+            "telefone.required" => "O campo Telefone é obrigatório.",
+            "data_nascimento.required" => "O campo Data de Nascimento é obrigatório.",
+            "estado_civil.required" => "O campo Estado Civil é obrigatório.",
+            "sexo.required" => "O campo Gênero é obrigatório.",
+            "consentimento.required" => "O campo Termos e Condições de Uso é obrigatório.",
+        ];
+        $request->validate($rules, $feedbacks);
 
-            ]);
+        try {
+            $user = User::find($request->id_usuario);
+            $user->documento = Helper::removeMascaraTelefone($request->cpf);
+            $user->nome_completo = $request->nome;
+            $user->celular = Helper::removeMascaraTelefone($request->telefone);
+            $user->rg = $request->rg;
+            $user->data_nascimento = $request->data_nascimento;
+            $user->estado_civil = $request->estado_civil;
+            $user->sexo = $request->sexo;
+            $user->consentimento = $request->consentimento;
+            $user->tipo_pessoa = $request->tipo_pessoa;
+            $user->tipo_user = $request->tipo_user;
+            $user->codigo_validacao = Helper::generateRandomNumberString(5);
+            $user->save();
+            Helper::sendSms($user->celular, $user->codigo_validacao);
+            $msg = ['valor' => trans("Cadastro de dados pessoais realizado com sucesso!"), 'tipo' => 'success'];
+            session()->flash('msg', $msg);
+        } catch (QueryException $e) {
+            dd($e->getMessage());
+            $msg = ['valor' => trans("Erro ao executar a operação!"), 'tipo' => 'danger'];
+            session()->flash('msg', $msg);
+
+            return back();
         }
 
-        return $input;
+        return redirect()->route('usuario.verificar_telefone', ['id_usuario' => $user->id]);
+    }
 
+    public function verificarTelefone($id_usuario)
+    {
+        return view('cadastro.verificar_telefone', ['id_usuario' => $id_usuario]);
+    }
+
+    public function validarTelefone(Request $request)
+    {
+        $rules = [
+            "codigo" => "required",
+        ];
+        $feedbacks = [
+            "codigo.required" => "O campo Código é obrigatório.",
+        ];
+        $request->validate($rules, $feedbacks);
+
+        try {
+            $user = User::find($request->id_usuario);
+            if ($request->codigo == $user->codigo_validacao) {
+                $user->celular_validado = "S";
+                $user->save();
+
+                $msg = ['valor' => trans("Seu telefone foi verificado com sucesso!"), 'tipo' => 'success'];
+                session()->flash('msg', $msg);
+            } else {
+                $msg = ['valor' => trans("O código informado esta incorreto!"), 'tipo' => 'danger'];
+                session()->flash('msg', $msg);
+
+                return back();
+            }
+        } catch(QueryException $e) {
+            $msg = ['valor' => trans("Erro ao executar a operação!"), 'tipo' => 'danger'];
+            session()->flash('msg', $msg);
+
+            return back();
+        }
+
+        return redirect()->route('endereco.create', ['id_usuario' => $user->id]);
     }
 
     public function handleProviderCallback()
@@ -206,7 +297,7 @@ class UsuarioController extends Controller
         } catch (\Exception $e) {
             return redirect()->route("index");
         }
-        
+
         $user = User::updateOrCreate([
             'email' => $providerUser->getEmail()
         ], [
@@ -362,9 +453,9 @@ class UsuarioController extends Controller
         $msgret = ['valor'=>"Operação realizada com sucesso!",'tipo'=>'success'];
         try{
             $bd = Endereco::find($id);
-            DB::table('enderecos')->where('user_id','=',$bd->user_id)->update(['princial'=>false]);
+            DB::table('enderecos')->where('user_id','=',$bd->user_id)->update(['principal'=>false]);
             $bd = Endereco::find($id);
-            $bd->princial=True;
+            $bd->principal=True;
             $bd->save();
         }
         catch (QueryException $exp ){
@@ -393,9 +484,9 @@ class UsuarioController extends Controller
             $endereco->complemento = $request->complemento;
             $endereco->informacoes = $request->informacoes;
             if ($request->principal){
-            $endereco->princial = $request->principal;
+            $endereco->principal = $request->principal;
             }else{
-                $endereco->princial=false;
+                $endereco->principal=false;
             }
 
 

@@ -18,13 +18,13 @@ class userSeeder extends Seeder
     public function run()
     {
         DB::table('users')->insert([
-            'name'=>"Gerente master",
+            'nome_completo'=>"Gerente master",
             'password'=>bcrypt("12345"),
             'email'=>"admin@inclua.com.br",
             'created_at'=>now(),
             'updated_at'=>now(),
             'telefone'=>"88888888",
-            'tipouser' => 'R',
+            'tipo_user' => 'R',
         ]);
     }
 }

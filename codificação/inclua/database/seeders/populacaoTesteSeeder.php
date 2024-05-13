@@ -18,13 +18,13 @@ class populacaoTesteSeeder extends Seeder
     public function run()
     {
         DB::table('users')->insert([
-            'name'=>"Gerente master - Teste",
+            'nome_completo'=>"Gerente master - Teste",
             'password'=>bcrypt("1"),
             'email'=>"a@a.com",
             'created_at'=>now(),
             'updated_at'=>now(),
             'telefone'=>"88888888",
-            'tipouser' => 'R',
+            'tipo_user' => 'R',
         ]);
     }
 }
