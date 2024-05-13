@@ -11,12 +11,16 @@
 
             <br/>
             <p>
-                <img src="/assets/img/Icone2t.png" style="max-width: 50px; height: auto;"/>
-                @if(\Illuminate\Support\Facades\Auth::user()->tipouser ==='V')
-                <a class="navbar-brand" href="#">{{ $page ?? __('Dashboard') }}</a>
-                @else
-                    <a class="navbar-brand" href="{{route('index')}}">{{ $page ?? __('Continuar comprando') }}</a>
+                @if(\Illuminate\Support\Facades\Auth::user()->tipouser ==='C')
+                <?php
+                   $clinica = App\Models\Clinica::where('usuario_id', '=', Auth::user()->id)->first();
+                   ?>
+                    <img src={{"/images/logosclinicas/". $clinica->logotipo}} style="max-width: 100px; height:60px;"/>
+                @else 
+                  <img src="/assets/img/Icone2t.png" style="max-width: 50px; height: auto;"/>
                 @endif
+               
+                <a class="navbar-brand" href="#">{{ $page ?? __('Dashboard') }}</a>
             </p>
 
         </div>
@@ -105,8 +109,8 @@
                     $rota = "home";
                     if(isset($rotaPesquisa))
                     {
-                        $rota =$rotaPesquisa;
-                    }
+                        $rota =$rotaPesquisa;                      
+                    }                  
                 @endphp
 
                 <form id="formPesquisar" method="post" action="{{route($rota)}}">

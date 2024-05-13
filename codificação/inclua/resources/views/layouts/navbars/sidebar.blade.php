@@ -4,7 +4,81 @@
     <div class="sidebar-wrapper">
 
         <ul class="nav">
+
+            <!-- usuario tipo clinica -->
+            @if(\Illuminate\Support\Facades\Auth::user()->tipouser ==='C')
+          <?php
+             $clinica = App\Models\Clinica::where('usuario_id', '=', Auth::user()->id)->first();
+             ?>
+                <li @if ($pageSlug == 'dashboard') class="active " @endif>
+                    <a href="{{route('home')}}">
+                        <i class="tim-icons icon-chart-pie-36"></i>
+                        <p>{{ __('Dashboard') }}</p>
+                    </a>
+                </li>
+
+                <li @if ($pageSlug == 'users') class="active " @endif>
+                    <a href="{{route('sales.list')}}">
+                        <i class="tim-icons icon-calendar-60"></i>
+                        <p>{{ __('Agenda') }}</p>
+                    </a>
+                </li>
+          
+                <li @if ($pageSlug == 'users') class="active " @endif>
+                    <a href="{{route('sales.list')}}">
+                        <i class="tim-icons icon-bullet-list-67"></i>
+                        <p>{{ __('Consultas') }}</p>
+                    </a>
+                </li>    
+                
+                <li @if ($pageSlug == 'users') class="active " @endif>
+                    <a href="{{route('advertisement.list')}}">
+                        <i class="tim-icons icon-single-02"></i>
+                        <p>{{ __('Pacientes') }}</p>
+                    </a>
+                </li>
+               
+                <li @if ($pageSlug == 'users') class="active " @endif>
+                    <a href="{{route('especialistaclinica.list',$clinica->id)}}">
+                        <i class="tim-icons icon-badge"></i>
+                        <p>{{ __('Especialistas') }}</p>
+                    </a>
+                </li>
+                        
+              
+                <li @if ($pageSlug == 'users') class="active " @endif>
+                    <a href="{{route('sales.list')}}">
+                        <i class="tim-icons icon-key-25"></i>
+                        <p>{{ __('Usuários') }}</p>
+                    </a>
+                </li>
+              
+
+                <li>
+                    <a data-toggle="collapse" href="#configclinica" aria-expanded="true">
+                        <i class="tim-icons icon-atom" ></i>
+                        <span class="nav-link-text" >{{ __('Configurações') }}</span>
+                        <b class="caret mt-1"></b>
+                    </a>
+
+                    <div class="collapse" id="configclinica">
+                        <ul class="nav pl-4">
+                            <li @if ($pageSlug == 'dashboard2' ) class="active " @endif>
+
+                                <a href="{{route('especialidadeclinica.list',17)}}">
+                                    <i class="tim-icons icon-components"></i>
+                                    <p>{{ __('Especialidades') }}</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>                   
+                </li>
+
+            @endif
+
             @if(\Illuminate\Support\Facades\Auth::user()->tipouser ==='R')
+
+
             <li @if ($pageSlug == 'dashboard') class="active " @endif>
                 <a href="{{route('home')}}">
                     <i class="tim-icons icon-chart-pie-36"></i>
@@ -13,57 +87,8 @@
             </li>
 
 
-            <li>
-                <a data-toggle="collapse" href="#laravel-examples" aria-expanded="true">
-                    <i class="tim-icons icon-bank" ></i>
-                    <span class="nav-link-text" >{{ __('Clinicas') }}</span>
-                    <b class="caret mt-1"></b>
-                </a>
-
-                <div class="collapse" id="laravel-examples">
-                    <ul class="nav pl-4">
-
-                        <li @if ($pageSlug == 'users') class="active " @endif>
-                            <a href="{{route('advertisement.list')}}">
-                                <i class="tim-icons icon-single-02"></i>
-                                <p>{{ __('Pacientes') }}</p>
-                            </a>
-                        </li>
-
-                        <li @if ($pageSlug == 'users') class="active " @endif>
-                            <a href="#">
-                                <i class="tim-icons icon-badge"></i>
-                                <p>{{ __('Especialistas') }}</p>
-                            </a>
-                        </li>
-                        <li @if ($pageSlug == 'users') class="active " @endif>
-                            <a href="{{route('sales.list')}}">
-                                <i class="tim-icons icon-bullet-list-67"></i>
-                                <p>{{ __('Consultas') }}</p>
-                            </a>
-                        </li>
-                        <li @if ($pageSlug == 'users') class="active " @endif>
-                            <a href="{{route('sales.list')}}">
-                                <i class="tim-icons icon-calendar-60"></i>
-                                <p>{{ __('Agenda') }}</p>
-                            </a>
-                        </li>
-                        <li @if ($pageSlug == 'users') class="active " @endif>
-                            <a href="{{route('sales.list')}}">
-                                <i class="tim-icons icon-key-25"></i>
-                                <p>{{ __('Usuários') }}</p>
-                            </a>
-                        </li>
-                        <li @if ($pageSlug == 'users') class="active " @endif>
-                            <a href="{{route('sales.list')}}">
-                                <i class="tim-icons icon-atom"></i>
-                                <p>{{ __('Configurações') }}</p>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-            @endif
+          
+            
 
             <li>
                 <a data-toggle="collapse" href="#compras" aria-expanded="true">
@@ -182,10 +207,6 @@
                  
                 </li>
 
-
-
-
-
                 <li>
                     <a data-toggle="collapse" href="#config" aria-expanded="true">
                         <i class="tim-icons icon-atom" ></i>
@@ -226,6 +247,8 @@
                     <p>{{ __('Meu Perfil') }}</p>
                 </a>
             </li>
+
+            @endif
         </ul>
     </div>
 </div>

@@ -1,49 +1,49 @@
-@extends('layouts.app',['page' => __('especialidadeclinica'),'rotaPesquisa' => 'clinica.search', 'id_lado_n'=> $clinica->id, 'pageSlug' => 'especialidadeclinica','class'=>'especialidadeclinica'])
+@extends('layouts.app',['page' => __('especialistaclinica'), 'pageSlug' => 'especialistaclinica','class'=>'especialistaclinica'])
 @section('content')
 <div class="card">
+
   <div class="row">
+
      <div class="col-lg-12 col-md-12">
          <div class="card card-tasks">
             <div class="card-header">
-                  <h6 class="title d-inline">Lista de especialidades da clínica {{$clinica->nome}} </h6>
+                  <h6 class="title d-inline">Lista de especialistas </h6>
 <div class="dropdown">
 <button type="button" class="btn btn-link dropdown-toggle btn-icon" data-toggle="dropdown">
    <i class="tim-icons icon-settings-gear-63"></i>
  </button>
  <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-     <a class="dropdown-item" href="{{route('especialidadeclinica.new',$clinica->id)}}">Adicionar</a>
+     <a class="dropdown-item" href="{{route('especialistaclinica.new',$clinica->id)}}">Adicionar</a>
  </div>
 </div>
             </div>
             <div class="card-body">
               <div class="table-responsive">
 <table class="table"> 
-  <thead>  
-     <th> Especialidade </th>
-
-     <th> Valor </th>
+  <thead>
+     <th> Nome </th>
+     <th> Telefone </th>
+     <th> Especialidade   </th>
      <th>    </th>
   </thead>
   <tbody>
   @if(sizeof($lista)>0)
     @foreach($lista as $ent)
       <tr>
-          <td>{{$ent->descricao}}</td> 
-
-          <td> R$ {{ number_format( $ent->valor, 2, ',', '.') }}</td> 
-     
-          <td> 
-        <a rel="tooltip" title="Editar" class="btn btn-link" data-original-title="Edit" href="{{route('especialidadeclinica.edit',$ent->id)}}"> 
+          <td>{{$ent->especialista_id}}</td> 
+          <td>{{$ent->especialista_id}}</td> 
+          <td>{{$ent->especialista_id}}</td> 
+        <td> 
+        <a rel="tooltip" title="Editar" class="btn btn-link" data-original-title="Edit" href="{{route('especialistaclinica.edit',$ent->id)}}"> 
            <i class="tim-icons icon-pencil"></i> 
         </a> 
         </td> 
         <td> 
-         <a href="{{route('especialidadeclinica.delete',$ent->id)}}" onclick="return confirm('Deseja relamente excluir?')"  rel="tooltip"
+         <a href="{{route('especialistaclinica.delete',$ent->id)}}" onclick="return confirm('Deseja relamente excluir?')"  rel="tooltip"
         title="Excluir" class="btn btn-link" data-original-title="Remove" > 
          <i class="tim-icons icon-simple-remove"></i> 
         </a> 
         </td> 
-     
   @endforeach 
   @endif 
    </tbody> 
@@ -52,7 +52,7 @@
                   @if ($lista->lastPage() > 1)
                      @php
                      $paginator=$lista;
-                     $paginator->url = route('especialidadeclinica.list');
+                     $paginator->url = route('especialistaclinica.list');
                   @endphp
                   <ul class="pagination">
                      <li class="{{ ($paginator->currentPage() == 1) ? ' disabled' : '' }}">
@@ -84,8 +84,6 @@
            </div>           </div>
             </div>
         </div>
-        <a href="{{route('clinica.list')}}" style="margin:10px" class="btn btn-primary"><i class="fa fa-reply"></i><span> Voltar</span></a>
-
      </div>
    </div>
 @endsection

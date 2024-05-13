@@ -153,6 +153,24 @@ Route::middleware('auth')->group(function() {
     Route::get("/especialidadeclinica/delete/{id}",[\App\Http\Controllers\EspecialidadeclinicaController::class,'delete'])->name('especialidadeclinica.delete')->middleware('auth');
     Route::get("/especialidadeclinica/edit/{id}",[\App\Http\Controllers\EspecialidadeclinicaController::class,'edit'])->name('especialidadeclinica.edit')->middleware('auth');
     
+    #ESPECIALISTA
+    Route::get("/especialista/list",[\App\Http\Controllers\EspecialistaController::class,'list'])->name('especialista.list')->middleware('auth');
+    Route::get("/especialista/new",[\App\Http\Controllers\EspecialistaController::class,'new'])->name('especialista.new')->middleware('auth');
+    Route::post("/especialista/search",[\App\Http\Controllers\EspecialistaController::class,'search'])->name('especialista.search')->middleware('auth');
+    Route::post("/especialista/save",[\App\Http\Controllers\EspecialistaController::class,'save'])->name('especialista.save')->middleware('auth');
+    Route::get("/especialista/delete/{id}",[\App\Http\Controllers\EspecialistaController::class,'delete'])->name('especialista.delete')->middleware('auth');
+    Route::get("/especialista/edit/{id}",[\App\Http\Controllers\EspecialistaController::class,'edit'])->name('especialista.edit')->middleware('auth');
+    
+    #ESPECIALISTA_POR_CLINICA    
+    Route::get("/especialistaclinica/list/{clinica_id}",[\App\Http\Controllers\EspecialistaclinicaController::class,'list'])->name('especialistaclinica.list')->middleware('auth');
+    Route::get("/especialistaclinica/new/{clinica_id}",[\App\Http\Controllers\EspecialistaclinicaController::class,'new'])->name('especialistaclinica.new')->middleware('auth');
+    Route::get("/especialistaclinica/search/{clinica_id}",[\App\Http\Controllers\EspecialistaclinicaController::class,'search'])->name('especialistaclinica.search')->middleware('auth');
+    Route::post("/especialistaclinica/save/{clinica_id}",[\App\Http\Controllers\EspecialistaclinicaController::class,'save'])->name('especialistaclinica.save')->middleware('auth');
+    Route::get("/especialistaclinica/delete/{id}",[\App\Http\Controllers\EspecialistaclinicaController::class,'delete'])->name('especialistaclinica.delete')->middleware('auth');
+    Route::get("/especialistaclinica/edit/{id}",[\App\Http\Controllers\EspecialistaclinicaController::class,'edit'])->name('especialistaclinica.edit')->middleware('auth');
+
+
+
 });
 
 /* ROTAS PARA SEREM ANALISADAS */
