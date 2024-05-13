@@ -30,10 +30,20 @@
   @if(sizeof($lista)>0)
     @foreach($lista as $ent)
       <tr>
-          <td>{{$ent->especialista_id}}</td> 
-          <td>{{$ent->especialista_id}}</td> 
-          <td>{{$ent->especialista_id}}</td> 
-        <td> 
+          <td>{{$ent->nome}}</td> 
+          <td>{{$ent->telefone}}</td> 
+          <td>DESCREVER A ESPECIALIDADE</td> 
+          <td>
+            <a href="#"  rel="tooltip"
+               title="Ver agenda"
+               class="btn btn-link"
+               data-original-title="Remove" >
+                  <i class="tim-icons icon-calendar-60">
+                  Agenda</i>
+            </a>
+         </td>
+
+          <td> 
         <a rel="tooltip" title="Editar" class="btn btn-link" data-original-title="Edit" href="{{route('especialistaclinica.edit',$ent->id)}}"> 
            <i class="tim-icons icon-pencil"></i> 
         </a> 
