@@ -12,11 +12,18 @@ class CreateEspecialistasTable extends Migration
       $table->string('nome')->nullable();
       $table->string('telefone')->nullable();
       $table->unsignedBigInteger('usuario_id')->nullable();
+      $table->unsignedBigInteger('especialidade_id')->nullable();
+      
       $table->timestamps();
     });
     Schema::table('especialistas', function (Blueprint $table) {
       $table->foreign('usuario_id')->references('id')->on('users');
     });
+
+    Schema::table('especialistas', function (Blueprint $table) {
+      $table->foreign('especialidade_id')->references('id')->on('especialidades');
+    });
+
 
   }
   public function down()

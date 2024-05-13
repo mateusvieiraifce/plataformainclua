@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 class Especialista extends Model
 {
   use HasFactory;
-  protected $fillable = ['nome', 'telefone', 'usuario_id'];
+  protected $fillable = ['nome', 'telefone', 'usuario_id','especialidade_id'];
 } ?>

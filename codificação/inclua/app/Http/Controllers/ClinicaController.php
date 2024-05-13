@@ -19,7 +19,7 @@ class ClinicaController extends Controller
       $lista = Clinica::join('users', 'users.id', '=', 'usuario_id')->
          where('nome', 'like', "%" . "%")->
          orderBy('nome', 'asc')->
-         select('clinicas.id', 'users.name as nome_responsavel', 'nome', 'cnpj', 'clinicas.telefone')->
+         select('clinicas.id', 'users.nome_completo as nome_responsavel', 'nome', 'cnpj', 'clinicas.telefone')->
          paginate(10);
       return view('clinica/list', ['lista' => $lista, 'filtro' => $filter, 'msg' => $msg]);
    }
@@ -85,11 +85,11 @@ class ClinicaController extends Controller
          ]);
 
          $usuario = User::create([
-            'name' => $request->nome_login,
+            'nome_completo' => $request->nome_login,
             'password' => bcrypt($request->password),
             'email' => $request->email,
             'telefone' => $request->telefone,
-            'tipouser' => 'C', //c eh clinica
+            'tipo_user' => 'C', //c eh clinica
          ]);
 
          $entidade = Clinica::create([

@@ -8,14 +8,14 @@
          <div class="card card-tasks">
             <div class="card-header">
                   <h6 class="title d-inline">Lista de especialista </h6>
-<div class="dropdown">
-<button type="button" class="btn btn-link dropdown-toggle btn-icon" data-toggle="dropdown">
-   <i class="tim-icons icon-settings-gear-63"></i>
- </button>
- <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-     <a class="dropdown-item" href="{{route('especialista.new')}}">Adicionar</a>
- </div>
-</div>
+         <div class="dropdown">
+         <button type="button" class="btn btn-link dropdown-toggle btn-icon" data-toggle="dropdown">
+            <i class="tim-icons icon-settings-gear-63"></i>
+         </button>
+         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+            <a class="dropdown-item" href="{{route('especialista.new')}}">Adicionar</a>
+         </div>
+         </div>
             </div>
             <div class="card-body">
               <div class="table-responsive">
@@ -25,9 +25,7 @@
 
      <th> Telefone </th>
 
-     <th> Clinica_id </th>
-
-     <th> Usuario_id </th>
+     <th> Especialidade </th>
      <th>    </th>
   </thead>
   <tbody>
@@ -38,10 +36,19 @@
 
           <td>{{$ent->telefone}}</td> 
 
-          <td>{{$ent->clinica_id}}</td> 
+          <td>{{$ent->especialidade}}</td> 
 
-          <td>{{$ent->usuario_id}}</td> 
         <td> 
+        <td>
+            <a href="#"  rel="tooltip"
+               title="Ver agenda"
+               class="btn btn-link"
+               data-original-title="Remove" >
+                  <i class="tim-icons icon-calendar-60">
+                  Agenda</i>
+            </a>
+         </td>
+         <td>
         <a rel="tooltip" title="Editar" class="btn btn-link" data-original-title="Edit" href="{{route('especialista.edit',$ent->id)}}"> 
            <i class="tim-icons icon-pencil"></i> 
         </a> 

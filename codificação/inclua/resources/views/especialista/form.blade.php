@@ -2,7 +2,7 @@
 @section('content')
 <section class="bg0 p-t-104 p-b-116">
    <div class="container">
-  <div class="row">
+ 
 
      <div class="col-md-12">
          <div class="card">
@@ -12,7 +12,7 @@
             <div class="card-body">
 <form  method="post" action="{{route('especialista.save')}}" >
   @csrf
-
+  <div class="row">
           <div class="col-md-5 px-8">
             <div class="form-group">
                <label id="labelFormulario">Nome</label>
@@ -20,18 +20,60 @@
 
             </div>
           </div>
-          <div class="col-md-5 px-8">
+          <div class="col-md-3 px-8">
             <div class="form-group">
                <label id="labelFormulario">Telefone</label>
                <input style="border-color: #C0C0C0" type="text" class="form-control" name="telefone" required value="{{$entidade->telefone}}" maxlength="150">
 
             </div>
           </div>
+
+          <div class="col-md-4 px-8">
+     <div class="form-group">
+       <label id="labelFormulario">Especialidade</label>
+        <select name="especialidade_id" id="especialidade_id" class="form-control"
+          title="Por favor selecionar ..." required style="border-color: white"> 
+        @foreach($especialidades as  $iten)
+          <option style="color: #2d3748"
+          value="{{old('especialidade_id', $iten->id)}}"
+            @if($iten->id == $entidade->especialidade_id)
+              <?php echo 'selected'; ?>
+            @endif
+            > {{$iten->descricao}}</option>
+          @endforeach
+          </select>
+   </div>
+  </div>
+
+  </div>
+          <div class="row">
+        <div class="col-md-6 px-8">
+            <div class="form-group">
+              <label id="labelFormulario">E-mail para login</label>
+              <input style="border-color: #C0C0C0" type="email" class="form-control" name="email" required value="{{$usuario->email}}" maxlength="150">
+              @error('email')
+                O e-mail já foi usado.
+                @enderror
+            </div>
+        </div>
+        <div class="col-md-6 px-8">
+          <div class="form-group">
+                <label id="labelFormulario">Senha</label>
+                <input type="password" style="border-color: #C0C0C0" class="form-control"
+                        name="password" required
+                        value="" maxlength="15">
+             
+            </div>
+          </div>
+          </div>
+   
+       
+
    
      <input type="hidden" name ="id" value="{{$entidade->id}}">
      <input type="hidden" name ="usuario_id" value="{{$entidade->usuario_id}}">
-    <a href="{{route('especialista.list')}}" class="btn btn-primary"><i class="fa fa-reply"></i><span> Voltar</span></a>
-    <button class="btn btn-success" onclick="$('#send').click(); "><i class="fa fa-save"></i><span> Salvar</span></button>
+    <a href="{{route('especialista.list')}}" class="btn btn-primary"><i class="fa fa-reply"></i> Voltar</a>
+    <button class="btn btn-success" onclick="$('#send').click(); "><i class="fa fa-save"></i> Salvar</button>
   </div>
 </form>
            </div>

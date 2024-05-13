@@ -2,8 +2,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Especialista;
+use App\Models\Especialidade;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class EspecialistaController extends Controller
@@ -14,12 +16,17 @@ class EspecialistaController extends Controller
       if (isset($_GET['filtro'])) {
          $filter = $_GET['filtro'];
       }
-      $lista = Especialista::where('nome', 'like', "%" . "%")->orderBy('id', 'desc')->paginate(10);
+     
+      $lista = Especialista::join('especialidades', 'especialidades.id', '=', 'especialidade_id')->          
+      orderBy('especialistas.nome', 'asc')->
+      select('especialistas.id','especialistas.nome', 'especialistas.telefone','especialidades.descricao as especialidade')->
+      paginate(10);
+
       return view('especialista/list', ['lista' => $lista, 'filtro' => $filter, 'msg' => $msg]);
    }
    function new()
    {
-      return view('especialista/form', ['entidade' => new Especialista()]);
+      return view('especialista/form', ['entidade' => new Especialista(), 'especialidades' => Especialidade::all(), 'usuario' => new User()]);
    }
    function search(Request $request)
    {
@@ -33,16 +40,37 @@ class EspecialistaController extends Controller
          $ent = Especialista::find($request->id);
          $ent->nome = $request->nome;
          $ent->telefone = $request->telefone;
-         $ent->clinica_id = $request->clinica_id;
+         $ent->especialidade_id = $request->especialidade_id;
          $ent->usuario_id = $request->usuario_id;
          $ent->save();
       } else {
+         $input = $request->validate([
+            'email' => 'required|unique:users,email,' . $request->usuario_id,
+         ]);
+
+        
+         $usuario = User::create([
+            'nome_completo' => $request->nome,
+            'password' => bcrypt($request->password),
+            'email' => $request->email,
+            'telefone' => $request->telefone,
+            'tipo_user' => 'E' //E eh especialista
+         ]);
+        
+       
+
          $entidade = Especialista::create([
             'nome' => $request->nome,
             'telefone' => $request->telefone,
-            'clinica_id' => $request->clinica_id,
+            'especialidade_id' => $request->especialidade_id,
             'usuario_id' => $request->usuario_id
          ]);
+
+        
+          //salvando o id do usuario no especialista
+          $entidade->usuario_id = $usuario->id;
+          $entidade->save();
+        
       }
       $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
       return $this->list($msg);
@@ -65,6 +93,6 @@ class EspecialistaController extends Controller
    function edit($id)
    {
       $entidade = Especialista::find($id);
-      return view('especialista/form', ['entidade' => $entidade]);
+      return view('especialista/form', ['entidade' => $entidade, 'especialidades' => Especialidade::all()]);
    }
 } ?>

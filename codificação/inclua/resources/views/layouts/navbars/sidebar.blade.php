@@ -6,7 +6,7 @@
         <ul class="nav">
 
             <!-- usuario tipo clinica -->
-            @if(\Illuminate\Support\Facades\Auth::user()->tipouser ==='C')
+            @if(\Illuminate\Support\Facades\Auth::user()->tipo_user ==='C')
           <?php
              $clinica = App\Models\Clinica::where('usuario_id', '=', Auth::user()->id)->first();
              ?>
@@ -76,7 +76,7 @@
 
             @endif
 
-            @if(\Illuminate\Support\Facades\Auth::user()->tipouser ==='R')
+            @if(\Illuminate\Support\Facades\Auth::user()->tipo_user ==='R')
 
 
             <li @if ($pageSlug == 'dashboard') class="active " @endif>
@@ -137,75 +137,81 @@
                     </ul>
                 </div>
             </li>
-                <li>
-                    <a data-toggle="collapse" href="#pacientes" aria-expanded="true">
-                        <i class="tim-icons icon-single-02" ></i>
-                        <span class="nav-link-text" >{{ __('Pacientes') }}</span>
-                        <b class="caret mt-1"></b>
-                    </a>
+            <li>
+                <a data-toggle="collapse" href="#pacientes" aria-expanded="true">
+                    <i class="tim-icons icon-single-02" ></i>
+                    <span class="nav-link-text" >{{ __('Pacientes') }}</span>
+                    <b class="caret mt-1"></b>
+                </a>
 
-                    <div class="collapse" id="pacientes">
-                        <ul class="nav pl-4">
-                            <li @if ($pageSlug == 'compras' ) class="active " @endif>
-                                <a href="{{route('user.compras')}}">
-                                    <i class="tim-icons icon-components"></i>
-                                    <p>{{ __('Marcação de consultas') }}</p>
-                                </a>
-                            </li>
-                            <li @if ($pageSlug == 'comentarios') class="active " @endif>
-                                <a href="{{route('user.comentarios')}}">
-                                    <i class="tim-icons icon-bullet-list-67"></i>
-                                    <p>{{ __('Histórico de Consulta') }}</p>
-                                </a>
-                            </li>
+                <div class="collapse" id="pacientes">
+                    <ul class="nav pl-4">
+                        <li @if ($pageSlug == 'compras' ) class="active " @endif>
+                            <a href="{{route('user.compras')}}">
+                                <i class="tim-icons icon-components"></i>
+                                <p>{{ __('Marcação de consultas') }}</p>
+                            </a>
+                        </li>
+                        <li @if ($pageSlug == 'comentarios') class="active " @endif>
+                            <a href="{{route('user.comentarios')}}">
+                                <i class="tim-icons icon-bullet-list-67"></i>
+                                <p>{{ __('Histórico de Consulta') }}</p>
+                            </a>
+                        </li>
 
-                            <li @if ($pageSlug == 'favoritos') class="active " @endif>
-                                <a href="{{route('user.favoritos')}}">
-                                    <i class="tim-icons icon-chat-33"></i>
-                                    <p>{{ __('Reputação') }}</p>
-                                </a>
-                            </li>
-
-
-                            <li @if ($pageSlug == 'favoritos') class="active " @endif>
-                                <a href="{{route('user.favoritos')}}">
-                                    <i class="tim-icons icon-money-coins"></i>
-                                    <p>{{ __('Histórico de Pagamentos') }}</p>
-                                </a>
-                            </li>
-
-                            <li @if ($pageSlug == 'favoritos') class="active " @endif>
-                                <a href="{{route('user.favoritos')}}">
-                                    <i class="tim-icons icon-notes"></i>
-                                    <p>{{ __('Exames') }}</p>
-                                </a>
-                            </li>
+                        <li @if ($pageSlug == 'favoritos') class="active " @endif>
+                            <a href="{{route('user.favoritos')}}">
+                                <i class="tim-icons icon-chat-33"></i>
+                                <p>{{ __('Reputação') }}</p>
+                            </a>
+                        </li>
 
 
-                        </ul>
-                    </div>
-                </li>
-                <li>
-                    <a data-toggle="collapse" href="#adminitracao" aria-expanded="true">
-                        <i class="tim-icons icon-chart-bar-32" ></i>
-                        <span class="nav-link-text" >{{ __('Administração') }}</span>
-                        <b class="caret mt-1"></b>
-                    </a>
+                        <li @if ($pageSlug == 'favoritos') class="active " @endif>
+                            <a href="{{route('user.favoritos')}}">
+                                <i class="tim-icons icon-money-coins"></i>
+                                <p>{{ __('Histórico de Pagamentos') }}</p>
+                            </a>
+                        </li>
 
-                    <div class="collapse" id="adminitracao">
-                        <ul class="nav pl-4">
-                            <li @if ($pageSlug == 'compras' ) class="active " @endif>
-                                <a href="{{route('clinica.list')}}">
-                                    <i class="tim-icons icon-bank"></i>
-                                    <p>{{ __('Clinicas cadastradas') }}</p>
-                                </a>
-                            </li>
+                        <li @if ($pageSlug == 'favoritos') class="active " @endif>
+                            <a href="{{route('user.favoritos')}}">
+                                <i class="tim-icons icon-notes"></i>
+                                <p>{{ __('Exames') }}</p>
+                            </a>
+                        </li>
 
 
-                        </ul>
-                    </div>
-                 
-                </li>
+                    </ul>
+                </div>
+            </li>
+            <li>
+                <a data-toggle="collapse" href="#adminitracao" aria-expanded="true">
+                    <i class="tim-icons icon-chart-bar-32" ></i>
+                    <span class="nav-link-text" >{{ __('Administração') }}</span>
+                    <b class="caret mt-1"></b>
+                </a>
+
+                <div class="collapse" id="adminitracao">
+                    <ul class="nav pl-4">
+                        <li @if ($pageSlug == 'compras' ) class="active " @endif>
+                            <a href="{{route('clinica.list')}}">
+                                <i class="tim-icons icon-bank"></i>
+                                <p>{{ __('Clinicas cadastradas') }}</p>
+                            </a>
+                        </li>
+                    </ul>
+                    <ul class="nav pl-4">
+                        <li @if ($pageSlug == 'compras' ) class="active " @endif>
+                            <a href="{{route('especialista.list')}}">
+                                <i class="tim-icons icon-badge"></i>
+                                <p>{{ __('Especialistas') }}</p>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+            </li>
 
                 <li>
                     <a data-toggle="collapse" href="#config" aria-expanded="true">
