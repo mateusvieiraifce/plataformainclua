@@ -1,8 +1,10 @@
+
 @extends('layouts.app',['page' => __('clinica'),'rotaPesquisa' => 'clinica.search', 'pageSlug' => 'especialidadeclinica','class'=>'especialidadeclinica'])
+@section('title', 'Cadastro de Especialidade')
 @section('content')
 <section class="bg0 p-t-104 p-b-116">
    <div class="container">
- 
+
 
      <div class="col-md-12">
          <div class="card">
@@ -14,7 +16,7 @@
   @csrf
 
   <div class="row">
-   
+
  <div class="col-md-5 px-8">
      <div class="form-group">
        <label id="labelFormulario">Especialidade</label>
