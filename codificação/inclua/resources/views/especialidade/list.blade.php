@@ -21,9 +21,9 @@
               <div class="table-responsive">
 <table class="table"> 
   <thead>
-     <th> Descricao </th>
+     <th> Descrição </th>
 
-     <th> Valorpadrao </th>
+     <th> Valor padrão </th>
      <th>    </th>
   </thead>
   <tbody>
@@ -32,7 +32,9 @@
       <tr>
           <td>{{$ent->descricao}}</td> 
 
-          <td>{{$ent->valorpadrao}}</td> 
+          <td>
+          R$ {{ number_format( $ent->valorpadrao, 2, ',', '.') }}
+         </td> 
         <td> 
         <a rel="tooltip" title="Editar" class="btn btn-link" data-original-title="Edit" href="{{route('especialidade.edit',$ent->id)}}"> 
            <i class="tim-icons icon-pencil"></i> 

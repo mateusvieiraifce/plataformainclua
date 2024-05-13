@@ -1,17 +1,17 @@
 @extends('layouts.app', ['page' => __('clinica'), 'rotaPesquisa' => 'clinica.search', 'pageSlug' => 'clinica', 'class' => 'clinica'])
 @section('content')
 
+
+<form  method="post" action="{{route('clinica.save')}}" enctype="multipart/form-data" >
+            @csrf 
    <div class="row">
       <div class="col-md-9"> 
-      <form  method="post" action="{{route('clinica.save')}}" >
-            @csrf     
+        
          <div class="card">
             <div class="card-header">
                 <h5 class="title">Editar</h5>
             </div>
             <div class="card-body">
-            <form  method="post" action="{{route('clinica.save')}}" >
-            @csrf
                 <div class="row">
                   <div class="col-md-6 px-8">
                     <div class="form-group">
@@ -166,32 +166,79 @@
     <button class="btn btn-success" onclick="$('#send').click(); "><i class="fa fa-save"></i><span> Salvar</span></button>
   
     </div>
-  </form>
-          
+ 
       <div class="col-md-3">
-      <div class="card card-user">
-          <div class="card-body">
-              <p class="card-text">
-                  <div class="author">
-                      <div class="block block-one"></div>
-                      <div class="block block-two"></div>
-                      <div class="block block-three"></div>
-                      <div class="block block-four"></div>
-                      <a href="#">
-                          <img class="avatar" src="{{ auth()->user()->avatar }}" alt="">
-                          <h5 class="title">Logo da clínica</h5>
-                      </a>
+           <div class="card card-user">
+              <div class="card-body">
+                  <p class="card-text">
+                      <div class="author">
+                          <div class="block block-one"></div>
+                          <div class="block block-two"></div>
+                          <div class="block block-three"></div>
+                          <h3 class="title">Logo da clínica</h3>                        
+                             
+                            <?php 
+                                //verificando se existe imagem 
+                            if (isset($entidade->logotipo)){
+                                ?>
+                            <img id="preview" src={{"/images/logosclinicas/". $entidade->logotipo}} alt="IMG-LOGO"
+                                    style="max-width: 200px; max-height: 200px;">
+                            <?php }else{ ?>
+                            <img id="preview" src={{"/assets/img/logo-01.png"}} alt="IMG-LOGO"
+                                    style="max-width: 200px; max-height: 200px;">
+                            <?php } ?>
 
-                  </div>
-              </p>
+                           </br>
+                          </br>
+                         
+                            <div class="custom-file">
+                                
+                            
+                                <input class="custom-file-input" type="file"  style="max-width: 200px; max-height: 200px;" id="image" name="image" onchange="visualizarImagem(event)">
+                                <label class="btn custom-file-label" for="image">Escolha um arquivo</label>
+                            </div>
+                            <style>
+                                   .custom-file-input {
+                                       display: none;
+                                    }
+                                    .custom-file-label {
+                                        cursor: pointer;    
+                                        padding-right:80px;  
+                                        left: 0;
+                                        right: 0;
+                                        top: 0;
+                                        bottom: 0;
+                                        z-index: 1;
+                                    }
+                             </style>
 
-          </div>
-         
-      </div>
-      </div>     
+                          <script>      
+                              document.getElementById('image').addEventListener('change', function() {
+                                    var fileName = $(this).val().split('\\').pop();
+                                  //  $(this).next('.custom-file-label').html(fileName);                                  
+                                });
+
+                            </script>
+                            <script>
+                              function visualizarImagem(event) {
+                                  var input = event.target;
+                                  var reader = new FileReader();
+                                  reader.onload = function(){
+                                      var preview = document.getElementById('preview');
+                                      preview.src = reader.result;
+                                      preview.style.display = 'block';
+                                  };
+                                  reader.readAsDataURL(input.files[0]);
+                              }
+                          </script>                     
+                      </div>
+                  </p>
+              </div>         
+            </div>
+       </div>     
    </div>
  
-
+   </form>
 
    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js"></script>

@@ -15,7 +15,7 @@
 
     <div class="col-md-5 px-8">
      <div class="form-group">
-       <label id="labelFormulario">Descricao</label>
+       <label id="labelFormulario">Descrição</label>
        <input style="border-color: #C0C0C0" type="text" class="form-control" name="descricao" required value="{{$entidade->descricao}}" maxlength="150">
 
   </div>
