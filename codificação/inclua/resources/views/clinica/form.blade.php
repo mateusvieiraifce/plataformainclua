@@ -161,9 +161,9 @@
      </div>
     </div>
     
-    <a href="{{route('clinica.list')}}" class="btn btn-primary"><i class="fa fa-reply"></i><span> Voltar</span></a>
+    <a href="{{route('clinica.list')}}" class="btn btn-primary"><i class="fa fa-reply"></i> Voltar</a>
   
-    <button class="btn btn-success" onclick="$('#send').click(); "><i class="fa fa-save"></i><span> Salvar</span></button>
+    <button class="btn btn-success" onclick="$('#send').click(); "><i class="fa fa-save"></i> Salvar</button>
   
     </div>
  

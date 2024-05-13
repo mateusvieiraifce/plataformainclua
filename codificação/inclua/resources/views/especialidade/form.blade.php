@@ -2,7 +2,7 @@
 @section('content')
 <section class="bg0 p-t-104 p-b-116">
      <div class="row">
-     <div class="col-md-10">
+     <div class="col-md-12">
          <div class="card">
             <div class="card-header">
                 <h5 class="title">Editar</h5>
@@ -29,8 +29,8 @@
 
     <div class="card-footer">
     <input type="hidden" name ="id" value="{{$entidade->id}}">
-    <a href="{{route('especialidade.list')}}" class="btn btn-primary"></i><span> Voltar</span></a>
-    <button class="btn btn-success" onclick="$('#send').click(); "></i><span> Salvar</span></button>
+    <a href="{{route('especialidade.list')}}" class="btn btn-primary"><i class="fa fa-reply"></i> Voltar</a>
+    <button class="btn btn-success" onclick="$('#send').click(); "><i class="fa fa-save"></i> Salvar</button>
   </div>
 </form>
            </div>
