@@ -70,7 +70,7 @@
                         
                         <div class="form-group">
                             <label for="complemento">
-                                Complemento <span class="required">*</span>
+                                Complemento
                             </label>
                             <div class="input-group {{ $errors->has('complemento') ? ' has-danger' : '' }} input-medium">
                                 <input type="text" id="complemento" class="form-control border-full only-numbers {{ $errors->has('complemento') ? ' is-invalid' : '' }}"
@@ -91,7 +91,7 @@
                         </div>
 
                         <div class="input-group">
-                            <button type="submit" class="btn btn-primary btn-round btn-lg">{{ __('Cadastrar') }}</button>
+                            <button type="submit" class="btn btn-primary btn-round btn-lg">{{ __('Próximo') }}</button>
                         </div>
                         <input type="hidden" name="id_usuario" value="{{ $id_usuario }}">
                     </form>
@@ -99,6 +99,5 @@
             </div>
         </div>
     </div>
-    <script>
-    </script>
+    @include("layouts.modal_aviso")
 @endsection

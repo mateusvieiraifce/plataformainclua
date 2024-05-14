@@ -5988,7 +5988,7 @@ button.close {
 .modal-footer {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    \
     padding: 24px 24px 16px 24px;
     border-top: 1px solid #e9ecef;
 }
@@ -12500,7 +12500,7 @@ img {
 }
 
 .modal-content .modal-body+.modal-footer {
-    padding-top: 0;
+    padding: 0 24px 24px;
 }
 
 .modal-backdrop {

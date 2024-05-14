@@ -240,7 +240,6 @@ class UsuarioController extends Controller
             $msg = ['valor' => trans("Cadastro de dados pessoais realizado com sucesso!"), 'tipo' => 'success'];
             session()->flash('msg', $msg);
         } catch (QueryException $e) {
-            dd($e->getMessage());
             $msg = ['valor' => trans("Erro ao executar a operação!"), 'tipo' => 'danger'];
             session()->flash('msg', $msg);
 
@@ -253,6 +252,18 @@ class UsuarioController extends Controller
     public function verificarTelefone($id_usuario)
     {
         return view('cadastro.verificar_telefone', ['id_usuario' => $id_usuario]);
+    }
+
+    public function reenviarSMS(Request $request)
+    {/* 
+        $user = User::find($request->usuario);
+        $user->codigo_validacao = Helper::generateRandomNumberString(5);
+        $user->save();
+
+        Helper::sendSms($user->celular, $user->codigo_validacao); */
+        $response = true;
+
+        return response()->json($response);
     }
 
     public function validarTelefone(Request $request)

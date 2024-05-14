@@ -23,7 +23,6 @@ class EnderecoController extends Controller
             "estado" => "required",
             "endereco" => "required",
             "numero" => "required",
-            "complemento" => "required",
             "bairro" => "required",
         ];
         $feedbacks = [
@@ -32,7 +31,6 @@ class EnderecoController extends Controller
             "estado.required" => "O campo Estado é obrigatório.",
             "endereco.required" => "O campo Endereço é obrigatório.",
             "numero.required" => "O campo Número é obrigatório.",
-            "complemento.required" => "O campo Complemento é obrigatório.",
             "bairro.required" => "O campo Bairro é obrigatório."
         ];
         $request->validate($rules, $feedbacks);

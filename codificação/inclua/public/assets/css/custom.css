@@ -89,6 +89,24 @@
     margin: 0;
 }
 
+.modal {
+    background-color: rgb(9,9,9,0.5);
+}
+
+a {
+    font-size: 0.75rem;
+}
+
+label.link {
+    color: #ba54f5 !important;
+    font-weight: 300;
+    margin: 0;
+}
+
+.hidden {
+    display: none;
+}
+
 @media (max-width: 768px) {
     .input-medium {
         width: 100%;
