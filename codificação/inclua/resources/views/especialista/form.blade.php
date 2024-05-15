@@ -20,13 +20,18 @@
 
             </div>
           </div>
-          <div class="col-md-3 px-8">
-            <div class="form-group">
-               <label id="labelFormulario">Telefone</label>
-               <input style="border-color: #C0C0C0" type="text" class="form-control" name="telefone" required value="{{$entidade->telefone}}" maxlength="150">
+         
 
-            </div>
-          </div>
+          <div class="col-md-3 px-8">
+                    <div class="form-group">
+                        <label id="labelFormulario">Telefone</label>
+                        <input style="border-color: #C0C0C0" type="tel"
+                                value="{{$entidade->telefone}}"
+                                name="telefone" id="telefone" class="form-control"
+                                maxlength="150"
+                                required>
+                    </div>
+                </div>
 
           <div class="col-md-4 px-8">
      <div class="form-group">
@@ -60,7 +65,10 @@
           <div class="form-group">
                 <label id="labelFormulario">Senha</label>
                 <input type="password" style="border-color: #C0C0C0" class="form-control"
-                        name="password" required
+                        name="password" 
+                        @if(!$usuario->id)
+                          required
+                        @endif
                         value="" maxlength="15">
              
             </div>
@@ -79,4 +87,14 @@
            </div>
             </div>
      </div>
+
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js"></script>
+
+    <script>
+        $(document).ready(function ($) {
+            $("#cep_input").mask("00000-000");
+            $('#telefone').mask("(00) 0 0000-0000");
+        });
+        </script>
 @endsection

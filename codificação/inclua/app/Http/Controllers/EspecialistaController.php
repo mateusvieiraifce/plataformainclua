@@ -36,6 +36,11 @@ class EspecialistaController extends Controller
    }
    function save(Request $request)
    {
+
+      $input = $request->validate([
+         'email' => 'required|unique:users,email,' . $request->usuario_id,
+      ]);
+      //dd($request->all());
       if ($request->id) {
          $ent = Especialista::find($request->id);
          $ent->nome = $request->nome;
@@ -43,12 +48,16 @@ class EspecialistaController extends Controller
          $ent->especialidade_id = $request->especialidade_id;
          $ent->usuario_id = $request->usuario_id;
          $ent->save();
-      } else {
-         $input = $request->validate([
-            'email' => 'required|unique:users,email,' . $request->usuario_id,
-         ]);
 
-        
+         $usuario = User::find(intval($request->usuario_id));
+         $usuario->nome_completo = $request->nome;
+         $usuario->telefone = $request->telefone;
+         $usuario->email = $request->email;
+         if(isset($request->password)){
+             $usuario->password = bcrypt($request->password);
+         }
+         $usuario->save();
+      } else {
          $usuario = User::create([
             'nome_completo' => $request->nome,
             'password' => bcrypt($request->password),
@@ -92,7 +101,9 @@ class EspecialistaController extends Controller
    }
    function edit($id)
    {
+     
       $entidade = Especialista::find($id);
-      return view('especialista/form', ['entidade' => $entidade, 'especialidades' => Especialidade::all()]);
+      $usuario = User::find($entidade->usuario_id);
+      return view('especialista/form', ['entidade' => $entidade, 'especialidades' => Especialidade::all(),'usuario' => $usuario]);
    }
 } ?>
