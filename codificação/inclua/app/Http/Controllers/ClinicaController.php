@@ -73,7 +73,7 @@ class ClinicaController extends Controller
          $ent->save();
 
          $entUsuario = User::find($request->usuario_id);
-         $entUsuario->name = $request->nome_login;
+         $entUsuario->nome_completo = $request->nome_login;
          $entUsuario->email = $request->email;
          if(isset($request->password)){
             $entUsuario->password = bcrypt($request->password);

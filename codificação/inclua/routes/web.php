@@ -152,7 +152,9 @@ Route::middleware('auth')->group(function() {
     Route::post("/especialidadeclinica/save/{clinica_id}",[\App\Http\Controllers\EspecialidadeclinicaController::class,'save'])->name('especialidadeclinica.save')->middleware('auth');
     Route::get("/especialidadeclinica/delete/{id}",[\App\Http\Controllers\EspecialidadeclinicaController::class,'delete'])->name('especialidadeclinica.delete')->middleware('auth');
     Route::get("/especialidadeclinica/edit/{id}",[\App\Http\Controllers\EspecialidadeclinicaController::class,'edit'])->name('especialidadeclinica.edit')->middleware('auth');
-    
+    Route::get("/especialidadeclinica/listclinica",[\App\Http\Controllers\EspecialidadeclinicaController::class,'listclinica'])->name('especialidadeclinica.listclinica')->middleware('auth');
+  
+
     #ESPECIALISTA
     Route::get("/especialista/list",[\App\Http\Controllers\EspecialistaController::class,'list'])->name('especialista.list')->middleware('auth');
     Route::get("/especialista/new",[\App\Http\Controllers\EspecialistaController::class,'new'])->name('especialista.new')->middleware('auth');

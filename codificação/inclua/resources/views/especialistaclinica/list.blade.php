@@ -1,4 +1,4 @@
-@extends('layouts.app',['page' => __('especialistaclinica'), 'pageSlug' => 'especialistaclinica','class'=>'especialistaclinica'])
+@extends('layouts.app',['page' => __('especialistas'), 'pageSlug' => 'especialistaclinica','class'=>'especialistaclinica'])
 @section('content')
 <div class="card">
 
@@ -32,7 +32,7 @@
       <tr>
           <td>{{$ent->nome}}</td> 
           <td>{{$ent->telefone}}</td> 
-          <td>DESCREVER A ESPECIALIDADE</td> 
+          <td>{{$ent->especialidade}}</td> 
           <td>
             <a href="#"  rel="tooltip"
                title="Ver agenda"

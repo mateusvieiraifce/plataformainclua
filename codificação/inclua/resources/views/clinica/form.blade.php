@@ -134,7 +134,7 @@
             <div class="col-md-4 px-8">
             <div class="form-group">
               <label id="labelFormulario">Nome</label>
-              <input style="border-color: #C0C0C0" type="text" class="form-control" name="nome_login" required value="{{$usuario->name}}" maxlength="150">
+              <input style="border-color: #C0C0C0" type="text" class="form-control" name="nome_login" required value="{{$usuario->nome_completo}}" maxlength="150">
               </div>
             </div>
         <div class="col-md-4 px-8">
@@ -150,7 +150,10 @@
           <div class="form-group">
                 <label id="labelFormulario">Senha</label>
                 <input type="password" style="border-color: #C0C0C0" class="form-control"
-                        name="password" required
+                        name="password" 
+                        @if(!$entidade->usuario_id)
+                          required
+                        @endif
                         value="" maxlength="15">
              
             </div>
