@@ -235,8 +235,8 @@ class UsuarioController extends Controller
             $user->tipo_pessoa = $request->tipo_pessoa;
             $user->tipo_user = $request->tipo_user;
             $user->codigo_validacao = Helper::generateRandomNumberString(5);
-            $user->save();/* 
-            Helper::sendSms($user->celular, $user->codigo_validacao); */
+            $user->save();
+            Helper::sendSms($user->celular, $user->codigo_validacao); 
             $msg = ['valor' => trans("Cadastro de dados pessoais realizado com sucesso!"), 'tipo' => 'success'];
             session()->flash('msg', $msg);
         } catch (QueryException $e) {
