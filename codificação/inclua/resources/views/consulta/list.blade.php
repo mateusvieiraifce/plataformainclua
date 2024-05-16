@@ -14,7 +14,7 @@
                   </button>
                   <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
                   <!--   <a class="dropdown-item" href="{{route('consulta.new', $especialista->id)}}">Adicionar</a>-->
-                     <a class="dropdown-item" href="{{route('consulta.agenda', $especialista->id)}}">asdf</a>
+                     <a class="dropdown-item" href="{{route('consulta.agenda', $especialista->id)}}">Disponibilizar consultas</a>
                   </div>
                </div>
             </div>

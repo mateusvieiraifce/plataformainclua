@@ -135,7 +135,7 @@
               <a href="{{route('consulta.list', $especialista->id)}}" class="btn btn-primary"><i
                   class="fa fa-reply"></i>
                 Voltar</a>
-              <button class="btn btn-success" onclick="$('#send').click(); "><i class="fa fa-save"></i> Salvar</button>
+              <button class="btn btn-success" onclick="$('#send').click(); "><i class="fa fa-save"></i> Disponibilizar</button>
           </div>
           </form>
         </div>
