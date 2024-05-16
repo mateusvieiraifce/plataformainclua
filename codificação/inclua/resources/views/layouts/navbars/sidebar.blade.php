@@ -53,7 +53,6 @@
                     </a>
                 </li>
               
-
                 <li>
                     <a data-toggle="collapse" href="#configclinica" aria-expanded="true">
                         <i class="tim-icons icon-atom" ></i>
@@ -73,7 +72,6 @@
                         </ul>
                     </div>                   
                 </li>
-
             @endif
 
              <!-- usuario tipo Root -->
@@ -249,6 +247,9 @@
 
              <!-- usuario tipo Especialista -->
             @if(\Illuminate\Support\Facades\Auth::user()->tipo_user ==='E')
+            <?php
+             $especialista = App\Models\Especialista::where('usuario_id', '=', Auth::user()->id)->first();
+             ?>
                 <li @if ($pageSlug == 'dashboard') class="active " @endif>
                     <a href="{{route('home')}}">
                         <i class="tim-icons icon-chart-pie-36"></i>
@@ -257,7 +258,7 @@
                 </li>
 
                 <li @if ($pageSlug == 'users') class="active " @endif>
-                    <a href="{{route('sales.list')}}">
+                    <a href="{{route('consulta.list',$especialista->id)}}">
                         <i class="tim-icons icon-calendar-60"></i>
                         <p>{{ __('Agenda') }}</p>
                     </a>

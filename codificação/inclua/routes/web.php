@@ -171,7 +171,17 @@ Route::middleware('auth')->group(function() {
     Route::get("/especialistaclinica/delete/{id}",[\App\Http\Controllers\EspecialistaclinicaController::class,'delete'])->name('especialistaclinica.delete')->middleware('auth');
     Route::get("/especialistaclinica/edit/{id}",[\App\Http\Controllers\EspecialistaclinicaController::class,'edit'])->name('especialistaclinica.edit')->middleware('auth');
 
-
+    #CONSULTAS_DISPONIBILIZADAS_POR_ESPECIALISTA 
+    Route::get("/consulta/list/{especialista_id}",[\App\Http\Controllers\ConsultaController::class,'list'])->name('consulta.list')->middleware('auth');
+    Route::get("/consulta/new/{especialista_id}",[\App\Http\Controllers\ConsultaController::class,'new'])->name('consulta.new')->middleware('auth');
+    Route::get("/consulta/search/{especialista_id}",[\App\Http\Controllers\ConsultaController::class,'search'])->name('consulta.search')->middleware('auth');
+    Route::post("/consulta/save/{especialista_id}",[\App\Http\Controllers\ConsultaController::class,'save'])->name('consulta.save')->middleware('auth');
+    Route::get("/consulta/delete/{id}",[\App\Http\Controllers\ConsultaController::class,'delete'])->name('consulta.delete')->middleware('auth');
+    Route::get("/consulta/edit/{id}",[\App\Http\Controllers\ConsultaController::class,'edit'])->name('consulta.edit')->middleware('auth');
+    Route::get("/consulta/agenda/{especialista_id}",[\App\Http\Controllers\ConsultaController::class,'agenda'])->name('consulta.agenda')->middleware('auth');
+    Route::post("/consulta/saveagenda/{especialista_id}",[\App\Http\Controllers\ConsultaController::class,'saveVariasConsultas'])->name('consulta.saveagenda')->middleware('auth');
+    
+    
 
 });
 
