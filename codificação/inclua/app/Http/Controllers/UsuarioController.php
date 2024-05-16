@@ -162,7 +162,7 @@ class UsuarioController extends Controller
     {
         $rules = [
             "email" => "required|unique:users,email",
-            'password' => 'required|confirmed|between:5,15',
+            'password' => 'required|min:5|confirmed',
             'password_confirmation' => 'required',
         ];
         $feedbacks = [
@@ -170,7 +170,7 @@ class UsuarioController extends Controller
             "email.unique" => "O email utilizado já foi cadastrado.",
             "password.required" => "O campo Senha é obrigatório.",
             "password.confirmed" => "As senhas não são correspondentes.",
-            "password.between" => "O campo senha deve ter no mínimo 5 e no máximo 15 caracteres.",
+            "password.min" => "O campo senha deve ter no mínimo 5 caracteres.",
             "password_confirmation.required" => "O campo Confirmar a senha é obrigatório."
         ];
         $request->validate($rules, $feedbacks);
@@ -202,7 +202,7 @@ class UsuarioController extends Controller
     {
         $rules = [
             "cpf" => "required",
-            "nome" => "required|between:5,255",
+            "nome" => "required|min:5",
             "telefone" => "required",
             "rg" => "required",
             "data_nascimento" => "required",
@@ -213,7 +213,7 @@ class UsuarioController extends Controller
         $feedbacks = [
             "cpf.required" => "O campo CPF é obrigatório.",
             "nome.required" => "O campo CPF é obrigatório.",
-            "nome.between" => "O campo nome deve ter no mínomo 5 caracteres.",
+            "nome.min" => "O campo nome deve ter no mínomo 5 caracteres.",
             "telefone.required" => "O campo Telefone é obrigatório.",
             "data_nascimento.required" => "O campo Data de Nascimento é obrigatório.",
             "estado_civil.required" => "O campo Estado Civil é obrigatório.",
@@ -235,8 +235,8 @@ class UsuarioController extends Controller
             $user->tipo_pessoa = $request->tipo_pessoa;
             $user->tipo_user = $request->tipo_user;
             $user->codigo_validacao = Helper::generateRandomNumberString(5);
-            $user->save();
-            Helper::sendSms($user->celular, $user->codigo_validacao);
+            $user->save();/* 
+            Helper::sendSms($user->celular, $user->codigo_validacao); */
             $msg = ['valor' => trans("Cadastro de dados pessoais realizado com sucesso!"), 'tipo' => 'success'];
             session()->flash('msg', $msg);
         } catch (QueryException $e) {
@@ -255,12 +255,12 @@ class UsuarioController extends Controller
     }
 
     public function reenviarSMS(Request $request)
-    {/* 
+    {
         $user = User::find($request->usuario);
         $user->codigo_validacao = Helper::generateRandomNumberString(5);
         $user->save();
 
-        Helper::sendSms($user->celular, $user->codigo_validacao); */
+        Helper::sendSms($user->celular, $user->codigo_validacao);
         $response = true;
 
         return response()->json($response);

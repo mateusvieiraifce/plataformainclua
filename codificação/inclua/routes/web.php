@@ -36,6 +36,8 @@ Route::get("/telefone/reenviar-sms/",[\App\Http\Controllers\UsuarioController::c
 Route::post("/telefone/validar",[\App\Http\Controllers\UsuarioController::class,'validarTelefone'])->name('usuario.validar_telefone');
 Route::get("/cadastrar/endereço/create/{id_usuario}",[\App\Http\Controllers\EnderecoController::class,'createEndereco'])->name('endereco.create');
 Route::post("/cadastrar/endereço/store",[\App\Http\Controllers\EnderecoController::class,'storeEndereco'])->name('endereco.store');
+Route::get("/cadastrar/cartao/create/{id_usuario}",[\App\Http\Controllers\CartaoController::class,'create'])->name('cartao.create');
+Route::post("/cadastrar/cartao/create",[\App\Http\Controllers\CartaoController::class,'store'])->name('cartao.store');
 
 Route::post("/auth/user",[\App\Http\Controllers\UsuarioController::class,'logar'])->name('login.do');
 Route::get("/logout",[\App\Http\Controllers\UsuarioController::class,'logout'])->name('logout');

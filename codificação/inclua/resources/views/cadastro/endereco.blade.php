@@ -1,5 +1,5 @@
 @extends('layouts.app', ['class' => 'register-page', 'contentClass' => 'register-page', 'pageSlug' => 'registre'])
-@section('title', 'Cadastro Endereço')
+@section('title', 'Cadastro de Endereço')
 @section('content')
     <div class="row">
         <div class="col-md-7 mr-auto">
@@ -19,7 +19,7 @@
                             </label>
                             <div class="input-group {{ $errors->has('cep') ? ' has-danger' : '' }} input-medium">
                                 <input type="text" id="cep" class="form-control border-full {{ $errors->has('cep') ? ' is-invalid' : '' }}"
-                                    name="cep" maxlength="9" placeholder="CEP" onkeydown="" onblur="mascaraCep(this); validarCep(this.value)" value="{{ old('cep') }}" >
+                                    name="cep" maxlength="9" placeholder="CEP" onblur="validarCep(this)" value="{{ old('cep') }}" autofocus>
                                 @include('alerts.feedback', ['field' => 'cep'])
                             </div>
                         </div>
@@ -99,5 +99,15 @@
             </div>
         </div>
     </div>
-    @include("layouts.modal_aviso")
+
+    <script>
+        $(document).ready(function () {
+            //APLICAÇÃO DA MASCARA NO CEP
+            document.getElementById('cep').addEventListener('input', function() {
+                if ($('#cep').val().length >= 7) {
+                    let documento = mascaraCep(this)
+                }
+            })
+        });
+    </script>
 @endsection

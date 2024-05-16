@@ -19,7 +19,7 @@
                             </label>
                             <div class="input-group input-medium{{ $errors->has('cpf') ? ' has-danger' : '' }}">
                                 <input type="text" id="cpf" class="form-control border-full {{ $errors->has('cpf') ? 'is-invalid' : '' }}"
-                                    name="cpf" maxlength="14" placeholder="000.000.000-00" value="{{ old('cpf') }}" >
+                                    name="cpf" maxlength="14" placeholder="000.000.000-00" value="{{ old('cpf') }}" autofocus>
                                 @include('alerts.feedback', ['field' => 'cpf'])
                             </div>
                         </div>
@@ -30,7 +30,7 @@
                             </label>
                             <div class="input-group input-medium{{ $errors->has('nome') ? ' has-danger' : '' }}">
                                 <input type="text" id="nome" class="form-control border-full {{ $errors->has('nome') ? 'is-invalid' : '' }}"
-                                    name="nome" placeholder="Nome Completo" data-validate-words="2" value="{{ old('nome') }}" >
+                                    name="nome" placeholder="Nome Completo" value="{{ old('nome') }}">
                                 @include('alerts.feedback', ['field' => 'nome'])
                             </div>
                         </div>
@@ -41,7 +41,7 @@
                             </label>
                             <div class="input-group input-medium{{ $errors->has('telefone') ? ' has-danger' : '' }}">
                                 <input type="text" id="telefone" class="form-control border-full {{ $errors->has('telefone') ? 'is-invalid' : '' }}"
-                                    name="telefone" maxlength="15" onblur="mascaraTelefone(this)" placeholder="Fone:(**) 9****-****" value="{{ old('telefone') }}">
+                                    name="telefone" maxlength="15" placeholder="Fone:(**) 9****-****" value="{{ old('telefone') }}">
                                 @include('alerts.feedback', ['field' => 'telefone'])
                             </div>
                         </div>
@@ -122,24 +122,29 @@
             </div>
         </div>
     </div>
-    @include("layouts.modal_aviso")
-    <script>
-    $(document).ready(function () {
-        const cpf = document.getElementById('cpf')
 
-        //APLICAÇÃO DA MASCARA NO CPF
-        cpf.addEventListener('input', function() {
-            if ($('#cpf').val().length == 11) {
-                let documento = formatarDocumento(this)
-            }
-        })
-        
-        //VALIDAÇÃO DO CPF
-        $('#cpf').blur(function() {
-            if (this.value != '') {
-                validarDocumento($(this).val(), 'cpf')
-            }
+    <script>
+        $(document).ready(function () {
+            //APLICAÇÃO DA MASCARA NO CPF
+            document.getElementById('cpf').addEventListener('input', function() {
+                if ($('#cpf').val().length >= 10) {
+                    formatarDocumento(this)
+                }
+            })
+            
+            //VALIDAÇÃO DO CPF
+            $('#cpf').blur(function() {
+                if (this.value != '') {
+                    var retorno = validarDocumento(this, 'cpf')
+                }
+            });
+
+            //APLICAÇÃO DA MASCARA NO TELEFONE
+            document.getElementById('telefone').addEventListener('input', function() {
+                if ($('#telefone').val().length >= 10) {
+                    mascaraTelefone(this)
+                }
+            })
         });
-    });
     </script>
     @endsection

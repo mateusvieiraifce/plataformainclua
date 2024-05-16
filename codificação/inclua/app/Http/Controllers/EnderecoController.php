@@ -48,8 +48,6 @@ class EnderecoController extends Controller
             $endereco->principal = true;
             $endereco->save();
 
-            Auth::loginUsingId($request->id_usuario);
-
             $msg = ['valor' => trans("Cadastro de endereço realizado com sucesso!"), 'tipo' => 'success'];
             session()->flash('msg', $msg);
         } catch (QueryException $e) {
@@ -59,6 +57,6 @@ class EnderecoController extends Controller
             return back();
         }
 
-        return redirect()->route('home');
+        return redirect()->route('cartao.create', ['id_usuario' => $request->id_usuario]);
     }
 }

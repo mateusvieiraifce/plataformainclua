@@ -19,7 +19,7 @@
                             </label>
                             <div class="input-group input-medium{{ $errors->has('codigo') ? ' has-danger' : '' }}">
                                 <input type="text" id="codigo" class="form-control border-full only-numbers {{ $errors->has('codigo') ? ' is-invalid' : '' }}"
-                                    name="codigo" maxlength="6" placeholder="Código" value="{{ old('codigo') }}" >
+                                    name="codigo" maxlength="5" placeholder="Código" value="{{ old('codigo') }}" >
                                 @include('alerts.feedback', ['field' => 'codigo'])
                             </div>
                             <div >

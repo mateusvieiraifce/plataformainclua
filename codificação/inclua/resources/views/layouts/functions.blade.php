@@ -1,4 +1,12 @@
 <script>
+//FUNÇÃO PARA ADICINAR MARCARA DO TELEFONE
+function mascaraTelefone(campo) {
+    //REMOVE A EXISTENCIA DE ALGUM CARACTERE ESPECIAL
+    campo.value = campo.value.replace(/\D/g, '')
+    //APLICA A MASCARA
+    campo.value = campo.value.replace(/(\d{2})(\d{5})(\d{4})/g,"(\$1) \$2-\$3");
+}
+
 //FUNÇÃO ORQUESTRADORA DAS MASCARA DE DOCUMENTO
 function formatarDocumento(campoTexto) {
     if (campoTexto.value.length <= 11) {
@@ -23,26 +31,16 @@ function mascaraCpf(valor) {
 function mascaraCnpj(valor) {
     return valor.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/g,"\$1.\$2.\$3\/\$4\-\$5");
 }
-
-//FUNÇÃO PARA ADICINAR MARCARA DO TELEFONE
-function mascaraTelefone(campo) {
-    //REMOVE A EXISTENCIA DE ALGUM CARACTERE ESPECIAL
-    campo.value = campo.value.replace(/\D/g, '')
-    //APLICA A MASCARA
-    campo.value = campo.value.replace(/(\d{2})(\d{5})(\d{4})/g,"(\$1) \$2-\$3");
-}
-
 //FUNÇÃO PARA VALIDAÇÃO DO DOCUMENTO
-function validarDocumento(documento, tipoDocumento) {
+function validarDocumento(campo, tipoDocumento) {
     $.ajax({
-        url: "https://api.invertexto.com/v1/validator?token={{env('TOKEN_API_VALIDATOR_DOCUMENTO')}}&value="+documento+"&type="+tipoDocumento+"",
+        url: "https://api.invertexto.com/v1/validator?token={{env('TOKEN_API_VALIDATOR_DOCUMENTO')}}&value="+campo.value+"&type="+tipoDocumento+"",
         method: 'GET',
         dataType: 'json',
         success: function(response) {
             if (response.valid === false) {
-                $("#modal-aviso-title").text("CPF inválido")
-                $("#modal-aviso-message").text("Verifique se o seu CPF foi digitado corretamente.")
-                $("#modal-aviso").modal()
+                nowuiDashboard.showNotification('top', 'right', 'CPF inválido! Verifique se o seu CPF foi digitado corretamente.', 'danger');
+                document.getElementById(campo.id).focus()
             }
         }
     });
@@ -57,22 +55,60 @@ function mascaraCep(cep) {
 }
 
 //FUNÇÃO DE VALIDAÇÃO DE CEP
-function validarCep(cep) {
+function validarCep(campo) {
     $.ajax({
-        url: "https://viacep.com.br/ws/"+cep+"/json/",
+        url: "https://viacep.com.br/ws/"+campo.value+"/json/",
         type: "GET",
         dataType: "json", 
         success: function(response) {
             if (response.erro) {
-                $("#modal-aviso-title").text("CEP inválido")
-                $("#modal-aviso-message").text("Verifique se o seu CEP foi digitado corretamente.")
-                $("#modal-aviso").modal()
+                nowuiDashboard.showNotification('top', 'right', 'CEP inválido! Verifique se o seu CEP foi digitado corretamente.', 'danger');
+                document.getElementById(campo.id).focus()
             } else {
                 document.getElementById('cidade').value = response.localidade
                 document.getElementById('estado').value = response.uf
                 document.getElementById('endereco').value = response.logradouro
                 document.getElementById('bairro').value = response.bairro
             }
+        },
+        error: function(error) {
+            nowuiDashboard.showNotification('top', 'right', 'CEP inválido! Verifique se o seu CEP foi digitado corretamente.', 'danger');
+            document.getElementById(campo.id).focus()
+        }
+    });
+}
+
+function marcaraNumeroCartao(campo) {
+    //REMOVE A EXISTENCIA DE ALGUM CARACTERE ESPECIAL
+    campo.value = campo.value.replace(/\D/g, '')
+    //APLICA A MASCARA
+    campo.value = campo.value.replace(/(\d{4})(\d{4})(\d{4})(\d{4})/g,"\$1 \$2 \$3 \$4");
+}
+
+function validarCartao(campo) {
+    let numero_cartao = campo.value.replace(/\D/g, '')
+    $.ajax({
+        crossDomain: true,
+        url: 'https://bin-ip-checker.p.rapidapi.com/?bin='+numero_cartao,
+        method: 'POST',
+        headers: {
+            'content-type': 'application/json',
+            'X-RapidAPI-Key': '{{env("X_RAPIDAPI_KEY")}}',
+            'X-RapidAPI-Host': 'bin-ip-checker.p.rapidapi.com'
+        },
+        processData: false,
+        success: function(response) {
+            if (response.BIN.type != 'CREDIT') {
+                nowuiDashboard.showNotification('top','right','Informe um cartão de crédito!','danger');
+                document.getElementById(campo.id).focus();
+            } else if (response.code != 200) {
+                nowuiDashboard.showNotification('top','right','Cartão inválido! Verifique se o número do cartão foi digitado corretamente.','danger');
+                document.getElementById(campo.id).focus();
+            }
+        },
+        error: function(error) {
+            nowuiDashboard.showNotification('top','right','Cartão inválido! Verifique se o número do cartão foi digitado corretamente.','danger');
+            document.getElementById(campo.id).focus();
         }
     });
 }
