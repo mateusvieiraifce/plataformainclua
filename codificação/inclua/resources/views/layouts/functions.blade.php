@@ -1,6 +1,6 @@
 <script>
-//FUNÇÃO PARA ADICINAR MARCARA DO TELEFONE
-function mascaraTelefone(campo) {
+//FUNÇÃO PARA ADICINAR MARCARA DO CELULAR
+function mascaraCelular(campo) {
     //REMOVE A EXISTENCIA DE ALGUM CARACTERE ESPECIAL
     campo.value = campo.value.replace(/\D/g, '')
     //APLICA A MASCARA

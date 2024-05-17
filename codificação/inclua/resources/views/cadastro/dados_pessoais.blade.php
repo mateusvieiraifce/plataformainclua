@@ -36,13 +36,13 @@
                         </div>
                         
                         <div class="form-group">
-                            <label for="telefone">
-                                Telefone <span class="required">*</span>
+                            <label for="celular">
+                                Celular <span class="required">*</span>
                             </label>
-                            <div class="input-group input-medium{{ $errors->has('telefone') ? ' has-danger' : '' }}">
-                                <input type="text" id="telefone" class="form-control border-full {{ $errors->has('telefone') ? 'is-invalid' : '' }}"
-                                    name="telefone" maxlength="15" placeholder="Fone:(**) 9****-****" value="{{ old('telefone') }}">
-                                @include('alerts.feedback', ['field' => 'telefone'])
+                            <div class="input-group input-medium{{ $errors->has('celular') ? ' has-danger' : '' }}">
+                                <input type="text" id="celular" class="form-control border-full {{ $errors->has('celular') ? 'is-invalid' : '' }}"
+                                    name="celular" maxlength="15" placeholder="Fone:(**) 9****-****" value="{{ old('celular') }}">
+                                @include('alerts.feedback', ['field' => 'celular'])
                             </div>
                         </div>
                         
@@ -140,9 +140,9 @@
             });
 
             //APLICAÇÃO DA MASCARA NO TELEFONE
-            document.getElementById('telefone').addEventListener('input', function() {
-                if ($('#telefone').val().length >= 10) {
-                    mascaraTelefone(this)
+            document.getElementById('celular').addEventListener('input', function() {
+                if ($('#celular').val().length >= 10) {
+                    mascaraCelular(this)
                 }
             })
         });
