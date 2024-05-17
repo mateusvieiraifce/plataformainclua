@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cartao;
 use App\Models\Vendas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

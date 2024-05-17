@@ -42,7 +42,6 @@
         @php
             $msg = Session::get('msg') ?? $msg ?? '';
         @endphp
-        @if(!empty($msg))
 
             <script src="https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js"></script>
 
@@ -73,12 +72,12 @@
                 };
             </script>
 
+        @if(!empty($msg))
             <script>
                 $(document).ready(function() {
                     nowuiDashboard.showNotification('top','right','{{$msg["valor"]}}','{{$msg["tipo"]}}');
                 });
             </script>
-
         @endif
         <script src="/assets/js/core/jquery.min.js"></script>
         <script src="/assets/js/core/popper.min.js"></script>
