@@ -40,6 +40,7 @@ function validarDocumento(campo, tipoDocumento) {
         success: function(response) {
             if (response.valid === false) {
                 nowuiDashboard.showNotification('top', 'right', 'CPF inválido! Verifique se o seu CPF foi digitado corretamente.', 'danger');
+                document.getElementById(campo.id).value = ''
                 document.getElementById(campo.id).focus()
             }
         }
@@ -100,14 +101,17 @@ function validarCartao(campo) {
         success: function(response) {
             if (response.BIN.type != 'CREDIT') {
                 nowuiDashboard.showNotification('top','right','Informe um cartão de crédito!','danger');
+                document.getElementById(campo.id).value = ''
                 document.getElementById(campo.id).focus();
             } else if (response.code != 200) {
                 nowuiDashboard.showNotification('top','right','Cartão inválido! Verifique se o número do cartão foi digitado corretamente.','danger');
+                document.getElementById(campo.id).value = ''
                 document.getElementById(campo.id).focus();
             }
         },
         error: function(error) {
             nowuiDashboard.showNotification('top','right','Cartão inválido! Verifique se o número do cartão foi digitado corretamente.','danger');
+            document.getElementById(campo.id).value = ''
             document.getElementById(campo.id).focus();
         }
     });
