@@ -69,17 +69,6 @@
                         </div>
                         
                         <div class="form-group">
-                            <label for="complemento">
-                                Complemento
-                            </label>
-                            <div class="input-group {{ $errors->has('complemento') ? ' has-danger' : '' }} input-medium">
-                                <input type="text" id="complemento" class="form-control border-full only-numbers {{ $errors->has('complemento') ? ' is-invalid' : '' }}"
-                                    name="complemento" placeholder="Complemento" value="{{ old('complemento') }}">
-                                @include('alerts.feedback', ['field' => 'complemento'])
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
                             <label for="bairro">
                                 Bairro <span class="required">*</span>
                             </label>
@@ -87,6 +76,17 @@
                                 <input type="text" id="bairro" class="form-control border-full only-numbers {{ $errors->has('bairro') ? ' is-invalid' : '' }}"
                                     name="bairro" placeholder="Bairro" value="{{ old('bairro') }}">
                                 @include('alerts.feedback', ['field' => 'bairro'])
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="complemento">
+                                Complemento
+                            </label>
+                            <div class="input-group {{ $errors->has('complemento') ? ' has-danger' : '' }} input-medium">
+                                <input type="text" id="complemento" class="form-control border-full only-numbers {{ $errors->has('complemento') ? ' is-invalid' : '' }}"
+                                    name="complemento" placeholder="Complemento" value="{{ old('complemento') }}">
+                                @include('alerts.feedback', ['field' => 'complemento'])
                             </div>
                         </div>
 
