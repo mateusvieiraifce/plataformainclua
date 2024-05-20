@@ -12,7 +12,7 @@
     font-size: 30px;
 }
 </style>
-  <div class="container">
+
     <div class="row">
 
       <div class="col-md-12">
@@ -149,9 +149,12 @@
                   class="fa fa-reply"></i>
                 Voltar</a>
               <button class="btn btn-success" onclick="$('#send').click(); "><i class="fa fa-save"></i> Disponibilizar</button>
-          </div>
+
+
           </form>
+          </div>
         </div>
       </div>
     </div>
-    @endsection
+
+@endsection
