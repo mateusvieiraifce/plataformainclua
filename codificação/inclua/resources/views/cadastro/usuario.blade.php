@@ -11,10 +11,19 @@
                     <h2 class="title">Cadastro de usuário</h2>
                 </div>
                 <div class="card-body">
-                    <div class="form-group type-user">
-                        <label>
+                    <div class="form-group">
+                        <label for="type_user">
                             Informe seu nivel de usuário <span class="required">*</span>
                         </label>
+                        <div id="type-user" class="input-group {{ $errors->has('type_user') ? 'has-danger' : '' }} input-medium">
+                            <select id="type_user" name="type_user" class="form-control border-full {{ $errors->has('type_user') ? 'is-invalid' : '' }}">
+                                <option value=""></option>
+                                <option id="paciente" value="formPaciente">Paciente</option>
+                                <option id="especialista" value="formEspecialista">Especialista</option>
+                                <option id="clinica" value="formClinica">Clínica</option>
+                            </select>
+                            @include('alerts.feedback', ['field' => 'type_user'])
+                        </div>{{-- 
                         <div class="custom-radio">
                             <input type="radio" name="type_user" id="paciente" value="P">
                             <label class="form-check-label" for="paciente">Paciente</label>
@@ -26,7 +35,7 @@
                         <div class="custom-radio">
                             <input type="radio" name="type_user" id="clinica" value="C">
                             <label class="form-check-label" for="clinica">Clínica</label>
-                        </div>
+                        </div> --}}
                     </div>
                     
                     <form id="formPaciente" class="form" method="post" action="{{ route('usuario.store') }}">
@@ -35,7 +44,7 @@
                             <label for="email">
                                 Email <span class="required">*</span>
                             </label>
-                            <div class="input-group {{ $errors->has('email') ? ' has-danger' : '' }} input-medium">
+                            <div class="input-group input-medium{{ $errors->has('email') ? ' has-danger' : '' }}">
                                 <input type="email" id="email" class="form-control border-full {{ $errors->has('email') ? ' is-invalid' : '' }}"
                                     name="email" autocomplete="email" placeholder="Email" value="{{ old('email') }}" >
                                 @include('alerts.feedback', ['field' => 'email'])
@@ -46,7 +55,7 @@
                             <label for="password">
                                 Senha <span class="required">*</span>
                             </label>
-                            <div class="input-group {{ $errors->has('password') ? ' has-danger' : '' }} input-medium">
+                            <div class="input-group input-medium{{ $errors->has('password') ? ' has-danger' : '' }}">
                                 <input type="password" id="password" class="form-control border-full {{ $errors->has('password') ? ' is-invalid' : '' }}"
                                     name="password" autocomplete="password" placeholder="Senha" value="{{ old('password') }}" >
                                 @include('alerts.feedback', ['field' => 'password'])
@@ -57,7 +66,7 @@
                             <label for="password_confirmation">
                                 Confirme a senha <span class="required">*</span>
                             </label>
-                            <div class="input-group {{ $errors->has('password_confirmation') ? ' has-danger' : '' }} input-medium">
+                            <div class="input-group input-medium{{ $errors->has('password_confirmation') ? ' has-danger' : '' }}">
                                 <input type="password" id="password_confirmation" class="form-control border-full {{ $errors->has('password_confirmation') ? ' is-invalid' : '' }}"
                                     name="password_confirmation" autocomplete="password_confirmation" placeholder="Confirmar senha" value="{{ old('password_confirmation') }}" >
                                 @include('alerts.feedback', ['field' => 'password_confirmation'])
@@ -65,7 +74,7 @@
                         </div>
                         
                         <div class="input-group">
-                            <button type="submit" class="btn btn-primary btn-round btn-lg">{{ __('Cadastrar') }}</button>
+                            <button type="submit" class="btn btn-primary btn-round btn-lg">{{ __('Próximo') }}</button>
                         </div>
                         <input type="hidden" name="tipo_pessoa" value="F">
                         <input type="hidden" name="tipo_user" value="P">
@@ -84,34 +93,29 @@
     </div>
     <script>
     $(document).ready(function () {
-        $(".type-user").change(function () {
-            if ($("#paciente").is(":checked")) {
-                $('#formPaciente').show();
-                $('#formEspecialista').hide();
-                $('#formClinica').hide();
-            } else if ($("#especialista").is(":checked")) {
-                $('#formEspecialista').show();
-                $('#formPaciente').hide();
-                $('#formClinica').hide();
-            } else if ($("#clinica").is(":checked")) {
-                $('#formClinica').show();
-                $('#formPaciente').hide();
-                $('#formEspecialista').hide();
-            }
+        $("#type-user").change(function () {
+            //ESCONDER FORM
+            $('#formPaciente').hide();
+            $('#formEspecialista').hide();
+            $('#formClinica').hide();
+            $(this).find(":selected").each(function () {
+                //EXIBIR FORM SELECIONADO
+                $("#"+$(this).val()).show();
+            });
         });
 
         @if (old('tipo_user') == "P")
-            $("#paciente").prop("checked", true);
+            $("#paciente").prop("selected", true);
             $('#formPaciente').show();
         @endif
 
         @if (old('tipo_user') == "E")
-            $("#especialista").prop("checked", true);
+            $("#especialista").prop("selected", true);
             $('#formEspecialista').show();
         @endif
 
         @if (old('tipo_user') == "C")
-            $("#clinica").prop("checked", true);
+            $("#clinica").prop("selected", true);
             $('#formClinica').show();
         @endif
     });

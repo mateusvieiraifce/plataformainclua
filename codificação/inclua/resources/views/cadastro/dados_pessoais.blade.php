@@ -17,9 +17,9 @@
                             <label for="cpf">
                                 CPF <span class="required">*</span>
                             </label>
-                            <div class="input-group {{ $errors->has('cpf') ? 'has-danger' : '' }} input-medium">
+                            <div class="input-group input-medium{{ $errors->has('cpf') ? ' has-danger' : '' }}">
                                 <input type="text" id="cpf" class="form-control border-full {{ $errors->has('cpf') ? 'is-invalid' : '' }}"
-                                    name="cpf" maxlength="14" placeholder="000.000.000-00" value="{{ old('cpf') }}" >
+                                    name="cpf" maxlength="14" placeholder="000.000.000-00" value="{{ old('cpf') }}" autofocus>
                                 @include('alerts.feedback', ['field' => 'cpf'])
                             </div>
                         </div>
@@ -28,21 +28,21 @@
                             <label for="nome">
                                 Nome <span class="required">*</span>
                             </label>
-                            <div class="input-group {{ $errors->has('nome') ? 'has-danger' : '' }} input-medium">
+                            <div class="input-group input-medium{{ $errors->has('nome') ? ' has-danger' : '' }}">
                                 <input type="text" id="nome" class="form-control border-full {{ $errors->has('nome') ? 'is-invalid' : '' }}"
-                                    name="nome" placeholder="Nome Completo" data-validate-words="2" value="{{ old('nome') }}" >
+                                    name="nome" placeholder="Nome Completo" value="{{ old('nome') }}">
                                 @include('alerts.feedback', ['field' => 'nome'])
                             </div>
                         </div>
                         
                         <div class="form-group">
-                            <label for="telefone">
-                                Telefone <span class="required">*</span>
+                            <label for="celular">
+                                Celular <span class="required">*</span>
                             </label>
-                            <div class="input-group {{ $errors->has('telefone') ? 'has-danger' : '' }} input-medium">
-                                <input type="text" id="telefone" class="form-control border-full {{ $errors->has('telefone') ? 'is-invalid' : '' }}"
-                                    name="telefone" maxlength="15" onblur="mascaraTelefone(this)" placeholder="Fone:(**)*****-****" value="{{ old('telefone') }}">
-                                @include('alerts.feedback', ['field' => 'telefone'])
+                            <div class="input-group input-medium{{ $errors->has('celular') ? ' has-danger' : '' }}">
+                                <input type="text" id="celular" class="form-control border-full {{ $errors->has('celular') ? 'is-invalid' : '' }}"
+                                    name="celular" maxlength="15" placeholder="Fone:(**) 9****-****" value="{{ old('celular') }}">
+                                @include('alerts.feedback', ['field' => 'celular'])
                             </div>
                         </div>
                         
@@ -50,7 +50,7 @@
                             <label for="rg">
                                 RG <span class="required">*</span>
                             </label>
-                            <div class="input-group {{ $errors->has('rg') ? 'has-danger' : '' }} input-medium">
+                            <div class="input-group input-medium{{ $errors->has('rg') ? ' has-danger' : '' }}">
                                 <input type="text" id="rg" class="form-control border-full {{ $errors->has('rg') ? 'is-invalid' : '' }}"
                                     name="rg" placeholder="RG" value="{{ old('rg') }}">
                                 @include('alerts.feedback', ['field' => 'rg'])
@@ -61,7 +61,7 @@
                             <label for="data_nascimento">
                                 Data de Nascimento <span class="required">*</span>
                             </label>
-                            <div class="input-group {{ $errors->has('data_nascimento') ? 'has-danger' : '' }} input-medium">
+                            <div class="input-group input-medium{{ $errors->has('data_nascimento') ? ' has-danger' : '' }}">
                                 <input type="date" id="data_nascimento" class="form-control border-full {{ $errors->has('data_nascimento') ? 'is-invalid' : '' }}"
                                     name="data_nascimento" placeholder="Nome Completo" value="{{ old('data_nascimento') }}">
                                 @include('alerts.feedback', ['field' => 'data_nascimento'])
@@ -72,7 +72,7 @@
                             <label for="estado_civil">
                                 Estado Civil <span class="required">*</span>
                             </label>
-                            <div class="input-group {{ $errors->has('estado_civil') ? 'has-danger' : '' }} input-medium">
+                            <div class="input-group input-medium{{ $errors->has('estado_civil') ? ' has-danger' : '' }}">
                                 <select name="estado_civil" class="form-control border-full {{ $errors->has('estado_civil') ? 'is-invalid' : '' }}">
                                     <option value=""></option>
                                     <option value="S" {{ old('estado_civil') == 'S' ? "Selected" : '' }}>Solteiro(a)</option>
@@ -87,17 +87,19 @@
                             <label for="sexo">
                                 Gênero <span class="required">*</span>
                             </label>
-                            <div class="input-group {{ $errors->has('sexo') ? 'has-danger' : '' }} input-medium">
+                            <div class="input-group input-medium{{ $errors->has('sexo') ? ' has-danger' : '' }}">
                                 <select name="sexo" class="form-control border-full {{ $errors->has('sexo') ? 'is-invalid' : '' }}">
                                     <option value=""></option>
                                     <option value="F" {{ old('sexo') == 'F' ? "Selected" : '' }}>Fenimino</option>
                                     <option value="M" {{ old('sexo') == 'M' ? "Selected" : '' }}>Musculino</option>
+                                    <option value="O" {{ old('sexo') == 'O' ? "Selected" : '' }}>Outro</option>
+                                    <option value="N" {{ old('sexo') == 'N' ? "Selected" : '' }}>Prefiro não informar</option>
                                 </select>
                                 @include('alerts.feedback', ['field' => 'sexo'])
                             </div>
                         </div>
                         
-                        <div class="input-group{{ $errors->has('consentimento') ? 'has-danger' : '' }}">
+                        <div class="input-group{{ $errors->has('consentimento') ? ' has-danger' : '' }}">
                             <div class="form-check text-left">
                                 <label class="form-check-label {{ $errors->has('consentimento') ? 'is-invalid' : '' }}">
                                     <input class="form-check-input" type="checkbox" name="consentimento" value="S">
@@ -110,7 +112,7 @@
                             </div>
                         </div>
                         <div class="input-group">
-                            <button type="submit" class="btn btn-primary btn-round btn-lg">{{ __('Cadastrar') }}</button>
+                            <button type="submit" class="btn btn-primary btn-round btn-lg">{{ __('Próximo') }}</button>
                         </div>
                         <input type="hidden" name="tipo_pessoa" value="F">
                         <input type="hidden" name="tipo_user" value="P">
@@ -120,22 +122,29 @@
             </div>
         </div>
     </div>
-    <script>
-    $(document).ready(function () {
-        const cpf = document.getElementById('cpf')
 
-        //APLICAÇÃO DA MASCARA NO CPF
-        cpf.addEventListener('input', function() {
-            if ($('#cpf').val().length == 11) {
-                let documento = formatarDocumento(this)
-            }
-        })
-        /*
-        //VALIDAÇÃO DO CPF
-        $('#cpf').blur(function() {
-            validarDocumento($(this).val(), 'cpf')
+    <script>
+        $(document).ready(function () {
+            //APLICAÇÃO DA MASCARA NO CPF
+            document.getElementById('cpf').addEventListener('input', function() {
+                if ($('#cpf').val().length >= 10) {
+                    formatarDocumento(this)
+                }
+            })
+            
+            //VALIDAÇÃO DO CPF
+            $('#cpf').blur(function() {
+                if (this.value != '') {
+                    var retorno = validarDocumento(this, 'cpf')
+                }
+            });
+
+            //APLICAÇÃO DA MASCARA NO TELEFONE
+            document.getElementById('celular').addEventListener('input', function() {
+                if ($('#celular').val().length >= 10) {
+                    mascaraCelular(this)
+                }
+            })
         });
-        */
-    });
     </script>
     @endsection

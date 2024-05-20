@@ -162,7 +162,7 @@ class UsuarioController extends Controller
     {
         $rules = [
             "email" => "required|unique:users,email",
-            'password' => 'required|confirmed|between:5,15',
+            'password' => 'required|min:5|confirmed',
             'password_confirmation' => 'required',
         ];
         $feedbacks = [
@@ -170,7 +170,7 @@ class UsuarioController extends Controller
             "email.unique" => "O email utilizado já foi cadastrado.",
             "password.required" => "O campo Senha é obrigatório.",
             "password.confirmed" => "As senhas não são correspondentes.",
-            "password.between" => "O campo senha deve ter no mínimo 5 e no máximo 15 caracteres.",
+            "password.min" => "O campo senha deve ter no mínimo 5 caracteres.",
             "password_confirmation.required" => "O campo Confirmar a senha é obrigatório."
         ];
         $request->validate($rules, $feedbacks);
@@ -200,10 +200,12 @@ class UsuarioController extends Controller
 
     public function storeDadosPessoais(Request $request)
     {
+        //REMOÇÃO DA MASCARA DO CELULAR PARA COMPARAR COM O BD
+        $request->request->set('celular', Helper::removerCaractereEspecial($request->celular));
         $rules = [
             "cpf" => "required",
-            "nome" => "required|between:5,255",
-            "telefone" => "required",
+            "nome" => "required|min:5",
+            "celular" => "required|unique:users,celular",
             "rg" => "required",
             "data_nascimento" => "required",
             "estado_civil" => "required",
@@ -213,8 +215,9 @@ class UsuarioController extends Controller
         $feedbacks = [
             "cpf.required" => "O campo CPF é obrigatório.",
             "nome.required" => "O campo CPF é obrigatório.",
-            "nome.between" => "O campo nome deve ter no mínomo 5 caracteres.",
-            "telefone.required" => "O campo Telefone é obrigatório.",
+            "nome.min" => "O campo nome deve ter no mínomo 5 caracteres.",
+            "celular.required" => "O campo Celular é obrigatório.",
+            "celular.unique" => "O celular utilizado já foi cadastrado.",
             "data_nascimento.required" => "O campo Data de Nascimento é obrigatório.",
             "estado_civil.required" => "O campo Estado Civil é obrigatório.",
             "sexo.required" => "O campo Gênero é obrigatório.",
@@ -224,9 +227,9 @@ class UsuarioController extends Controller
 
         try {
             $user = User::find($request->id_usuario);
-            $user->documento = Helper::removeMascaraTelefone($request->cpf);
+            $user->documento = Helper::removerCaractereEspecial($request->cpf);
             $user->nome_completo = $request->nome;
-            $user->celular = Helper::removeMascaraTelefone($request->telefone);
+            $user->celular = Helper::removerCaractereEspecial($request->celular);
             $user->rg = $request->rg;
             $user->data_nascimento = $request->data_nascimento;
             $user->estado_civil = $request->estado_civil;
@@ -236,11 +239,11 @@ class UsuarioController extends Controller
             $user->tipo_user = $request->tipo_user;
             $user->codigo_validacao = Helper::generateRandomNumberString(5);
             $user->save();
-            Helper::sendSms($user->celular, $user->codigo_validacao);
+            Helper::sendSms($user->celular, $user->codigo_validacao); 
             $msg = ['valor' => trans("Cadastro de dados pessoais realizado com sucesso!"), 'tipo' => 'success'];
             session()->flash('msg', $msg);
         } catch (QueryException $e) {
-            dd($e->getMessage());
+            dd($e);
             $msg = ['valor' => trans("Erro ao executar a operação!"), 'tipo' => 'danger'];
             session()->flash('msg', $msg);
 
@@ -253,6 +256,18 @@ class UsuarioController extends Controller
     public function verificarTelefone($id_usuario)
     {
         return view('cadastro.verificar_telefone', ['id_usuario' => $id_usuario]);
+    }
+
+    public function reenviarSMS(Request $request)
+    {
+        $user = User::find($request->usuario);
+        $user->codigo_validacao = Helper::generateRandomNumberString(5);
+        $user->save();
+
+        Helper::sendSms($user->celular, $user->codigo_validacao);
+        $response = true;
+
+        return response()->json($response);
     }
 
     public function validarTelefone(Request $request)

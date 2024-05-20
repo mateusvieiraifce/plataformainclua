@@ -1,5 +1,5 @@
 @extends('layouts.app', ['class' => 'register-page', 'contentClass' => 'register-page', 'pageSlug' => 'registre'])
-@section('title', 'Cadastro Endereço')
+@section('title', 'Cadastro de Endereço')
 @section('content')
     <div class="row">
         <div class="col-md-7 mr-auto">
@@ -19,7 +19,7 @@
                             </label>
                             <div class="input-group {{ $errors->has('cep') ? ' has-danger' : '' }} input-medium">
                                 <input type="text" id="cep" class="form-control border-full {{ $errors->has('cep') ? ' is-invalid' : '' }}"
-                                    name="cep" maxlength="9" placeholder="CEP" onkeydown="" onblur="mascaraCep(this); validarCep(this.value)" value="{{ old('cep') }}" >
+                                    name="cep" maxlength="9" placeholder="CEP" onblur="validarCep(this)" value="{{ old('cep') }}" autofocus>
                                 @include('alerts.feedback', ['field' => 'cep'])
                             </div>
                         </div>
@@ -69,17 +69,6 @@
                         </div>
                         
                         <div class="form-group">
-                            <label for="complemento">
-                                Complemento <span class="required">*</span>
-                            </label>
-                            <div class="input-group {{ $errors->has('complemento') ? ' has-danger' : '' }} input-medium">
-                                <input type="text" id="complemento" class="form-control border-full only-numbers {{ $errors->has('complemento') ? ' is-invalid' : '' }}"
-                                    name="complemento" placeholder="Complemento" value="{{ old('complemento') }}">
-                                @include('alerts.feedback', ['field' => 'complemento'])
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
                             <label for="bairro">
                                 Bairro <span class="required">*</span>
                             </label>
@@ -89,9 +78,20 @@
                                 @include('alerts.feedback', ['field' => 'bairro'])
                             </div>
                         </div>
+                        
+                        <div class="form-group">
+                            <label for="complemento">
+                                Complemento
+                            </label>
+                            <div class="input-group {{ $errors->has('complemento') ? ' has-danger' : '' }} input-medium">
+                                <input type="text" id="complemento" class="form-control border-full only-numbers {{ $errors->has('complemento') ? ' is-invalid' : '' }}"
+                                    name="complemento" placeholder="Complemento" value="{{ old('complemento') }}">
+                                @include('alerts.feedback', ['field' => 'complemento'])
+                            </div>
+                        </div>
 
                         <div class="input-group">
-                            <button type="submit" class="btn btn-primary btn-round btn-lg">{{ __('Cadastrar') }}</button>
+                            <button type="submit" class="btn btn-primary btn-round btn-lg">{{ __('Próximo') }}</button>
                         </div>
                         <input type="hidden" name="id_usuario" value="{{ $id_usuario }}">
                     </form>
@@ -99,6 +99,15 @@
             </div>
         </div>
     </div>
+
     <script>
+        $(document).ready(function () {
+            //APLICAÇÃO DA MASCARA NO CEP
+            document.getElementById('cep').addEventListener('input', function() {
+                if ($('#cep').val().length >= 7) {
+                    let documento = mascaraCep(this)
+                }
+            })
+        });
     </script>
 @endsection

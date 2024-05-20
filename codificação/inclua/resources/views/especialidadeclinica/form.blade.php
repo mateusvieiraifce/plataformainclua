@@ -1,8 +1,8 @@
 @extends('layouts.app', ['page' => __('clinica'), 'rotaPesquisa' => 'clinica.search', 'pageSlug' => 'especialidadeclinica', 'class' => 'especialidadeclinica'])
 @section('content')
+@section('title', 'Cadastro de Especialidade')
 <section class="bg0 p-t-104 p-b-116">
   <div class="container">
-
 
     <div class="col-md-12">
       <div class="card">
@@ -28,13 +28,6 @@
                   </select>
                 </div>
               </div>
-
-
-
-
-
-
-
               <div class="col-md-5 px-8">
                 <div class="form-group">
                   <label id="labelFormulario">Valor</label>

@@ -27,7 +27,7 @@ class Helper
         return $randomString;
     }
 
-    public static function removeMascaraTelefone($fone)
+    public static function removerCaractereEspecial($fone)
     {
         if ($fone) {
             $cep = str_replace("-", "", $fone);

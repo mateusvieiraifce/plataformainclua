@@ -1,4 +1,6 @@
-@extends('layouts.app',['page' => __('especialidadeclinica'),'rotaPesquisa' => 'clinica.search', 'id_lado_n'=> $clinica->id, 'pageSlug' => 'especialidadeclinica','class'=>'especialidadeclinica'])
+@extends('layouts.app',['page' => __('especialidadeclinica'),'rotaPesquisa' => 'clinica.search', 'pageSlug' => 'especialidadeclinica','class'=>'especialidadeclinica'])
+@section('title', 'Cadastro de Especialidade')
+
 @section('content')
 <div class="card">
   <div class="row">
@@ -17,8 +19,8 @@
             </div>
             <div class="card-body">
               <div class="table-responsive">
-<table class="table"> 
-  <thead>  
+<table class="table">
+  <thead>
      <th> Especialidade </th>
 
      <th> Valor </th>
@@ -28,26 +30,26 @@
   @if(sizeof($lista)>0)
     @foreach($lista as $ent)
       <tr>
-          <td>{{$ent->descricao}}</td> 
+          <td>{{$ent->descricao}}</td>
 
-          <td> R$ {{ number_format( $ent->valor, 2, ',', '.') }}</td> 
-     
-          <td> 
-        <a rel="tooltip" title="Editar" class="btn btn-link" data-original-title="Edit" href="{{route('especialidadeclinica.edit',$ent->id)}}"> 
-           <i class="tim-icons icon-pencil"></i> 
-        </a> 
-        </td> 
-        <td> 
+          <td> R$ {{ number_format( $ent->valor, 2, ',', '.') }}</td>
+
+          <td>
+        <a rel="tooltip" title="Editar" class="btn btn-link" data-original-title="Edit" href="{{route('especialidadeclinica.edit',$ent->id)}}">
+           <i class="tim-icons icon-pencil"></i>
+        </a>
+        </td>
+        <td>
          <a href="{{route('especialidadeclinica.delete',$ent->id)}}" onclick="return confirm('Deseja relamente excluir?')"  rel="tooltip"
-        title="Excluir" class="btn btn-link" data-original-title="Remove" > 
-         <i class="tim-icons icon-simple-remove"></i> 
-        </a> 
-        </td> 
-     
-  @endforeach 
-  @endif 
-   </tbody> 
- </table> 
+        title="Excluir" class="btn btn-link" data-original-title="Remove" >
+         <i class="tim-icons icon-simple-remove"></i>
+        </a>
+        </td>
+
+  @endforeach
+  @endif
+   </tbody>
+ </table>
  <div>
                   @if ($lista->lastPage() > 1)
                      @php

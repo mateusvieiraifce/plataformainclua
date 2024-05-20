@@ -39,10 +39,10 @@ class ClinicaController extends Controller
    }
    function save(Request $request)
    {
-        $imageName = "";       
+        $imageName = "";
         //salvando a logo na clinica
         if ($request->hasFile('image') && $request->file('image')->isValid()) {
-         // Recupera a extensão do arquivo       
+         // Recupera a extensão do arquivo
          $requestImage = $request->image;
          $extension = $requestImage->extension();
          $imageName = md5($requestImage->getClientOriginalName() . strtotime("now")) . "." . $extension;
@@ -110,7 +110,7 @@ class ClinicaController extends Controller
             'numero_atendimento_social_mensal' => $request->numero_atendimento_social_mensal,
             'usuario_id' => $request->usuario_id
          ]);
-        
+
          //salvando o id do usuario na clinica
          $entidade->usuario_id = $usuario->id;
          //salvando o nome da imagem

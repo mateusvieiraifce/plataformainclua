@@ -23,7 +23,6 @@ class EnderecoController extends Controller
             "estado" => "required",
             "endereco" => "required",
             "numero" => "required",
-            "complemento" => "required",
             "bairro" => "required",
         ];
         $feedbacks = [
@@ -32,7 +31,6 @@ class EnderecoController extends Controller
             "estado.required" => "O campo Estado é obrigatório.",
             "endereco.required" => "O campo Endereço é obrigatório.",
             "numero.required" => "O campo Número é obrigatório.",
-            "complemento.required" => "O campo Complemento é obrigatório.",
             "bairro.required" => "O campo Bairro é obrigatório."
         ];
         $request->validate($rules, $feedbacks);
@@ -50,8 +48,6 @@ class EnderecoController extends Controller
             $endereco->principal = true;
             $endereco->save();
 
-            Auth::loginUsingId($request->id_usuario);
-
             $msg = ['valor' => trans("Cadastro de endereço realizado com sucesso!"), 'tipo' => 'success'];
             session()->flash('msg', $msg);
         } catch (QueryException $e) {
@@ -61,6 +57,6 @@ class EnderecoController extends Controller
             return back();
         }
 
-        return redirect()->route('home');
+        return redirect()->route('cartao.create', ['id_usuario' => $request->id_usuario]);
     }
 }
