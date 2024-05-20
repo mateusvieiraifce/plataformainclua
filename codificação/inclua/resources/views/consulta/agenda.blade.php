@@ -118,30 +118,30 @@
               <label id="labelFormulario">Dias na semana de atemdimento</label>
               <div class="row">
                 <div class="custom-col">
-                  <label class="checkbox-inline"><input type="checkbox" name="dia[]" value="Segunda-feira">
+                  <label class="checkbox-inline"><input type="checkbox" name="dia[]" value="1">
                     Segunda</label>
                 </div>
                 <div class="custom-col ">
-                  <label class="checkbox-inline"><input type="checkbox" name="dia[]" value="Terça-feira">
+                  <label class="checkbox-inline"><input type="checkbox" name="dia[]" value="2">
                     Terça</label>
                 </div>
                 <div class="custom-col">
-                  <label class="checkbox-inline"><input type="checkbox" name="dia[]" value="Quarta-feira">
+                  <label class="checkbox-inline"><input type="checkbox" name="dia[]" value="3">
                     Quarta</label>
                 </div>
                 <div class="custom-col">
-                  <label class="checkbox-inline"><input type="checkbox" name="dia[]" value="Quinta-feira">
+                  <label class="checkbox-inline"><input type="checkbox" name="dia[]" value="4">
                     Quinta</label>
                 </div>
                 <div class="custom-col">
-                  <label class="checkbox-inline  mt-1 mb-1"><input type="checkbox" name="dia[]" value="Sexta-feira">
+                  <label class="checkbox-inline  mt-1 mb-1"><input type="checkbox" name="dia[]" value="5">
                     Sexta</label>
                 </div>
                 <div class="custom-col" >
-                  <label class="checkbox-inline"><input type="checkbox" name="dia[]" value="Sábado"> Sábado</label>
+                  <label class="checkbox-inline"><input type="checkbox" name="dia[]" value="6"> Sábado</label>
                 </div>
                 <div class="custom-col">
-                  <label class="checkbox-inline"><input type="checkbox" name="dia[]" value="Domingo"> Domingo</label>
+                  <label class="checkbox-inline"><input type="checkbox" name="dia[]" value="0"> Domingo</label>
                 </div>
               </div>
               <input type="hidden" name="id" value="{{$entidade->id}}">

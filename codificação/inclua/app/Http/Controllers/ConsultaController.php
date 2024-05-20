@@ -8,6 +8,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Especialista;
+use Carbon\Carbon;
 
 class ConsultaController extends Controller
 {
@@ -111,8 +112,25 @@ class ConsultaController extends Controller
    function saveVariasConsultas(Request $request)
    {
       $especialista_id = $request->especialista_id;
+
+
+      $startDate = Carbon::parse($request->data_inicio);
+      $endDate = Carbon::parse($request->data_fim);
+      $tercas = [];
+      
+    //  dd($request);
+      // Loop através do intervalo de datas
+      for ($date = $startDate; $date->lte($endDate); $date->addDay()) {
+          // Verifique se o dia é uma terça-feira (dayOfWeek retorna 0 a 6 para para o dia da semana)
+         if (in_array($date->dayOfWeek, $request->dia)) {
+            //criando as consulta de acordo com o dia
+            
+              $tercas[] = $date->toDateString(); // Adicione a terça-feira ao array
+          }
+      }
+
     
-      dd($request);
+      dd($tercas);
      //for para criar varias consultas
 
       $entidade = Consulta::create([
