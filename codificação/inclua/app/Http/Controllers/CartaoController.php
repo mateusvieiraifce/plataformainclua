@@ -19,14 +19,14 @@ class CartaoController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            "numero_cartao" => "required|max:19",
+            "numero_cartao" => "required|min:19",
             "validade" => "required",
             "cvv" => "required|min:3",
             "nome_titular" => "required|min:5"
         ];
         $feedbacks = [
             "numero_cartao.required" => "O campo Número do cartão é obrigatório.",
-            "numero_cartao.max" => "O campo Número do cartão deve ter no máximo 16 dígitos.",
+            "numero_cartao.min" => "O campo Número do cartão deve ter no mínimo 16 dígitos.",
             "cvv.required" => "O campo CVV é obrigatório.",
             "cvv.min" => "O campo CVV deve ter 3 dígitos.",
             "nome_titular.required" => "O campo Nome do titular é obrigatório.",
