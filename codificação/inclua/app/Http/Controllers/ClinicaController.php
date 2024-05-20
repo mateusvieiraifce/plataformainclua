@@ -19,7 +19,7 @@ class ClinicaController extends Controller
       $lista = Clinica::join('users', 'users.id', '=', 'usuario_id')->
          where('nome', 'like', "%" . "%")->
          orderBy('nome', 'asc')->
-         select('clinicas.id', 'users.name as nome_responsavel', 'nome', 'cnpj', 'clinicas.telefone')->
+         select('clinicas.id', 'users.nome_completo as nome_responsavel', 'nome', 'cnpj', 'clinicas.telefone')->
          paginate(10);
       return view('clinica/list', ['lista' => $lista, 'filtro' => $filter, 'msg' => $msg]);
    }
@@ -39,10 +39,10 @@ class ClinicaController extends Controller
    }
    function save(Request $request)
    {
-        $imageName = "";       
+        $imageName = "";
         //salvando a logo na clinica
         if ($request->hasFile('image') && $request->file('image')->isValid()) {
-         // Recupera a extensão do arquivo       
+         // Recupera a extensão do arquivo
          $requestImage = $request->image;
          $extension = $requestImage->extension();
          $imageName = md5($requestImage->getClientOriginalName() . strtotime("now")) . "." . $extension;
@@ -85,7 +85,7 @@ class ClinicaController extends Controller
          ]);
 
          $usuario = User::create([
-            'name' => $request->nome_login,
+            'nome_completo' => $request->nome_login,
             'password' => bcrypt($request->password),
             'email' => $request->email,
             'telefone' => $request->telefone,
@@ -108,7 +108,7 @@ class ClinicaController extends Controller
             'numero_atendimento_social_mensal' => $request->numero_atendimento_social_mensal,
             'usuario_id' => $request->usuario_id
          ]);
-        
+
          //salvando o id do usuario na clinica
          $entidade->usuario_id = $usuario->id;
          //salvando o nome da imagem
