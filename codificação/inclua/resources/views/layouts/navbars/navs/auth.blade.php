@@ -11,12 +11,16 @@
 
             <br/>
             <p>
-                <img src="/assets/img/Icone2t.png" style="max-width: 50px; height: auto;"/>
-                @if(\Illuminate\Support\Facades\Auth::user()->tipouser ==='V')
-                <a class="navbar-brand" href="#">{{ $page ?? __('Dashboard') }}</a>
-                @else
-                    <a class="navbar-brand" href="{{route('index')}}">{{ $page ?? __('Continuar comprando') }}</a>
+                @if(\Illuminate\Support\Facades\Auth::user()->tipouser ==='C')
+                <?php
+                   $clinica = App\Models\Clinica::where('usuario_id', '=', Auth::user()->id)->first();
+                   ?>
+                    <img src={{"/images/logosclinicas/". $clinica->logotipo}} style="max-width: 100px; height:60px;"/>
+                @else 
+                  <img src="/assets/img/Icone2t.png" style="max-width: 50px; height: auto;"/>
                 @endif
+               
+                <a class="navbar-brand" href="#">{{ $page ?? __('Dashboard') }}</a>
             </p>
 
         </div>
@@ -26,12 +30,26 @@
             <span class="navbar-toggler-bar navbar-kebab"></span>
         </button>
         <div class="collapse navbar-collapse" id="navigation">
-            <ul class="navbar-nav ml-auto">
-                <li class="search-bar input-group">
-                    <button class="btn btn-link" id="search-button" data-toggle="modal" data-target="#searchModal"><i class="tim-icons icon-zoom-split"></i>
-                        <span class="d-lg-none d-md-block">{{ __('Search') }}</span>
-                    </button>
-                </li>
+            <ul class="navbar-nav ml-auto">                           
+                @php
+                    $exibir = true;
+                    if(isset($exibirPesquisa))
+                    {
+                       $exibir = $exibirPesquisa;
+                    }
+                @endphp
+                @if($exibir)
+                    <li class="search-bar input-group">
+                        <button class="btn btn-link" id="search-button" data-toggle="modal" data-target="#searchModal">
+                            <i
+                                class="tim-icons icon-zoom-split"></i>
+                            <span class="d-lg-none d-md-block">{{ __('Search') }}</span>
+                        </button>
+                    </li>
+                @endif
+
+
+
                 <?php
                 $notifcatio = \App\Models\Notificacoes::where('id_user','=',auth()->user()->id)
                     ->whereNull('data_leitura')->get()->count();
@@ -105,8 +123,8 @@
                     $rota = "home";
                     if(isset($rotaPesquisa))
                     {
-                        $rota =$rotaPesquisa;
-                    }
+                        $rota =$rotaPesquisa;                      
+                    }                  
                 @endphp
 
                 <form id="formPesquisar" method="post" action="{{route($rota)}}">

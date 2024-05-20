@@ -155,7 +155,37 @@ Route::middleware('auth')->group(function() {
     Route::post("/especialidadeclinica/save/{clinica_id}",[\App\Http\Controllers\EspecialidadeclinicaController::class,'save'])->name('especialidadeclinica.save')->middleware('auth');
     Route::get("/especialidadeclinica/delete/{id}",[\App\Http\Controllers\EspecialidadeclinicaController::class,'delete'])->name('especialidadeclinica.delete')->middleware('auth');
     Route::get("/especialidadeclinica/edit/{id}",[\App\Http\Controllers\EspecialidadeclinicaController::class,'edit'])->name('especialidadeclinica.edit')->middleware('auth');
+    Route::get("/especialidadeclinica/listclinica",[\App\Http\Controllers\EspecialidadeclinicaController::class,'listclinica'])->name('especialidadeclinica.listclinica')->middleware('auth');
+  
+
+    #ESPECIALISTA
+    Route::get("/especialista/list",[\App\Http\Controllers\EspecialistaController::class,'list'])->name('especialista.list')->middleware('auth');
+    Route::get("/especialista/new",[\App\Http\Controllers\EspecialistaController::class,'new'])->name('especialista.new')->middleware('auth');
+    Route::post("/especialista/search",[\App\Http\Controllers\EspecialistaController::class,'search'])->name('especialista.search')->middleware('auth');
+    Route::post("/especialista/save",[\App\Http\Controllers\EspecialistaController::class,'save'])->name('especialista.save')->middleware('auth');
+    Route::get("/especialista/delete/{id}",[\App\Http\Controllers\EspecialistaController::class,'delete'])->name('especialista.delete')->middleware('auth');
+    Route::get("/especialista/edit/{id}",[\App\Http\Controllers\EspecialistaController::class,'edit'])->name('especialista.edit')->middleware('auth');
     
+    #ESPECIALISTA_POR_CLINICA    
+    Route::get("/especialistaclinica/list/{clinica_id}",[\App\Http\Controllers\EspecialistaclinicaController::class,'list'])->name('especialistaclinica.list')->middleware('auth');
+    Route::get("/especialistaclinica/new/{clinica_id}",[\App\Http\Controllers\EspecialistaclinicaController::class,'new'])->name('especialistaclinica.new')->middleware('auth');
+    Route::get("/especialistaclinica/search/{clinica_id}",[\App\Http\Controllers\EspecialistaclinicaController::class,'search'])->name('especialistaclinica.search')->middleware('auth');
+    Route::post("/especialistaclinica/save/{clinica_id}",[\App\Http\Controllers\EspecialistaclinicaController::class,'save'])->name('especialistaclinica.save')->middleware('auth');
+    Route::get("/especialistaclinica/delete/{id}",[\App\Http\Controllers\EspecialistaclinicaController::class,'delete'])->name('especialistaclinica.delete')->middleware('auth');
+    Route::get("/especialistaclinica/edit/{id}",[\App\Http\Controllers\EspecialistaclinicaController::class,'edit'])->name('especialistaclinica.edit')->middleware('auth');
+
+    #CONSULTAS_DISPONIBILIZADAS_POR_ESPECIALISTA 
+    Route::get("/consulta/list/{especialista_id}",[\App\Http\Controllers\ConsultaController::class,'list'])->name('consulta.list')->middleware('auth');
+    Route::get("/consulta/new/{especialista_id}",[\App\Http\Controllers\ConsultaController::class,'new'])->name('consulta.new')->middleware('auth');
+    Route::get("/consulta/search/{especialista_id}",[\App\Http\Controllers\ConsultaController::class,'search'])->name('consulta.search')->middleware('auth');
+    Route::post("/consulta/save/{especialista_id}",[\App\Http\Controllers\ConsultaController::class,'save'])->name('consulta.save')->middleware('auth');
+    Route::get("/consulta/delete/{id}",[\App\Http\Controllers\ConsultaController::class,'delete'])->name('consulta.delete')->middleware('auth');
+    Route::get("/consulta/edit/{id}",[\App\Http\Controllers\ConsultaController::class,'edit'])->name('consulta.edit')->middleware('auth');
+    Route::get("/consulta/agenda/",[\App\Http\Controllers\ConsultaController::class,'agenda'])->name('consulta.agenda')->middleware('auth');
+    Route::post("/consulta/saveagenda/",[\App\Http\Controllers\ConsultaController::class,'saveVariasConsultas'])->name('consulta.saveagenda')->middleware('auth');
+    
+    
+
 });
 
 /* ROTAS PARA SEREM ANALISADAS */

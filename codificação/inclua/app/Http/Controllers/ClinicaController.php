@@ -51,7 +51,7 @@ class ClinicaController extends Controller
 
       if ($request->id) {
          $input = $request->validate([
-            'email' => 'required|unique:users,email,' . $request->id,
+            'email' => 'required|unique:users,email,' . $request->usuario_id,
          ]);
          $ent = Clinica::find($request->id);
          $ent->nome = $request->nome;
@@ -73,9 +73,11 @@ class ClinicaController extends Controller
          $ent->save();
 
          $entUsuario = User::find($request->usuario_id);
-         $entUsuario->name = $request->nome_login;
+         $entUsuario->nome_completo = $request->nome_login;
          $entUsuario->email = $request->email;
-         $entUsuario->password = bcrypt($request->password);
+         if(isset($request->password)){
+            $entUsuario->password = bcrypt($request->password);
+        }
          $entUsuario->telefone = $request->telefone;
          $entUsuario->save();
 
@@ -89,7 +91,7 @@ class ClinicaController extends Controller
             'password' => bcrypt($request->password),
             'email' => $request->email,
             'telefone' => $request->telefone,
-            'tipouser' => 'C', //c eh clinica
+            'tipo_user' => 'C', //c eh clinica
          ]);
 
          $entidade = Clinica::create([

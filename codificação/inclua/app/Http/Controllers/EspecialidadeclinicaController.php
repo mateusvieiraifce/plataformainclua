@@ -10,20 +10,41 @@ use App\Models\Especialidade;
 
 class EspecialidadeclinicaController extends Controller
 {
-   function list($clinica_id, $msg = null)
+   function listclinica($msg = null)
    {
       $filter = "";
       if (isset($_GET['filtro'])) {
          $filter = $_GET['filtro'];
       }
+
+      $clinica  = Clinica::where('usuario_id',Auth::user()->id)->first();
+
+      $lista = Especialidadeclinica::join('especialidades', 'especialidades.id', '=', 'especialidade_id')->      
+      where('clinica_id', '=', $clinica->id)->
+      orderBy('id', 'desc')->
+      select('especialidadeclinicas.id','especialidades.descricao', 'valor')->
+      paginate(10);
+      return view('especialidadeclinica/list', ['lista' => $lista, 'filtro' => $filter, 'clinica' => $clinica, 'msg' => $msg]);
+   }
+
+   function list($clinica_id,$msg = null)
+   {
+      $filter = "";
+      if (isset($_GET['filtro'])) {
+         $filter = $_GET['filtro'];
+      }
+
+      $clinica  = Clinica::find($clinica_id);
+
+
       $lista = Especialidadeclinica::join('especialidades', 'especialidades.id', '=', 'especialidade_id')->      
       where('clinica_id', '=', $clinica_id)->
       orderBy('id', 'desc')->
       select('especialidadeclinicas.id','especialidades.descricao', 'valor')->
       paginate(10);
-      $clinica = clinica::find($clinica_id);
       return view('especialidadeclinica/list', ['lista' => $lista, 'filtro' => $filter, 'clinica' => $clinica, 'msg' => $msg]);
    }
+
    function new($clinica_id)
    {
       $clinica = Clinica::find($clinica_id);
