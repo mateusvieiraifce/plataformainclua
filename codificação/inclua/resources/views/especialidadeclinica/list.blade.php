@@ -84,7 +84,7 @@
            </div>           </div>
             </div>
         </div>
-        <a href="{{route('clinica.list')}}" style="margin:10px" class="btn btn-primary"><i class="fa fa-reply"></i><span> Voltar</span></a>
+        <a href="{{route('clinica.list')}}" style="margin:10px" class="btn btn-primary"><i class="fa fa-reply"></i> Voltar</a>
 
      </div>
    </div>

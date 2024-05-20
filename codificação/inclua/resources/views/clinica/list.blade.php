@@ -7,7 +7,7 @@
      <div class="col-lg-12 col-md-12">
          <div class="card card-tasks">
             <div class="card-header">
-                  <h6 class="title d-inline">Lista de clinicas </h6>
+                  <h6 class="title d-inline">Lista de clínicas </h6>
 <div class="dropdown">
 <button type="button" class="btn btn-link dropdown-toggle btn-icon" data-toggle="dropdown">
    <i class="tim-icons icon-settings-gear-63"></i>

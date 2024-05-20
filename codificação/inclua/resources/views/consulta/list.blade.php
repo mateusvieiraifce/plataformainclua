@@ -1,4 +1,4 @@
-@extends('layouts.app', ['page' => __('consulta'), 'pageSlug' => 'consulta', 'class' => 'consulta'])
+@extends('layouts.app', ['page' => __('consulta'), 'exibirPesquisa' => false,'pageSlug' => 'consulta', 'class' => 'consulta'])
 @section('content')
 <div class="card">
 
@@ -14,7 +14,7 @@
                   </button>
                   <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
                   <!--   <a class="dropdown-item" href="{{route('consulta.new', $especialista->id)}}">Adicionar</a>-->
-                     <a class="dropdown-item" href="{{route('consulta.agenda', $especialista->id)}}">Disponibilizar consultas</a>
+                     <a class="dropdown-item" href="{{route('consulta.agenda')}}">Disponibilizar consultas</a>
                   </div>
                </div>
             </div>
@@ -24,9 +24,9 @@
                      <thead>
                         <th> Status </th>
 
-                        <th> Horario_agendado </th>
+                        <th> Horário agendado </th>
 
-                        <th> Clinica_id </th>
+                        <th> Clínica </th>
                         <th> </th>
                      </thead>
                      <tbody>

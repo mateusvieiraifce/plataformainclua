@@ -2,6 +2,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Consulta;
+use App\Models\Clinica;
+use App\Models\Especialistaclinica;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -93,17 +95,24 @@ class ConsultaController extends Controller
       return view('consulta/form', ['entidade' => $entidade, 'especialista' => $especialista]);
    }
 
-   function agenda($especialista_id)
-   {
-      $especialista = Especialista::find($especialista_id);
+   function agenda()
+   {    
+      $especialista = Especialista::where('usuario_id', '=', Auth::user()->id)->first();
       //todoas as clinicas que o especialista eh vinculado
-      return view('consulta/agenda', ['entidade' => new Consulta(), 'especialista' => $especialista]);
+      $clinicas =  Especialistaclinica::
+      join('clinicas', 'clinicas.id','=','especialistaclinicas.clinica_id')->
+      where('especialista_id',$especialista->id)->
+      orderBy('clinicas.nome', 'asc')->
+      select('clinicas.id','clinicas.nome')->
+      get();
+      return view('consulta/agenda', ['entidade' => new Consulta(), 'especialista' => $especialista, 'clinicas' => $clinicas]);
    }
 
    function saveVariasConsultas(Request $request)
    {
       $especialista_id = $request->especialista_id;
     
+      dd($request);
      //for para criar varias consultas
 
       $entidade = Consulta::create([

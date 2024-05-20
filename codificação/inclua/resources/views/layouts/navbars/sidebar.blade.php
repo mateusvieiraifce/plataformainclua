@@ -190,7 +190,7 @@
                         <li @if ($pageSlug == 'compras' ) class="active " @endif>
                             <a href="{{route('clinica.list')}}">
                                 <i class="tim-icons icon-bank"></i>
-                                <p>{{ __('Clinicas') }}</p>
+                                <p>{{ __('Clínicas') }}</p>
                             </a>
                         </li>
                     </ul>
@@ -281,7 +281,7 @@
                 <li @if ($pageSlug == 'compras' ) class="active " @endif>
                     <a href="{{route('user.compras')}}">
                         <i class="tim-icons icon-bank"></i>
-                        <p>{{ __('Clinicas') }}</p>
+                        <p>{{ __('Clínicas') }}</p>
                     </a>
                 </li>
 

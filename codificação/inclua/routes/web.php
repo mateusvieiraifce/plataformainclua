@@ -178,8 +178,8 @@ Route::middleware('auth')->group(function() {
     Route::post("/consulta/save/{especialista_id}",[\App\Http\Controllers\ConsultaController::class,'save'])->name('consulta.save')->middleware('auth');
     Route::get("/consulta/delete/{id}",[\App\Http\Controllers\ConsultaController::class,'delete'])->name('consulta.delete')->middleware('auth');
     Route::get("/consulta/edit/{id}",[\App\Http\Controllers\ConsultaController::class,'edit'])->name('consulta.edit')->middleware('auth');
-    Route::get("/consulta/agenda/{especialista_id}",[\App\Http\Controllers\ConsultaController::class,'agenda'])->name('consulta.agenda')->middleware('auth');
-    Route::post("/consulta/saveagenda/{especialista_id}",[\App\Http\Controllers\ConsultaController::class,'saveVariasConsultas'])->name('consulta.saveagenda')->middleware('auth');
+    Route::get("/consulta/agenda/",[\App\Http\Controllers\ConsultaController::class,'agenda'])->name('consulta.agenda')->middleware('auth');
+    Route::post("/consulta/saveagenda/",[\App\Http\Controllers\ConsultaController::class,'saveVariasConsultas'])->name('consulta.saveagenda')->middleware('auth');
     
     
 

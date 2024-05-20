@@ -30,12 +30,26 @@
             <span class="navbar-toggler-bar navbar-kebab"></span>
         </button>
         <div class="collapse navbar-collapse" id="navigation">
-            <ul class="navbar-nav ml-auto">
-                <li class="search-bar input-group">
-                    <button class="btn btn-link" id="search-button" data-toggle="modal" data-target="#searchModal"><i class="tim-icons icon-zoom-split"></i>
-                        <span class="d-lg-none d-md-block">{{ __('Search') }}</span>
-                    </button>
-                </li>
+            <ul class="navbar-nav ml-auto">                           
+                @php
+                    $exibir = true;
+                    if(isset($exibirPesquisa))
+                    {
+                       $exibir = $exibirPesquisa;
+                    }
+                @endphp
+                @if($exibir)
+                    <li class="search-bar input-group">
+                        <button class="btn btn-link" id="search-button" data-toggle="modal" data-target="#searchModal">
+                            <i
+                                class="tim-icons icon-zoom-split"></i>
+                            <span class="d-lg-none d-md-block">{{ __('Search') }}</span>
+                        </button>
+                    </li>
+                @endif
+
+
+
                 <?php
                 $notifcatio = \App\Models\Notificacoes::where('id_user','=',auth()->user()->id)
                     ->whereNull('data_leitura')->get()->count();
