@@ -13,15 +13,19 @@ use Carbon\Carbon;
 class ConsultaController extends Controller
 {
    //list de consultas disponiveis
-   function list($especialista_id, $msg = null)
+   function list($msg = null)
    {
-
+      $especialista = Especialista::where('usuario_id', '=', Auth::user()->id)->first();
+      $especialista_id = $especialista->id;
       $filter = "";
       if (isset($_GET['filtro'])) {
          $filter = $_GET['filtro'];
       }
-      $lista = Consulta::where('especialista_id', '=', $especialista_id)->orderBy('id', 'desc')->paginate(10);
-      $especialista = especialista::find($especialista_id);
+      $lista = Consulta::
+      join('clinicas', 'clinicas.id','=','consultas.clinica_id')->
+      where('especialista_id', '=', $especialista_id)->
+      select('consultas.id','status','horario_agendado','clinicas.nome as nome_clinica')->
+      orderBy('horario_agendado', 'asc')->paginate(10);
       return view('consulta/list', ['lista' => $lista, 'filtro' => $filter, 'especialista' => $especialista, 'msg' => $msg]);
    }
    function new($especialista_id)
@@ -86,7 +90,7 @@ class ConsultaController extends Controller
       } catch (QueryException $exp) {
          $msg = ['valor' => $exp->getMessage(), 'tipo' => 'primary'];
       }
-      return $this->list($especialista_id, $msg);
+      return $this->list($msg);
    }
    function edit($id)
    {
@@ -116,35 +120,48 @@ class ConsultaController extends Controller
 
       $startDate = Carbon::parse($request->data_inicio);
       $endDate = Carbon::parse($request->data_fim);
-      $tercas = [];
+      $tercas = collect();
       
     //  dd($request);
       // Loop através do intervalo de datas
+      $qtdConsutasCriadas = 1; 
       for ($date = $startDate; $date->lte($endDate); $date->addDay()) {
           // Verifique se o dia é uma terça-feira (dayOfWeek retorna 0 a 6 para para o dia da semana)
-         if (in_array($date->dayOfWeek, $request->dia)) {
-            //criando as consulta de acordo com o dia
             
-              $tercas[] = $date->toDateString(); // Adicione a terça-feira ao array
+          if (in_array($date->dayOfWeek, $request->dia)) {
+            //criando as consulta de acordo com o dia
+            $hora_inicio = $request->hora_inicio;
+            $hora_fim = $request->hora_fim;
+            // Convertendo para objetos DateTime
+           // dd($date->format('Y-m-d'));
+          // $dataCons = Carbon::createFromFormat('Y-m-d', $data);
+          //  $inicio =  new \DateTime($date->format('Y-m-d')+"T$hora_inicio");
+            $dataInic = $date->format('Y-m-d').' '.$hora_inicio;
+            $inicio = Carbon::createFromTimeString($date->format('Y-m-d').' '.$hora_inicio);
+            $termino =  Carbon::createFromTimeString($date->format('Y-m-d').' '.$hora_fim);
+          //  $inicio->modify("+$request->duracao_media minutes");
+            $termino->modify("-$request->duracao_media minutes");
+            while($termino>= $inicio){
+               $entidade = Consulta::create([
+                  'status' => "Disponível",
+                  'horario_agendado' => $inicio,
+                  'preco' => $request->preco,
+                  'porcetagem_repasse_clinica' => $request->porcetagem_repasse_clinica,
+                  'porcetagem_repasse_plataforma' => $request->porcetagem_repasse_plataforma,
+                  'clinica_id' => $request->clinica_id,
+                  'especialista_id' => $especialista_id
+               ]);  
+           
+               $inicio->modify("+$request->duracao_media minutes");
+               $qtdConsutasCriadas++;
+            }           
           }
+         
       }
-
-    
-      dd($tercas);
-     //for para criar varias consultas
-
-      $entidade = Consulta::create([
-         'status' => "Disponível",
-         'horario_agendado' => $request->horario_agendado,
-         'preco' => $request->preco,
-         'porcetagem_repasse_clinica' => $request->porcetagem_repasse_clinica,
-         'porcetagem_repasse_plataforma' => $request->porcetagem_repasse_plataforma,
-         'clinica_id' => $request->clinica_id,
-         'especialista_id' => $especialista_id
-      ]);
+       
      
-      $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
-      return $this->list($especialista_id, $msg);
+      $msg = ['valor' => trans("Operação realizada com sucesso! Foram criadas ". $qtdConsutasCriadas." consultas."), 'tipo' => 'success'];
+      return $this->list($msg);
    }
 
 } ?>

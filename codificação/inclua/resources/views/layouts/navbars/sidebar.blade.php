@@ -246,10 +246,7 @@
             @endif
 
              <!-- usuario tipo Especialista -->
-            @if(\Illuminate\Support\Facades\Auth::user()->tipo_user ==='E')
-            <?php
-             $especialista = App\Models\Especialista::where('usuario_id', '=', Auth::user()->id)->first();
-             ?>
+            @if(\Illuminate\Support\Facades\Auth::user()->tipo_user ==='E')           
                 <li @if ($pageSlug == 'dashboard') class="active " @endif>
                     <a href="{{route('home')}}">
                         <i class="tim-icons icon-chart-pie-36"></i>
@@ -258,7 +255,7 @@
                 </li>
 
                 <li @if ($pageSlug == 'users') class="active " @endif>
-                    <a href="{{route('consulta.list',$especialista->id)}}">
+                    <a href="{{route('consulta.list')}}">
                         <i class="tim-icons icon-calendar-60"></i>
                         <p>{{ __('Agenda') }}</p>
                     </a>
