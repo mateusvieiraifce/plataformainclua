@@ -254,8 +254,8 @@
                     </a>
                 </li>
 
-                <li @if ($pageSlug == 'users') class="active " @endif>
-                    <a href="{{route('sales.list')}}">
+                <li @if ($pageSlug == 'listconsultaporespecialista') class="active " @endif>
+                    <a href="{{route('consulta.listconsultaporespecialista')}}">
                         <i class="tim-icons icon-bullet-list-67"></i>
                         <p>{{ __('Consultas') }}</p>
                     </a>

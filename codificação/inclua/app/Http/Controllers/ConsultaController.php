@@ -164,4 +164,22 @@ class ConsultaController extends Controller
       return $this->list($msg);
    }
 
+   function listconsultaporespecialista($msg = null)
+   {
+      $especialista = Especialista::where('usuario_id', '=', Auth::user()->id)->first();
+      $especialista_id = $especialista->id;
+      $filter = "";
+      if (isset($_GET['filtro'])) {
+         $filter = $_GET['filtro'];
+      }
+      $lista = Consulta::
+      join('clinicas', 'clinicas.id','=','consultas.clinica_id')->
+      where('especialista_id', '=', $especialista_id)->
+      select('consultas.id','status','horario_agendado','clinicas.nome as nome_clinica')->
+      orderBy('horario_agendado', 'asc')->paginate(10);
+      $status = "Aguardando atendimento";
+      return view('consulta/listconsultaporespecialista', ['lista' => $lista, 'status'=> $status ,'filtro' => $filter, 'especialista' => $especialista, 'msg' => $msg]);
+   }
+
+
 } ?>

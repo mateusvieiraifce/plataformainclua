@@ -187,6 +187,9 @@ Route::middleware('auth')->group(function() {
     #CLINICAS_POR_ESPECIALISTA
     Route::get("/clinica/vinculo/",[\App\Http\Controllers\EspecialistaclinicaController::class,'clinicasdoespecilista'])->name('especialistaclinica.clinicas');
 
+    #CONSULTAS_POR_ESPECIALISTA
+    Route::get("/consulta/listconsultas/",[\App\Http\Controllers\ConsultaController::class,'listconsultaporespecialista'])->name('consulta.listconsultaporespecialista');
+
 
 });
 
