@@ -1,4 +1,4 @@
-@extends('layouts.app', ['page' => __('consulta'), 'exibirPesquisa' => false, 'pageSlug' => 'consulta', 'class' => 'consulta'])
+@extends('layouts.app', ['page' => __('agenda'), 'exibirPesquisa' => false, 'pageSlug' => 'agendaespecialista', 'class' => 'agenda'])
 @section('content')
 <div class="card">
    <div class="row">
@@ -17,7 +17,8 @@
                </div>
             </div>
             <div class="card-body">
-               <div class="table-responsive">
+
+               <div class="table-responsive">                  
                   <table class="table">
                      <thead>
                         <th> Status </th>

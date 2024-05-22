@@ -80,4 +80,24 @@ class EspecialistaclinicaController extends Controller
       return view('especialistaclinica/form', ['entidade' => $entidade, 'clinica' => $clinica]);
    }
 
+   function clinicasdoespecilista($clinica_id, $msg = null)
+   {
+
+       $filter = "";
+      if (isset($_GET['filtro'])) {
+         $filter = $_GET['filtro'];
+      }
+
+      $especialista = Especialista::where('usuario_id', '=', Auth::user()->id)->first();
+      //todoas as clinicas que o especialista eh vinculado
+      $lista =  Especialistaclinica::
+      join('clinicas', 'clinicas.id','=','especialistaclinicas.clinica_id')->
+      where('especialista_id',$especialista->id)->
+      orderBy('clinicas.nome', 'asc')->
+      select('clinicas.id','clinicas.nome')->
+      paginate(10);
+      return view('especialistaclinica/listclinicaporespecialista', ['lista' => $lista, 'filtro' => $filter, 'especialista' => $especialista, 'msg' => $msg]);
+   }
+   
+
 } ?>

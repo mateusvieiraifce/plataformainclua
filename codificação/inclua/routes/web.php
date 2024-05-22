@@ -184,7 +184,9 @@ Route::middleware('auth')->group(function() {
     Route::get("/consulta/agenda/",[\App\Http\Controllers\ConsultaController::class,'agenda'])->name('consulta.agenda')->middleware('auth');
     Route::post("/consulta/saveagenda/",[\App\Http\Controllers\ConsultaController::class,'saveVariasConsultas'])->name('consulta.saveagenda')->middleware('auth');
     
-    
+    #CLINICAS_POR_ESPECIALISTA
+    Route::get("/clinica/vinculo/",[\App\Http\Controllers\EspecialistaclinicaController::class,'clinicasdoespecilista'])->name('especialistaclinica.clinicas');
+
 
 });
 

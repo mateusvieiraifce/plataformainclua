@@ -1,4 +1,4 @@
-@extends('layouts.app', ['page' => __('consulta'), 'exibirPesquisa' => false, 'pageSlug' => 'consulta', 'class' => 'consulta'])
+@extends('layouts.app', ['page' => __('Agenda'), 'exibirPesquisa' => false, 'pageSlug' => 'agendaespecialista', 'class' => 'consulta'])
 @section('content')
 <section class="bg0 p-t-104 p-b-116">
 <style>

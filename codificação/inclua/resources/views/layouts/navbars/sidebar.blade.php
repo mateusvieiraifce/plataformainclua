@@ -255,18 +255,20 @@
                 </li>
 
                 <li @if ($pageSlug == 'users') class="active " @endif>
+                    <a href="{{route('sales.list')}}">
+                        <i class="tim-icons icon-bullet-list-67"></i>
+                        <p>{{ __('Consultas') }}</p>
+                    </a>
+                </li>   
+
+                <li @if ($pageSlug == 'agendaespecialista') class="active " @endif>
                     <a href="{{route('consulta.list')}}">
                         <i class="tim-icons icon-calendar-60"></i>
                         <p>{{ __('Agenda') }}</p>
                     </a>
                 </li>
           
-                <li @if ($pageSlug == 'users') class="active " @endif>
-                    <a href="{{route('sales.list')}}">
-                        <i class="tim-icons icon-bullet-list-67"></i>
-                        <p>{{ __('Consultas') }}</p>
-                    </a>
-                </li>    
+                
                 
                 <li @if ($pageSlug == 'users') class="active " @endif>
                     <a href="#">
@@ -275,8 +277,8 @@
                     </a>
                 </li>
                
-                <li @if ($pageSlug == 'compras' ) class="active " @endif>
-                    <a href="{{route('user.compras')}}">
+                <li @if ($pageSlug == 'clinicas' ) class="active " @endif>
+                    <a href="{{route('especialistaclinica.clinicas')}}">
                         <i class="tim-icons icon-bank"></i>
                         <p>{{ __('Clínicas') }}</p>
                     </a>
