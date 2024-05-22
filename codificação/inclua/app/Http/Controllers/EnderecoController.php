@@ -12,7 +12,7 @@ class EnderecoController extends Controller
 {
     public function createEndereco($id_usuario)
     {
-        return view('cadastro.endereco', ['id_usuario' => $id_usuario]);
+        return view('cadastro.form_endereco', ['id_usuario' => $id_usuario]);
     }
 
     public function storeEndereco(Request $request)

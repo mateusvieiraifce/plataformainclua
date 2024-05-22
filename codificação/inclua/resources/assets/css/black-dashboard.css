@@ -2173,7 +2173,8 @@ textarea.form-control {
 .was-validated .custom-select:invalid~.invalid-feedback,
 .was-validated .custom-select:invalid~.invalid-tooltip,
 .custom-select.is-invalid~.invalid-feedback,
-.custom-select.is-invalid~.invalid-tooltip {
+.custom-select.is-invalid~.invalid-tooltip,
+.custom-file + .invalid-feedback {
   display: block;
 }
 
@@ -3765,12 +3766,12 @@ input[type="button"].btn-block {
 .input-group>.custom-file .custom-file-input:focus {
   z-index: 4;
 }
-
+/* 
 .input-group>.form-control:not(:last-child),
 .input-group>.custom-select:not(:last-child) {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
-}
+} */
 
 .input-group>.form-control:not(:first-child),
 .input-group>.custom-select:not(:first-child) {
@@ -3788,11 +3789,11 @@ input[type="button"].btn-block {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }
-
+/* 
 .input-group>.custom-file:not(:first-child) .custom-file-label {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
-}
+} */
 
 .input-group-prepend,
 .input-group-append {

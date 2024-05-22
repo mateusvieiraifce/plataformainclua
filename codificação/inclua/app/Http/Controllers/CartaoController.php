@@ -13,7 +13,7 @@ class CartaoController extends Controller
 {
     public function create($id_usuario)
     {
-        return view('cadastro.cartao', ['id_usuario' => $id_usuario]);
+        return view('cadastro.form_cartao', ['id_usuario' => $id_usuario]);
     }
 
     public function store(Request $request)
