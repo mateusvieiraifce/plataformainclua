@@ -167,18 +167,36 @@ class ConsultaController extends Controller
    function listconsultaporespecialista($msg = null)
    {
       $especialista = Especialista::where('usuario_id', '=', Auth::user()->id)->first();
-      $especialista_id = $especialista->id;
       $filter = "";
       if (isset($_GET['filtro'])) {
          $filter = $_GET['filtro'];
       }
+      
+      //todoas as clinicas que o especialista eh vinculado
+      $clinicas =  Especialistaclinica::
+      join('clinicas', 'clinicas.id','=','especialistaclinicas.clinica_id')->
+      where('especialista_id',$especialista->id)->
+      orderBy('clinicas.nome', 'asc')->
+      select('clinicas.id','clinicas.nome')->
+      get();
+
+      //caso o especialista esteja vinculado a apenas uma clinicar, ja estou deixando o select selecionando a clinica
+      if(sizeof($clinicas)==1){
+         $clinicaselecionada_id = $clinicas[0]->id;
+      }
+      $statusConsulta = "Aguardando atendimento";
+
       $lista = Consulta::
       join('clinicas', 'clinicas.id','=','consultas.clinica_id')->
-      where('especialista_id', '=', $especialista_id)->
-      select('consultas.id','status','horario_agendado','clinicas.nome as nome_clinica')->
+      join('pacientes', 'pacientes.id','=','consultas.paciente_id')->
+      where('especialista_id', '=', $especialista->id)->
+      where('status', '=', 'Aguardando atendimento')->
+      select('consultas.id','status','horario_agendado','clinicas.nome as nome_clinica','pacientes.nome as nome_paciente')->
       orderBy('horario_agendado', 'asc')->paginate(10);
-      $status = "Aguardando atendimento";
-      return view('consulta/listconsultaporespecialista', ['lista' => $lista, 'status'=> $status ,'filtro' => $filter, 'especialista' => $especialista, 'msg' => $msg]);
+     
+      return view('consulta/listconsultaporespecialista', ['lista' => $lista, 
+      'clinicas' =>$clinicas, 'clinicaselecionada_id' => $clinicaselecionada_id,  'status'=> $statusConsulta ,'filtro' => $filter,
+       'especialista' => $especialista, 'msg' => $msg]);
    }
 
 
