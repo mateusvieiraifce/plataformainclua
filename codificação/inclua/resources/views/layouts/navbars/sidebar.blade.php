@@ -246,10 +246,7 @@
             @endif
 
              <!-- usuario tipo Especialista -->
-            @if(\Illuminate\Support\Facades\Auth::user()->tipo_user ==='E')
-            <?php
-             $especialista = App\Models\Especialista::where('usuario_id', '=', Auth::user()->id)->first();
-             ?>
+            @if(\Illuminate\Support\Facades\Auth::user()->tipo_user ==='E')           
                 <li @if ($pageSlug == 'dashboard') class="active " @endif>
                     <a href="{{route('home')}}">
                         <i class="tim-icons icon-chart-pie-36"></i>
@@ -257,19 +254,21 @@
                     </a>
                 </li>
 
-                <li @if ($pageSlug == 'users') class="active " @endif>
-                    <a href="{{route('consulta.list',$especialista->id)}}">
+                <li @if ($pageSlug == 'listconsultaporespecialista') class="active " @endif>
+                    <a href="{{route('consulta.listconsultaporespecialista')}}">
+                        <i class="tim-icons icon-bullet-list-67"></i>
+                        <p>{{ __('Consultas') }}</p>
+                    </a>
+                </li>   
+
+                <li @if ($pageSlug == 'agendaespecialista') class="active " @endif>
+                    <a href="{{route('consulta.list')}}">
                         <i class="tim-icons icon-calendar-60"></i>
                         <p>{{ __('Agenda') }}</p>
                     </a>
                 </li>
           
-                <li @if ($pageSlug == 'users') class="active " @endif>
-                    <a href="{{route('sales.list')}}">
-                        <i class="tim-icons icon-bullet-list-67"></i>
-                        <p>{{ __('Consultas') }}</p>
-                    </a>
-                </li>    
+                
                 
                 <li @if ($pageSlug == 'users') class="active " @endif>
                     <a href="#">
@@ -278,8 +277,8 @@
                     </a>
                 </li>
                
-                <li @if ($pageSlug == 'compras' ) class="active " @endif>
-                    <a href="{{route('user.compras')}}">
+                <li @if ($pageSlug == 'clinicas' ) class="active " @endif>
+                    <a href="{{route('especialistaclinica.clinicas')}}">
                         <i class="tim-icons icon-bank"></i>
                         <p>{{ __('Clínicas') }}</p>
                     </a>

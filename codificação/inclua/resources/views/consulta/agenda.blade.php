@@ -1,4 +1,4 @@
-@extends('layouts.app', ['page' => __('consulta'), 'exibirPesquisa' => false, 'pageSlug' => 'consulta', 'class' => 'consulta'])
+@extends('layouts.app', ['page' => __('Agenda'), 'exibirPesquisa' => false, 'pageSlug' => 'agendaespecialista', 'class' => 'consulta'])
 @section('content')
 <section class="bg0 p-t-104 p-b-116">
 <style>
@@ -12,6 +12,25 @@
     font-size: 30px;
 }
 </style>
+<script>
+function validarCheckBoxes() {
+    var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    var peloMenosUmSelecionado = false;
+    
+    checkboxes.forEach(function(checkbox) {
+        if (checkbox.checked) {
+            peloMenosUmSelecionado = true;
+        }
+    });
+    
+    if (!peloMenosUmSelecionado) {
+        alert("Por favor, selecione pelo menos um dia da semana.");
+        return false;
+    }
+    
+    return true;
+}
+</script>
 
     <div class="row">
 
@@ -21,7 +40,7 @@
             <h5 class="title">Disponibilizar consultas</h5>
           </div>
           <div class="card-body">
-            <form method="post" action="{{route('consulta.saveagenda', $especialista->id)}}">
+            <form method="post" action="{{route('consulta.saveagenda', $especialista->id)}}" onsubmit="return validarCheckBoxes()">
               @csrf
               <div class="row">
 
@@ -145,6 +164,9 @@
                 </div>
               </div>
               <input type="hidden" name="id" value="{{$entidade->id}}">
+              <input type="hidden" name="especialista_id" value="{{$especialista->id}}">
+
+
               <a href="{{route('consulta.list', $especialista->id)}}" class="btn btn-primary"><i
                   class="fa fa-reply"></i>
                 Voltar</a>
