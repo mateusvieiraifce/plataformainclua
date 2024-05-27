@@ -37,13 +37,13 @@
                         <p>{{ __('Pacientes') }}</p>
                     </a>
                 </li>
-               
+               {{-- 
                 <li @if ($pageSlug == 'especialistaclinica') class="active " @endif>
                     <a href="{{route('especialistaclinica.list',$clinica->id)}}">
                         <i class="tim-icons icon-badge"></i>
                         <p>{{ __('Especialistas') }}</p>
                     </a>
-                </li>
+                </li> --}}
                         
               
                 <li @if ($pageSlug == 'users') class="active " @endif>

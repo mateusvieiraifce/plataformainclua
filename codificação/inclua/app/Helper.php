@@ -9,7 +9,7 @@ class Helper
 
     public static function sendSms($phone, $msg){
         error_log('aqui');
-        $mensagem = urlencode($msg);
+        $mensagem = urlencode(mb_convert_encoding($msg, "UTF-8", mb_detect_encoding($msg)));
         $url_api = "https://api.iagentesms.com.br/webservices/http.php?metodo=envio&usuario=mentrixmax@gmail.com&senha=Windows2000@&celular={$phone}&mensagem={$mensagem}";
         error_log($url_api);
         $response = Http::get($url_api);
@@ -27,15 +27,15 @@ class Helper
         return $randomString;
     }
 
-    public static function removerCaractereEspecial($fone)
+    public static function removerCaractereEspecial($string)
     {
-        if ($fone) {
-            $cep = str_replace("-", "", $fone);
-            $cep = str_replace("(", "", $cep);
-            $cep = str_replace(")", "", $cep);
-            $cep = str_replace(".", "", $cep);
-            $cep = str_replace(" ", "", $cep);
-            return trim($cep);
+        if ($string) {
+            $newString = str_replace("-", "", $string);
+            $newString = str_replace("(", "", $newString);
+            $newString = str_replace(")", "", $newString);
+            $newString = str_replace(".", "", $newString);
+            $newString = str_replace(" ", "", $newString);
+            return trim($newString);
         }
         return "";
     }
@@ -151,5 +151,41 @@ class Helper
             //echo 'Caught exception: '. ."\n";
         }
         return "Ok";
+    }
+    public static function mascaraCelular($fone)
+    {
+        if (is_array($fone)) {
+            foreach ($fone as $n => $v) {
+                $fone[$n] = mensagens::encodeFone($v);
+            }
+            return $fone;
+        }
+        $fone = preg_replace("/\D/", '', $fone);
+        $ddd = substr($fone, 0, 2);
+        $tamanho_telefone = strlen((string)$fone);
+        if ($tamanho_telefone < 10) {
+            for ($i = 0; $i < (10 - $tamanho_telefone); $i++) {
+                $fone = "0" . $fone;
+            }
+        }
+        $terceiro_digito = substr($fone, 2, 1);
+        if ($terceiro_digito == 9) {
+            // Celular
+            $prefixo = substr($fone, 2, 5);
+            $sufixo = substr($fone, 7, 4);
+        } else {
+            // Telefone fixo
+            $prefixo = substr($fone, 2, 4);
+            $sufixo = substr($fone, 6, 4);
+        }
+        return '(' . $ddd . ') ' . $prefixo . '-' . $sufixo;
+    }
+    
+    public static function mascaraCPF($documento){
+        $docFormatado = substr($documento, 0, 3) . '.' .
+            substr($documento, 3, 3) . '.' .
+            substr($documento, 6, 3) . '-' .
+            substr($documento, 9, 2);
+        return $docFormatado;
     }
 }

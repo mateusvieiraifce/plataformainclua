@@ -21,6 +21,17 @@
     color: #344675;
 }
 
+.card-register .custom-file-label::after {
+    position: unset;
+    display: inline;
+    line-height: 1.428571;
+    color: rgba(255, 255, 255, 0.8);
+    content: "Browse";
+    background-color: transparent;
+    border-radius: 0 0.25rem 0.25rem 0;
+    border-left: none;
+}
+
 .custom-radio {
     display: flex;
     margin: 5px;
@@ -76,6 +87,10 @@
     width: 50%;
 }
 
+.input-small {
+    width: 30%;
+}
+
 .card.card-white .form-control.border-full {
     color: #222a42;
     border: solid 1px rgba(29, 37, 59, 0.2);
@@ -105,6 +120,10 @@ label.link {
 
 .hidden {
     display: none;
+}
+
+.img-avatar {
+    width: 200px;
 }
 
 @media (max-width: 768px) {
