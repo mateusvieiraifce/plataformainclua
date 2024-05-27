@@ -185,9 +185,11 @@ class UsuarioController extends Controller
             $user->codigo_validacao = Helper::generateRandomNumberString(5);
             $user->tipo_pessoa = $request->tipo_pessoa;
             $user->tipo_user = $request->tipo_user;
+            Helper::sendEmail("Validação de Código", "Seu Código de Verificação é:".$user->codigo_validacao, $user->email);
             $user->save();
             //ENVIAR O EMAIL COM CÓDIGO DE CONFIRMAÇÃO
-            Mail::to($user->email)->send(new verificarEmail($user->codigo_validacao));
+
+            //Mail::to($user->email)->send(new verificarEmail($user->codigo_validacao));
 
             $msg = ['valor' => trans("Cadastro do usuário realizado com sucesso!"), 'tipo' => 'success'];
             session()->flash('msg', $msg);
@@ -229,9 +231,12 @@ class UsuarioController extends Controller
             $user->email = $request->email;
             $user->password = bcrypt($request->password);
             $user->codigo_validacao = Helper::generateRandomNumberString(5);
-            $user->save();
+
             //ENVIAR O EMAIL COM CÓDIGO DE CONFIRMAÇÃO
-            Mail::to($user->email)->send(new verificarEmail($user->codigo_validacao));
+            //Mail::to($user->email)->send(new verificarEmail($user->codigo_validacao));
+
+            Helper::sendEmail("Validação de Código","Seu código de validação é:".$user->codigo_validacao, $user->email);
+            $user->save();
 
             $msg = ['valor' => trans("Edição do cadastro do usuário realizado com sucesso!"), 'tipo' => 'success'];
             session()->flash('msg', $msg);
@@ -241,7 +246,7 @@ class UsuarioController extends Controller
 
             return back();
         }
-        
+
         return redirect()->route('usuario.verificar_email', ['id_usuario' => $user->id]);
     }
 
@@ -255,10 +260,12 @@ class UsuarioController extends Controller
     {
         $user = User::find($request->usuario);
         $user->codigo_validacao = Helper::generateRandomNumberString(5);
-        $user->save();
 
+
+        Helper::sendEmail("Re-Envio de Código de validação","o seu codigo de validação é:".$user->codigo_validacao,$user->email);
+        $user->save();
         //ENVIAR O EMAIL COM CÓDIGO DE CONFIRMAÇÃO
-        Mail::to($user->email)->send(new verificarEmail($user->codigo_validacao));
+        //Mail::to($user->email)->send(new verificarEmail($user->codigo_validacao));
         $response = true;
 
         return response()->json($response);
@@ -398,7 +405,7 @@ class UsuarioController extends Controller
     public function verificarCelular($id_usuario)
     {
         $user = User::find($id_usuario);
-        
+
         return view('cadastro.verificar_celular', ['id_usuario' => $id_usuario, 'celular' => Helper::mascaraCelular($user->celular)]);
     }
 

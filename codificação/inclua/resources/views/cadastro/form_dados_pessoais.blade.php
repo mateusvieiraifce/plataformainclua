@@ -36,7 +36,7 @@
                                 @include('alerts.feedback', ['field' => 'cpf'])
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="nome">
                                 Nome <span class="required">*</span>
@@ -47,7 +47,7 @@
                                 @include('alerts.feedback', ['field' => 'nome'])
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="celular">
                                 Celular <span class="required">*</span>
@@ -58,7 +58,7 @@
                                 @include('alerts.feedback', ['field' => 'celular'])
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="rg">
                                 RG
@@ -80,7 +80,7 @@
                                 @include('alerts.feedback', ['field' => 'data_nascimento'])
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="estado_civil">
                                 Estado Civil <span class="required">*</span>
@@ -95,7 +95,7 @@
                                 @include('alerts.feedback', ['field' => 'estado_civil'])
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="sexo">
                                 Gênero <span class="required">*</span>
@@ -104,14 +104,14 @@
                                 <select name="sexo" class="form-control border-full {{ $errors->has('sexo') ? 'is-invalid' : '' }}">
                                     <option value=""></option>
                                     <option value="F" @if ((isset($user) && $user->sexo == 'F') || old('sexo') == 'F') selected @endif>Fenimino</option>
-                                    <option value="M" @if ((isset($user) && $user->sexo == 'M') || old('sexo') == 'M') selected @endif>Musculino</option>
+                                    <option value="M" @if ((isset($user) && $user->sexo == 'M') || old('sexo') == 'M') selected @endif>Masculino</option>
                                     <option value="O" @if ((isset($user) && $user->sexo == 'O') || old('sexo') == 'O') selected @endif>Outro</option>
                                     <option value="N" @if ((isset($user) && $user->sexo == 'N') || old('sexo') == 'N') selected @endif>Prefiro não informar</option>
                                 </select>
                                 @include('alerts.feedback', ['field' => 'sexo'])
                             </div>
                         </div>
-                        
+
                         <div class="input-group{{ $errors->has('consentimento') ? ' has-danger' : '' }}">
                             <div class="form-check text-left">
                                 <label class="form-check-label {{ $errors->has('consentimento') ? 'is-invalid' : '' }}">
@@ -131,7 +131,7 @@
                         <input type="hidden" name="tipo_user" value="P">
                         <input type="hidden" name="id_usuario" value="{{ $id_usuario ?? $user->id }}">
                     </form>
-                </div>                    
+                </div>
             </div>
         </div>
     </div>
@@ -141,7 +141,7 @@
         document.getElementById('cpf').addEventListener('input', function() {
             formatarDocumento(this)
         })
-        
+
         //VALIDAÇÃO DO CPF
         $('#cpf').blur(function() {
             if (this.value != '') {
@@ -153,12 +153,12 @@
         document.getElementById('celular').addEventListener('input', function() {
             mascaraCelular(this)
         })
-        
+
         document.getElementById('image').addEventListener('change', function() {
             var fileName = $(this).val().split('\\').pop();
-            //  $(this).next('.custom-file-label').html(fileName);                                  
+            //  $(this).next('.custom-file-label').html(fileName);
         });
-        
+
         function visualizarImagem(event) {
             var input = event.target;
             var reader = new FileReader();

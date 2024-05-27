@@ -58,7 +58,7 @@ class Helper
     {
 
         $email = new \SendGrid\Mail\Mail();
-        $email->setFrom("admin@ecomoda.sobralstartups.com", "Ecomoda");
+        $email->setFrom(env("MAIL_SAND"), env("MAIL_OWNER"));
         $email->setSubject($assunto);
         $email->addTo($emissor, $name);
       /*  $email->addContent("text/plain", "and easy to do anywhere, even with PHP");
@@ -68,18 +68,6 @@ class Helper
         $sendgrid = new \SendGrid(env('SENDGRID_API_KEY'));
 
 
-        /*$mail = new PHPMailer();
-        $mail->IsSMTP();
-        $mail->Host = "smtp.gmail.com";
-        $mail->Subject = $assunto;
-        $mail->SMTPAuth = true;
-        $mail->Username = 'ecomodasobral@gmail.com';
-        $mail->Password = 'ylzatowvawrekvxb';
-        $mail->SMTPSecure = 'ssl';
-        $mail->IsHTML(true);
-        $mail->CharSet = 'utf-8';
-        $mail->SetFrom('ecomodasobral@gmail.com', "Ecomoda", 0);
-        $mail->AddAddress($emissor);*/
 
         $imagem_topo = '<img src="'.env('URL').'assets/img/logo-01.png" alt="topo" border="0" style="max-width:800px; max-height:150px; width: auto;
     height: auto;"/> <br/>';
@@ -180,7 +168,7 @@ class Helper
         }
         return '(' . $ddd . ') ' . $prefixo . '-' . $sufixo;
     }
-    
+
     public static function mascaraCPF($documento){
         $docFormatado = substr($documento, 0, 3) . '.' .
             substr($documento, 3, 3) . '.' .

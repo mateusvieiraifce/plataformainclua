@@ -10,7 +10,7 @@
                 <div class="card-header">
                     <h2 class="title">Verificar Email</h2>
                 </div>
-                <div class="card-body">                    
+                <div class="card-body">
                     <form class="form" method="post" action="{{ route('usuario.validar_email') }}">
                         @csrf
                         <div class="form-group">
@@ -34,7 +34,7 @@
                             </div>
                             <div >
                                 <a id="reenviar-email" href="#" class="input-group input-medium justify-content-end">re-enviar código via email</a>
-                                <label id="wait" class="input-group input-medium justify-content-end link hidden">solice um novo código em&nbsp;<label id="timer" class="link"></label></label>
+                                <label id="wait" class="input-group input-medium justify-content-end link hidden">Solicite um novo código em&nbsp;<label id="timer" class="link"></label></label>
                             </div>
                         </div>
 
@@ -44,7 +44,7 @@
                         </div>
                         <input type="hidden" id="id_usuario" name="id_usuario" value="{{ $id_usuario }}">
                     </form>
-                </div>                    
+                </div>
             </div>
         </div>
     </div>
@@ -69,16 +69,16 @@
             $('#reenviar-email').hide();
             temporizador(120);
             $("#wait").css("display", "flex");
-            
+
             //EXIBIR NOVAMENTE A OPÇÃO DE SOLICITAR CÓDIGO
             setInterval(function () {
                 $("#wait").css("display", "none");
                 $("#reenviar-email").css("display", "flex");
             }, 120000);
         });
-        
+
         var tempo = 0 // tempo em segundos
-        var working = false; // sinaliza se o timer está ativado    
+        var working = false; // sinaliza se o timer está ativado
         var intervaloID = 0; // identificação do intervalo que permite limpá-lo
 
         function temporizador(t) {
@@ -89,17 +89,17 @@
                 exibeTempo();
             }
         }
-        
+
         function exibeTempo() {
-            let min = parseInt(tempo / 60); // Pega a parte inteira dos minutos     
+            let min = parseInt(tempo / 60); // Pega a parte inteira dos minutos
             let seg = tempo % 60; // Calcula os segundos restantes
             let smin = min.toString().padStart(2, '0'); // Formata o número em duas casas
             let sseg = seg.toString().padStart(2, '0');
-            
+
             let tempoTela = smin + ':' + sseg; // Variável para formatar no estilo cronômetro
             document.querySelector("#timer").textContent = tempoTela;
             tempo--;
-    
+
             if (tempo < 0){ // zera temporizador
                 working = false;
                 clearInterval(intervaloID);
