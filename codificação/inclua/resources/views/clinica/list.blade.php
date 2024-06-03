@@ -1,5 +1,6 @@
 @extends('layouts.app',['page' => __('clinica'),'rotaPesquisa' => 'clinica.search', 'pageSlug' => 'clinica','class'=>'clinica'])
 @section('content')
+@section('title', 'Clínica')
 <div class="card">
 
   <div class="row">

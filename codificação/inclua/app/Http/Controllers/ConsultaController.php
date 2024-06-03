@@ -25,7 +25,7 @@ class ConsultaController extends Controller
       join('clinicas', 'clinicas.id','=','consultas.clinica_id')->
       where('especialista_id', '=', $especialista_id)->
       select('consultas.id','status','horario_agendado','clinicas.nome as nome_clinica')->
-      orderBy('horario_agendado', 'asc')->paginate(10);
+      orderBy('horario_agendado', 'asc')->paginate(8);
       return view('consulta/list', ['lista' => $lista, 'filtro' => $filter, 'especialista' => $especialista, 'msg' => $msg]);
    }
    function new($especialista_id)
@@ -120,14 +120,12 @@ class ConsultaController extends Controller
 
       $startDate = Carbon::parse($request->data_inicio);
       $endDate = Carbon::parse($request->data_fim);
-      $tercas = collect();
       
     //  dd($request);
       // Loop através do intervalo de datas
       $qtdConsutasCriadas = 1; 
       for ($date = $startDate; $date->lte($endDate); $date->addDay()) {
-          // Verifique se o dia é uma terça-feira (dayOfWeek retorna 0 a 6 para para o dia da semana)
-            
+          // dayOfWeek retorna 0 a 6 para para o dia da semana            
           if (in_array($date->dayOfWeek, $request->dia)) {
             //criando as consulta de acordo com o dia
             $hora_inicio = $request->hora_inicio;
@@ -140,7 +138,10 @@ class ConsultaController extends Controller
             $inicio = Carbon::createFromTimeString($date->format('Y-m-d').' '.$hora_inicio);
             $termino =  Carbon::createFromTimeString($date->format('Y-m-d').' '.$hora_fim);
           //  $inicio->modify("+$request->duracao_media minutes");
-            $termino->modify("-$request->duracao_media minutes");
+             //add tempo de intervalo entre consulta
+             $request->duracao_media = $request->duracao_media +  $request->intervalo_consulta;
+           //  dd( $request->duracao_media);
+              $termino->modify("-$request->duracao_media minutes");
             while($termino>= $inicio){
                $entidade = Consulta::create([
                   'status' => "Disponível",
