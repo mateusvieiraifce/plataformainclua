@@ -12288,13 +12288,13 @@ fieldset[disabled] .btn-link.active {
     filter: alpha(opacity=100);
 }
 
-.form-control::-webkit-input-placeholder {
+.form-control::-webkit-input-placeholder, input#cardNumber::-webkit-input-placeholder {
     color: #6c757c;
     opacity: 1;
     filter: alpha(opacity=100);
 }
 
-.form-control:-ms-input-placeholder {
+.form-control:-ms-input-placeholder,input#cardNumber::-ms-input-placeholder {
     color: #6c757c;
     opacity: 1;
     filter: alpha(opacity=100);

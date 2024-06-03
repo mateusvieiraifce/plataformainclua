@@ -11,7 +11,7 @@
                     <h2 class="title">{{ isset($user) ? "Editar" : "Cadastro de " }} dados pessoais</h2>
                 </div>
                 <div class="card-body">
-                    <form class="form" method="post" action="{{ route('usuario.dados.store') }}" enctype="multipart/form-data" >
+                    <form class="form" method="post" action="{{ route('usuario.dados.store') }}" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group">
                             <label for="image">
@@ -20,7 +20,7 @@
                             <br>
                             <img class="img-avatar" src="{{ isset($user) && !empty($user->avatar) ? asset($user->avatar) : asset('assets/img/default-avatar.png')}}" id="preview" alt="Avatar">
                             <div class="custom-file">
-                                <input class="custom-file-input hidden" type="file" id="image" name="image" onchange="visualizarImagem(event)">
+                                <input class="custom-file-input hidden" type="file" id="image" name="image" onchange="visualizarImagem(event)" accept="image/jpeg,image/jpg,image/png">
                                 <label class="btn custom-file-label input-small {{ $errors->has('image') ? 'is-invalid' : '' }}" for="image"></label>
                             </div>
                             @include('alerts.feedback', ['field' => 'image'])
