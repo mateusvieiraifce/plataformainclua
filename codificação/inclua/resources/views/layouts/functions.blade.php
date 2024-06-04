@@ -8,22 +8,25 @@ function mascaraCelular(campo) {
 }
 
 //FUNÇÃO ORQUESTRADORA DAS MASCARA DE DOCUMENTO
-function formatarDocumento(campoTexto) {
-    if (campoTexto.value.length <= 11) {
-        campoTexto.value = mascaraCpf(campoTexto.value);
-        return campoTexto.value;
-    } else {
-        campoTexto.value = mascaraCnpj(campoTexto.value);
+function formatarDocumento(campo) {
+    retirarFormatacao(campo)
+    if (campo.value.length <= 11) {
+        campo.value = mascaraCpf(campo.value);
+        return campo.value;
+    } else if (campo.value.length >= 14) {
+        campo.value = mascaraCnpj(campo.value);
+        return campo.value;
     }
 }
 
 //FUNÇÃO PARA RERTIRAR MARCARA DO DOCUMENTO
-function retirarFormatacao(campoTexto) {
-    campoTexto.value = campoTexto.value.replace(/(\.|\/|\-)/g,"");
+function retirarFormatacao(campo) {
+    campo.value = campo.value.replace(/(\.|\/|\-)/g,"");
 }
 
 //FUNÇÃO PARA ADICINAR MARCARA DO CPF
 function mascaraCpf(valor) {
+    
     return valor.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/g,"\$1.\$2.\$3\-\$4");
 }
 
