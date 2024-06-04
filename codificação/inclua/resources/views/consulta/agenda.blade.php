@@ -84,21 +84,29 @@ function validarCheckBoxes() {
 
               </div>
               <div class="row">
-                <div class="col-md-4 px-8">
+                <div class="col-md-3 px-8">
                   <div class="form-group">
                     <label id="labelFormulario">Duração média (min)</label>
                     <input style="border-color: #C0C0C0" type="number" min="1" step="1" class="form-control" name="duracao_media" required
                       value="{{$entidade->preco}}" maxlength="150">
                   </div>
                 </div>
-                <div class="col-md-4 px-8">
+                <div class="col-md-3 px-8">
+                  <div class="form-group">
+                    <label id="labelFormulario">Intervalo entre as consultas (min)</label>
+                    <input style="border-color: #C0C0C0" type="number" min="1" step="1" class="form-control" name="intervalo_consulta" required
+                      value="{{$entidade->preco}}" maxlength="150">
+                  </div>
+                </div>
+
+                <div class="col-md-3 px-8">
                   <div class="form-group">
                     <label id="labelFormulario">Horário de início dos atendimentos</label>
                     <input style="border-color: #C0C0C0" type="time" class="form-control" name="hora_inicio" required
                       value="{{$entidade->preco}}" maxlength="150">
                   </div>
                 </div>
-                <div class="col-md-4 px-8">
+                <div class="col-md-3 px-8">
                   <div class="form-group">
                     <label id="labelFormulario">Horário de fim dos atendimentos</label>
                     <input style="border-color: #C0C0C0" type="time" class="form-control" name="hora_fim" required

@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Rules\CnpjValidationRule;
 
 class ClinicaController extends Controller
 {
@@ -20,7 +21,7 @@ class ClinicaController extends Controller
          where('nome', 'like', "%" . "%")->
          orderBy('nome', 'asc')->
          select('clinicas.id', 'users.nome_completo as nome_responsavel', 'nome', 'cnpj', 'clinicas.telefone')->
-         paginate(10);
+         paginate(8);
       return view('clinica/list', ['lista' => $lista, 'filtro' => $filter, 'msg' => $msg]);
    }
    function new()
@@ -34,11 +35,13 @@ class ClinicaController extends Controller
          where('nome', 'like', "%" . $filter . "%")->
          orderBy('nome', 'asc')->
          select('clinicas.id', 'users.name as nome_responsavel', 'nome', 'cnpj', 'clinicas.telefone')->
-         paginate(10);
+         paginate(8);
       return view('clinica/list', ['lista' => $lista, 'filtro' => $request->filtro])->with('filtro', $filter);
    }
    function save(Request $request)
    {
+    
+
         $imageName = "";
         //salvando a logo na clinica
         if ($request->hasFile('image') && $request->file('image')->isValid()) {
@@ -52,6 +55,7 @@ class ClinicaController extends Controller
       if ($request->id) {
          $input = $request->validate([
             'email' => 'required|unique:users,email,' . $request->usuario_id,
+            'cnpj' => ['required', new CnpjValidationRule,'unique:clinicas,cnpj,'.$request->id,],
          ]);
          $ent = Clinica::find($request->id);
          $ent->nome = $request->nome;
@@ -84,7 +88,8 @@ class ClinicaController extends Controller
       } else {
          $input = $request->validate([
             'email' => 'required|unique:users,email,' . $request->id,
-         ]);
+            'cnpj' => ['required', new CnpjValidationRule,'unique:clinicas,cnpj'],
+         ]);      
 
          $usuario = User::create([
             'nome_completo' => $request->nome_login,
@@ -118,12 +123,11 @@ class ClinicaController extends Controller
          $entidade->save();
       }
 
-
-
-
       $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
       return $this->list($msg);
    }
+
+
    function delete($id)
    {
       try {
