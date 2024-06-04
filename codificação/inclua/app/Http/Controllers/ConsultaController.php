@@ -39,7 +39,7 @@ class ConsultaController extends Controller
    {
       $especialista = Especialista::find($especialista_id);
       $filter = $request->query('filtro');
-      $lista = Consulta::where('nome', 'like', "%" . $request->filtro . "%")->orderBy('id', 'desc')->paginate(10);
+      $lista = Consulta::where('nome', 'like', "%" . $request->filtro . "%")->orderBy('id', 'desc')->paginate(8);
       return view('consulta/list', ['lista' => $lista, 'filtro' => $request->filtro, 'especialista' => $especialista])->with('filter', $filter);
    }
    function save(Request $request)
@@ -193,7 +193,7 @@ class ConsultaController extends Controller
       where('especialista_id', '=', $especialista->id)->
       where('status', '=', 'Aguardando atendimento')->
       select('consultas.id','status','horario_agendado','clinicas.nome as nome_clinica','pacientes.nome as nome_paciente')->
-      orderBy('horario_agendado', 'asc')->paginate(10);
+      orderBy('horario_agendado', 'asc')->paginate(8);
      
       return view('consulta/listconsultaporespecialista', ['lista' => $lista, 
       'clinicas' =>$clinicas, 'clinicaselecionada_id' => $clinicaselecionada_id,  'status'=> $statusConsulta ,'filtro' => $filter,

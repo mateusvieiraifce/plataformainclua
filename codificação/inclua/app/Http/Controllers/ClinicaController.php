@@ -21,7 +21,7 @@ class ClinicaController extends Controller
          where('nome', 'like', "%" . "%")->
          orderBy('nome', 'asc')->
          select('clinicas.id', 'users.nome_completo as nome_responsavel', 'nome', 'cnpj', 'clinicas.telefone')->
-         paginate(10);
+         paginate(8);
       return view('clinica/list', ['lista' => $lista, 'filtro' => $filter, 'msg' => $msg]);
    }
    function new()
@@ -35,7 +35,7 @@ class ClinicaController extends Controller
          where('nome', 'like', "%" . $filter . "%")->
          orderBy('nome', 'asc')->
          select('clinicas.id', 'users.name as nome_responsavel', 'nome', 'cnpj', 'clinicas.telefone')->
-         paginate(10);
+         paginate(8);
       return view('clinica/list', ['lista' => $lista, 'filtro' => $request->filtro])->with('filtro', $filter);
    }
    function save(Request $request)

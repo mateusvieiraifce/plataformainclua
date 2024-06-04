@@ -14,7 +14,7 @@ class FormapagamentoController extends Controller
       if (isset($_GET['filtro'])) {
          $filter = $_GET['filtro'];
       }
-      $lista = Formapagamento::where('descricao', 'like', "%" . "%")->orderBy('id', 'desc')->paginate(10);
+      $lista = Formapagamento::where('descricao', 'like', "%" . "%")->orderBy('id', 'desc')->paginate(8);
       return view('formapagamento/list', ['lista' => $lista, 'filtro' => $filter, 'msg' => $msg]);
    }
    function new()
@@ -24,7 +24,7 @@ class FormapagamentoController extends Controller
    function search(Request $request)
    {
       $filter = $request->query('filtro');
-      $lista = Formapagamento::where('descricao', 'like', "%" . $request->filtro . "%")->orderBy('id', 'desc')->paginate(10);
+      $lista = Formapagamento::where('descricao', 'like', "%" . $request->filtro . "%")->orderBy('id', 'desc')->paginate(8);
       return view('formapagamento/list', ['lista' => $lista, 'filtro' => $request->filtro])->with('filter', $filter);
    }
    function save(Request $request)

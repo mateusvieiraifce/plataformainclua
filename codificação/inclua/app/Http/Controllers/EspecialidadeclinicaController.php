@@ -23,7 +23,7 @@ class EspecialidadeclinicaController extends Controller
       where('clinica_id', '=', $clinica->id)->
       orderBy('id', 'desc')->
       select('especialidadeclinicas.id','especialidades.descricao', 'valor')->
-      paginate(10);
+      paginate(8);
       return view('especialidadeclinica/list', ['lista' => $lista, 'filtro' => $filter, 'clinica' => $clinica, 'msg' => $msg]);
    }
 
@@ -41,7 +41,7 @@ class EspecialidadeclinicaController extends Controller
       where('clinica_id', '=', $clinica_id)->
       orderBy('id', 'desc')->
       select('especialidadeclinicas.id','especialidades.descricao', 'valor')->
-      paginate(10);
+      paginate(8);
       return view('especialidadeclinica/list', ['lista' => $lista, 'filtro' => $filter, 'clinica' => $clinica, 'msg' => $msg]);
    }
 
@@ -53,7 +53,7 @@ class EspecialidadeclinicaController extends Controller
    function search(Request $request, $clinica_id)
    {
       $clinica = Clinica::find($clinica_id);
-      $lista = Especialidadeclinica::where('clinica_id', '=', $clinica_id)->orderBy('id', 'desc')->paginate(10);
+      $lista = Especialidadeclinica::where('clinica_id', '=', $clinica_id)->orderBy('id', 'desc')->paginate(8);
       return view('especialidadeclinica/list', ['lista' => $lista, 'filtro' => $request->filtro, 'clinica' => $clinica])->with('filter', $filter);
    }
    function save(Request $request)

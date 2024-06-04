@@ -20,7 +20,7 @@ class EspecialistaController extends Controller
       $lista = Especialista::join('especialidades', 'especialidades.id', '=', 'especialidade_id')->          
       orderBy('especialistas.nome', 'asc')->
       select('especialistas.id','especialistas.nome', 'especialistas.telefone','especialidades.descricao as especialidade')->
-      paginate(10);
+      paginate(8);
 
       return view('especialista/list', ['lista' => $lista, 'filtro' => $filter, 'msg' => $msg]);
    }
@@ -31,7 +31,7 @@ class EspecialistaController extends Controller
    function search(Request $request)
    {
       $filter = $request->query('filtro');
-      $lista = Especialista::where('nome', 'like', "%" . $request->filtro . "%")->orderBy('id', 'desc')->paginate(10);
+      $lista = Especialista::where('nome', 'like', "%" . $request->filtro . "%")->orderBy('id', 'desc')->paginate(8);
       return view('especialista/list', ['lista' => $lista, 'filtro' => $request->filtro])->with('filter', $filter);
    }
    function save(Request $request)
