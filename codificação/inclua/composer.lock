@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3cca7ca693948ec11af73380f7d3cb56",
+    "content-hash": "bbe78782efcfc52b4db57c932515d1bd",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2419,6 +2419,45 @@
                 "source": "https://github.com/thephpleague/oauth1-client/tree/v1.10.1"
             },
             "time": "2022-04-15T14:02:14+00:00"
+        },
+        {
+            "name": "mercadopago/dx-php",
+            "version": "3.0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mercadopago/sdk-php.git",
+                "reference": "c0c6b738a3f8517ef941c218bb7e44d1ad93fd5e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mercadopago/sdk-php/zipball/c0c6b738a3f8517ef941c218bb7e44d1ad93fd5e",
+                "reference": "c0c6b738a3f8517ef941c218bb7e44d1ad93fd5e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.2"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.22",
+                "phpunit/phpunit": "^10.2",
+                "squizlabs/php_codesniffer": "3.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "MercadoPago\\": "src/MercadoPago"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Mercado Pago PHP SDK",
+            "homepage": "https://github.com/mercadopago/sdk-php",
+            "support": {
+                "source": "https://github.com/mercadopago/sdk-php/tree/3.0.5"
+            },
+            "time": "2024-04-09T18:05:55+00:00"
         },
         {
             "name": "monolog/monolog",

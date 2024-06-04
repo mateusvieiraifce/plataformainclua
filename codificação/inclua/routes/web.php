@@ -39,6 +39,10 @@ Route::post("/cadastrar/endereço/store",[\App\Http\Controllers\EnderecoControll
 Route::get("/cadastrar/cartao/create/{id_usuario}",[\App\Http\Controllers\CartaoController::class,'create'])->name('cartao.create');
 Route::post("/cadastrar/cartao/create",[\App\Http\Controllers\CartaoController::class,'store'])->name('cartao.store');
 
+//teste
+Route::get("/cadastrar/cartao/teste",[\App\Http\Controllers\CartaoController::class,'teste'])->name('cartao.teste');
+Route::post("/sdqwdqwdqwdqwd",[\App\Http\Controllers\CartaoController::class,'save'])->name('cartao.save');
+
 #VALIDAÇÕES
 Route::get("/email/verificar/{id_usuario}",[\App\Http\Controllers\UsuarioController::class,'verificarEmail'])->name('usuario.verificar_email');
 Route::get("/email/reenviar-sms/",[\App\Http\Controllers\UsuarioController::class,'reenviarEmail'])->name('usuario.reenviar_email');

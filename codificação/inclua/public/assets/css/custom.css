@@ -124,6 +124,15 @@ label.link {
 
 .img-avatar {
     width: 200px;
+    max-height: 200px;
+    object-fit: cover;
+}
+
+.form-control.border-full input#cardNumber {
+    color: rgba(29, 37, 59, 0.2);
+    font-size: 0.75rem !important;
+    display: flex;
+    align-items: center;
 }
 
 @media (max-width: 768px) {

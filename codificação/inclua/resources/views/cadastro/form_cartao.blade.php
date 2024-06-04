@@ -10,63 +10,101 @@
                 <div class="card-header">
                     <h2 class="title">Dados de pagamento</h2>
                 </div>
-                <div class="card-body">                    
-                    <form class="form" method="post" action="{{ route('cartao.store') }}">
-                        @csrf
+                <div class="card-body">
+                    <form id="form-checkout" class="form">
                         <div class="form-group">
                             <label for="numero_cartao">
                                 Número do cartão <span class="required">*</span>
                             </label>
-                            <div class="input-group {{ $errors->has('numero_cartao') ? ' has-danger' : '' }} input-medium">
-                                <input type="text" id="numero_cartao" class="form-control border-full {{ $errors->has('numero_cartao') ? ' is-invalid' : '' }}"
-                                    name="numero_cartao" maxlength="19" placeholder="0000 0000 0000 0000" value="{{ old('numero_cartao') }}" >
-                                @include('alerts.feedback', ['field' => 'numero_cartao'])
+                            <div class="input-group input-medium{{ $errors->has('validade') ? ' has-danger' : '' }}">
+                                <div id="form-checkout__cardNumber" class="form-control border-full {{ $errors->has('cvv') ? ' is-invalid' : '' }}">
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="validade">
                                 Validade <span class="required">*</span>
                             </label>
-                            <div class="input-group {{ $errors->has('validade') ? ' has-danger' : '' }} input-medium">
-                                <input type="month" id="validade" class="form-control border-full {{ $errors->has('validade') ? ' is-invalid' : '' }}"
-                                    name="validade" placeholder="Validade" value="{{ old('validade') }}" >
-                                @include('alerts.feedback', ['field' => 'validade'])
+                            <div class="input-group input-medium{{ $errors->has('validade') ? ' has-danger' : '' }}">
+                                <div id="form-checkout__expirationDate" class="form-control border-full {{ $errors->has('cvv') ? ' is-invalid' : '' }}"></div>
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="cvv">
                                 CVV <span class="required">*</span>
                             </label>
-                            <div class="input-group {{ $errors->has('cvv') ? ' has-danger' : '' }} input-medium">
-                                <input type="text" id="cvv" class="form-control border-full {{ $errors->has('cvv') ? ' is-invalid' : '' }}"
-                                    name="cvv" maxlength="3" placeholder="***" value="{{ old('cvv') }}">
-                                @include('alerts.feedback', ['field' => 'cvv'])
+                            <div class="input-group input-medium{{ $errors->has('validade') ? ' has-danger' : '' }}">
+                                <div id="form-checkout__securityCode" class="form-control border-full {{ $errors->has('cvv') ? ' is-invalid' : '' }}"></div>
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="nome_titular">
                                 Nome do titular <span class="required">*</span>
                             </label>
-                            <div class="input-group {{ $errors->has('nome_titular') ? ' has-danger' : '' }} input-medium">
-                                <input type="text" id="nome_titular" class="form-control border-full {{ $errors->has('nome_titular') ? ' is-invalid' : '' }}"
-                                    name="nome_titular" placeholder="Nome do titular igual ao cartão" value="{{ old('nome_titular') }}">
-                                @include('alerts.feedback', ['field' => 'nome_titular'])
+                            <div class="input-group input-medium{{ $errors->has('validade') ? ' has-danger' : '' }}">
+                                <input type="text" id="form-checkout__cardholderName" class="form-control border-full {{ $errors->has('cvv') ? ' is-invalid' : '' }}"/>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="banco">
+                                Banco <span class="required">*</span>
+                            </label>
+                            <div class="input-group input-medium{{ $errors->has('validade') ? ' has-danger' : '' }}">
+                                <select id="form-checkout__issuer" class="form-control border-full {{ $errors->has('cvv') ? ' is-invalid' : '' }}"></select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="parcelas">
+                                Parcelas <span class="required">*</span>
+                            </label>
+                            <div class="input-group input-medium{{ $errors->has('validade') ? ' has-danger' : '' }}">
+                                <select id="form-checkout__installments" class="form-control border-full {{ $errors->has('cvv') ? ' is-invalid' : '' }}"></select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="tipo_documento">
+                                Tipo de Documento <span class="required">*</span>
+                            </label>
+                            <div class="input-group input-medium{{ $errors->has('validade') ? ' has-danger' : '' }}">
+                                <select id="form-checkout__identificationType" class="form-control border-full {{ $errors->has('cvv') ? ' is-invalid' : '' }}"></select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="documento">
+                                Documento <span class="required">*</span>
+                            </label>
+                            <div class="input-group input-medium{{ $errors->has('validade') ? ' has-danger' : '' }}">
+                                <input type="text" id="form-checkout__identificationNumber" class="form-control border-full {{ $errors->has('cvv') ? ' is-invalid' : '' }}" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">
+                                Email <span class="required">*</span>
+                            </label>
+                            <div class="input-group input-medium{{ $errors->has('validade') ? ' has-danger' : '' }}">
+                                <input type="email" id="form-checkout__cardholderEmail" class="form-control border-full {{ $errors->has('cvv') ? ' is-invalid' : '' }}" />
                             </div>
                         </div>
 
                         <div class="input-group">
-                            <button type="submit" class="btn btn-primary btn-round btn-lg">{{ __('Finalizar') }}</button>
+                            <button id="form-checkout__submit" type="submit" class="btn btn-primary btn-round btn-lg">{{ __('Finalizar') }}</button>
                         </div>
-                        <input type="hidden" name="id_usuario" value="{{ $id_usuario }}">
                     </form>
                 </div>                    
             </div>
         </div>
     </div>
     @include("layouts.modal_aviso")
+    {{-- IMPORTAÇÃO SDK MERCADO PAGO --}}
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
+    
     <script>
         $(document).ready(function () {
             //APLICAÇÃO DA MASCARA NO NÚMERO DO CARTÃO
@@ -82,5 +120,93 @@
                 }
             })
         })
+
+        const mp = new MercadoPago("{{env('MERCADOPAGO_PUBLIC_KEY')}}");
+        const cardForm = mp.cardForm({
+            amount: "{{env('PRECO_ASSINATURA')}}",
+            iframe: true,
+            form: {
+                id: "form-checkout",
+                cardNumber: {
+                id: "form-checkout__cardNumber",
+                placeholder: "0000 0000 0000 0000",
+                },
+                expirationDate: {
+                id: "form-checkout__expirationDate",
+                placeholder: "MM/YY",
+                },
+                securityCode: {
+                id: "form-checkout__securityCode",
+                placeholder: "Código de segurança",
+                },
+                cardholderName: {
+                id: "form-checkout__cardholderName",
+                placeholder: "Nome do titular igual ao cartão",
+                },
+                issuer: {
+                id: "form-checkout__issuer",
+                placeholder: "Banco emissor",
+                },
+                installments: {
+                id: "form-checkout__installments",
+                placeholder: "Parcelas",
+                },        
+                identificationType: {
+                id: "form-checkout__identificationType",
+                placeholder: "Tipo de documento",
+                },
+                identificationNumber: {
+                id: "form-checkout__identificationNumber",
+                placeholder: "Número do documento",
+                },
+                cardholderEmail: {
+                id: "form-checkout__cardholderEmail",
+                placeholder: "E-mail",
+                },
+            },
+            callbacks: {
+                onFormMounted: error => {
+                    if (error) return console.warn("Form Mounted handling error: ", error);
+                },
+                onSubmit: event => {
+                    event.preventDefault();
+
+                    const {
+                        paymentMethodId: payment_method_id,
+                        issuerId: issuer_id,
+                        cardholderEmail: email,
+                        amount,
+                        token,
+                        installments,
+                        identificationNumber,
+                        identificationType,
+                    } = cardForm.getCardFormData();
+
+                    fetch("{{route('cartao.save')}}", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-Token":"{{ csrf_token() }}"
+                        },
+                        body: JSON.stringify({
+                            token,
+                            issuer_id,
+                            payment_method_id,
+                            transaction_amount: Number(amount),
+                            installments: Number(installments),
+                            description: "Plataforma Inclua - Assinatura",
+                            payer: {
+                                email,
+                                identification: {
+                                    type: identificationType,
+                                    number: identificationNumber,
+                                },
+                            },
+                        }),
+                    })
+                    .then(response => console.log(response.json(), response.status));
+                },
+            },
+        });
     </script>
 @endsection

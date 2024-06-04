@@ -176,4 +176,39 @@ class Helper
             substr($documento, 9, 2);
         return $docFormatado;
     }
+    
+
+    public static function pagamentoMercadoPago($descricao,$qnt,$preco,$ref)
+    {
+        try {
+            $token = env('MERCADOPAGO_ACCESS_TOKEN');
+            $dadosPagamento = [
+                'items' =>
+                    [[
+                        'description'=>$descricao,
+                        'title' => 'DNA ASSESSMENTS',
+                        'quantity' => $qnt,
+                        'currency_id' => 'BRL',
+                        'unit_price' => $preco, // Preço do produto
+                    ]],
+                'external_reference'=>$ref,
+
+            ];
+
+            // Requisição para o Mercado Pago
+            $response = Http::withToken($token)->post('https://api.mercadopago.com/checkout/preferences', $dadosPagamento);
+
+
+            $data = json_decode($response->getBody(), true);
+
+            //dd($data);
+            //$linkDePagamento = $response['sandbox_init_point']; // Link de pagamento
+            return $data;
+
+
+        } catch (Exception $e) {
+            // Lidar com erros da API do MercadoPago
+            return redirect()->route('subscription.index')->with('error', 'Erro ao buscar os planos: ' . $e->getMessage());
+        }
+    }
 }
