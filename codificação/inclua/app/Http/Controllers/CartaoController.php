@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helper;
 use App\Models\Cartao;
+use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -153,6 +154,10 @@ class CartaoController extends Controller
             $cartao->nome_titular = $request->nome_titular;
             $cartao->principal = "S";
             $cartao->save();
+
+            $user = User::find($request->id_usuario);
+            $user->etapa_cadastro = 'F';
+            $user->save();
 
             Auth::loginUsingId($request->id_usuario);
             $msg = ['valor' => trans("Seu cadastro foi finalizado com sucesso!"), 'tipo' => 'success'];

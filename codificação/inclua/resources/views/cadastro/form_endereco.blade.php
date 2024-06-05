@@ -19,7 +19,7 @@
                             </label>
                             <div class="input-group {{ $errors->has('cep') ? ' has-danger' : '' }} input-medium">
                                 <input type="text" id="cep" class="form-control border-full {{ $errors->has('cep') ? ' is-invalid' : '' }}"
-                                    name="cep" maxlength="9" placeholder="CEP" onblur="validarCep(this)" value="{{ old('cep') }}" autofocus>
+                                    name="cep" maxlength="9" placeholder="CEP" onblur="validarCep(this)" value="{{ (isset($user) ? $user->cep : null) ?? old('cep') }}">
                                 @include('alerts.feedback', ['field' => 'cep'])
                             </div>
                         </div>
@@ -30,7 +30,7 @@
                             </label>
                             <div class="input-group {{ $errors->has('cidade') ? ' has-danger' : '' }} input-medium">
                                 <input type="text" id="cidade" class="form-control border-full {{ $errors->has('cidade') ? ' is-invalid' : '' }}"
-                                    name="cidade" placeholder="Cidade" value="{{ old('cidade') }}" >
+                                    name="cidade" placeholder="Cidade" value="{{ (isset($user) ? $user->cidade : null) ?? old('cidade') }}" >
                                 @include('alerts.feedback', ['field' => 'cidade'])
                             </div>
                         </div>
@@ -41,7 +41,7 @@
                             </label>
                             <div class="input-group {{ $errors->has('estado') ? ' has-danger' : '' }} input-medium">
                                 <input type="text" id="estado" class="form-control border-full {{ $errors->has('estado') ? ' is-invalid' : '' }}"
-                                    name="estado" placeholder="Estado" value="{{ old('estado') }}">
+                                    name="estado" placeholder="Estado" value="{{ (isset($user) ? $user->estado : null) ?? old('estado') }}">
                                 @include('alerts.feedback', ['field' => 'estado'])
                             </div>
                         </div>
@@ -52,7 +52,7 @@
                             </label>
                             <div class="input-group {{ $errors->has('endereco') ? ' has-danger' : '' }} input-medium">
                                 <input type="text" id="endereco" class="form-control border-full {{ $errors->has('endereco') ? ' is-invalid' : '' }}"
-                                    name="endereco" placeholder="Endereço" value="{{ old('endereco') }}">
+                                    name="endereco" placeholder="Endereço" value="{{ (isset($user) ? $user->endereco : null) ?? old('endereco') }}">
                                 @include('alerts.feedback', ['field' => 'endereco'])
                             </div>
                         </div>
@@ -63,7 +63,7 @@
                             </label>
                             <div class="input-group {{ $errors->has('numero') ? ' has-danger' : '' }} input-medium">
                                 <input type="text" id="numero" class="form-control border-full only-numbers {{ $errors->has('numero') ? ' is-invalid' : '' }}"
-                                    name="numero" placeholder="Número" value="{{ old('numero') }}">
+                                    name="numero" placeholder="Número" value="{{ (isset($user) ? $user->numero : null) ?? old('numero') }}">
                                 @include('alerts.feedback', ['field' => 'numero'])
                             </div>
                         </div>
@@ -74,7 +74,7 @@
                             </label>
                             <div class="input-group {{ $errors->has('bairro') ? ' has-danger' : '' }} input-medium">
                                 <input type="text" id="bairro" class="form-control border-full only-numbers {{ $errors->has('bairro') ? ' is-invalid' : '' }}"
-                                    name="bairro" placeholder="Bairro" value="{{ old('bairro') }}">
+                                    name="bairro" placeholder="Bairro" value="{{ (isset($user) ? $user->bairro : null) ?? old('bairro') }}">
                                 @include('alerts.feedback', ['field' => 'bairro'])
                             </div>
                         </div>
@@ -85,7 +85,7 @@
                             </label>
                             <div class="input-group {{ $errors->has('complemento') ? ' has-danger' : '' }} input-medium">
                                 <input type="text" id="complemento" class="form-control border-full only-numbers {{ $errors->has('complemento') ? ' is-invalid' : '' }}"
-                                    name="complemento" placeholder="Complemento" value="{{ old('complemento') }}">
+                                    name="complemento" placeholder="Complemento" value="{{ (isset($user) ? $user->complemento : null) ?? old('complemento') }}">
                                 @include('alerts.feedback', ['field' => 'complemento'])
                             </div>
                         </div>
