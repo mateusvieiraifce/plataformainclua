@@ -36,11 +36,10 @@ class EspecialistaController extends Controller
    }
    function save(Request $request)
    {
-
       $input = $request->validate([
          'email' => 'required|unique:users,email,' . $request->usuario_id,
+         'password' => 'confirmed',
       ]);
-      //dd($request->all());
       if ($request->id) {
          $ent = Especialista::find($request->id);
          $ent->nome = $request->nome;

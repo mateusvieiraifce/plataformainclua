@@ -224,7 +224,7 @@
 
                     </ul>
                 </div>
-                <div class="collapse" id="config">
+              <!--  <div class="collapse" id="config">
                     <ul class="nav pl-4">
                         <li @if ($pageSlug == 'compras' ) class="active " @endif>
                             <a href="{{route('formapagamento.list')}}">
@@ -236,6 +236,7 @@
 
                     </ul>
                 </div>
+            -->
             </li>
             <li @if ($pageSlug == 'profile') class="active " @endif>
                 <a href="{{route('user.preedit')}}">

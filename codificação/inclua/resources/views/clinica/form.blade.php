@@ -161,24 +161,24 @@
               <div class="form-group">
                 <label id="labelFormulario">Senha</label>
                 <input type="password" style="border-color: #C0C0C0" class="form-control" name="password"
-                  @if(!$entidade->usuario_id) required @endif value="" maxlength="15">
-
-              </div>
-            </div>
+                  @if(!$entidade->usuario_id) 
+                      required  minlength="8"
+                  @else
+                      minlength="8"
+                  @endif 
+                  value="" maxlength="15"></div>
+                 </div>
             <div class="col-md-12 px-8">
             <div class="form-group">
               <label id="labelFormulario">Confirmar senha</label>
               <input type="password" style="border-color: #C0C0C0" class="form-control" name="password_confirmation"
                 @if(!$entidade->usuario_id) required @endif value="" maxlength="15">
                 @error('password')
-                Por favor, verifique se a senha tem pelo menos 8 caracteres e corresponde à confirmação da senha.
+                Por favor, verifique se a senha corresponde ao campo de confirmação da senha.
                 @enderror
             </div>
+              </div>
           </div>
-          </div>
-
-         
-
           <input type="hidden" name="id" value="{{$entidade->id}}">
           <input type="hidden" name="usuario_id" value="{{$entidade->usuario_id}}">
         </div>
