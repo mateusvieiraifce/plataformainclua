@@ -211,4 +211,11 @@ class Helper
             return redirect()->route('subscription.index')->with('error', 'Erro ao buscar os planos: ' . $e->getMessage());
         }
     }
+    
+    //Função para adicionar meses a uma determinada data
+    public static function addMonthsToDate($date, $months)
+    {
+        $nextdate = strtotime("{$date} + {$months} months");
+        return date('Y-m-d', $nextdate);
+    }
 }

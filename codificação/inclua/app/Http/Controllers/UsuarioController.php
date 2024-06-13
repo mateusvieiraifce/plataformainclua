@@ -327,12 +327,13 @@ class UsuarioController extends Controller
             return redirect()->route("index");
         }
 
-        $user = User::updateOrCreate([
+        $user = User::firstOrCreate([
             'email' => $providerUser->getEmail()
         ], [
             'name' => $providerUser->getName(),
             'google_id' => $providerUser->getId(),
             'avatar' => $providerUser->getAvatar(),
+            'etapa_cadastro' => "1"
         ]);
 
         if ($user && $user->docucumento != null) {
@@ -372,7 +373,12 @@ class UsuarioController extends Controller
             auth()->login($user, true);
 
             return redirect()->route('home');
+        } else {
+            session()->flash('msg', ['valor' => trans("Realize o seu cadastro"), 'tipo' => 'danger']);
+            
+            return redirect()->route('index');
         }
+         
     }
 
     public function preEdit($id=null){

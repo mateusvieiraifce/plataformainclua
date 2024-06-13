@@ -10,93 +10,10 @@
                 <div class="card-header">
                     <h2 class="title">Dados de pagamento</h2>
                 </div>
-                <div class="card-body">
-                    <form id="form-checkout" class="form">
-                        <div class="form-group">
-                            <label for="numero_cartao">
-                                Número do cartão <span class="required">*</span>
-                            </label>
-                            <div class="input-group input-medium{{ $errors->has('validade') ? ' has-danger' : '' }}">
-                                <div id="form-checkout__cardNumber" class="form-control border-full {{ $errors->has('cvv') ? ' is-invalid' : '' }}">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="validade">
-                                Validade <span class="required">*</span>
-                            </label>
-                            <div class="input-group input-medium{{ $errors->has('validade') ? ' has-danger' : '' }}">
-                                <div id="form-checkout__expirationDate" class="form-control border-full {{ $errors->has('cvv') ? ' is-invalid' : '' }}"></div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="cvv">
-                                CVV <span class="required">*</span>
-                            </label>
-                            <div class="input-group input-medium{{ $errors->has('validade') ? ' has-danger' : '' }}">
-                                <div id="form-checkout__securityCode" class="form-control border-full {{ $errors->has('cvv') ? ' is-invalid' : '' }}"></div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="nome_titular">
-                                Nome do titular <span class="required">*</span>
-                            </label>
-                            <div class="input-group input-medium{{ $errors->has('validade') ? ' has-danger' : '' }}">
-                                <input type="text" id="form-checkout__cardholderName" class="form-control border-full {{ $errors->has('cvv') ? ' is-invalid' : '' }}"/>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="banco">
-                                Banco <span class="required">*</span>
-                            </label>
-                            <div class="input-group input-medium{{ $errors->has('validade') ? ' has-danger' : '' }}">
-                                <select id="form-checkout__issuer" class="form-control border-full {{ $errors->has('cvv') ? ' is-invalid' : '' }}"></select>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="parcelas">
-                                Parcelas <span class="required">*</span>
-                            </label>
-                            <div class="input-group input-medium{{ $errors->has('validade') ? ' has-danger' : '' }}">
-                                <select id="form-checkout__installments" class="form-control border-full {{ $errors->has('cvv') ? ' is-invalid' : '' }}"></select>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="tipo_documento">
-                                Tipo de Documento <span class="required">*</span>
-                            </label>
-                            <div class="input-group input-medium{{ $errors->has('validade') ? ' has-danger' : '' }}">
-                                <select id="form-checkout__identificationType" class="form-control border-full {{ $errors->has('cvv') ? ' is-invalid' : '' }}"></select>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="documento">
-                                Documento <span class="required">*</span>
-                            </label>
-                            <div class="input-group input-medium{{ $errors->has('validade') ? ' has-danger' : '' }}">
-                                <input type="text" id="form-checkout__identificationNumber" class="form-control border-full {{ $errors->has('cvv') ? ' is-invalid' : '' }}" />
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="email">
-                                Email <span class="required">*</span>
-                            </label>
-                            <div class="input-group input-medium{{ $errors->has('validade') ? ' has-danger' : '' }}">
-                                <input type="email" id="form-checkout__cardholderEmail" class="form-control border-full {{ $errors->has('cvv') ? ' is-invalid' : '' }}" />
-                            </div>
-                        </div>
-
-                        <div class="input-group">
-                            <button id="form-checkout__submit" type="submit" class="btn btn-primary btn-round btn-lg">{{ __('Finalizar') }}</button>
-                        </div>
-                    </form>
+                <div class="card-body" style="padding: 0px;">
+                    <div id="cardPaymentBrick_container">
+                        <input type="hidden" name="id_usuario" id="id_usuario" value="{{ $id_usuario ?? $user->id }}">
+                    </div>
                 </div>                    
             </div>
         </div>
@@ -121,92 +38,111 @@
             })
         })
 
-        const mp = new MercadoPago("{{env('MERCADOPAGO_PUBLIC_KEY')}}");
-        const cardForm = mp.cardForm({
-            amount: "{{env('PRECO_ASSINATURA')}}",
-            iframe: true,
-            form: {
-                id: "form-checkout",
-                cardNumber: {
-                id: "form-checkout__cardNumber",
-                placeholder: "0000 0000 0000 0000",
-                },
-                expirationDate: {
-                id: "form-checkout__expirationDate",
-                placeholder: "MM/YY",
-                },
-                securityCode: {
-                id: "form-checkout__securityCode",
-                placeholder: "Código de segurança",
-                },
-                cardholderName: {
-                id: "form-checkout__cardholderName",
-                placeholder: "Nome do titular igual ao cartão",
-                },
-                issuer: {
-                id: "form-checkout__issuer",
-                placeholder: "Banco emissor",
-                },
-                installments: {
-                id: "form-checkout__installments",
-                placeholder: "Parcelas",
-                },        
-                identificationType: {
-                id: "form-checkout__identificationType",
-                placeholder: "Tipo de documento",
-                },
-                identificationNumber: {
-                id: "form-checkout__identificationNumber",
-                placeholder: "Número do documento",
-                },
-                cardholderEmail: {
-                id: "form-checkout__cardholderEmail",
-                placeholder: "E-mail",
-                },
-            },
-            callbacks: {
-                onFormMounted: error => {
-                    if (error) return console.warn("Form Mounted handling error: ", error);
-                },
-                onSubmit: event => {
-                    event.preventDefault();
-
-                    const {
-                        paymentMethodId: payment_method_id,
-                        issuerId: issuer_id,
-                        cardholderEmail: email,
-                        amount,
-                        token,
-                        installments,
-                        identificationNumber,
-                        identificationType,
-                    } = cardForm.getCardFormData();
-
-                    fetch("{{route('cartao.save')}}", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "X-CSRF-Token":"{{ csrf_token() }}"
-                        },
-                        body: JSON.stringify({
-                            token,
-                            issuer_id,
-                            payment_method_id,
-                            transaction_amount: Number(amount),
-                            installments: Number(installments),
-                            description: "Plataforma Inclua - Assinatura",
-                            payer: {
-                                email,
-                                identification: {
-                                    type: identificationType,
-                                    number: identificationNumber,
-                                },
-                            },
-                        }),
-                    })
-                    .then(response => console.log(response.json(), response.status));
-                },
-            },
+        const id_usuario = document.getElementById("id_usuario").value
+        const mp = new MercadoPago("{{env('MERCADOPAGO_PUBLIC_KEY')}}", {
+          locale: 'pt-BR'
         });
+        const bricksBuilder = mp.bricks();
+        const renderCardPaymentBrick = async (bricksBuilder) => {
+            const settings = {
+                initialization: {
+                    amount: {{ env('PRECO_ASSINATURA') }}, // valor total a ser pago
+                },
+                customization: {
+                    visual: {
+                        style: {
+                            customVariables: {
+                                theme: 'bootstrap', // | 'dark' | 'bootstrap' | 'flat'
+                                textPrimaryColor: "#344675",
+                                baseColor: "rgb(137,119,249)",
+                                baseColorFirstVariant: "rgb(137,119,249)",
+                                baseColorSecondVariant: "rgb(137,119,249)",
+                                outlinePrimaryColor: "rgba(29, 37, 59, 0.2)",
+                                fontSizeMedium: "14px",
+                                fontSizeLarge: "14px",
+                                borderRadiusMedium: "8px",
+                            }
+                        },
+                        texts: {
+                            formTitle: "Cartão de crédito",
+                            installmentsSectionTitle: "Selecione o número de parcelas *",
+                            cardholderName: {
+                                label: "Nome do titular *",
+                                placeholder: "Nome do titular como aparece no cartão"
+                            },
+                            email: {
+                                label: "E-mail *"
+                            },
+                            cardholderIdentification: {
+                                label: "Documento do titular *"
+                            },
+                            cardNumber: {
+                                label: "Número do cartão *"
+                            },
+                            expirationDate: {
+                                label: "Data de vencimento *"
+                            },
+                            securityCode: {
+                                label: "Código de segurança *"
+                            },
+                            formSubmit: "Finalizar"
+                        },
+                    paymentMethods: {
+                        types: {
+                            excluded: ['debit_card']
+                        }, 
+                        maxInstallments: 12,
+                    }
+                    }
+                },
+                callbacks: {
+                    onReady: () => {
+                        // callback chamado quando o Brick estiver pronto
+                    },
+                    onSubmit: (cardFormData) => {
+                        //  callback chamado o usuário clicar no botão de submissão dos dados
+                        //  exemplo de envio dos dados coletados pelo Brick para seu servidor
+                        return new Promise((resolve, reject) => {
+                            fetch("{{route('assinatura.aprovar')}}", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    "X-CSRF-Token":"{{ csrf_token() }}"
+                                },
+                                body: JSON.stringify({cardFormData, id_usuario})
+                            })
+                            .then((response) => {
+                                // receber o resultado do pagamento
+                                document.querySelector('button[type="submit"]').style.pointerEvents  = "unset"
+                                response.json().then((jsonResponse) => {
+                                    console.log(jsonResponse)
+                                    if (jsonResponse.message.status == "rejected") {
+                                        $("#modal-aviso-title").text("Cartão não aprovado")
+                                        $("#modal-aviso-message").text("O cartão utilizado não foi aprovado. Verifique os dados inserido ou informe outro cartão.")
+                                        $("#modal-aviso").modal()
+                                    } else if (jsonResponse.message.status == "amountAlter") {
+                                        $("#modal-aviso-title").text("Pagamento alterado")
+                                        $("#modal-aviso-message").text("O valor a ser pago foi alterado, tente novamente sem realizar mudanças no valor.")
+                                        $("#modal-aviso").modal()
+                                    } else if (jsonResponse.message.status == "approved") {
+                                        //window.location.href = "{{ route('home') }}";
+                                    }
+                                })
+                                resolve();
+                            })
+                            .catch((error) => {
+                                // lidar com a resposta de erro ao tentar criar o pagamento
+                                reject();
+                            })
+                        });
+                    },
+                    onError: (error) => {
+                        // callback chamado para todos os casos de erro do Brick
+                    },
+                },
+            };
+            window.cardPaymentBrickController = bricksBuilder.create('cardPayment', 'cardPaymentBrick_container', settings);
+        };
+        renderCardPaymentBrick(bricksBuilder);
     </script>
 @endsection

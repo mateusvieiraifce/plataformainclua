@@ -36,11 +36,10 @@ Route::get("/cadastrar/dados/edit/{id_usuario}",[\App\Http\Controllers\UsuarioCo
 Route::get("/cadastrar/endereço/create/{id_usuario}",[\App\Http\Controllers\EnderecoController::class,'createEndereco'])->name('endereco.create');
 Route::post("/cadastrar/endereço/store",[\App\Http\Controllers\EnderecoController::class,'storeEndereco'])->name('endereco.store');
 Route::get("/cadastrar/cartao/create/{id_usuario}",[\App\Http\Controllers\CartaoController::class,'create'])->name('cartao.create');
-Route::post("/cadastrar/cartao/create",[\App\Http\Controllers\CartaoController::class,'store'])->name('cartao.store');
 
-//teste
-Route::get("/cadastrar/cartao/teste",[\App\Http\Controllers\CartaoController::class,'teste'])->name('cartao.teste');
-Route::post("/sdqwdqwdqwdqwd",[\App\Http\Controllers\CartaoController::class,'save'])->name('cartao.save');
+#ASSINATURA
+Route::post("/assinatura/aprovar",[\App\Http\Controllers\AssinaturaController::class,'lancarAssinatura'])->name('assinatura.aprovar');
+Route::get("/assinatura/renovar/{id_usuario}",[\App\Http\Controllers\AssinaturaController::class,'renovarAssinatura'])->name('assiantura.renovar');
 
 #VALIDAÇÕES
 Route::get("/email/verificar/{id_usuario}",[\App\Http\Controllers\ValidacoesController::class,'verificarEmail'])->name('view.verificar_email');
