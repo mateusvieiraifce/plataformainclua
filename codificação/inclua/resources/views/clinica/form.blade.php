@@ -114,15 +114,15 @@
             <div class="col-md-12 px-8">
               <div class="form-group">
                 <label id="labelFormulario">Longitude</label>
-                <input style="border-color: #C0C0C0" type="number" step="0.000000000001" class="form-control"
-                  name="longitude" required value="{{old('longitude', $entidade->longitude)}}" maxlength="150">
+                <input style="border-color: #C0C0C0" type="number" step="0.000000000000001" class="form-control"
+                  name="longitude"   id="longitude" required value="{{old('longitude', $entidade->longitude)}}" maxlength="150">
               </div>
             </div>
             <div class="col-md-12 px-8">
               <div class="form-group">
                 <label id="labelFormulario">Latitude</label>
-                <input style="border-color: #C0C0C0" type="number" step="0.000000000001" class="form-control"
-                  name="latitude" required value="{{old('latitude', $entidade->latitude)}}" maxlength="150">
+                <input style="border-color: #C0C0C0" type="number" step="0.000000000000001" class="form-control"
+                  name="latitude"   id="latitude"  required value="{{old('latitude', $entidade->latitude)}}" maxlength="150">
               </div>
             </div>
 
@@ -202,7 +202,7 @@
 
             <?php 
                                 //verificando se existe imagem 
-if (isset($entidade->logotipo)) {
+            if (isset($entidade->logotipo)) {
                                 ?>
             <img id="preview" src={{"/images/logosclinicas/" . $entidade->logotipo}} alt="IMG-LOGO"
               style="max-width: 200px; max-height: 200px;">
@@ -260,10 +260,89 @@ if (isset($entidade->logotipo)) {
           </p>
         </div>
       </div>
+   
+     
+      <div class="card card-user">
+        <div class="card-body">         
+            <h5 class="title">Geolocalização</h5>            
+            <div id="map"></div>   
+                       
+          </div>
+          
+          <style>
+               /* Estilo básico para o mapa */
+                #map {
+                    height: 15em;
+                    width: 15em;
+                }
+            </style>
+            <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD2JOV40dm1OczqGvDLCfYEY5ijE4e_GBY&callback=initMap" async defer></script>
+            <script>
+                var map;
+                function initMap() {
+                 
+                    map = new google.maps.Map(document.getElementById('map'), {
+                        center: {lat: -3.68274, lng: -40.3512}, // Posição inicial do mapa
+                        zoom: 12 // Zoom inicial do mapa
+                    });
+
+                    @if(isset($entidade->latitude))
+                       var latitude = {{ $entidade->latitude }};                
+                       var longitude = {{ $entidade->longitude }};                       
+                       var myLatLng = {lat: latitude, lng: longitude};
+                       placeMarker(myLatLng, map);
+                     @endif
+
+                    // Adicionar um event listener para capturar o clique no mapa
+                    google.maps.event.addListener(map, 'click', function(event) {
+                        // Obter latitude e longitude do evento de clique              
+                        var latitude = event.latLng.lat();
+                        var longitude = event.latLng.lng();           
+
+                        // Atualizar os campos de entrada com a latitude e a longitude
+                        document.getElementById('latitude').value = latitude;
+                        document.getElementById('longitude').value = longitude;  
+                        placeMarker(event.latLng, map);             
+                    });
+                }
+
+                 // Função para colocar o marcador no local clicado
+                function placeMarker(location, map) {
+                    // Remover marcador anterior, se houver
+                    if (window.marker) {
+                        window.marker.setMap(null);
+                    }
+                    // Criar um novo marcador
+                    window.marker = new google.maps.Marker({
+                        position: location,
+                        map: map
+                    });                    
+                }
+
+            </script>
+      </div>
+   
+   
+   
+    </div>
+
+   
+
     </div>
   </div>
 
 </form>
+
+
+
+
+
+
+
+
+
+
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js"></script>
