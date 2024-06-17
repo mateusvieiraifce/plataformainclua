@@ -84,7 +84,7 @@
                         @endphp
                                   <ul class="pagination">
                                     <li class="{{ ($paginator->currentPage() == 1) ? ' disabled' : '' }}">
-                                       <a href="{{$paginator->url . "?page=1&filtro=" . $filtro }}">&nbsp;<<&nbsp;&nbsp;< /a>
+                                       <a href="{{$paginator->url . "?page=1&filtro=" . $filtro }}">&nbsp;<<&nbsp;&nbsp;</a>
                                     </li>
                                     @for ($i = 1; $i <= $paginator->lastPage(); $i++)
                                           <?php

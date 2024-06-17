@@ -115,7 +115,7 @@
               <div class="form-group">
                 <label id="labelFormulario">Longitude</label>
                 <input style="border-color: #C0C0C0" type="number" step="0.000000000000001" class="form-control"
-                  name="longitude"   id="longitude" required value="{{old('longitude', $entidade->longitude)}}" maxlength="150">
+                  name="longitude"   id="longitude"  required value="{{old('longitude', $entidade->longitude)}}" maxlength="150">
               </div>
             </div>
             <div class="col-md-12 px-8">
@@ -276,8 +276,8 @@
                     width: 15em;
                 }
             </style>
-            <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD2JOV40dm1OczqGvDLCfYEY5ijE4e_GBY&callback=initMap" async defer></script>
-            <script>
+            <script src="{{env('MAP_APP_URL_KEY')}}" async defer></script>
+              <script>
                 var map;
                 function initMap() {
                  
