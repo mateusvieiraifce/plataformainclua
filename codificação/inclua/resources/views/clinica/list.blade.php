@@ -40,7 +40,7 @@
                      <td>
                        <a href="{{route('especialidadeclinica.list', $ent->id)}}" rel="tooltip"
                         title="Adicionar especialidades" class="btn btn-link" data-original-title="Remove">
-                        <i class="tim-icons icon-sound-wave">
+                        <i class="tim-icons icon-single-02">
                           Especilistas</i>
                        </a>
                      </td>
