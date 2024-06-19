@@ -202,6 +202,9 @@ Route::middleware('auth')->group(function() {
     #CONSULTAS_POR_ESPECIALISTA
     Route::get("/consulta/listconsultas/",[\App\Http\Controllers\ConsultaController::class,'listconsultaporespecialista'])->name('consulta.listconsultaporespecialista');
 
+     #MARCAR_CONSULTA_USUARIO_PACIENTE
+     Route::get("/paciente/marcarconsulta/",[\App\Http\Controllers\PacienteController::class,'marcarconsultapasso1'])->name('paciente.marcarconsultapasso1');
+
 
 });
 
