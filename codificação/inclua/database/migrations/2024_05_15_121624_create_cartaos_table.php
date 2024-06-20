@@ -24,7 +24,7 @@ class CreateCartaosTable extends Migration
             $table->string('principal', 1)->nullable();
             $table->timestamps();
             
-            $table->foreign('user_id')->references('id')->on('users');            
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

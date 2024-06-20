@@ -42,7 +42,8 @@ class User extends Authenticatable
         'ativo',
         'sexo',
         'tipo_pessoa',
-        'tipo_user'
+        'tipo_user',
+        'etapa_cadastro'
     ];
 
     /**

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helper;
 use App\Models\Endereco;
+use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -47,6 +48,10 @@ class EnderecoController extends Controller
             $endereco->bairro = $request->bairro;
             $endereco->principal = true;
             $endereco->save();
+
+            $user = User::find($request->id_usuario);
+            $user->etapa_cadastro = '4';
+            $user->save();
 
             $msg = ['valor' => trans("Cadastro de endereço realizado com sucesso!"), 'tipo' => 'success'];
             session()->flash('msg', $msg);
