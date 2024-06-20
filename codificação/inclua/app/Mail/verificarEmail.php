@@ -29,7 +29,7 @@ class verificarEmail extends Mailable
      */
     public function build()
     {
-        return $this->from(env('MAIL_USERNAME'), 'Inclua')
+        return $this->from(env('MAIL_USERNAME'), env('APP_NAME'))
             ->subject('Confirme seu e-mail')
             ->markdown('emails.verificar_email', ['codigo' => $this->codigo]);
     }

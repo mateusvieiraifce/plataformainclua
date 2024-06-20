@@ -31,7 +31,7 @@
         <meta property="og:image" content="https://s3.amazonaws.com/creativetim_bucket/products/164/original/opt_blk_laravel_thumbnail.jpg?1561102244" />
         <meta property="og:description" content="Black Dashboard Laravel is a beautiful Bootstrap 4 admin dashboard with a large number of components, designed to look beautiful and organized. If you are looking for a tool to manage and visualize data about your business, this dashboard is the thing for you." />
         <meta property="og:site_name" content="Creative Tim" />
-        <title>{{ config('app.name', 'Ecomoda') }}</title>
+        <title>{{ config('app.name', 'Conecta Agropec') }}</title>
         <!-- Favicon -->
         <link rel="apple-touch-icon" sizes="76x76" href="/assets/img/apple-icon.png">
         <link rel="icon" type="image/png" href="/assets/img/favicon.png">

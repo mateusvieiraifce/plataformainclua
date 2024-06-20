@@ -8,7 +8,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <!--<title>{{ config('app.name', 'Black Dashboard') }}</title> -->
-        <title>@yield('title') | Inclua</title>
+        <title>@yield('title') | Conecta Agropec</title>
         <!-- Favicon -->
         <link rel="apple-touch-icon" sizes="76x76" href="/assets/img/apple-icon.png">
         <link rel="icon" type="image/png" href="/assets/img/favicon.png">

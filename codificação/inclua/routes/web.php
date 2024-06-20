@@ -13,6 +13,21 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('/', function () {
+    \Illuminate\Support\Facades\App::setLocale("pt-br");
+    return view('welcome');
+});
+Route::get('/esp', function () {
+    \Illuminate\Support\Facades\App::setLocale("es_ES");
+    return view('welcome');
+});
+Route::get('/en', function () {
+    \Illuminate\Support\Facades\App::setLocale("en");
+    return view('welcome');
+});
+
+
 Route::get('/sobre', function () {
     return view('frente/about');
 })->name('home.sobre');
@@ -21,7 +36,10 @@ Route::get('/contato', function () {
     return view('frente/contato');
 })->name('contato');
 
-Route::get("/", [\App\Http\Controllers\UsuarioController::class, 'index'])->name('index');
+Route::get("/login", [\App\Http\Controllers\UsuarioController::class, 'index'])->name('login');
+Route::get("/index", [\App\Http\Controllers\UsuarioController::class, 'index'])->name('index');
+Route::post("/sendmail",[\App\Http\Controllers\HomeController::class,'sendMail'])->name('home.email');
+
 
 Route::get('/checkout', [\App\Http\Controllers\CheckoutControler::class, "checkout"])->name('finalizar');
 
@@ -72,7 +90,7 @@ Route::middleware('auth')->group(function() {
     Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'home'])->name('home');
 
     Route::get("/turnvendedor",[\App\Http\Controllers\UsuarioController::class,'turnVendedor'])->name('user.turnvendedor');
-    
+
     #USERS
     Route::get("/user/comentarios",[\App\Http\Controllers\UsuarioController::class,'comentariosComprador'])->name('user.comentarios');
     Route::get("/user/compras",[\App\Http\Controllers\UsuarioController::class,'compras'])->name('user.compras');
@@ -173,7 +191,7 @@ Route::middleware('auth')->group(function() {
     Route::get("/especialidadeclinica/delete/{id}",[\App\Http\Controllers\EspecialidadeclinicaController::class,'delete'])->name('especialidadeclinica.delete')->middleware('auth');
     Route::get("/especialidadeclinica/edit/{id}",[\App\Http\Controllers\EspecialidadeclinicaController::class,'edit'])->name('especialidadeclinica.edit')->middleware('auth');
     Route::get("/especialidadeclinica/listclinica",[\App\Http\Controllers\EspecialidadeclinicaController::class,'listclinica'])->name('especialidadeclinica.listclinica')->middleware('auth');
-  
+
 
     #ESPECIALISTA
     Route::get("/especialista/list",[\App\Http\Controllers\EspecialistaController::class,'list'])->name('especialista.list')->middleware('auth');
@@ -182,8 +200,8 @@ Route::middleware('auth')->group(function() {
     Route::post("/especialista/save",[\App\Http\Controllers\EspecialistaController::class,'save'])->name('especialista.save')->middleware('auth');
     Route::get("/especialista/delete/{id}",[\App\Http\Controllers\EspecialistaController::class,'delete'])->name('especialista.delete')->middleware('auth');
     Route::get("/especialista/edit/{id}",[\App\Http\Controllers\EspecialistaController::class,'edit'])->name('especialista.edit')->middleware('auth');
-    
-    #ESPECIALISTA_POR_CLINICA    
+
+    #ESPECIALISTA_POR_CLINICA
     Route::get("/especialistaclinica/list/{clinica_id}",[\App\Http\Controllers\EspecialistaclinicaController::class,'list'])->name('especialistaclinica.list')->middleware('auth');
     Route::get("/especialistaclinica/new/{clinica_id}",[\App\Http\Controllers\EspecialistaclinicaController::class,'new'])->name('especialistaclinica.new')->middleware('auth');
     Route::get("/especialistaclinica/search/{clinica_id}",[\App\Http\Controllers\EspecialistaclinicaController::class,'search'])->name('especialistaclinica.search')->middleware('auth');
@@ -191,7 +209,7 @@ Route::middleware('auth')->group(function() {
     Route::get("/especialistaclinica/delete/{id}",[\App\Http\Controllers\EspecialistaclinicaController::class,'delete'])->name('especialistaclinica.delete')->middleware('auth');
     Route::get("/especialistaclinica/edit/{id}",[\App\Http\Controllers\EspecialistaclinicaController::class,'edit'])->name('especialistaclinica.edit')->middleware('auth');
 
-    #CONSULTAS_DISPONIBILIZADAS_POR_ESPECIALISTA 
+    #CONSULTAS_DISPONIBILIZADAS_POR_ESPECIALISTA
     Route::get("/consulta/list/",[\App\Http\Controllers\ConsultaController::class,'list'])->name('consulta.list')->middleware('auth');
     Route::get("/consulta/new/{especialista_id}",[\App\Http\Controllers\ConsultaController::class,'new'])->name('consulta.new')->middleware('auth');
     Route::get("/consulta/search/{especialista_id}",[\App\Http\Controllers\ConsultaController::class,'search'])->name('consulta.search')->middleware('auth');
@@ -200,7 +218,7 @@ Route::middleware('auth')->group(function() {
     Route::get("/consulta/edit/{id}",[\App\Http\Controllers\ConsultaController::class,'edit'])->name('consulta.edit')->middleware('auth');
     Route::get("/consulta/agenda/",[\App\Http\Controllers\ConsultaController::class,'agenda'])->name('consulta.agenda')->middleware('auth');
     Route::post("/consulta/saveagenda/",[\App\Http\Controllers\ConsultaController::class,'saveVariasConsultas'])->name('consulta.saveagenda')->middleware('auth');
-    
+
     #CLINICAS_POR_ESPECIALISTA
     Route::get("/clinica/vinculo/",[\App\Http\Controllers\EspecialistaclinicaController::class,'clinicasdoespecilista'])->name('especialistaclinica.clinicas');
 

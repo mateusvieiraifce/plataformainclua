@@ -18,14 +18,13 @@
                         <div id="type-user" class="input-group {{ $errors->has('type_user') ? 'has-danger' : '' }} input-medium">
                             <select id="type_user" name="type_user" class="form-control border-full {{ $errors->has('type_user') ? 'is-invalid' : '' }}">
                                 <option value=""></option>
-                                <option id="paciente" @if (isset($user) && $user->tipo_user == "P") selected @endif value="formPaciente">Paciente</option>
+                                <option id="paciente" @if (isset($user) && $user->tipo_user == "P") selected @endif value="formPaciente">Usuário</option>
                                 <option id="especialista" @if (isset($user) && $user->tipo_user == "E") selected @endif value="formEspecialista">Especialista</option>
-                                <option id="clinica" @if (isset($user) && $user->tipo_user == "C") selected @endif value="formClinica">Clínica</option>
                             </select>
                             @include('alerts.feedback', ['field' => 'type_user'])
                         </div>
                     </div>
-                    
+
                     <form id="formPaciente" class="form" method="post" action="{{ route('usuario.store') }}">
                         @csrf
                         <div class="form-group">
@@ -38,7 +37,7 @@
                                 @include('alerts.feedback', ['field' => 'email'])
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="password">
                                 Senha <span class="required">*</span>
@@ -49,7 +48,7 @@
                                 @include('alerts.feedback', ['field' => 'password'])
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="password_confirmation">
                                 Confirme a senha <span class="required">*</span>
@@ -60,7 +59,7 @@
                                 @include('alerts.feedback', ['field' => 'password_confirmation'])
                             </div>
                         </div>
-                        
+
                         <div class="input-group">
                             <button type="submit" class="btn btn-primary btn-round btn-lg">{{ __('Próximo') }}</button>
                         </div>
@@ -76,7 +75,7 @@
                         @csrf
                         Form Clínica
                     </form>
-                </div>                    
+                </div>
             </div>
         </div>
     </div>

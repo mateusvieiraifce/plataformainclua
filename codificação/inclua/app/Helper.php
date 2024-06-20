@@ -78,7 +78,7 @@ class Helper
                     Esta mensagem foi enviada de um endereço de e-mail que apenas envia mensagens.<br>
                     Para obter mais informações sobre sua conta, envie e-mail para: '.env("EMAIL_ADMIN").'
                     <br /><br />
-                    &copy; ' . date('Y') . ' Todos os direitos reservados Ecomoda
+                    &copy; ' . date('Y') . ' Todos os direitos reservados ' .env('APP_NAME').'
                 </font><br />
                 ';
 
@@ -176,7 +176,7 @@ class Helper
             substr($documento, 9, 2);
         return $docFormatado;
     }
-    
+
 
     public static function pagamentoMercadoPago($descricao,$qnt,$preco,$ref)
     {
@@ -211,7 +211,7 @@ class Helper
             return redirect()->route('subscription.index')->with('error', 'Erro ao buscar os planos: ' . $e->getMessage());
         }
     }
-    
+
     //Função para adicionar meses a uma determinada data
     public static function addMonthsToDate($date, $months)
     {
@@ -222,7 +222,7 @@ class Helper
     public static function createCheckouSumup()
     {
         //CODIGO CREATE CHECKOUT
-        $curl = curl_init();        
+        $curl = curl_init();
         curl_setopt_array($curl, array(
             CURLOPT_URL => 'https://api.sumup.com/v0.1/checkouts',
             CURLOPT_RETURNTRANSFER => true,
@@ -232,7 +232,7 @@ class Helper
                 "amount": '.floatval(Helper::converterMonetario(env('PRECO_ASSINATURA'))).',
                 "currency": "BRL",
                 "pay_to_email": "'.env('EMAIL_TO_PAY').'",
-                "description": "Plataforma Inclua - Assinatura",
+                "description": "Plataforma"'.env("").'" - Assinatura",
                 "redirect_url": "'.route('callback.payment').'"
             }',
             CURLOPT_HTTPHEADER => array(
@@ -299,7 +299,7 @@ class Helper
 
         return $response;
     }
-    
+
     public static function converterMonetario($input)
     {
         $output = strlen(trim($input)) == 0 ? 0 : $input;

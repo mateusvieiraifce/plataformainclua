@@ -60,8 +60,8 @@ class UsuarioController extends Controller
             }
             $msgemail = " <br>Para recuperar sua conta, acesse o link, ".
                 ", acessse  ".env('URL_RECOVER').$token.
-                " Atenciosamente, Ecomoda. ";
-            Helper::sendEmail("Recuperação de senha da  Plataforma Ecomoda",$msgemail,$request->email);
+                " Atenciosamente, ".env('APP_NAME');
+            Helper::sendEmail("Recuperação de senha da  Plataforma ".env("APP_NAME") ,$msgemail,$request->email);
 
         }else{
             //$msg = ['valor'=>trans('messport.pass_conf'),'tipo'=>'primary'];
@@ -166,7 +166,7 @@ class UsuarioController extends Controller
         //QUANDO O USUARIO INSERIR UM E-MAIL JÁ CADASTRADO
         if ($request->id_usuario == null) {
             $user = User::where('email', $request->email)->first();
-            
+
             if ($user) {
                 return $this->verifyCadastro($user->id);
             }
@@ -294,7 +294,7 @@ class UsuarioController extends Controller
             $user->tipo_user = $request->tipo_user;
             $user->etapa_cadastro = '3';
             $user->save();
-            Helper::sendSms($user->celular, "Bem vindo a plataforma Inclua, o seu código de verificação é: $user->codigo_validacao");
+            Helper::sendSms($user->celular, "Bem vindo a plataforma ".env("APP_NAME").", o seu código de verificação é: $user->codigo_validacao");
 
             $msg = ['valor' => trans("Cadastro de dados pessoais realizado com sucesso!"), 'tipo' => 'success'];
             session()->flash('msg', $msg);
@@ -360,15 +360,15 @@ class UsuarioController extends Controller
             return redirect()->route('usuario.edit', ['id_usuario' => $user->id]);
         } else if ($user->etapa_cadastro == '2') {
             session()->flash('msg', ['valor' => trans("Já existe um cadastro realizado com o e-mail utilizado, prossiga com o seu cadastro."), 'tipo' => 'success']);
-            
+
             return redirect()->route('usuario.dados.edit', ['id_usuario' => $user->id]);
         } else if ($user->etapa_cadastro == '3') {
             session()->flash('msg', ['valor' => trans("Já existe um cadastro realizado com o e-mail utilizado, prossiga com o seu cadastro."), 'tipo' => 'success']);
-            
+
             return redirect()->route('endereco.create', ['id_usuario' => $user->id]);
         } else if ($user->etapa_cadastro == '4') {
             session()->flash('msg', ['valor' => trans("Já existe um cadastro realizado com o e-mail utilizado, prossiga com o seu cadastro."), 'tipo' => 'success']);
-            
+
             return redirect()->route('cartao.create', ['id_usuario' => $user->id]);
         } else if ($user->etapa_cadastro == 'F') {
             session()->flash('msg', ['valor' => trans("Seu cadastro foi finalizado com sucesso!"), 'tipo' => 'success']);
@@ -377,10 +377,10 @@ class UsuarioController extends Controller
             return redirect()->route('home');
         } else {
             session()->flash('msg', ['valor' => trans("Realize o seu cadastro"), 'tipo' => 'danger']);
-            
+
             return redirect()->route('index');
         }
-         
+
     }
 
     public function preEdit($id=null){

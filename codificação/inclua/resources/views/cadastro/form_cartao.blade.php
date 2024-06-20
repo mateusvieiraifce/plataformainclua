@@ -10,9 +10,24 @@
                 <div class="card-header">
                     <h2 class="title">Dados para pagamento</h2>
                 </div>
-                <div class="card-body">                    
+                <div class="card-body">
                     <form class="form" method="post" action="{{ route('pagamento.assinatura') }}">
                         @csrf
+                        <div class="form-group">
+                            <label for="numero_cartao">
+                                Plano <span class="required">*</span>
+                            </label>
+                            <div class="input-group {{ $errors->has('numero_cartao') ? ' has-danger' : '' }} input-medium">
+                                <select name="sexo" class="form-control border-full {{ $errors->has('sexo') ? 'is-invalid' : '' }}">
+                                    <option value="F" @if ((isset($user) && $user->sexo == 'F') || old('sexo') == 'F') selected @endif>Basic Pets - 60,00 R$</option>
+                                    <option value="M" @if ((isset($user) && $user->sexo == 'M') || old('sexo') == 'M') selected @endif>Profissional Pets - 98,00 R$</option>
+                                    <option value="F" @if ((isset($user) && $user->sexo == 'F') || old('sexo') == 'F') selected @endif>Basic Pec - 60,00 R$</option>
+                                    <option value="M" @if ((isset($user) && $user->sexo == 'M') || old('sexo') == 'M') selected @endif>Profissional Pec - 80,00 R$</option>
+
+                                    </select>
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <label for="numero_cartao">
                                 Número do cartão <span class="required">*</span>
@@ -23,7 +38,7 @@
                                 @include('alerts.feedback', ['field' => 'numero_cartao'])
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="validade">
                                 Validade <span class="required">*</span>
@@ -34,7 +49,7 @@
                                 @include('alerts.feedback', ['field' => 'validade'])
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="codigo_seguranca">
                                 Código de segurança <span class="required">*</span>
@@ -45,7 +60,7 @@
                                 @include('alerts.feedback', ['field' => 'codigo_seguranca'])
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="nome_titular">
                                 Nome do titular <span class="required">*</span>
@@ -62,7 +77,7 @@
                         </div>
                         <input type="hidden" name="id_usuario" value="{{ $id_usuario }}">
                     </form>
-                </div>                    
+                </div>
             </div>
         </div>
     </div>
