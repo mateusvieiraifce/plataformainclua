@@ -23,13 +23,16 @@
                     <div class="card card-custom">
                         <div class="card-body">
                             <h5 class="card-title">Escolha pela clínica</h5>
-                            <button class="btn btn-success" onclick="$('#send').click(); "><i class="fa fa-save"></i> Próximo</button>
+                            <a href="{{route('paciente.marcarconsultapasso2Clinica')}}"
+                             class="btn btn-success">Próximo <i
+                                    class="tim-icons icon-double-right"></i> </a>
                         </div>
                     </div>
                     <div class="card card-custom">
                         <div class="card-body">
                             <h5 class="card-title">Escolha pela especialidade</h5>
-                            <button class="btn btn-success" onclick="$('#send').click(); "><i class="tim-icons icon-minimal-right"></i> Próximo</button>
+                            <a href="#" class="btn btn-success">Próximo <i
+                                    class="tim-icons icon-double-right"></i> </a>
                         </div>
                     </div>
                 </div>
