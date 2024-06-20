@@ -8,7 +8,7 @@
                     <img class="img-card" src="{{ asset('assets/img/logo-01.png') }}" alt="Card image" >
                 </div>
                 <div class="card-header">
-                    <h2 class="title">{{ isset($user) ? "Editar" : "Cadastro de " }} dados pessoais</h2>
+                    <h2 class="title">Cadastro de dados pessoais</h2>
                 </div>
                 <div class="card-body">
                     <form class="form" method="post" action="{{ route('usuario.dados.store') }}" enctype="multipart/form-data">
@@ -18,7 +18,7 @@
                                 Imagem <span class="required">*</span>
                             </label>
                             <br>
-                            <img class="img-avatar" src="{{ isset($user) && !empty($user->avatar) ? asset($user->avatar) : asset('assets/img/default-avatar.png')}}" id="preview" alt="Avatar">
+                            <img class="img-avatar" src="{{ asset('assets/img/default-avatar.png') }}" id="preview" alt="Avatar">
                             <div class="custom-file">
                                 <input class="custom-file-input hidden" type="file" id="image" name="image" onchange="visualizarImagem(event)" accept="image/jpeg,image/jpg,image/png">
                                 <label class="btn custom-file-label input-small {{ $errors->has('image') ? 'is-invalid' : '' }}" for="image"></label>
@@ -32,7 +32,7 @@
                             </label>
                             <div class="input-group input-medium{{ $errors->has('cpf') ? ' has-danger' : '' }}">
                                 <input type="text" id="cpf" class="form-control border-full {{ $errors->has('cpf') ? 'is-invalid' : '' }}"
-                                    name="cpf" maxlength="14" placeholder="000.000.000-00" value="{{ (isset($user) ? $user->documento : null) ?? old('cpf') }}">
+                                    name="cpf" maxlength="14" placeholder="000.000.000-00" value="{{ (isset($user) && $user->documento ? $user->documento : null) ?? old('cpf') }}">
                                 @include('alerts.feedback', ['field' => 'cpf'])
                             </div>
                         </div>
@@ -54,7 +54,7 @@
                             </label>
                             <div class="input-group input-medium{{ $errors->has('celular') ? ' has-danger' : '' }}">
                                 <input type="text" id="celular" class="form-control border-full {{ $errors->has('celular') ? 'is-invalid' : '' }}"
-                                    name="celular" maxlength="15" placeholder="Fone:(**) 9****-****" value="{{ (isset($user) ? $user->celular : null) ?? old('celular') }}">
+                                    name="celular" maxlength="15" placeholder="Fone:(**) 9****-****" value="{{ (isset($user) && $user->celular ? $user->celular : null) ?? old('celular') }}">
                                 @include('alerts.feedback', ['field' => 'celular'])
                             </div>
                         </div>
