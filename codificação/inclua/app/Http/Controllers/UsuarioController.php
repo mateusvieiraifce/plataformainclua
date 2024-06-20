@@ -229,11 +229,12 @@ class UsuarioController extends Controller
 
     public function storeDadosPessoais(Request $request)
     {
-        //REMOÇÃO DA MASCARA DO CELULAR PARA COMPARAR COM O BD
+        //REMOÇÃO DA MASCARA DO CELULAR E DOCUMENTO PARA COMPARAR COM O BD
         $request->request->set('celular', Helper::removerCaractereEspecial($request->celular));
+        $request->request->set('cpf', Helper::removerCaractereEspecial($request->cpf));
         $rules = [
             "image" => "required",
-            "cpf" => "required",
+            "cpf" => "required|unique:users,documento,{$request->id_usuario}",
             "nome" => "required|min:5",
             "celular" => "required|unique:users,celular,{$request->id_usuario}",
             "data_nascimento" => "required",
@@ -244,6 +245,7 @@ class UsuarioController extends Controller
         $feedbacks = [
             "image.required" => "O campo Imagem é obrigatório.",
             "cpf.required" => "O campo CPF é obrigatório.",
+            "cpf.unique" => "Este CPF já foi utilizado.",
             "nome.required" => "O campo nome é obrigatório.",
             "nome.min" => "O campo nome deve ter no mínomo 5 caracteres.",
             "celular.required" => "O campo Celular é obrigatório.",

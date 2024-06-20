@@ -37,6 +37,13 @@ Route::get("/cadastrar/endereço/create/{id_usuario}",[\App\Http\Controllers\End
 Route::post("/cadastrar/endereço/store",[\App\Http\Controllers\EnderecoController::class,'storeEndereco'])->name('endereco.store');
 Route::get("/cadastrar/cartao/create/{id_usuario}",[\App\Http\Controllers\CartaoController::class,'create'])->name('cartao.create');
 
+#TESTES API
+Route::get("/checkout",[\App\Http\Controllers\CartaoController::class,'create_checkout']);
+Route::post("/pagamento/assinatura",[\App\Http\Controllers\AssinaturaController::class,'lancarAssinatura'])->name('pagamento.assinatura');
+Route::get("/callback-payment",[\App\Http\Controllers\AssinaturaController::class,'callbackPaymentAssinatura'])->name('callback.payment');
+Route::get("/custumer",[\App\Http\Controllers\CartaoController::class,'create_custumer']);
+Route::get("/recuperara",[\App\Http\Controllers\CartaoController::class,'recuperar']);
+
 #ASSINATURA
 Route::post("/assinatura/aprovar",[\App\Http\Controllers\AssinaturaController::class,'lancarAssinatura'])->name('assinatura.aprovar');
 Route::get("/assinatura/renovar/{id_usuario}",[\App\Http\Controllers\AssinaturaController::class,'renovarAssinatura'])->name('assiantura.renovar');

@@ -11,11 +11,12 @@ class Cartao extends Model
     
     protected $fillable = [
         'user_id',
-        'token',
-        'issuer_id',
-        'installments',
-        'payment_method_id',
-        'email'
+        'numero_cartao',
+        'mes_validade',
+        'ano_validade',
+        'codigo_seguranca',
+        'nome_titular',
+        'status'
     ];
 
     protected $table = 'cartoes';

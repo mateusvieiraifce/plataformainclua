@@ -218,4 +218,93 @@ class Helper
         $nextdate = strtotime("{$date} + {$months} months");
         return date('Y-m-d', $nextdate);
     }
+
+    public static function createCheckouSumup()
+    {
+        //CODIGO CREATE CHECKOUT
+        $curl = curl_init();        
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://api.sumup.com/v0.1/checkouts',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => '{
+                "checkout_reference": "Teste - Assinatura '.Helper::generateRandomNumberString(5).'",
+                "amount": '.floatval(Helper::converterMonetario(env('PRECO_ASSINATURA'))).',
+                "currency": "BRL",
+                "pay_to_email": "'.env('EMAIL_TO_PAY').'",
+                "description": "Plataforma Inclua - Assinatura",
+                "redirect_url": "'.route('callback.payment').'"
+            }',
+            CURLOPT_HTTPHEADER => array(
+                'accept: application/json',
+                'content-type: application/json',
+                'Authorization: Bearer '.env("SAMUP_KEY")
+            ),
+        ));
+        $response = curl_exec($curl);
+        $response = json_decode($response);
+        curl_close($curl);
+
+        return $response;
+    }
+
+    public static function createPagamento($dados, $checkout)
+    {
+        //PAGAMENTO PADRÃO
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://api.sumup.com/v0.1/checkouts/'.$checkout->id,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_CUSTOMREQUEST => 'PUT',
+            CURLOPT_POSTFIELDS => '{
+                "payment_type": "card",
+                "card": {
+                    "name": "'.$dados->nome_titular.'",
+                    "number": "'.Helper::removeMascaraDocumento($dados->numero_cartao).'",
+                    "expiry_month": "'.date("m", strtotime($dados->validade)).'",
+                    "expiry_year": "'.date("Y", strtotime($dados->validade)).'",
+                    "cvv": "'.$dados->codigo_seguranca.'"
+                }
+            }',
+            CURLOPT_HTTPHEADER => array(
+                'accept: application/json',
+                'content-type: application/json',
+                'Authorization: Bearer '.env("SAMUP_KEY")
+            ),
+        ));
+
+        $response = curl_exec($curl);
+        $response = json_decode($response);
+        curl_close($curl);
+
+        return $response;
+    }
+
+    public static function getCheckout($checkout_id)
+    {
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://api.sumup.com/v0.1/checkouts/'.$checkout_id,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+            CURLOPT_HTTPHEADER => array(
+                'accept: application/json',
+                'content-type: application/json',
+                'Authorization: Bearer '.env("SAMUP_KEY")
+            ),
+        ));
+        $response = curl_exec($curl);
+        $response = json_decode($response);
+        curl_close($curl);
+
+        return $response;
+    }
+    
+    public static function converterMonetario($input)
+    {
+        $output = strlen(trim($input)) == 0 ? 0 : $input;
+        $output = str_replace(".", ".", $output);
+        $output = str_replace(",", ".", $output);
+        return (float) $output;
+    }
 }

@@ -16,9 +16,13 @@ class CreateAssinaturasTable extends Migration
         Schema::create('assinaturas', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('cartao_id')->unsigned();
-            $table->date('data_pagamento');
             $table->date('data_renovacao');
             $table->string('status', 255);
+            $table->string('assinante', 255);
+            $table->string('mes_referencia', 4);
+            $table->string('transaction_code', 256);
+            $table->string('motivo', 256)->nullable();
+            $table->string('situacao', 256)->nullable();
 
             $table->foreign('cartao_id')->references('id')->on('cartoes');
         });
