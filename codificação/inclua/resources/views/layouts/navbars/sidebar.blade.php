@@ -246,7 +246,7 @@
             </li>
             @endif
 
-            <!-- usuario tipo Especialista -->
+            <!-- usuario tipo Paciente -->
             @if(\Illuminate\Support\Facades\Auth::user()->tipo_user ==='P')
             <li @if ($pageSlug=='dashboard' ) class="active " @endif>
                 <a href="{{route('home')}}">
@@ -266,8 +266,8 @@
                     <p>{{ __('Marcação de consultas') }}</p>
                 </a>
             </li>
-            <li @if ($pageSlug=='comentarios' ) class="active " @endif>
-                <a href="{{route('user.comentarios')}}">
+            <li @if ($pageSlug=='historicoconsultas' ) class="active " @endif>
+                <a href="{{route('paciente.historicoconsultas')}}">
                     <i class="tim-icons icon-bullet-list-67"></i>
                     <p>{{ __('Histórico de Consulta') }}</p>
                 </a>

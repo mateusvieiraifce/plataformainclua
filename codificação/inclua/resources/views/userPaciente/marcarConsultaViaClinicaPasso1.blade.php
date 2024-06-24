@@ -1,82 +1,165 @@
 @extends('layouts.app', ['page' => __('Marcar Consulta'), 'pageSlug' => 'marcarconsulta', 'class' => 'especialidade'])
 @section('title', 'Marcar Consulta')
 @section('content')
+<style>
+   .progress {
+  width: 100%;
+  height: 30%;
+  list-style: none;
+  list-style-image: none;
+  margin: 20px 0 10px 0;
+  padding: 10;
+}
+.progress li {
+  float: left;
+  text-align: center;
+  position: relative;
+}
 
+.progress .step {
+  color: black;
+  border: 3px solid silver;
+  background-color: silver;
+  border-radius: 20%;
+  line-height: 1.2;
+  width: 1.2em;
+  height: 1.2em;
+  display: inline-block;
+  z-index: 0;
+  padding: 0 0 0 50px;
+  margin: 5px;
+}
+.progress .step span {
+  opacity: 0.3;
+}
+.progress .step:before {
+  content: "";
+  display: block;
+  background-color: silver;
+  height: 0.4em;
+  width: 50%;
+  position: absolute;
+  bottom: 0.6em;
+  left: 0;
+  z-index: -1;
+}
+.progress .step:after {
+  content: "";
+  display: block;
+  background-color: silver;
+  height: 0.4em;
+  width: 50%;
+  position: absolute;
+  bottom: 0.6em;
+  right: 0;
+  z-index: -1;
+}
+.progress li:first-of-type .step:before {
+  display: none;
+}
+.progress li:last-of-type .step:after {
+  display: none;
+}
+.progress .done .step,
+.progress .done .step:before,
+.progress .done .step:after,
+.progress .active .step,
+.progress .active .step:before {
+  background-color: yellowgreen;
+}
+.progress .done .step,
+.progress .active .step {
+  border: 3px solid yellowgreen;
+}
+   </style>
 
 <div class="row">
-      <div class="col-lg-12 col-md-12">
-         <div class="card card-tasks">
-            <div class="card-header">
-               <h6 class="title d-inline">Escolha onde consultar </h6>               
-            </div>
-            <div class="card-body">
-               <div class="table-responsive">
-                  <table class="table">
-                     <thead>
-                        <th> Clínica </th>                      
-                        <th> Telefone </th>
-                        <th>  </th>
-                     </thead>
-                     <tbody>
-                        @if(sizeof($lista) > 0)
+   <div class="col-lg-12 col-md-12">
+      <div class="card card-tasks">      
+         <div class="card-header">          
+         <ol class="progress">        
+               <li class="done">
+                  <span class="step"><span></span></span>
+               </li>
+               <li>
+                  <span class="step"><span></span></span>
+               </li>
+               <li>
+                  <span class="step"><span></span></span>
+               </li>
+               <li>
+                  <span class="step"><span></span></span>
+               </li>
+             
+            </ol>
+      
+
+            <h6 class="title d-inline">Escolha onde consultar </h6>
+         </div>
+         <div class="card-body">
+            <div class="table-responsive">
+               <table class="table">
+                  <thead>
+                     <th> Clínica </th>
+                     <th> Telefone </th>
+                     <th> </th>
+                  </thead>
+                  <tbody>
+                     @if(sizeof($lista) > 0)
                      @foreach($lista as $ent)
-                   <tr>
-                     <td>{{$ent->nome}}</td>                   
-                     <td>{{$ent->telefone}}</td>                   
-                     <td>
-                       <a style="max-height: 35px;"  href="{{route('paciente.marcarConsultaViaClinicaPasso2',$ent->id)}}"
-                             class="btn btn-success">Próximo <i
-                               class="tim-icons icon-double-right"> </i> </a>
-                     </td>                   
-               @endforeach 
-                     @endif                     
-                   </tbody>
-                  </table>
-                  <div>
-                     @if ($lista->lastPage() > 1)
-                                  @php
-                            $paginator = $lista;
-                            $paginator->url = route('clinica.list');
-                        @endphp
-                                  <ul class="pagination">
-                                    <li class="{{ ($paginator->currentPage() == 1) ? ' disabled' : '' }}">
-                                       <a href="{{$paginator->url . "?page=1&filtro=" . $filtro }}">&nbsp;<<&nbsp;&nbsp;</a>
-                                    </li>
-                                    @for ($i = 1; $i <= $paginator->lastPage(); $i++)
-                                          <?php
-                                 $link_limit = 7;
-                                 $half_total_links = floor($link_limit / 2);
-                                 $from = $paginator->currentPage() - $half_total_links;
-                                 $to = $paginator->currentPage() + $half_total_links;
-                                 if ($paginator->currentPage() < $half_total_links) {
-                                  $to += $half_total_links - $paginator->currentPage();
-                                 }
-                                 if ($paginator->lastPage() - $paginator->currentPage() < $half_total_links) {
-                                  $from -= $half_total_links - ($paginator->lastPage() - $paginator->currentPage()) - 1;
-                                 }    ?>
-                                          @if ($from < $i && $i < $to)
-                                   <li class="{{ ($paginator->currentPage() == $i) ? ' active' : '' }}">
-                                     @if($paginator->currentPage() == $i)
-                               <a href="{{ $paginator->url . "?page=" . $i . "&filtro=" . $filtro }} "> <b>{{ $i }}</b> &nbsp; </a>
-                            @else
-                         <a href="{{ $paginator->url . "?page=" . $i . "&filtro=" . $filtro }} ">{{ $i }} &nbsp; </a>
-                      @endif
-                                   </li>
-                                @endif
+                     <tr>
+                        <td>{{$ent->nome}}</td>
+                        <td>{{$ent->telefone}}</td>
+                        <td>
+                           <a style="max-height: 35px;" href="{{route('paciente.marcarConsultaViaClinicaPasso2',$ent->id)}}" class="btn btn-success">Próximo <i class="tim-icons icon-double-right"> </i> </a>
+                        </td>
+                        @endforeach
+                        @endif
+                  </tbody>
+               </table>
+               <div>
+                  @if ($lista->lastPage() > 1)
+                  @php
+                  $paginator = $lista;
+                  $paginator->url = route('clinica.list');
+                  @endphp
+                  <ul class="pagination">
+                     <li class="{{ ($paginator->currentPage() == 1) ? ' disabled' : '' }}">
+                        <a href="{{$paginator->url . "?page=1&filtro=" . $filtro }}">&nbsp;<<&nbsp;&nbsp;< /a>
+                     </li>
+                     @for ($i = 1; $i <= $paginator->lastPage(); $i++)
+                        <?php
+                        $link_limit = 7;
+                        $half_total_links = floor($link_limit / 2);
+                        $from = $paginator->currentPage() - $half_total_links;
+                        $to = $paginator->currentPage() + $half_total_links;
+                        if ($paginator->currentPage() < $half_total_links) {
+                           $to += $half_total_links - $paginator->currentPage();
+                        }
+                        if ($paginator->lastPage() - $paginator->currentPage() < $half_total_links) {
+                           $from -= $half_total_links - ($paginator->lastPage() - $paginator->currentPage()) - 1;
+                        }    ?>
+                        @if ($from < $i && $i < $to) <li class="{{ ($paginator->currentPage() == $i) ? ' active' : '' }}">
+                           @if($paginator->currentPage() == $i)
+                           <a href="{{ $paginator->url . "?page=" . $i . "&filtro=" . $filtro }} "> <b>{{ $i }}</b> &nbsp; </a>
+                           @else
+                           <a href="{{ $paginator->url . "?page=" . $i . "&filtro=" . $filtro }} ">{{ $i }} &nbsp; </a>
+                           @endif
+                           </li>
+                           @endif
                            @endfor
-                                    <li class="{{ ($paginator->currentPage() == $paginator->lastPage()) ? ' disabled' : '' }}">
-                                       <a href="{{ $paginator->url . "?page=" . $paginator->lastPage() . "&filtro=" . $filtro }}"> >></a>
-                                    </li>
-                                  </ul>
-                @endif
-                  </div>
+                           <li class="{{ ($paginator->currentPage() == $paginator->lastPage()) ? ' disabled' : '' }}">
+                              <a href="{{ $paginator->url . "?page=" . $paginator->lastPage() . "&filtro=" . $filtro }}"> >></a>
+                           </li>
+                  </ul>
+                  @endif
                </div>
-           
-            <a href="{{route('paciente.marcarconsulta')}}" class="btn btn-primary"><i
-            class="fa fa-reply"></i> Voltar</a>
             </div>
+
+            <a href="{{route('paciente.marcarconsulta')}}" class="btn btn-primary"><i class="fa fa-reply"></i> Voltar</a>
          </div>
       </div>
    </div>
+</div>
 
 @endsection

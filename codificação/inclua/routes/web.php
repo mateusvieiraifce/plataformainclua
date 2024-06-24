@@ -203,7 +203,6 @@ Route::middleware('auth')->group(function() {
     Route::get("/consulta/listconsultas/",[\App\Http\Controllers\ConsultaController::class,'listconsultaporespecialista'])->name('consulta.listconsultaporespecialista')->middleware('auth');
 
      #MARCAR_CONSULTA_USUARIO_PACIENTE
-     Route::get("/paciente/minhasconsultas/",[\App\Http\Controllers\PacienteController::class,'minhasconsultas'])->name('paciente.minhasconsultas')->middleware('auth');
      Route::get("/paciente/marcarconsulta/",[\App\Http\Controllers\PacienteController::class,'marcarconsulta'])->name('paciente.marcarconsulta')->middleware('auth');
      Route::get("/paciente/marcarconsulta/etapa2",[\App\Http\Controllers\PacienteController::class,'marcarConsultaViaClinicaPasso1'])->name('paciente.marcarConsultaViaClinicaPasso1')->middleware('auth');
      Route::get("/paciente/marcarconsulta/etapa3/{id}",[\App\Http\Controllers\PacienteController::class,'marcarConsultaViaClinicaPasso2'])->name('paciente.marcarConsultaViaClinicaPasso2')->middleware('auth');
@@ -211,6 +210,10 @@ Route::middleware('auth')->group(function() {
      Route::get("/paciente/marcarconsulta/etapa5/{clinica_id}/{especialidade_id}",[\App\Http\Controllers\PacienteController::class,'marcarConsultaViaClinicaPasso4'])->name('paciente.marcarConsultaViaClinicaPasso4')->middleware('auth');
      Route::post("/paciente/marcarconsulta/finalizar/",[\App\Http\Controllers\PacienteController::class,'marcarConsultaViaClinicaFinalizar'])->name('paciente.marcarConsultaViaClinicaFinalizar')->middleware('auth');
  
+     #CONSULTAS_USER_PACIENTE
+     Route::get("/paciente/minhasconsultas/",[\App\Http\Controllers\PacienteController::class,'minhasconsultas'])->name('paciente.minhasconsultas')->middleware('auth');
+     Route::get("/paciente/historicoconsultas/",[\App\Http\Controllers\PacienteController::class,'historicoconsultas'])->name('paciente.historicoconsultas')->middleware('auth');
+  
 
 });
 
