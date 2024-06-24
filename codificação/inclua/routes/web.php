@@ -203,6 +203,7 @@ Route::middleware('auth')->group(function() {
     Route::get("/consulta/listconsultas/",[\App\Http\Controllers\ConsultaController::class,'listconsultaporespecialista'])->name('consulta.listconsultaporespecialista')->middleware('auth');
 
      #MARCAR_CONSULTA_USUARIO_PACIENTE
+     Route::get("/paciente/minhasconsultas/",[\App\Http\Controllers\PacienteController::class,'minhasconsultas'])->name('paciente.minhasconsultas')->middleware('auth');
      Route::get("/paciente/marcarconsulta/",[\App\Http\Controllers\PacienteController::class,'marcarconsulta'])->name('paciente.marcarconsulta')->middleware('auth');
      Route::get("/paciente/marcarconsulta/etapa2",[\App\Http\Controllers\PacienteController::class,'marcarConsultaViaClinicaPasso1'])->name('paciente.marcarConsultaViaClinicaPasso1')->middleware('auth');
      Route::get("/paciente/marcarconsulta/etapa3/{id}",[\App\Http\Controllers\PacienteController::class,'marcarConsultaViaClinicaPasso2'])->name('paciente.marcarConsultaViaClinicaPasso2')->middleware('auth');

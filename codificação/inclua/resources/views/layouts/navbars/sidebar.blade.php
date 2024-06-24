@@ -254,7 +254,13 @@
                     <p>{{ __('Dashboard') }}</p>
                 </a>
             </li>
-            <li @if ($pageSlug=='compras' ) class="active " @endif>
+            <li @if ($pageSlug=='minhasconsultas' ) class="active " @endif>
+                <a href="{{route('paciente.minhasconsultas')}}">
+                    <i class="tim-icons icon-notes"></i>
+                    <p>{{ __('Minhas consultas') }}</p>
+                </a>
+            </li>
+            <li @if ($pageSlug=='marcarconsulta' ) class="active " @endif>
                 <a href="{{route('paciente.marcarconsulta')}}">
                     <i class="tim-icons icon-components"></i>
                     <p>{{ __('Marcação de consultas') }}</p>

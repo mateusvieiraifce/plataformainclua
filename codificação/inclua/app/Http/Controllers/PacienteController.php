@@ -14,6 +14,23 @@ use Illuminate\Support\Facades\Auth;
 
 class PacienteController extends Controller
 {
+   function minhasconsultas()
+   {
+      $paciente =  Paciente::where('usuario_id', '=', Auth::user()->id)->first();     
+      $statusConsulta = "Aguardando atendimento";
+      $lista = Consulta::
+      join('especialistas', 'especialistas.id', '=', 'consultas.especialista_id')->
+      join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')->
+      join('especialidades', 'especialidades.id', '=', 'especialistas.especialidade_id')->
+      where('paciente_id', '=', $paciente->id)->
+      where('status', '=', $statusConsulta)->
+      select('consultas.id', 'horario_agendado','especialistas.nome as nome_especialista',
+      'clinicas.nome as nome_clinica','especialidades.descricao as descricao_especialidade')->
+      orderBy('horario_agendado', 'asc')->paginate(8);
+      return view('userPaciente/minhasconsultas', ['lista' => $lista]);
+
+
+   }
 
    function marcarconsulta()
    {
@@ -98,7 +115,6 @@ class PacienteController extends Controller
       $ent = Consulta::find($request->consulta_id);
       $ent->status = "Aguardando atendimento";
       $ent->save();
-      //mostrar mensagem que foi salvo com sucesso
       $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];    
        return view('userPaciente/marcarconsulta',['msg' => $msg]);
      }
