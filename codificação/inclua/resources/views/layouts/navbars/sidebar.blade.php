@@ -255,7 +255,7 @@
                 </a>
             </li>
             <li @if ($pageSlug=='compras' ) class="active " @endif>
-                <a href="{{route('paciente.marcarconsultapasso1')}}">
+                <a href="{{route('paciente.marcarconsulta')}}">
                     <i class="tim-icons icon-components"></i>
                     <p>{{ __('Marcação de consultas') }}</p>
                 </a>

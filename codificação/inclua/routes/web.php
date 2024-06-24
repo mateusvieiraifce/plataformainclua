@@ -203,10 +203,12 @@ Route::middleware('auth')->group(function() {
     Route::get("/consulta/listconsultas/",[\App\Http\Controllers\ConsultaController::class,'listconsultaporespecialista'])->name('consulta.listconsultaporespecialista')->middleware('auth');
 
      #MARCAR_CONSULTA_USUARIO_PACIENTE
-     Route::get("/paciente/marcarconsulta/",[\App\Http\Controllers\PacienteController::class,'marcarconsultapasso1'])->name('paciente.marcarconsultapasso1')->middleware('auth');
-     Route::get("/paciente/marcarconsulta/etapa2",[\App\Http\Controllers\PacienteController::class,'marcarconsultapasso2Clinica'])->name('paciente.marcarconsultapasso2Clinica')->middleware('auth');
-     Route::get("/paciente/marcarconsulta/etapa3/{id}",[\App\Http\Controllers\PacienteController::class,'marcarconsultapasso3Clinica'])->name('paciente.marcarconsultapasso3Clinica')->middleware('auth');
-     Route::get("/paciente/marcarconsulta/etapa4/{clinica_id}/{especialidade_id}",[\App\Http\Controllers\PacienteController::class,'marcarconsultapasso4Clinica'])->name('paciente.marcarconsultapasso4Clinica')->middleware('auth');
+     Route::get("/paciente/marcarconsulta/",[\App\Http\Controllers\PacienteController::class,'marcarconsulta'])->name('paciente.marcarconsulta')->middleware('auth');
+     Route::get("/paciente/marcarconsulta/etapa2",[\App\Http\Controllers\PacienteController::class,'marcarConsultaViaClinicaPasso1'])->name('paciente.marcarConsultaViaClinicaPasso1')->middleware('auth');
+     Route::get("/paciente/marcarconsulta/etapa3/{id}",[\App\Http\Controllers\PacienteController::class,'marcarConsultaViaClinicaPasso2'])->name('paciente.marcarConsultaViaClinicaPasso2')->middleware('auth');
+     Route::get("/paciente/marcarconsulta/etapa4/{clinica_id}/{especialidade_id}",[\App\Http\Controllers\PacienteController::class,'marcarConsultaViaClinicaPasso3'])->name('paciente.marcarConsultaViaClinicaPasso3')->middleware('auth');
+     Route::get("/paciente/marcarconsulta/etapa5/{clinica_id}/{especialidade_id}",[\App\Http\Controllers\PacienteController::class,'marcarConsultaViaClinicaPasso4'])->name('paciente.marcarConsultaViaClinicaPasso4')->middleware('auth');
+     Route::post("/paciente/marcarconsulta/finalizar/",[\App\Http\Controllers\PacienteController::class,'marcarConsultaViaClinicaFinalizar'])->name('paciente.marcarConsultaViaClinicaFinalizar')->middleware('auth');
  
 
 });

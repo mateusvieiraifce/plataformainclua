@@ -7,13 +7,13 @@
       <div class="col-lg-12 col-md-12">
          <div class="card card-tasks">
             <div class="card-header">
-               <h6 class="title d-inline">Lista de clínicas </h6>               
+               <h6 class="title d-inline">Escolha onde consultar </h6>               
             </div>
             <div class="card-body">
                <div class="table-responsive">
                   <table class="table">
                      <thead>
-                        <th> Nome </th>                      
+                        <th> Clínica </th>                      
                         <th> Telefone </th>
                         <th>  </th>
                      </thead>
@@ -24,7 +24,7 @@
                      <td>{{$ent->nome}}</td>                   
                      <td>{{$ent->telefone}}</td>                   
                      <td>
-                       <a style="max-height: 35px;"  href="{{route('paciente.marcarconsultapasso3Clinica',$ent->id)}}"
+                       <a style="max-height: 35px;"  href="{{route('paciente.marcarConsultaViaClinicaPasso2',$ent->id)}}"
                              class="btn btn-success">Próximo <i
                                class="tim-icons icon-double-right"> </i> </a>
                      </td>                   
@@ -72,7 +72,7 @@
                   </div>
                </div>
            
-            <a href="{{route('paciente.marcarconsultapasso1')}}" class="btn btn-primary"><i
+            <a href="{{route('paciente.marcarconsulta')}}" class="btn btn-primary"><i
             class="fa fa-reply"></i> Voltar</a>
             </div>
          </div>

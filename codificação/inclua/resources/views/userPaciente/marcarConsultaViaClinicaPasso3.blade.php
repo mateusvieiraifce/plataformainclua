@@ -7,23 +7,23 @@
    <div class="col-lg-12 col-md-12">
       <div class="card card-tasks">
          <div class="card-header">
-            <h6 class="title d-inline">Lista de especialidades </h6>
+            <h6 class="title d-inline">Escolha o profissional que vai te atender</h6>
          </div>
          <div class="card-body">
             <div class="table-responsive">
                <table class="table">
                   <thead>
-                     <th> Especialidade </th>
+                     <th> Especialista </th>
                      <th> </th>
                   </thead>
                   <tbody>
                      @if(sizeof($lista) > 0)
                    @foreach($lista as $ent)
                   <tr>
-                   <td>{{$ent->descricao}}</td>
+                   <td>{{$ent->nome}}</td>
                    <td>
                      <a style="max-height: 35px;"
-                       href="{{route('paciente.marcarconsultapasso4Clinica', $ent->id)}}"
+                       href="{{route('paciente.marcarConsultaViaClinicaPasso4',[$clinica_id, $ent->id])}}"
                        class="btn btn-success">Próximo <i class="tim-icons icon-double-right"> </i> </a>
                    </td>
              @endforeach 
@@ -71,7 +71,7 @@
                </div>
             </div>
 
-            <a href="{{route('paciente.marcarconsultapasso2Clinica')}}" class="btn btn-primary"><i class="fa fa-reply"></i>
+            <a href="{{route('paciente.marcarConsultaViaClinicaPasso2',$clinica_id)}}" class="btn btn-primary"><i class="fa fa-reply"></i>
                Voltar</a>
          </div>
       </div>

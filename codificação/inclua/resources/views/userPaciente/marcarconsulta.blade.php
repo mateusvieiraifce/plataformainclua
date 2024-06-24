@@ -23,7 +23,7 @@
                     <div class="card card-custom">
                         <div class="card-body">
                             <h5 class="card-title">Escolha pela clínica</h5>
-                            <a href="{{route('paciente.marcarconsultapasso2Clinica')}}"
+                            <a href="{{route('paciente.marcarConsultaViaClinicaPasso1')}}"
                              class="btn btn-success">Próximo <i
                                     class="tim-icons icon-double-right"></i> </a>
                         </div>
