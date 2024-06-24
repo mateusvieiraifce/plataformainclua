@@ -104,15 +104,17 @@
                <div>
                   @if ($lista->lastPage() > 1)
                              @php
+                             $filtro="";
                           $paginator = $lista;
                           $paginator->url = route('clinica.list');
                       @endphp
                              <ul class="pagination">
                                <li class="{{ ($paginator->currentPage() == 1) ? ' disabled' : '' }}">
-                                 <a href="{{$paginator->url . "?page=1&filtro=" . $filtro }}">&nbsp;<<&nbsp;&nbsp;< /a>
+                                 <a href="{{$paginator->url . "?page=1&filtro=" . $filtro }}">&nbsp;<<&nbsp;&nbsp; </a>
                                </li>
                                @for ($i = 1; $i <= $paginator->lastPage(); $i++)
                                  <?php
+
                         $link_limit = 7;
                         $half_total_links = floor($link_limit / 2);
                         $from = $paginator->currentPage() - $half_total_links;
