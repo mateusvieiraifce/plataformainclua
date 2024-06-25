@@ -1,83 +1,97 @@
-@extends('layouts.app', ['page' => __('Marcar Consulta'), 'pageSlug' => 'marcarconsulta', 'class' => 'especialidade'])
+@extends('layouts.app', ['page' => __('Marcar Consulta'), 'exibirPesquisa' => false,'pageSlug' => 'marcarconsulta', 'class' => 'especialidade'])
 @section('title', 'Marcar Consulta')
 @section('content')
 <style>
    .progress {
-  width: 100%;
-  height: 30%;
-  list-style: none;
-  list-style-image: none;
-  margin: 20px 0 10px 0;
-  padding: 10;
-}
-.progress li {
-  float: left;
-  text-align: center;
-  position: relative;
-}
+      width: 100%;
+      height: 30%;
+      list-style: none;
+      list-style-image: none;
+      margin: 20px 0 10px 0;
+      padding: 10;
+   }
 
-.progress .step {
-  color: black;
-  border: 3px solid silver;
-  background-color: silver;
-  border-radius: 20%;
-  line-height: 1.2;
-  width: 1.2em;
-  height: 1.2em;
-  display: inline-block;
-  z-index: 0;
-  padding: 0 0 0 50px;
-  margin: 5px;
-}
-.progress .step span {
-  opacity: 0.3;
-}
-.progress .step:before {
-  content: "";
-  display: block;
-  background-color: silver;
-  height: 0.4em;
-  width: 50%;
-  position: absolute;
-  bottom: 0.6em;
-  left: 0;
-  z-index: -1;
-}
-.progress .step:after {
-  content: "";
-  display: block;
-  background-color: silver;
-  height: 0.4em;
-  width: 50%;
-  position: absolute;
-  bottom: 0.6em;
-  right: 0;
-  z-index: -1;
-}
-.progress li:first-of-type .step:before {
-  display: none;
-}
-.progress li:last-of-type .step:after {
-  display: none;
-}
-.progress .done .step,
-.progress .done .step:before,
-.progress .done .step:after,
-.progress .active .step,
-.progress .active .step:before {
-  background-color: yellowgreen;
-}
-.progress .done .step,
-.progress .active .step {
-  border: 3px solid yellowgreen;
-}
-   </style>
+   .progress li {
+      float: left;
+      text-align: center;
+      position: relative;
+   }
+
+   .progress .step {
+      color: black;
+      border: 3px solid silver;
+      background-color: silver;
+      border-radius: 20%;
+      line-height: 1.2;
+      width: 1.2em;
+      height: 1.2em;
+      display: inline-block;
+      z-index: 0;
+      padding: 0 0 0 50px;
+      margin: 5px;
+   }
+
+   .progress .step span {
+      opacity: 0.3;
+   }
+
+   .progress .step:before {
+      content: "";
+      display: block;
+      background-color: silver;
+      height: 0.4em;
+      width: 50%;
+      position: absolute;
+      bottom: 0.6em;
+      left: 0;
+      z-index: -1;
+   }
+
+   .progress .step:after {
+      content: "";
+      display: block;
+      background-color: silver;
+      height: 0.4em;
+      width: 50%;
+      position: absolute;
+      bottom: 0.6em;
+      right: 0;
+      z-index: -1;
+   }
+
+   .progress li:first-of-type .step:before {
+      display: none;
+   }
+
+   .progress li:last-of-type .step:after {
+      display: none;
+   }
+
+   .progress .done .step,
+   .progress .done .step:before,
+   .progress .done .step:after,
+   .progress .active .step,
+   .progress .active .step:before {
+      background-color: yellowgreen;
+   }
+
+   .progress .done .step,
+   .progress .active .step {
+      border: 3px solid yellowgreen;
+   }
+</style>
+
+
+
+
+
 
 <div class="row">
    <div class="col-lg-12 col-md-12">
-      <div class="card card-tasks">      
-         <div class="card-header">          
-         <ol class="progress">        
+      <div class="card card-tasks">
+         <div class="card-header">
+            <!-- barra de progresso
+            <ol class="progress">        
                <li class="done">
                   <span class="step"><span></span></span>
                </li>
@@ -91,11 +105,29 @@
                   <span class="step"><span></span></span>
                </li>
              
-            </ol>
-      
+            </ol> -->
 
-            <h6 class="title d-inline">Escolha onde consultar </h6>
+            <form action="#" method="get" id="pesquisar">
+               @csrf
+               <fieldset>
+                  <div class="row">
+                     <div class="col-sm-6 ">
+                        <div class="form-group">
+                           <h6 class="title d-inline">Escolha onde consultar </h6>                           
+                           <input type="text" style="margin-left:10px;margin-top:5px;" name="final_data" id="final_data" placeholder="Pesquise por uma clínica digitado o nome dela aqui..." class="form-control" @if(isset($final_data)) value="{{$final_data}}" @endif>
+                        </div>
+                     </div>
+                     <div class="col-sm-1">
+                        <button style="max-height: 40px; max-width: 40px;margin-top: 25px" class="btn btn-primary">
+                           <i class="tim-icons icon-zoom-split">
+                           </i></button>
+                     </div>
+                  </div>
+
+               </fieldset>
+            </form>
          </div>
+
          <div class="card-body">
             <div class="table-responsive">
                <table class="table">

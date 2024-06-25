@@ -67,7 +67,7 @@ class populacaoTesteSeeder extends Seeder
             'especialidade_id'=>$especialidade->id,          
         ]);
 
-        //usuario clinica
+        //usuario clinica 01
         $entidade = User::create([ 
             'nome_completo'=>"Usuario da Clinica 01",
             'password'=>bcrypt("1"),
@@ -79,6 +79,21 @@ class populacaoTesteSeeder extends Seeder
         ]);
         DB::table('clinicas')->insert([
             'nome'=>"Clinica 01",
+            'usuario_id'=>$entidade->id, 
+        ]);
+
+         //usuario clinica 02
+         $entidade = User::create([ 
+            'nome_completo'=>"Usuario da Clinica 02",
+            'password'=>bcrypt("1"),
+            'email'=>"c@c2",
+            'created_at'=>now(),
+            'updated_at'=>now(),
+            'telefone'=>"88888888",
+            'tipo_user' => 'C',
+        ]);
+        DB::table('clinicas')->insert([
+            'nome'=>"Clinica 02",
             'usuario_id'=>$entidade->id, 
         ]);
 
