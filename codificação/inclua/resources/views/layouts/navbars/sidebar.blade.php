@@ -248,12 +248,12 @@
 
             <!-- usuario tipo Paciente -->
             @if(\Illuminate\Support\Facades\Auth::user()->tipo_user ==='P')
-            <li @if ($pageSlug=='dashboard' ) class="active " @endif>
+           <!--  <li @if ($pageSlug=='dashboard' ) class="active " @endif>
                 <a href="{{route('home')}}">
                     <i class="tim-icons icon-chart-pie-36"></i>
                     <p>{{ __('Dashboard') }}</p>
                 </a>
-            </li>
+            </li> -->
             <li @if ($pageSlug=='minhasconsultas' ) class="active " @endif>
                 <a href="{{route('paciente.minhasconsultas')}}">
                     <i class="tim-icons icon-notes"></i>

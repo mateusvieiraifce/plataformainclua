@@ -17,40 +17,38 @@ class PacienteController extends Controller
 {
    function historicoconsultas($msg = null)
    {
+      $filtro = "";
+      if (isset($_GET['filtro'])) {
+         $filtro = $_GET['filtro'];
+      }
       $paciente =  Paciente::where('usuario_id', '=', Auth::user()->id)->first();
       $statusConsulta = "Finalizada";
-      $lista = Consulta::join('especialistas', 'especialistas.id', '=', 'consultas.especialista_id')->
-      join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')->
-      join('especialidades', 'especialidades.id', '=', 'especialistas.especialidade_id')->
-      where('paciente_id', '=', $paciente->id)->
-      where('status', '=', $statusConsulta)->
-      select(
+      $lista = Consulta::join('especialistas', 'especialistas.id', '=', 'consultas.especialista_id')->join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')->join('especialidades', 'especialidades.id', '=', 'especialistas.especialidade_id')->where('paciente_id', '=', $paciente->id)->where('status', '=', $statusConsulta)->select(
             'consultas.id',
             'horario_agendado',
             'especialistas.nome as nome_especialista',
             'clinicas.nome as nome_clinica',
             'especialidades.descricao as descricao_especialidade'
          )->orderBy('horario_agendado', 'asc')->paginate(8);
-      return view('userPaciente/historicoconsultas', ['lista' => $lista,  'msg' => $msg]);
+      return view('userPaciente/historicoconsultas', ['lista' => $lista,  'msg' => $msg,'filtro' => $filtro]);
    }
 
    function minhasconsultas($msg = null)
    {
+      $filtro = "";
+      if (isset($_GET['filtro'])) {
+         $filtro = $_GET['filtro'];
+      }
       $paciente =  Paciente::where('usuario_id', '=', Auth::user()->id)->first();
       $statusConsulta = "Aguardando atendimento";
-      $lista = Consulta::join('especialistas', 'especialistas.id', '=', 'consultas.especialista_id')->
-      join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')->
-      join('especialidades', 'especialidades.id', '=', 'especialistas.especialidade_id')->
-      where('paciente_id', '=', $paciente->id)->
-      where('status', '=', $statusConsulta)->
-      select(
+      $lista = Consulta::join('especialistas', 'especialistas.id', '=', 'consultas.especialista_id')->join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')->join('especialidades', 'especialidades.id', '=', 'especialistas.especialidade_id')->where('paciente_id', '=', $paciente->id)->where('status', '=', $statusConsulta)->select(
             'consultas.id',
             'horario_agendado',
             'especialistas.nome as nome_especialista',
             'clinicas.nome as nome_clinica',
             'especialidades.descricao as descricao_especialidade'
          )->orderBy('horario_agendado', 'asc')->paginate(8);
-      return view('userPaciente/minhasconsultas', ['lista' => $lista,  'msg' => $msg]);
+      return view('userPaciente/minhasconsultas', ['lista' => $lista,  'msg' => $msg,'filtro' => $filtro]);
    }
 
    function marcarconsulta()
@@ -67,6 +65,21 @@ class PacienteController extends Controller
       }
       $lista = Clinica::join('users', 'users.id', '=', 'usuario_id')->where('nome', 'like', "%" . "%")->orderBy('nome', 'asc')->select('clinicas.id', 'users.nome_completo as nome_responsavel', 'nome', 'cnpj', 'clinicas.telefone', 'clinicas.ativo')->paginate(8);
       return view('userPaciente/marcarConsultaViaClinicaPasso1', ['lista' => $lista, 'filtro' => $filter]);
+   }
+
+   function pesquisarclinicamarcarconsulta()
+   {
+      //retonando a lista de clincias
+      $filtro = "";
+      if (isset($_GET['filtro'])) {
+         $filtro = $_GET['filtro'];
+      }
+      $lista = Clinica::join('users', 'users.id', '=', 'usuario_id')->where('nome', 'like', "%" . $filtro . "%")->orderBy('nome', 'asc')->select('clinicas.id', 'users.nome_completo as nome_responsavel', 'nome', 'cnpj', 'clinicas.telefone', 'clinicas.ativo')->paginate(8);
+      $msg = null;      
+      if ($lista->isEmpty()) {
+         $msg = ['valor' => trans("Não foi encontrado nenhuma clínica com o nome digitado!"), 'tipo' => 'primary'];
+      }
+      return view('userPaciente/marcarConsultaViaClinicaPasso1', ['lista' => $lista, 'filtro' => $filtro, 'msg' => $msg]);
    }
 
    function marcarConsultaViaClinicaPasso2($clinica_id)

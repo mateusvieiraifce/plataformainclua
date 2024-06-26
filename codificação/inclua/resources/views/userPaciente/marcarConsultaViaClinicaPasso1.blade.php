@@ -107,14 +107,14 @@
              
             </ol> -->
 
-            <form action="#" method="get" id="pesquisar">
+            <form action="{{route('paciente.pesquisarclinicamarcarconsulta')}}" method="get" id="pesquisar">
                @csrf
                <fieldset>
                   <div class="row">
                      <div class="col-sm-6 ">
                         <div class="form-group">
                            <h6 class="title d-inline">Escolha onde consultar </h6>                           
-                           <input type="text" style="margin-left:10px;margin-top:5px;" name="final_data" id="final_data" placeholder="Pesquise por uma clínica digitado o nome dela aqui..." class="form-control" @if(isset($final_data)) value="{{$final_data}}" @endif>
+                           <input type="text" name="filtro" style="margin-left:10px;margin-top:5px;" id="filtro" placeholder="Pesquise por uma clínica digitando o nome dela aqui..." class="form-control" @if(isset($filtro)) value="{{$filtro}}" @endif>
                         </div>
                      </div>
                      <div class="col-sm-1">

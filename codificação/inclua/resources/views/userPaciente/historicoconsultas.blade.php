@@ -27,9 +27,8 @@
                      <td>{{date( 'd/m/Y' , strtotime($ent->horario_agendado))}}</td>
                      <td>{{$ent->nome_especialista}}</td>
                      <td>{{$ent->descricao_especialidade}}</td>
-                     <td>{{$ent->nome_clinica}}</td>                  
-                   
-                   
+                     <td>{{$ent->nome_clinica}}</td>  
+                              
                      </tr>
                   @endforeach 
                         @endif                       </tbody>
@@ -38,7 +37,7 @@
                      @if ($lista->lastPage() > 1)
                                  @php
                            $paginator = $lista;
-                           $paginator->url = route('consulta.list');
+                           $paginator->url = route('paciente.historicoconsultas');
                         @endphp
                                  <ul class="pagination">
                                     <li class="{{ ($paginator->currentPage() == 1) ? ' disabled' : '' }}">
