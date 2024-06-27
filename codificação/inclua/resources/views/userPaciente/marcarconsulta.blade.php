@@ -31,7 +31,7 @@
                     <div class="card card-custom">
                         <div class="card-body">
                             <h5 class="card-title">Escolha pela especialidade</h5>
-                            <a href="#" class="btn btn-success">Próximo <i
+                            <a href="{{route('paciente.marcarConsultaViaEspecialidadePasso1')}}" class="btn btn-success">Próximo <i
                                     class="tim-icons icon-double-right"></i> </a>
                         </div>
                     </div>

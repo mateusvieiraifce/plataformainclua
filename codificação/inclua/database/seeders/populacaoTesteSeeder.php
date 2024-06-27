@@ -80,6 +80,7 @@ class populacaoTesteSeeder extends Seeder
         DB::table('clinicas')->insert([
             'nome'=>"Clinica 01",
             'usuario_id'=>$entidade->id, 
+            'ativo'=>"1",
         ]);
 
          //usuario clinica 02

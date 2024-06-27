@@ -174,8 +174,11 @@
             </div>
          </div>
 
-         <a href="{{route('paciente.marcarConsultaViaClinicaPasso3',[$clinica->id,$especialidade->id])}}" class="btn btn-primary"><i class="fa fa-reply"></i>
-            Voltar</a>
+       
+      </div>
+      <div class="col-2">  
+      <a href="{{route('paciente.marcarConsultaViaClinicaPasso3',[$clinica->id,$especialidade->id])}}" class="btn btn-primary"><i class="fa fa-reply"></i>
+      Voltar</a>
       </div>
    </div>
 </div>

@@ -44,7 +44,7 @@
                      @if ($lista->lastPage() > 1)
                                  @php
                            $paginator = $lista;
-                           $paginator->url = route('consulta.list');
+                           $paginator->url = route('paciente.minhasconsultas');
                         @endphp
                                  <ul class="pagination">
                                     <li class="{{ ($paginator->currentPage() == 1) ? ' disabled' : '' }}">

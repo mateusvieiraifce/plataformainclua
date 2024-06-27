@@ -1,4 +1,4 @@
-@extends('layouts.app', ['page' => __('Marcar Consulta'), 'exibirPesquisa' => false,'pageSlug' => 'marcarconsulta', 'class' => 'especialidade'])
+@extends('layouts.app', ['page' => __('Marcar Consulta'),'exibirPesquisa' => false, 'pageSlug' => 'marcarconsulta', 'class' => 'especialidade'])
 @section('title', 'Marcar Consulta')
 @section('content')
 
@@ -7,23 +7,23 @@
    <div class="col-lg-12 col-md-12">
       <div class="card card-tasks">
          <div class="card-header">
-            <h6 class="title d-inline">Escolha a área de atuação </h6>
+            <h6 class="title d-inline">Escolha o profissional que vai te atender</h6>
          </div>
          <div class="card-body">
             <div class="table-responsive">
                <table class="table">
                   <thead>
-                     <th> Especialidade </th>
+                     <th> Especialista </th>
                      <th> </th>
                   </thead>
                   <tbody>
                      @if(sizeof($lista) > 0)
                    @foreach($lista as $ent)
                   <tr>
-                   <td>{{$ent->descricao}}</td>
+                   <td>{{$ent->nome}}</td>
                    <td>
                      <a style="max-height: 35px;"
-                       href="{{route('paciente.marcarConsultaViaClinicaPasso3',[$clinica_id, $ent->id])}}"
+                       href="{{route('paciente.marcarConsultaViaEspecialidadePasso4',[$clinica_id, $ent->id])}}"
                        class="btn btn-success">Próximo <i class="tim-icons icon-double-right"> </i> </a>
                    </td>
              @endforeach 
@@ -70,12 +70,12 @@
               @endif
                </div>
             </div>
-           
+          
          </div>
-         <div class="col-2">          
-          <a href="{{route('paciente.marcarConsultaViaClinicaPasso1')}}" class="btn btn-primary"><i class="fa fa-reply"></i>
-             Voltar</a>
-             </div>
+         <div class="col-2"> 
+            <a href="{{route('paciente.marcarConsultaViaEspecialidadePasso2',$especialidade_id)}}" class="btn btn-primary"><i class="fa fa-reply"></i>
+               Voltar</a>
+               </div>
       </div>
    </div>
 </div>
