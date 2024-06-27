@@ -121,29 +121,51 @@
         intervalodias.innerHTML = dayText;
     }
 
+    //funcao para poder comparar as datas considerando apenas o dia, mes e ano.
+    function normalizarDataParaComparacao(data) {
+         return new Date(data.getFullYear(), data.getMonth(), data.getDate());
+    }
+
+     //funcao para poder verificar se existe consulta na data criada 
+     function existeConsulta(dataTela) {
+        @foreach($lista as $consulta) 
+            var dataString ={!! json_encode(date( 'd/m/Y' , strtotime($consulta->horario_agendado))) !!}; 
+            var partesData = dataString.split('/');    
+            // Constrói um objeto Date no formato esperado (mês-1 porque o mês no objeto Date é baseado em zero)
+            var data = new Date(partesData[2], partesData[1] - 1, partesData[0]);
+            var data = normalizarDataParaComparacao(data);     
+            if(data.getTime() === dataTela.getTime())
+            {
+                return true;               
+            }
+        @endforeach
+        return false;
+    }
+
     function geraDias(currentWeekStart, daysContainer) {
-
         // Loop para gerar os dias da semana
-        for (var i = 0; i < 7; i++) {
-            var day = new Date(currentWeekStart);
-            day.setDate(currentWeekStart.getDate() + i);
-
-            var dayElement = document.createElement('div');
-            dayElement.id = "" + day.getDate() + '/' + (day.getMonth() + 1) + "/" + day.getFullYear();
-            dayElement.classList.add('day');
-            // Monta o conteúdo do dia com nome do dia e data completa
+        for (var i = 0; i < 7; i++) {            
+            var day = new Date(currentWeekStart);        
+            var data1  =  new Date(day.setDate(currentWeekStart.getDate() + i));
+            var data1 = normalizarDataParaComparacao(data1);
             //aqui desenhar o dia apenas se tiver consulta disponível
-            var dayName = getDayName(day.getDay());
-            var dayText = dayName + '<br>' + day.getDate() + '/' + (day.getMonth() + 1);
-            dayElement.innerHTML = dayText;
-            dayElement.onclick = function() {
-                consultasDisponiveis(this);
-            };
-            daysContainer.appendChild(dayElement);
+            if(existeConsulta(data1)){        
+                var dayElement = document.createElement('div');
+                dayElement.id = "" + day.getDate() + '/' + (day.getMonth() + 1) + "/" + day.getFullYear();
+                dayElement.classList.add('day');  
+                var dayName = getDayName(day.getDay());
+                var dayText = dayName + '<br>' + day.getDate() + '/' + (day.getMonth() + 1);
+                dayElement.innerHTML = dayText;
+                dayElement.onclick = function() {
+                    //aqui esta dando erro ************* estpa passando sempre a ultima data.
+                    consultasDisponiveis(this,data1.toDateString());
+                };
+                daysContainer.appendChild(dayElement);
+           }
         }
     }
 
-    function consultasDisponiveis(dayElement) {
+    function consultasDisponiveis(dayElement, dia) {
         var paragrafohora = document.getElementById('paragrafohora');
         paragrafohora.innerText = 'Selecione a hora'; // Limpa o conteúdo anterior
         var dataDoElemento = dayElement.innerHTML;
@@ -157,25 +179,39 @@
         });
         dayElement.style.backgroundColor = 'lightblue';
 
-        @foreach($lista as $consulta)       
-              var dayElement = document.createElement('div');
+
+        //desenhando as divs dos horarios das consultas
+        @foreach($lista as $consulta)      
+
+            var hora ={!! json_encode(date( 'H:i' , strtotime($consulta->horario_agendado))) !!};   
+            var dataString ={!! json_encode(date( 'd/m/Y' , strtotime($consulta->horario_agendado))) !!}; 
+            var partesData = dataString.split('/');    
+            // Constrói um objeto Date no formato esperado (mês-1 porque o mês no objeto Date é baseado em zero)
+            var data = new Date(partesData[2], partesData[1] - 1, partesData[0]);
+            var data = normalizarDataParaComparacao(data);     
+            console.log("####################");
+            console.log("As datas são iguais."+dia+" "+data);
+           if(dia === data.toDateString())
+           {
+            console.log("As datas são iguais."+dia+" "+data);
+             alert('verdadeiro')         
+            var dayElement = document.createElement('div');
             dayElement.id =  {{$consulta->id}};
             dayElement.classList.add('day');
-            //aqui desenhar as consulta disponíveis no dia
-            var hora = {{($consulta->horario_agendado).toString()}};
-            alert(hora)
-            dayElement.innerHTML = "<br>";
-         
+            //aqui desenhar as consulta disponíveis no dia        
+
+            dayElement.innerHTML = " "+ hora+" <br>"+data;         
             dayElement.onclick = function() {
                 finalizar(this);
             };
             consultasContainer.appendChild(dayElement);
+        }
         @endforeach
 
     }
 
     function finalizar(consultaElement) {
-        alert('aqui chama modal finalizar:' + consultaElement.innerHTML);
+        alert('aqui chama modal finalizar:' + consultaElement.innerHTML+" id:"+consultaElement.id);
     }
 
     // Função auxiliar para obter o nome do dia
