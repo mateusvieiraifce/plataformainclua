@@ -181,30 +181,28 @@
 
 
         //desenhando as divs dos horarios das consultas
-        @foreach($lista as $consulta)      
+        @foreach($lista as $consulta)     
 
             var hora ={!! json_encode(date( 'H:i' , strtotime($consulta->horario_agendado))) !!};   
             var dataString ={!! json_encode(date( 'd/m/Y' , strtotime($consulta->horario_agendado))) !!}; 
             var partesData = dataString.split('/');    
             // Constrói um objeto Date no formato esperado (mês-1 porque o mês no objeto Date é baseado em zero)
             var data = new Date(partesData[2], partesData[1] - 1, partesData[0]);
-            var data = normalizarDataParaComparacao(data);     
-            console.log("####################");
-            console.log("As datas são iguais."+dia+" "+data);
-           if(dia === data.toDateString())
-           {
-            console.log("As datas são iguais."+dia+" "+data);
-             alert('verdadeiro')         
-            var dayElement = document.createElement('div');
-            dayElement.id =  {{$consulta->id}};
-            dayElement.classList.add('day');
-            //aqui desenhar as consulta disponíveis no dia        
+            var data ="" + data.getDate() + '/' + (data.getMonth() + 1) + "/" + data.getFullYear();  
+            var diaselecionado = dayElement.id;
+            if(diaselecionado === data)
+            {
+                console.log("As datas são iguais."+dia+" "+data);                     
+                var horaElemento = document.createElement('div');
+                horaElemento.id =  {{$consulta->id}};
+                horaElemento.classList.add('day');
+                //aqui desenhar as consulta disponíveis no dia       
 
-            dayElement.innerHTML = " "+ hora+" <br>"+data;         
-            dayElement.onclick = function() {
-                finalizar(this);
-            };
-            consultasContainer.appendChild(dayElement);
+                horaElemento.innerHTML = " "+ hora+" <br>";         
+                horaElemento.onclick = function() {
+                    finalizar(this);
+                };
+                consultasContainer.appendChild(horaElemento);
         }
         @endforeach
 
