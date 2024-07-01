@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 Route::get('/sobre', function () {
     return view('frente/about');
 })->name('home.sobre');
@@ -21,200 +22,189 @@ Route::get('/contato', function () {
     return view('frente/contato');
 })->name('contato');
 
+Route::get("/teste", function () {
+    return view('teste');
+});
 Route::get("/", [\App\Http\Controllers\UsuarioController::class, 'index'])->name('index');
 
 Route::get('/checkout', [\App\Http\Controllers\CheckoutControler::class, "checkout"])->name('finalizar');
 
-Route::post('/mail',[\App\Http\Controllers\MailController::class,"sendMail"])->name('sendmail');
+Route::post('/mail', [\App\Http\Controllers\MailController::class, "sendMail"])->name('sendmail');
 
-Route::get("/cadastrar/usuario/create",[\App\Http\Controllers\UsuarioController::class,'createUser'])->name('usuario.create');
-Route::post("/cadastrar/usuario/store",[\App\Http\Controllers\UsuarioController::class,'storeUser'])->name('usuario.store');
-Route::get("/cadastrar/usuario/edit/{id_usuario}",[\App\Http\Controllers\UsuarioController::class,'editUser'])->name('usuario.edit');
-Route::get("/cadastrar/dados/create/{id_usuario}",[\App\Http\Controllers\UsuarioController::class,'createDadosPessoais'])->name('usuario.dados.create');
-Route::post("/cadastrar/dados/store",[\App\Http\Controllers\UsuarioController::class,'storeDadosPessoais'])->name('usuario.dados.store');
-Route::get("/cadastrar/dados/edit/{id_usuario}",[\App\Http\Controllers\UsuarioController::class,'editDadosPessoais'])->name('usuario.dados.edit');
-Route::get("/cadastrar/endereço/create/{id_usuario}",[\App\Http\Controllers\EnderecoController::class,'createEndereco'])->name('endereco.create');
-Route::post("/cadastrar/endereço/store",[\App\Http\Controllers\EnderecoController::class,'storeEndereco'])->name('endereco.store');
-Route::get("/cadastrar/cartao/create/{id_usuario}",[\App\Http\Controllers\CartaoController::class,'create'])->name('cartao.create');
 
-#TESTES API
-Route::get("/checkout",[\App\Http\Controllers\CartaoController::class,'create_checkout']);
-Route::post("/pagamento/assinatura",[\App\Http\Controllers\AssinaturaController::class,'lancarAssinatura'])->name('pagamento.assinatura');
-Route::get("/callback-payment",[\App\Http\Controllers\AssinaturaController::class,'callbackPaymentAssinatura'])->name('callback.payment');
-Route::get("/custumer",[\App\Http\Controllers\CartaoController::class,'create_custumer']);
-Route::get("/recuperara",[\App\Http\Controllers\CartaoController::class,'recuperar']);
-
-#ASSINATURA
-Route::post("/assinatura/aprovar",[\App\Http\Controllers\AssinaturaController::class,'lancarAssinatura'])->name('assinatura.aprovar');
-Route::get("/assinatura/renovar/{id_usuario}",[\App\Http\Controllers\AssinaturaController::class,'renovarAssinatura'])->name('assiantura.renovar');
-
-#VALIDAÇÕES
-Route::get("/email/verificar/{id_usuario}",[\App\Http\Controllers\ValidacoesController::class,'verificarEmail'])->name('view.verificar_email');
-Route::get("/email/reenviar-sms/",[\App\Http\Controllers\ValidacoesController::class,'reenviarEmail'])->name('validar.reenviar_email');
-Route::post("/email/validar",[\App\Http\Controllers\ValidacoesController::class,'validarEmail'])->name('validar.email');
-Route::get("/celular/verificar/{id_usuario}",[\App\Http\Controllers\ValidacoesController::class,'verificarCelular'])->name('view.verificar_celular');
-Route::get("/celular/reenviar-sms/",[\App\Http\Controllers\ValidacoesController::class,'reenviarSMS'])->name('validar.reenviar_sms');
-Route::post("/celular/validar",[\App\Http\Controllers\ValidacoesController::class,'validarCelular'])->name('validar.celular');
-
-Route::post("/auth/user",[\App\Http\Controllers\UsuarioController::class,'logar'])->name('login.do');
-Route::get("/logout",[\App\Http\Controllers\UsuarioController::class,'logout'])->name('logout');
-Route::get("/recuperar",[\App\Http\Controllers\UsuarioController::class,'recover'])->name('recover');
-Route::get("/recuperar/{id?}",[\App\Http\Controllers\UsuarioController::class,'recoverID'])->name('recover.id');
-Route::post("/recuperar",[\App\Http\Controllers\UsuarioController::class,'recoverDo'])->name('recover.do');
-Route::post("/updatepassword",[\App\Http\Controllers\UsuarioController::class,'recoverPassword'])->name('update.password');
 
 #URL's AUTH GOOGLE
-Route::get('/google/redirect', [\App\Http\Controllers\UsuarioController::class,'redirectToProvider'])->name('google.redirect');
-Route::get('/auth/google/callback', [\App\Http\Controllers\UsuarioController::class,'handleProviderCallback'])->name('google.callback');
+Route::get('/google/redirect', [\App\Http\Controllers\UsuarioController::class, 'redirectToProvider'])->name('google.redirect');
+Route::get('/auth/google/callback', [\App\Http\Controllers\UsuarioController::class, 'handleProviderCallback'])->name('google.callback');
 
-Route::middleware('auth')->group(function() {
+Route::middleware('auth')->group(function () {
     #DASHBORD
     Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'home'])->name('home');
 
-    Route::get("/turnvendedor",[\App\Http\Controllers\UsuarioController::class,'turnVendedor'])->name('user.turnvendedor');
-    
+    Route::get("/turnvendedor", [\App\Http\Controllers\UsuarioController::class, 'turnVendedor'])->name('user.turnvendedor');
+
     #USERS
-    Route::get("/user/comentarios",[\App\Http\Controllers\UsuarioController::class,'comentariosComprador'])->name('user.comentarios');
-    Route::get("/user/compras",[\App\Http\Controllers\UsuarioController::class,'compras'])->name('user.compras');
-    Route::get("/user/favoritos",[\App\Http\Controllers\UsuarioController::class,'listFavoritos'])->name('user.favoritos');
-    Route::get("/user/notificacoes",[\App\Http\Controllers\UsuarioController::class,'listNotificacoes'])->name('user.notificacoes');
-    Route::get("/user/notificacao/{id}",[\App\Http\Controllers\UsuarioController::class,'lerNotificacoes'])->name('user.notificacoes.ler');
+    Route::get("/user/comentarios", [\App\Http\Controllers\UsuarioController::class, 'comentariosComprador'])->name('user.comentarios');
+    Route::get("/user/compras", [\App\Http\Controllers\UsuarioController::class, 'compras'])->name('user.compras');
+    Route::get("/user/favoritos", [\App\Http\Controllers\UsuarioController::class, 'listFavoritos'])->name('user.favoritos');
+    Route::get("/user/notificacoes", [\App\Http\Controllers\UsuarioController::class, 'listNotificacoes'])->name('user.notificacoes');
+    Route::get("/user/notificacao/{id}", [\App\Http\Controllers\UsuarioController::class, 'lerNotificacoes'])->name('user.notificacoes.ler');
 
     #PROFILE
-    Route::get("/profile/{id?}",[\App\Http\Controllers\UsuarioController::class,'preEdit'])->name('user.preedit');
-    Route::post("/profile/update",[\App\Http\Controllers\UsuarioController::class,'update'])->name('user.update');
-    Route::put("/profile/update",[\App\Http\Controllers\UsuarioController::class,'updateCompletar'])->name('user.update.comp');
-    Route::post("/profile/delete",[\App\Http\Controllers\UsuarioController::class,'delete'])->name('user.delete');
-    Route::get("/profile/update/add",[\App\Http\Controllers\UsuarioController::class,'addEndereco'])->name('user.update.add');
-    Route::post("/profile/update/add",[\App\Http\Controllers\UsuarioController::class,'addEnderecoDo'])->name('user.update.add.do');
-    Route::get("/profile/endereco/del/{id}",[\App\Http\Controllers\UsuarioController::class,'delEndereco'])->name('user.update.del.do');
-    Route::get("/profile/endereco/principal/{id}",[\App\Http\Controllers\UsuarioController::class,'setPrincialEndereco'])->name('user.update.end.pri');
-    Route::get("/profile/update/add/{id}",[\App\Http\Controllers\UsuarioController::class,'addEndereco'])->name('user.add.update');
+    Route::get("/profile/{id?}", [\App\Http\Controllers\UsuarioController::class, 'preEdit'])->name('user.preedit');
+    Route::post("/profile/update", [\App\Http\Controllers\UsuarioController::class, 'update'])->name('user.update');
+    Route::put("/profile/update", [\App\Http\Controllers\UsuarioController::class, 'updateCompletar'])->name('user.update.comp');
+    Route::post("/profile/delete", [\App\Http\Controllers\UsuarioController::class, 'delete'])->name('user.delete');
+    Route::get("/profile/update/add", [\App\Http\Controllers\UsuarioController::class, 'addEndereco'])->name('user.update.add');
+    Route::post("/profile/update/add", [\App\Http\Controllers\UsuarioController::class, 'addEnderecoDo'])->name('user.update.add.do');
+    Route::get("/profile/endereco/del/{id}", [\App\Http\Controllers\UsuarioController::class, 'delEndereco'])->name('user.update.del.do');
+    Route::get("/profile/endereco/principal/{id}", [\App\Http\Controllers\UsuarioController::class, 'setPrincialEndereco'])->name('user.update.end.pri');
+    Route::get("/profile/update/add/{id}", [\App\Http\Controllers\UsuarioController::class, 'addEndereco'])->name('user.add.update');
 
     #ADVERTISEMENT
-    Route::get("/advertisement",[\App\Http\Controllers\AnuncioController::class,'list'])->name('advertisement.list');;
-    Route::get("/advertisement/add",[\App\Http\Controllers\AnuncioController::class,'add'])->name('advertisement.add');;
-    Route::post("/advertisement/save",[\App\Http\Controllers\AnuncioController::class,'save'])->name('advertisement.save');;
-    Route::post("/advertisement/preco",[\App\Http\Controllers\AnuncioController::class,'passo2'])->name('advertisement.preco');;
-    Route::get("/advertisement/preco/{id}",[\App\Http\Controllers\AnuncioController::class,'passo1'])->name('advertisement.back');;
-    Route::get("/advertisement/precoback/{id}",[\App\Http\Controllers\AnuncioController::class,'passo2back'])->name('advertisement.back.fotos');;
-    Route::any("/advertisement/fotos",[\App\Http\Controllers\AnuncioController::class,'passo3'])->name('advertisement.fotos');;
-    Route::any("/advertisement/fotos/{id}",[\App\Http\Controllers\AnuncioController::class,'passoFotos'])->name('advertisement.passo.fotos');;
-    Route::any("/advertisement/finalizar/",[\App\Http\Controllers\AnuncioController::class,'addFotos'])->name('advertisement.finalizar');;
-    Route::get("/advertisement/destacar/{id}",[\App\Http\Controllers\AnuncioController::class,'destacar'])->name('advertisement.destacar');;
-    Route::post("/advertisement/destacar/{id}",[\App\Http\Controllers\AnuncioController::class,'destacarDo'])->name('advertisement.destacar.do');;
-    Route::get("/advertisement/tamanho/{id}",[\App\Http\Controllers\AnuncioController::class,'tamanho'])->name('advertisement.tamanho');;
-    Route::post("/advertisement/tamanho/add/{id}",[\App\Http\Controllers\AnuncioController::class,'tamanhoAdd'])->name('advertisement.tamanho.add');;
-    Route::get("/advertisement/tamanho/del/{id}",[\App\Http\Controllers\AnuncioController::class,'deleteTamanho'])->name('advertisement.tamanho.del');;
-    Route::get("/advertisement/tamanho/edit/{id}",[\App\Http\Controllers\AnuncioController::class,'editTamanho'])->name('advertisement.tamanho.edit');;
-    Route::get("/advertisement/fim/{id}",[\App\Http\Controllers\AnuncioController::class,'finalizar'])->name('advertisement.tamanho.finalizar');;
-    Route::get("/advertisement/delete/{id}",[\App\Http\Controllers\AnuncioController::class,'delete'])->name('advertisement.delete');;
-    Route::get("/advertisement/edit/{id}",[\App\Http\Controllers\AnuncioController::class,'edit'])->name('advertisement.edit');;
+    Route::get("/advertisement", [\App\Http\Controllers\AnuncioController::class, 'list'])->name('advertisement.list');;
+    Route::get("/advertisement/add", [\App\Http\Controllers\AnuncioController::class, 'add'])->name('advertisement.add');;
+    Route::post("/advertisement/save", [\App\Http\Controllers\AnuncioController::class, 'save'])->name('advertisement.save');;
+    Route::post("/advertisement/preco", [\App\Http\Controllers\AnuncioController::class, 'passo2'])->name('advertisement.preco');;
+    Route::get("/advertisement/preco/{id}", [\App\Http\Controllers\AnuncioController::class, 'passo1'])->name('advertisement.back');;
+    Route::get("/advertisement/precoback/{id}", [\App\Http\Controllers\AnuncioController::class, 'passo2back'])->name('advertisement.back.fotos');;
+    Route::any("/advertisement/fotos", [\App\Http\Controllers\AnuncioController::class, 'passo3'])->name('advertisement.fotos');;
+    Route::any("/advertisement/fotos/{id}", [\App\Http\Controllers\AnuncioController::class, 'passoFotos'])->name('advertisement.passo.fotos');;
+    Route::any("/advertisement/finalizar/", [\App\Http\Controllers\AnuncioController::class, 'addFotos'])->name('advertisement.finalizar');;
+    Route::get("/advertisement/destacar/{id}", [\App\Http\Controllers\AnuncioController::class, 'destacar'])->name('advertisement.destacar');;
+    Route::post("/advertisement/destacar/{id}", [\App\Http\Controllers\AnuncioController::class, 'destacarDo'])->name('advertisement.destacar.do');;
+    Route::get("/advertisement/tamanho/{id}", [\App\Http\Controllers\AnuncioController::class, 'tamanho'])->name('advertisement.tamanho');;
+    Route::post("/advertisement/tamanho/add/{id}", [\App\Http\Controllers\AnuncioController::class, 'tamanhoAdd'])->name('advertisement.tamanho.add');;
+    Route::get("/advertisement/tamanho/del/{id}", [\App\Http\Controllers\AnuncioController::class, 'deleteTamanho'])->name('advertisement.tamanho.del');;
+    Route::get("/advertisement/tamanho/edit/{id}", [\App\Http\Controllers\AnuncioController::class, 'editTamanho'])->name('advertisement.tamanho.edit');;
+    Route::get("/advertisement/fim/{id}", [\App\Http\Controllers\AnuncioController::class, 'finalizar'])->name('advertisement.tamanho.finalizar');;
+    Route::get("/advertisement/delete/{id}", [\App\Http\Controllers\AnuncioController::class, 'delete'])->name('advertisement.delete');;
+    Route::get("/advertisement/edit/{id}", [\App\Http\Controllers\AnuncioController::class, 'edit'])->name('advertisement.edit');;
 
     #FAVORITE
-    Route::get("/favorite/add/{id}",[\App\Http\Controllers\AnuncioController::class,'addFavorite'])->name('advertisement.addfavorito');
-    Route::get("/favorite/list",[\App\Http\Controllers\AnuncioController::class,'listFavorite'])->name('advertisement.listfavorito');
-    Route::get("/favorite/remove/{id}",[\App\Http\Controllers\AnuncioController::class,'remFavorite'])->name('advertisement.remfavorito');
+    Route::get("/favorite/add/{id}", [\App\Http\Controllers\AnuncioController::class, 'addFavorite'])->name('advertisement.addfavorito');
+    Route::get("/favorite/list", [\App\Http\Controllers\AnuncioController::class, 'listFavorite'])->name('advertisement.listfavorito');
+    Route::get("/favorite/remove/{id}", [\App\Http\Controllers\AnuncioController::class, 'remFavorite'])->name('advertisement.remfavorito');
 
     /*TODO REFACTORY TO FRONT */
-    Route::get("/detail/{id}",[\App\Http\Controllers\AnuncioController::class,'produtctDetail'])->name('advertisement.detail');
-    Route::post("/comentario/add/",[\App\Http\Controllers\AnuncioController::class,'addComentario'])->name('advertisement.comentario.add');
+    Route::get("/detail/{id}", [\App\Http\Controllers\AnuncioController::class, 'produtctDetail'])->name('advertisement.detail');
+    Route::post("/comentario/add/", [\App\Http\Controllers\AnuncioController::class, 'addComentario'])->name('advertisement.comentario.add');
 
     #CART
-    Route::get("/cart/add/",[\App\Http\Controllers\AnuncioController::class,'addSession'])->name('advertisement.addsession');
-    Route::get("/cart/view/",[\App\Http\Controllers\AnuncioController::class,'viewSession'])->name('advertisement.viewssesion');
-    Route::any("/cart/clear/",[\App\Http\Controllers\AnuncioController::class,'clearCarr'])->name('cart.clear');
-    Route::get("/cart/remqnt/{id}",[\App\Http\Controllers\CheckoutControler::class,'removerQntCarrinho'])->name('cart.remqtd');
-    Route::get("/cart/addqnt/{id}",[\App\Http\Controllers\CheckoutControler::class,'addQntCarrinho'])->name('cart.addqtd');
+    Route::get("/cart/add/", [\App\Http\Controllers\AnuncioController::class, 'addSession'])->name('advertisement.addsession');
+    Route::get("/cart/view/", [\App\Http\Controllers\AnuncioController::class, 'viewSession'])->name('advertisement.viewssesion');
+    Route::any("/cart/clear/", [\App\Http\Controllers\AnuncioController::class, 'clearCarr'])->name('cart.clear');
+    Route::get("/cart/remqnt/{id}", [\App\Http\Controllers\CheckoutControler::class, 'removerQntCarrinho'])->name('cart.remqtd');
+    Route::get("/cart/addqnt/{id}", [\App\Http\Controllers\CheckoutControler::class, 'addQntCarrinho'])->name('cart.addqtd');
 
     #CHECK OUT
-    Route::post("/checkout/create",[\App\Http\Controllers\CheckoutControler::class,'create'])->name('vendas.create');;
-    Route::get("/checkout/address",[\App\Http\Controllers\CheckoutControler::class,'addEndereco'])->name('vendas.adr.create');;
-    Route::post("/checkout/address/save",[\App\Http\Controllers\CheckoutControler::class,'saveEndereco'])->name('vendas.adr.save');;
-    Route::get("/checkout/confirmpay/{id}",[\App\Http\Controllers\CheckoutControler::class,'posProcessPagamento'])->name('vendas.payment');
-    Route::get("/checkout/useraddress/{id?}",[\App\Http\Controllers\UsuarioController::class,'findAdress'])->name('vendas.endereco');;
-    Route::any("/checkout/confirmpay",[\App\Http\Controllers\CheckoutControler::class,'returnPagSeguro'])->name('vendas.payment.return');
+    Route::post("/checkout/create", [\App\Http\Controllers\CheckoutControler::class, 'create'])->name('vendas.create');;
+    Route::get("/checkout/address", [\App\Http\Controllers\CheckoutControler::class, 'addEndereco'])->name('vendas.adr.create');;
+    Route::post("/checkout/address/save", [\App\Http\Controllers\CheckoutControler::class, 'saveEndereco'])->name('vendas.adr.save');;
+    Route::get("/checkout/confirmpay/{id}", [\App\Http\Controllers\CheckoutControler::class, 'posProcessPagamento'])->name('vendas.payment');
+    Route::get("/checkout/useraddress/{id?}", [\App\Http\Controllers\UsuarioController::class, 'findAdress'])->name('vendas.endereco');;
+    Route::any("/checkout/confirmpay", [\App\Http\Controllers\CheckoutControler::class, 'returnPagSeguro'])->name('vendas.payment.return');
 
     #SALES
-    Route::get("/sales/list", [\App\Http\Controllers\VendasController::class,'list'])->name('sales.list');;
-    Route::get("/sales/send/{id}",[\App\Http\Controllers\VendasController::class,'send'])->name('sales.send');;
-    Route::post("/sales/send/do/{id}",[\App\Http\Controllers\VendasController::class,'sendDo'])->name('sales.send.do');;
-    Route::get("/send/mail",[\App\Http\Controllers\MailController::class,'sendMenssagem'])->name('sales.send.do.email');
+    Route::get("/sales/list", [\App\Http\Controllers\VendasController::class, 'list'])->name('sales.list');;
+    Route::get("/sales/send/{id}", [\App\Http\Controllers\VendasController::class, 'send'])->name('sales.send');;
+    Route::post("/sales/send/do/{id}", [\App\Http\Controllers\VendasController::class, 'sendDo'])->name('sales.send.do');;
+    Route::get("/send/mail", [\App\Http\Controllers\MailController::class, 'sendMenssagem'])->name('sales.send.do.email');
 
     #ESPECIALIDADES
-    Route::get("/especialidade/list",[\App\Http\Controllers\EspecialidadeController::class,'list'])->name('especialidade.list');
-    Route::get("/especialidade/new",[\App\Http\Controllers\EspecialidadeController::class,'new'])->name('especialidade.new');
-    Route::post("/especialidade/search",[\App\Http\Controllers\EspecialidadeController::class,'search'])->name('especialidade.search');
-    Route::post("/especialidade/save",[\App\Http\Controllers\EspecialidadeController::class,'save'])->name('especialidade.save');
-    Route::get("/especialidade/delete/{id}",[\App\Http\Controllers\EspecialidadeController::class,'delete'])->name('especialidade.delete');
-    Route::get("/especialidade/edit/{id}",[\App\Http\Controllers\EspecialidadeController::class,'edit'])->name('especialidade.edit');
+    Route::get("/especialidade/list", [\App\Http\Controllers\EspecialidadeController::class, 'list'])->name('especialidade.list');
+    Route::get("/especialidade/new", [\App\Http\Controllers\EspecialidadeController::class, 'new'])->name('especialidade.new');
+    Route::post("/especialidade/search", [\App\Http\Controllers\EspecialidadeController::class, 'search'])->name('especialidade.search');
+    Route::post("/especialidade/save", [\App\Http\Controllers\EspecialidadeController::class, 'save'])->name('especialidade.save');
+    Route::get("/especialidade/delete/{id}", [\App\Http\Controllers\EspecialidadeController::class, 'delete'])->name('especialidade.delete');
+    Route::get("/especialidade/edit/{id}", [\App\Http\Controllers\EspecialidadeController::class, 'edit'])->name('especialidade.edit');
 
     #FORMA DE PAGAMENTO
-    Route::get("/formapagamento/list",[\App\Http\Controllers\FormapagamentoController::class,'list'])->name('formapagamento.list');
-    Route::get("/formapagamento/new",[\App\Http\Controllers\FormapagamentoController::class,'new'])->name('formapagamento.new');
-    Route::post("/formapagamento/search",[\App\Http\Controllers\FormapagamentoController::class,'search'])->name('formapagamento.search');
-    Route::post("/formapagamento/save",[\App\Http\Controllers\FormapagamentoController::class,'save'])->name('formapagamento.save');
-    Route::get("/formapagamento/delete/{id}",[\App\Http\Controllers\FormapagamentoController::class,'delete'])->name('formapagamento.delete');
-    Route::get("/formapagamento/edit/{id}",[\App\Http\Controllers\FormapagamentoController::class,'edit'])->name('formapagamento.edit');
+    Route::get("/formapagamento/list", [\App\Http\Controllers\FormapagamentoController::class, 'list'])->name('formapagamento.list');
+    Route::get("/formapagamento/new", [\App\Http\Controllers\FormapagamentoController::class, 'new'])->name('formapagamento.new');
+    Route::post("/formapagamento/search", [\App\Http\Controllers\FormapagamentoController::class, 'search'])->name('formapagamento.search');
+    Route::post("/formapagamento/save", [\App\Http\Controllers\FormapagamentoController::class, 'save'])->name('formapagamento.save');
+    Route::get("/formapagamento/delete/{id}", [\App\Http\Controllers\FormapagamentoController::class, 'delete'])->name('formapagamento.delete');
+    Route::get("/formapagamento/edit/{id}", [\App\Http\Controllers\FormapagamentoController::class, 'edit'])->name('formapagamento.edit');
 
     #CLINICA
-    Route::get("/clinica/list",[\App\Http\Controllers\ClinicaController::class,'list'])->name('clinica.list');
-    Route::get("/clinica/new",[\App\Http\Controllers\ClinicaController::class,'new'])->name('clinica.new');
-    Route::post("/clinica/search",[\App\Http\Controllers\ClinicaController::class,'search'])->name('clinica.search');
-    Route::post("/clinica/save",[\App\Http\Controllers\ClinicaController::class,'save'])->name('clinica.save');
-    Route::get("/clinica/delete/{id}",[\App\Http\Controllers\ClinicaController::class,'delete'])->name('clinica.delete');
-    Route::get("/clinica/edit/{id}",[\App\Http\Controllers\ClinicaController::class,'edit'])->name('clinica.edit');
+    Route::get("/clinica/list", [\App\Http\Controllers\ClinicaController::class, 'list'])->name('clinica.list');
+    Route::get("/clinica/new", [\App\Http\Controllers\ClinicaController::class, 'new'])->name('clinica.new');
+    Route::post("/clinica/search", [\App\Http\Controllers\ClinicaController::class, 'search'])->name('clinica.search');
+    Route::post("/clinica/save", [\App\Http\Controllers\ClinicaController::class, 'save'])->name('clinica.save');
+    Route::get("/clinica/delete/{id}", [\App\Http\Controllers\ClinicaController::class, 'delete'])->name('clinica.delete');
+    Route::get("/clinica/edit/{id}", [\App\Http\Controllers\ClinicaController::class, 'edit'])->name('clinica.edit');
 
     #ESPECIALIDADE_CLINICA
-    Route::get("/especialidadeclinica/list/{clinica_id}",[\App\Http\Controllers\EspecialidadeclinicaController::class,'list'])->name('especialidadeclinica.list')->middleware('auth');
-    Route::get("/especialidadeclinica/new/{clinica_id}",[\App\Http\Controllers\EspecialidadeclinicaController::class,'new'])->name('especialidadeclinica.new')->middleware('auth');
-    Route::get("/especialidadeclinica/search/{clinica_id}",[\App\Http\Controllers\EspecialidadeclinicaController::class,'search'])->name('especialidadeclinica.search')->middleware('auth');
-    Route::post("/especialidadeclinica/save/{clinica_id}",[\App\Http\Controllers\EspecialidadeclinicaController::class,'save'])->name('especialidadeclinica.save')->middleware('auth');
-    Route::get("/especialidadeclinica/delete/{id}",[\App\Http\Controllers\EspecialidadeclinicaController::class,'delete'])->name('especialidadeclinica.delete')->middleware('auth');
-    Route::get("/especialidadeclinica/edit/{id}",[\App\Http\Controllers\EspecialidadeclinicaController::class,'edit'])->name('especialidadeclinica.edit')->middleware('auth');
-    Route::get("/especialidadeclinica/listclinica",[\App\Http\Controllers\EspecialidadeclinicaController::class,'listclinica'])->name('especialidadeclinica.listclinica')->middleware('auth');
-  
+    Route::get("/especialidadeclinica/list/{clinica_id}", [\App\Http\Controllers\EspecialidadeclinicaController::class, 'list'])->name('especialidadeclinica.list')->middleware('auth');
+    Route::get("/especialidadeclinica/new/{clinica_id}", [\App\Http\Controllers\EspecialidadeclinicaController::class, 'new'])->name('especialidadeclinica.new')->middleware('auth');
+    Route::get("/especialidadeclinica/search/{clinica_id}", [\App\Http\Controllers\EspecialidadeclinicaController::class, 'search'])->name('especialidadeclinica.search')->middleware('auth');
+    Route::post("/especialidadeclinica/save/{clinica_id}", [\App\Http\Controllers\EspecialidadeclinicaController::class, 'save'])->name('especialidadeclinica.save')->middleware('auth');
+    Route::get("/especialidadeclinica/delete/{id}", [\App\Http\Controllers\EspecialidadeclinicaController::class, 'delete'])->name('especialidadeclinica.delete')->middleware('auth');
+    Route::get("/especialidadeclinica/edit/{id}", [\App\Http\Controllers\EspecialidadeclinicaController::class, 'edit'])->name('especialidadeclinica.edit')->middleware('auth');
+    Route::get("/especialidadeclinica/listclinica", [\App\Http\Controllers\EspecialidadeclinicaController::class, 'listclinica'])->name('especialidadeclinica.listclinica')->middleware('auth');
+
 
     #ESPECIALISTA
-    Route::get("/especialista/list",[\App\Http\Controllers\EspecialistaController::class,'list'])->name('especialista.list')->middleware('auth');
-    Route::get("/especialista/new",[\App\Http\Controllers\EspecialistaController::class,'new'])->name('especialista.new')->middleware('auth');
-    Route::post("/especialista/search",[\App\Http\Controllers\EspecialistaController::class,'search'])->name('especialista.search')->middleware('auth');
-    Route::post("/especialista/save",[\App\Http\Controllers\EspecialistaController::class,'save'])->name('especialista.save')->middleware('auth');
-    Route::get("/especialista/delete/{id}",[\App\Http\Controllers\EspecialistaController::class,'delete'])->name('especialista.delete')->middleware('auth');
-    Route::get("/especialista/edit/{id}",[\App\Http\Controllers\EspecialistaController::class,'edit'])->name('especialista.edit')->middleware('auth');
-    
+    Route::get("/especialista/list", [\App\Http\Controllers\EspecialistaController::class, 'list'])->name('especialista.list')->middleware('auth');
+    Route::get("/especialista/new", [\App\Http\Controllers\EspecialistaController::class, 'new'])->name('especialista.new')->middleware('auth');
+    Route::post("/especialista/search", [\App\Http\Controllers\EspecialistaController::class, 'search'])->name('especialista.search')->middleware('auth');
+    Route::post("/especialista/save", [\App\Http\Controllers\EspecialistaController::class, 'save'])->name('especialista.save')->middleware('auth');
+    Route::get("/especialista/delete/{id}", [\App\Http\Controllers\EspecialistaController::class, 'delete'])->name('especialista.delete')->middleware('auth');
+    Route::get("/especialista/edit/{id}", [\App\Http\Controllers\EspecialistaController::class, 'edit'])->name('especialista.edit')->middleware('auth');
+
     #ESPECIALISTA_POR_CLINICA    
-    Route::get("/especialistaclinica/list/{clinica_id}",[\App\Http\Controllers\EspecialistaclinicaController::class,'list'])->name('especialistaclinica.list')->middleware('auth');
-    Route::get("/especialistaclinica/new/{clinica_id}",[\App\Http\Controllers\EspecialistaclinicaController::class,'new'])->name('especialistaclinica.new')->middleware('auth');
-    Route::get("/especialistaclinica/search/{clinica_id}",[\App\Http\Controllers\EspecialistaclinicaController::class,'search'])->name('especialistaclinica.search')->middleware('auth');
-    Route::post("/especialistaclinica/save/{clinica_id}",[\App\Http\Controllers\EspecialistaclinicaController::class,'save'])->name('especialistaclinica.save')->middleware('auth');
-    Route::get("/especialistaclinica/delete/{id}",[\App\Http\Controllers\EspecialistaclinicaController::class,'delete'])->name('especialistaclinica.delete')->middleware('auth');
-    Route::get("/especialistaclinica/edit/{id}",[\App\Http\Controllers\EspecialistaclinicaController::class,'edit'])->name('especialistaclinica.edit')->middleware('auth');
+    Route::get("/especialistaclinica/list/{clinica_id}", [\App\Http\Controllers\EspecialistaclinicaController::class, 'list'])->name('especialistaclinica.list')->middleware('auth');
+    Route::get("/especialistaclinica/new/{clinica_id}", [\App\Http\Controllers\EspecialistaclinicaController::class, 'new'])->name('especialistaclinica.new')->middleware('auth');
+    Route::get("/especialistaclinica/search/{clinica_id}", [\App\Http\Controllers\EspecialistaclinicaController::class, 'search'])->name('especialistaclinica.search')->middleware('auth');
+    Route::post("/especialistaclinica/save/{clinica_id}", [\App\Http\Controllers\EspecialistaclinicaController::class, 'save'])->name('especialistaclinica.save')->middleware('auth');
+    Route::get("/especialistaclinica/delete/{id}", [\App\Http\Controllers\EspecialistaclinicaController::class, 'delete'])->name('especialistaclinica.delete')->middleware('auth');
+    Route::get("/especialistaclinica/edit/{id}", [\App\Http\Controllers\EspecialistaclinicaController::class, 'edit'])->name('especialistaclinica.edit')->middleware('auth');
 
     #CONSULTAS_DISPONIBILIZADAS_POR_ESPECIALISTA 
-    Route::get("/consulta/list/",[\App\Http\Controllers\ConsultaController::class,'list'])->name('consulta.list')->middleware('auth');
-    Route::get("/consulta/new/{especialista_id}",[\App\Http\Controllers\ConsultaController::class,'new'])->name('consulta.new')->middleware('auth');
-    Route::get("/consulta/search/{especialista_id}",[\App\Http\Controllers\ConsultaController::class,'search'])->name('consulta.search')->middleware('auth');
-    Route::post("/consulta/save/{especialista_id}",[\App\Http\Controllers\ConsultaController::class,'save'])->name('consulta.save')->middleware('auth');
-    Route::get("/consulta/delete/{id}",[\App\Http\Controllers\ConsultaController::class,'delete'])->name('consulta.delete')->middleware('auth');
-    Route::get("/consulta/edit/{id}",[\App\Http\Controllers\ConsultaController::class,'edit'])->name('consulta.edit')->middleware('auth');
-    Route::get("/consulta/agenda/",[\App\Http\Controllers\ConsultaController::class,'agenda'])->name('consulta.agenda')->middleware('auth');
-    Route::post("/consulta/saveagenda/",[\App\Http\Controllers\ConsultaController::class,'saveVariasConsultas'])->name('consulta.saveagenda')->middleware('auth');
-    
+    Route::get("/consulta/list/", [\App\Http\Controllers\ConsultaController::class, 'list'])->name('consulta.list')->middleware('auth');
+    Route::get("/consulta/new/{especialista_id}", [\App\Http\Controllers\ConsultaController::class, 'new'])->name('consulta.new')->middleware('auth');
+    Route::get("/consulta/search/{especialista_id}", [\App\Http\Controllers\ConsultaController::class, 'search'])->name('consulta.search')->middleware('auth');
+    Route::post("/consulta/save/{especialista_id}", [\App\Http\Controllers\ConsultaController::class, 'save'])->name('consulta.save')->middleware('auth');
+    Route::get("/consulta/delete/{id}", [\App\Http\Controllers\ConsultaController::class, 'delete'])->name('consulta.delete')->middleware('auth');
+    Route::get("/consulta/edit/{id}", [\App\Http\Controllers\ConsultaController::class, 'edit'])->name('consulta.edit')->middleware('auth');
+    Route::get("/consulta/agenda/", [\App\Http\Controllers\ConsultaController::class, 'agenda'])->name('consulta.agenda')->middleware('auth');
+    Route::post("/consulta/saveagenda/", [\App\Http\Controllers\ConsultaController::class, 'saveVariasConsultas'])->name('consulta.saveagenda')->middleware('auth');
+
     #CLINICAS_POR_ESPECIALISTA
-    Route::get("/clinica/vinculo/",[\App\Http\Controllers\EspecialistaclinicaController::class,'clinicasdoespecilista'])->name('especialistaclinica.clinicas');
+    Route::get("/clinica/vinculo/", [\App\Http\Controllers\EspecialistaclinicaController::class, 'clinicasdoespecilista'])->name('especialistaclinica.clinicas')->middleware('auth');
 
     #CONSULTAS_POR_ESPECIALISTA
-    Route::get("/consulta/listconsultas/",[\App\Http\Controllers\ConsultaController::class,'listconsultaporespecialista'])->name('consulta.listconsultaporespecialista');
+    Route::get("/consulta/listconsultas/", [\App\Http\Controllers\ConsultaController::class, 'listconsultaporespecialista'])->name('consulta.listconsultaporespecialista')->middleware('auth');
 
+    #MARCAR_CONSULTA_USUARIO_PACIENTE
+    Route::get("/paciente/marcarconsulta/", [\App\Http\Controllers\PacienteController::class, 'marcarconsulta'])->name('paciente.marcarconsulta')->middleware('auth');
+    #VIA_CLINICA
+    Route::get("/paciente/marcarconsulta/viaclinica/etapa2", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaClinicaPasso1'])->name('paciente.marcarConsultaViaClinicaPasso1')->middleware('auth');
+    Route::get("/paciente/marcarconsulta/viaclinica/etapa3/{id}", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaClinicaPasso2'])->name('paciente.marcarConsultaViaClinicaPasso2')->middleware('auth');
+    Route::get("/paciente/marcarconsulta/viaclinica/etapa4/{clinica_id}/{especialidade_id}", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaClinicaPasso3'])->name('paciente.marcarConsultaViaClinicaPasso3')->middleware('auth');
+    Route::get("/paciente/marcarconsulta/viaclinica/etapa5/{clinica_id}/{especialidade_id}", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaClinicaPasso4'])->name('paciente.marcarConsultaViaClinicaPasso4')->middleware('auth');
+    Route::post("/paciente/marcarconsulta/viaclinica/finalizar/", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaClinicaFinalizar'])->name('paciente.marcarConsultaViaClinicaFinalizar')->middleware('auth');
+    Route::get("/paciente/viaclinica/search/", [\App\Http\Controllers\PacienteController::class, 'pesquisarclinicamarcarconsulta'])->name('paciente.pesquisarclinicamarcarconsulta')->middleware('auth');
+    #VIA_ESPECIALIDADE
+    Route::get("/paciente/marcarconsulta/viaespecialidade/etapa2", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaEspecialidadePasso1'])->name('paciente.marcarConsultaViaEspecialidadePasso1')->middleware('auth');
+    Route::get("/paciente/marcarconsulta/viaespecialidade/etapa3/{especialidade_id}", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaEspecialidadePasso2'])->name('paciente.marcarConsultaViaEspecialidadePasso2')->middleware('auth');
+    Route::get("/paciente/marcarconsulta/viaespecialidade/etapa3/{especialidade_id}/{clinica_id}", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaEspecialidadePasso3'])->name('paciente.marcarConsultaViaEspecialidadePasso3')->middleware('auth');
+    Route::get("/paciente/marcarconsulta/viaespecialidade/etapa4/{clinica_id}/{especialista_id}", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaEspecialidadePasso4'])->name('paciente.marcarConsultaViaEspecialidadePasso4')->middleware('auth');
 
+   
+    
+
+    #CONSULTAS_USER_PACIENTE
+    Route::get("/paciente/minhasconsultas/", [\App\Http\Controllers\PacienteController::class, 'minhasconsultas'])->name('paciente.minhasconsultas')->middleware('auth');
+    Route::get("/paciente/historicoconsultas/", [\App\Http\Controllers\PacienteController::class, 'historicoconsultas'])->name('paciente.historicoconsultas')->middleware('auth');
 });
 
 /* ROTAS PARA SEREM ANALISADAS */
 Route::get('/compras', function () {
     $usuario = Auth::user();
-    $compras = \App\Models\Vendas::where('comprador_id','=',$usuario->id)->orderBy('created_at','desc')->get();
-    return view('dashboard',['compras'=>$compras]);
+    $compras = \App\Models\Vendas::where('comprador_id', '=', $usuario->id)->orderBy('created_at', 'desc')->get();
+    return view('dashboard', ['compras' => $compras]);
 })->name('compras.list')->middleware('auth');
 
 Route::get('/users', function () {

@@ -94,7 +94,7 @@ function validarCheckBoxes() {
                 <div class="col-md-3 px-8">
                   <div class="form-group">
                     <label id="labelFormulario">Intervalo entre as consultas (min)</label>
-                    <input style="border-color: #C0C0C0" type="number" min="1" step="1" class="form-control" name="intervalo_consulta" required
+                    <input style="border-color: #C0C0C0" type="number" min="0" step="1" class="form-control" name="intervalo_consulta" required
                       value="{{$entidade->preco}}" maxlength="150">
                   </div>
                 </div>

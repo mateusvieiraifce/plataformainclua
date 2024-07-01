@@ -134,7 +134,13 @@ class UsuarioController extends Controller
                 return redirect(session('nextview'));
             }
             $usuario = Auth::user();
+
+            if($usuario->tipo_user ==='P'){
+                return redirect()->route('paciente.minhasconsultas');
+            }
+
             return view('dashboard',[] );
+
             #return redirect()->intended('dashboard',['compras'=>[]]);
         } else{
 

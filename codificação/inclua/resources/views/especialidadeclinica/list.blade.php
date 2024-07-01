@@ -1,4 +1,4 @@
-@extends('layouts.app',['page' => __('especialidadeclinica'),'rotaPesquisa' => 'clinica.search', 'pageSlug' => 'especialidadeclinica','class'=>'especialidadeclinica'])
+@extends('layouts.app',['page' => __('Cadastro de Especialidade'),'rotaPesquisa' => 'clinica.search', 'pageSlug' => 'especialidadeclinica','class'=>'especialidadeclinica'])
 @section('title', 'Cadastro de Especialidade')
 
 @section('content')
