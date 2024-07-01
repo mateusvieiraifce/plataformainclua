@@ -53,6 +53,73 @@
         cursor: pointer;
     }
 </style>
+
+ <!-- Modal confirmar consulta-->
+ <div class="modal" id="modalFinalizarConsulta" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h3 class="modal-title">
+                <label style="color:black; font-size: 20px;">Revise sua consulta</label>
+            </h3>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+            <div class="container">
+                <!--aqui a rota de salvar de confirmar consulta -->
+                <form method="post" action="{{route('paciente.marcarConsultaViaClinicaFinalizar')}}">
+                    @csrf
+                    <div class="row">
+                        <div class="col-md-12">
+                        <div class="form-group" style=" border-bottom: 1px solid black; ">
+                            <label style="color:black; font-size: 15px;"><strong>Paciente:</strong> {{$paciente->nome}}</label>
+                        </div>
+                        </div>
+                        <div class="col-md-12 px-8">
+                        <div class="form-group" style="border-bottom: 1px solid black; ">
+                            <label style="color:black; font-size: 15px; "><strong>Data:</strong></label>
+                            <label id="diaModal" style="color:black; font-size: 15px;"></label>
+                        </div>
+                        </div>
+                        <div class="col-md-12 px-8">
+                        <div class="form-group" style=" border-bottom: 1px solid black; ">
+                        <label style="color:black; font-size: 15px; "><strong>Hora:</strong></label>
+                            <label id="horarioModal" style="color:black; font-size: 15px;"> </label>
+                        </div>
+                        </div>
+                        <div class="col-md-12 px-8">
+                        <div class="form-group" style="border-bottom: 1px solid black;">
+                            <label style="color:black; font-size: 15px;"><strong>Área de atuação:</strong> {{$especialidade->descricao}}</label>
+                        </div>
+                        </div>
+                        <div class="col-md-12 px-8">
+                        <div class="form-group"  style=" border-bottom: 1px solid black;">
+                            <label style="color:black; font-size: 15px;"><strong>Especialista:</strong> {{$especialista->nome}}</label>
+                        </div>
+                        </div>
+                        <div class="col-md-12 px-8">
+                        <div class="form-group"  style=" border-bottom: 1px solid black; ">
+                            <label style="color:black; font-size: 15px;"><strong>Clínica:</strong> {{$clinica->nome}}</label>
+                        </div>
+                        </div>
+                    </div>
+                    <input type="hidden" id="consulta_id" name="consulta_id">
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-reply"></i>
+                    Voltar
+                </button>
+                <button type="submit" class="btn btn-success">Confirmar consulta</button>
+            </div>
+            </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="row">
     <div class="col-lg-12 col-md-12">
         <div class="card card-tasks">
@@ -198,9 +265,9 @@
                 horaElemento.classList.add('day');
                 //aqui desenhar as consulta disponíveis no dia       
 
-                horaElemento.innerHTML = " "+ hora+" <br>";         
+                horaElemento.innerHTML = " "+ hora+" ";         
                 horaElemento.onclick = function() {
-                    finalizar(this);
+                    finalizar(this,diaselecionado);
                 };
                 consultasContainer.appendChild(horaElemento);
         }
@@ -208,8 +275,13 @@
 
     }
 
-    function finalizar(consultaElement) {
-        alert('aqui chama modal finalizar:' + consultaElement.innerHTML+" id:"+consultaElement.id);
+    function finalizar(consultaElement,diaselecionado) {
+       // alert('aqui chama modal finalizar:' + consultaElement.innerHTML+" id:"+consultaElement.id);
+        document.getElementById('diaModal').textContent  = diaselecionado;
+        document.getElementById('horarioModal').textContent  = consultaElement.innerHTML;
+        document.getElementById('consulta_id').value  = consultaElement.id;
+        // Abra o modal
+        $('#modalFinalizarConsulta').modal('show');
     }
 
     // Função auxiliar para obter o nome do dia
