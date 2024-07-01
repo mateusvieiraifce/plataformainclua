@@ -1,6 +1,8 @@
 <?php
 
 namespace App;
+
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Http;
 use PHPMailer\PHPMailer\PHPMailer;
 
@@ -219,7 +221,7 @@ class Helper
         return date('Y-m-d', $nextdate);
     }
 
-    public static function createCheckouSumup()
+    public static function createCheckouSumup($renovacao = false)
     {
         //CODIGO CREATE CHECKOUT
         $curl = curl_init();        
@@ -228,12 +230,12 @@ class Helper
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_POSTFIELDS => '{
-                "checkout_reference": "Teste - Assinatura '.Helper::generateRandomNumberString(5).'",
+                "checkout_reference": "Assinatura '.Helper::generateRandomNumberString(5).'",
                 "amount": '.floatval(Helper::converterMonetario(env('PRECO_ASSINATURA'))).',
                 "currency": "BRL",
                 "pay_to_email": "'.env('EMAIL_TO_PAY').'",
                 "description": "Plataforma Inclua - Assinatura",
-                "redirect_url": "'.route('callback.payment').'"
+                "redirect_url": "'. route('callback.payment.assinatura') .'"
             }',
             CURLOPT_HTTPHEADER => array(
                 'accept: application/json',
@@ -280,6 +282,38 @@ class Helper
         return $response;
     }
 
+    public static function renovarPagamento($cartao, $checkout)
+    {
+        //PAGAMENTO PADRÃO
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://api.sumup.com/v0.1/checkouts/'.$checkout->id,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_CUSTOMREQUEST => 'PUT',
+            CURLOPT_POSTFIELDS => '{
+                "payment_type": "card",
+                "card": {
+                    "name": "'.$cartao->nome_titular.'",
+                    "number": "'.Crypt::decrypt($cartao->numero_cartao).'",
+                    "expiry_month": "'.$cartao->mes_validade.'",
+                    "expiry_year": "'.$cartao->ano_validade.'",
+                    "cvv": "'.Crypt::decrypt($cartao->codigo_seguranca).'"
+                }
+            }',
+            CURLOPT_HTTPHEADER => array(
+                'accept: application/json',
+                'content-type: application/json',
+                'Authorization: Bearer '.env("SAMUP_KEY")
+            ),
+        ));
+
+        $response = curl_exec($curl);
+        $response = json_decode($response);
+        curl_close($curl);
+
+        return $response;
+    }
+
     public static function getCheckout($checkout_id)
     {
         $curl = curl_init();
@@ -296,6 +330,13 @@ class Helper
         $response = curl_exec($curl);
         $response = json_decode($response);
         curl_close($curl);
+
+        return $response;
+    }
+
+    public static function teste($url)
+    {
+        $response = Http::get($url);
 
         return $response;
     }

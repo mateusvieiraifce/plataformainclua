@@ -31,44 +31,7 @@ Route::get('/checkout', [\App\Http\Controllers\CheckoutControler::class, "checko
 
 Route::post('/mail', [\App\Http\Controllers\MailController::class, "sendMail"])->name('sendmail');
 
-
-
-#URL's AUTH GOOGLE
-Route::get('/google/redirect', [\App\Http\Controllers\UsuarioController::class, 'redirectToProvider'])->name('google.redirect');
-Route::get('/auth/google/callback', [\App\Http\Controllers\UsuarioController::class, 'handleProviderCallback'])->name('google.callback');
-
-
-Route::get("/cadastrar/usuario/create", [\App\Http\Controllers\UsuarioController::class, 'createUser'])->name('usuario.create');
-Route::post("/cadastrar/usuario/store", [\App\Http\Controllers\UsuarioController::class, 'storeUser'])->name('usuario.store');
-Route::get("/cadastrar/usuario/edit/{id_usuario}", [\App\Http\Controllers\UsuarioController::class, 'editUser'])->name('usuario.edit');
-Route::post("/cadastrar/usuario/update", [\App\Http\Controllers\UsuarioController::class, 'updateUser'])->name('usuario.update');
-Route::get("/cadastrar/dados/create/{id_usuario}", [\App\Http\Controllers\UsuarioController::class, 'createDadosPessoais'])->name('usuario.dados.create');
-Route::post("/cadastrar/dados/store", [\App\Http\Controllers\UsuarioController::class, 'storeDadosPessoais'])->name('usuario.dados.store');
-Route::get("/cadastrar/dados/edit/{id_usuario}", [\App\Http\Controllers\UsuarioController::class, 'editDadosPessoais'])->name('usuario.dados.edit');
-Route::get("/cadastrar/endereço/create/{id_usuario}", [\App\Http\Controllers\EnderecoController::class, 'createEndereco'])->name('endereco.create');
-Route::post("/cadastrar/endereço/store", [\App\Http\Controllers\EnderecoController::class, 'storeEndereco'])->name('endereco.store');
-Route::get("/cadastrar/cartao/create/{id_usuario}", [\App\Http\Controllers\CartaoController::class, 'create'])->name('cartao.create');
-Route::post("/cadastrar/cartao/create", [\App\Http\Controllers\CartaoController::class, 'store'])->name('cartao.store');
-
-//teste
-Route::get("/cadastrar/cartao/teste", [\App\Http\Controllers\CartaoController::class, 'teste'])->name('cartao.teste');
-Route::post("/sdqwdqwdqwdqwd", [\App\Http\Controllers\CartaoController::class, 'save'])->name('cartao.save');
-
-#VALIDAÇÕES
-Route::get("/email/verificar/{id_usuario}", [\App\Http\Controllers\UsuarioController::class, 'verificarEmail'])->name('usuario.verificar_email');
-Route::get("/email/reenviar-sms/", [\App\Http\Controllers\UsuarioController::class, 'reenviarEmail'])->name('usuario.reenviar_email');
-Route::post("/email/validar", [\App\Http\Controllers\UsuarioController::class, 'validarEmail'])->name('usuario.validar_email');
-Route::get("/celular/verificar/{id_usuario}", [\App\Http\Controllers\UsuarioController::class, 'verificarCelular'])->name('usuario.verificar_celular');
-Route::get("/celular/reenviar-sms/", [\App\Http\Controllers\UsuarioController::class, 'reenviarSMS'])->name('usuario.reenviar_sms');
-Route::post("/celular/validar", [\App\Http\Controllers\UsuarioController::class, 'validarCelular'])->name('usuario.validar_celular');
-
-Route::post("/auth/user", [\App\Http\Controllers\UsuarioController::class, 'logar'])->name('login.do');
-Route::get("/logout", [\App\Http\Controllers\UsuarioController::class, 'logout'])->name('logout');
-Route::get("/recuperar", [\App\Http\Controllers\UsuarioController::class, 'recover'])->name('recover');
-Route::get("/recuperar/{id?}", [\App\Http\Controllers\UsuarioController::class, 'recoverID'])->name('recover.id');
-Route::post("/recuperar", [\App\Http\Controllers\UsuarioController::class, 'recoverDo'])->name('recover.do');
-Route::post("/updatepassword", [\App\Http\Controllers\UsuarioController::class, 'recoverPassword'])->name('update.password');
-
+#CADASTRO DE USUARIO
 Route::get("/cadastrar/usuario/create",[\App\Http\Controllers\UsuarioController::class,'createUser'])->name('usuario.create');
 Route::post("/cadastrar/usuario/store",[\App\Http\Controllers\UsuarioController::class,'storeUser'])->name('usuario.store');
 Route::get("/cadastrar/usuario/edit/{id_usuario}",[\App\Http\Controllers\UsuarioController::class,'editUser'])->name('usuario.edit');
@@ -79,12 +42,16 @@ Route::get("/cadastrar/endereço/create/{id_usuario}",[\App\Http\Controllers\End
 Route::post("/cadastrar/endereço/store",[\App\Http\Controllers\EnderecoController::class,'storeEndereco'])->name('endereco.store');
 Route::get("/cadastrar/cartao/create/{id_usuario}",[\App\Http\Controllers\CartaoController::class,'create'])->name('cartao.create');
 
+#URL's AUTH GOOGLE
+Route::get('/google/redirect', [\App\Http\Controllers\UsuarioController::class, 'redirectToProvider'])->name('google.redirect');
+Route::get('/auth/google/callback', [\App\Http\Controllers\UsuarioController::class, 'handleProviderCallback'])->name('google.callback');
+
 #TESTES API
 Route::get("/checkout",[\App\Http\Controllers\CartaoController::class,'create_checkout']);
 Route::post("/pagamento/assinatura",[\App\Http\Controllers\AssinaturaController::class,'lancarAssinatura'])->name('pagamento.assinatura');
-Route::get("/callback-payment",[\App\Http\Controllers\AssinaturaController::class,'callbackPaymentAssinatura'])->name('callback.payment');
-Route::get("/custumer",[\App\Http\Controllers\CartaoController::class,'create_custumer']);
-Route::get("/recuperara",[\App\Http\Controllers\CartaoController::class,'recuperar']);
+Route::get("/callback-payment/assinatura",[\App\Http\Controllers\AssinaturaController::class,'callbackPaymentAssinatura'])->name('callback.payment.assinatura');
+Route::get("/pagamento/assinatura/renovar",[\App\Http\Controllers\AssinaturaController::class,'renovacaoAutomatica'])->name('pagamento.22');
+Route::get("/callback-payment/assinatura/renovar",[\App\Http\Controllers\AssinaturaController::class,'callbackPaymentRenovarAssinatura'])->name('callback.payment.assinatura.renovar');
 
 #ASSINATURA
 Route::post("/assinatura/aprovar",[\App\Http\Controllers\AssinaturaController::class,'lancarAssinatura'])->name('assinatura.aprovar');
@@ -98,13 +65,12 @@ Route::get("/celular/verificar/{id_usuario}",[\App\Http\Controllers\ValidacoesCo
 Route::get("/celular/reenviar-sms/",[\App\Http\Controllers\ValidacoesController::class,'reenviarSMS'])->name('validar.reenviar_sms');
 Route::post("/celular/validar",[\App\Http\Controllers\ValidacoesController::class,'validarCelular'])->name('validar.celular');
 
-Route::post("/auth/user",[\App\Http\Controllers\UsuarioController::class,'logar'])->name('login.do');
+Route::post("/auth/user",[\App\Http\Controllers\UsuarioController::class,'logar'])->name('login.do')->middleware('payment.signature');
 Route::get("/logout",[\App\Http\Controllers\UsuarioController::class,'logout'])->name('logout');
 Route::get("/recuperar",[\App\Http\Controllers\UsuarioController::class,'recover'])->name('recover');
 Route::get("/recuperar/{id?}",[\App\Http\Controllers\UsuarioController::class,'recoverID'])->name('recover.id');
 Route::post("/recuperar",[\App\Http\Controllers\UsuarioController::class,'recoverDo'])->name('recover.do');
 Route::post("/updatepassword",[\App\Http\Controllers\UsuarioController::class,'recoverPassword'])->name('update.password');
-
 
 Route::middleware('auth')->group(function () {
     #DASHBORD
@@ -213,7 +179,6 @@ Route::middleware('auth')->group(function () {
     Route::get("/especialidadeclinica/edit/{id}", [\App\Http\Controllers\EspecialidadeclinicaController::class, 'edit'])->name('especialidadeclinica.edit')->middleware('auth');
     Route::get("/especialidadeclinica/listclinica", [\App\Http\Controllers\EspecialidadeclinicaController::class, 'listclinica'])->name('especialidadeclinica.listclinica')->middleware('auth');
 
-
     #ESPECIALISTA
     Route::get("/especialista/list", [\App\Http\Controllers\EspecialistaController::class, 'list'])->name('especialista.list')->middleware('auth');
     Route::get("/especialista/new", [\App\Http\Controllers\EspecialistaController::class, 'new'])->name('especialista.new')->middleware('auth');
@@ -248,6 +213,7 @@ Route::middleware('auth')->group(function () {
 
     #MARCAR_CONSULTA_USUARIO_PACIENTE
     Route::get("/paciente/marcarconsulta/", [\App\Http\Controllers\PacienteController::class, 'marcarconsulta'])->name('paciente.marcarconsulta')->middleware('auth');
+
     #VIA_CLINICA
     Route::get("/paciente/marcarconsulta/viaclinica/etapa2", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaClinicaPasso1'])->name('paciente.marcarConsultaViaClinicaPasso1')->middleware('auth');
     Route::get("/paciente/marcarconsulta/viaclinica/etapa3/{id}", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaClinicaPasso2'])->name('paciente.marcarConsultaViaClinicaPasso2')->middleware('auth');
@@ -255,14 +221,12 @@ Route::middleware('auth')->group(function () {
     Route::get("/paciente/marcarconsulta/viaclinica/etapa5/{clinica_id}/{especialidade_id}", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaClinicaPasso4'])->name('paciente.marcarConsultaViaClinicaPasso4')->middleware('auth');
     Route::post("/paciente/marcarconsulta/viaclinica/finalizar/", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaClinicaFinalizar'])->name('paciente.marcarConsultaViaClinicaFinalizar')->middleware('auth');
     Route::get("/paciente/viaclinica/search/", [\App\Http\Controllers\PacienteController::class, 'pesquisarclinicamarcarconsulta'])->name('paciente.pesquisarclinicamarcarconsulta')->middleware('auth');
+    
     #VIA_ESPECIALIDADE
     Route::get("/paciente/marcarconsulta/viaespecialidade/etapa2", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaEspecialidadePasso1'])->name('paciente.marcarConsultaViaEspecialidadePasso1')->middleware('auth');
     Route::get("/paciente/marcarconsulta/viaespecialidade/etapa3/{especialidade_id}", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaEspecialidadePasso2'])->name('paciente.marcarConsultaViaEspecialidadePasso2')->middleware('auth');
     Route::get("/paciente/marcarconsulta/viaespecialidade/etapa3/{especialidade_id}/{clinica_id}", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaEspecialidadePasso3'])->name('paciente.marcarConsultaViaEspecialidadePasso3')->middleware('auth');
     Route::get("/paciente/marcarconsulta/viaespecialidade/etapa4/{clinica_id}/{especialista_id}", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaEspecialidadePasso4'])->name('paciente.marcarConsultaViaEspecialidadePasso4')->middleware('auth');
-
-
-
 
     #CONSULTAS_USER_PACIENTE
     Route::get("/paciente/minhasconsultas/", [\App\Http\Controllers\PacienteController::class, 'minhasconsultas'])->name('paciente.minhasconsultas')->middleware('auth');

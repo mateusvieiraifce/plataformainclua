@@ -10,6 +10,7 @@ class Assinatura extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
         'cartao_id',
         'data_renovacao',
         'assinante',

@@ -23,6 +23,7 @@ class CartaoController extends Controller
             $cartao = new Cartao();
             $cartao->user_id = $request->id_usuario;
             $cartao->numero_cartao = Crypt::encrypt(Helper::removeMascaraDocumento($request->numero_cartao));
+            $cartao->instituicao = $request->instituicao;
             $cartao->mes_validade = date("m",strtotime($request->validade));
             $cartao->ano_validade = date("Y",strtotime($request->validade));
             $cartao->codigo_seguranca = Crypt::encrypt($request->codigo_seguranca);
@@ -30,7 +31,7 @@ class CartaoController extends Controller
             $cartao->status = "PENDENTE";
             $cartao->save();
             
-            return $cartao->id;
+            return $cartao;
         } catch (QueryException $e) {
             $msg = ['valor' => trans("Erro ao executar a operação!"), 'tipo' => 'danger'];
             session()->flash('msg', $msg);
