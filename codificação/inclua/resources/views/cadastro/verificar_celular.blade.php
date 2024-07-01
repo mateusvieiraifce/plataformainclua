@@ -11,7 +11,7 @@
                     <h2 class="title">Verificar celular</h2>
                 </div>
                 <div class="card-body">                    
-                    <form class="form" method="post" action="{{ route('usuario.validar_celular') }}">
+                    <form class="form" method="post" action="{{ route('validar.celular') }}">
                         @csrf
                         <div class="form-group">
                             <label for="celular">
@@ -54,7 +54,7 @@
         $('#reenviar-sms').click(function() {
             $.ajax({
                 type: 'GET',
-                url: '{{ route("usuario.reenviar_sms") }}',
+                url: '{{ route("validar.reenviar_sms") }}',
                 data: {
                     usuario: $('#id_usuario').val()
                 },

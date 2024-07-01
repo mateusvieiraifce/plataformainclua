@@ -8,7 +8,7 @@
                     <img class="img-card" src="{{ asset('assets/img/logo-01.png') }}" alt="Card image" >
                 </div>
                 <div class="card-header">
-                    <h2 class="title">{{ isset($user) ? "Editar" : "Cadastro de " }} usuário</h2>
+                    <h2 class="title">Cadastro de usuário</h2>
                 </div>
                 <div class="card-body">
                     <div class="form-group">
@@ -26,7 +26,7 @@
                         </div>
                     </div>
                     
-                    <form id="formPaciente" class="form" method="post" action="{{ isset($user) ? route('usuario.update') : route('usuario.store') }}">
+                    <form id="formPaciente" class="form" method="post" action="{{ route('usuario.store') }}">
                         @csrf
                         <div class="form-group">
                             <label for="email">

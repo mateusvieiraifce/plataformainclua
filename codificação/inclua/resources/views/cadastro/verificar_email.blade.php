@@ -11,7 +11,7 @@
                     <h2 class="title">Verificar Email</h2>
                 </div>
                 <div class="card-body">
-                    <form class="form" method="post" action="{{ route('usuario.validar_email') }}">
+                    <form class="form" method="post" action="{{ route('validar.email') }}">
                         @csrf
                         <div class="form-group">
                             <label for="email">
@@ -53,7 +53,7 @@
         $('#reenviar-email').click(function() {
             $.ajax({
                 type: 'GET',
-                url: '{{ route("usuario.reenviar_email") }}',
+                url: '{{ route("validar.reenviar_email") }}',
                 data: {
                     usuario: $('#id_usuario').val()
                 },

@@ -135,6 +135,10 @@ label.link {
     align-items: center;
 }
 
+.card p {
+    color: #344675;
+}
+
 @media (max-width: 768px) {
     .input-medium {
         width: 100%;

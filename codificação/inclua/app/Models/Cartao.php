@@ -14,9 +14,9 @@ class Cartao extends Model
         'numero_cartao',
         'mes_validade',
         'ano_validade',
-        'cvv',
+        'codigo_seguranca',
         'nome_titular',
-        'principal'
+        'status'
     ];
 
     protected $table = 'cartoes';

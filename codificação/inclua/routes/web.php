@@ -31,36 +31,7 @@ Route::get('/checkout', [\App\Http\Controllers\CheckoutControler::class, "checko
 
 Route::post('/mail', [\App\Http\Controllers\MailController::class, "sendMail"])->name('sendmail');
 
-Route::get("/cadastrar/usuario/create", [\App\Http\Controllers\UsuarioController::class, 'createUser'])->name('usuario.create');
-Route::post("/cadastrar/usuario/store", [\App\Http\Controllers\UsuarioController::class, 'storeUser'])->name('usuario.store');
-Route::get("/cadastrar/usuario/edit/{id_usuario}", [\App\Http\Controllers\UsuarioController::class, 'editUser'])->name('usuario.edit');
-Route::post("/cadastrar/usuario/update", [\App\Http\Controllers\UsuarioController::class, 'updateUser'])->name('usuario.update');
-Route::get("/cadastrar/dados/create/{id_usuario}", [\App\Http\Controllers\UsuarioController::class, 'createDadosPessoais'])->name('usuario.dados.create');
-Route::post("/cadastrar/dados/store", [\App\Http\Controllers\UsuarioController::class, 'storeDadosPessoais'])->name('usuario.dados.store');
-Route::get("/cadastrar/dados/edit/{id_usuario}", [\App\Http\Controllers\UsuarioController::class, 'editDadosPessoais'])->name('usuario.dados.edit');
-Route::get("/cadastrar/endereço/create/{id_usuario}", [\App\Http\Controllers\EnderecoController::class, 'createEndereco'])->name('endereco.create');
-Route::post("/cadastrar/endereço/store", [\App\Http\Controllers\EnderecoController::class, 'storeEndereco'])->name('endereco.store');
-Route::get("/cadastrar/cartao/create/{id_usuario}", [\App\Http\Controllers\CartaoController::class, 'create'])->name('cartao.create');
-Route::post("/cadastrar/cartao/create", [\App\Http\Controllers\CartaoController::class, 'store'])->name('cartao.store');
 
-//teste
-Route::get("/cadastrar/cartao/teste", [\App\Http\Controllers\CartaoController::class, 'teste'])->name('cartao.teste');
-Route::post("/sdqwdqwdqwdqwd", [\App\Http\Controllers\CartaoController::class, 'save'])->name('cartao.save');
-
-#VALIDAÇÕES
-Route::get("/email/verificar/{id_usuario}", [\App\Http\Controllers\UsuarioController::class, 'verificarEmail'])->name('usuario.verificar_email');
-Route::get("/email/reenviar-sms/", [\App\Http\Controllers\UsuarioController::class, 'reenviarEmail'])->name('usuario.reenviar_email');
-Route::post("/email/validar", [\App\Http\Controllers\UsuarioController::class, 'validarEmail'])->name('usuario.validar_email');
-Route::get("/celular/verificar/{id_usuario}", [\App\Http\Controllers\UsuarioController::class, 'verificarCelular'])->name('usuario.verificar_celular');
-Route::get("/celular/reenviar-sms/", [\App\Http\Controllers\UsuarioController::class, 'reenviarSMS'])->name('usuario.reenviar_sms');
-Route::post("/celular/validar", [\App\Http\Controllers\UsuarioController::class, 'validarCelular'])->name('usuario.validar_celular');
-
-Route::post("/auth/user", [\App\Http\Controllers\UsuarioController::class, 'logar'])->name('login.do');
-Route::get("/logout", [\App\Http\Controllers\UsuarioController::class, 'logout'])->name('logout');
-Route::get("/recuperar", [\App\Http\Controllers\UsuarioController::class, 'recover'])->name('recover');
-Route::get("/recuperar/{id?}", [\App\Http\Controllers\UsuarioController::class, 'recoverID'])->name('recover.id');
-Route::post("/recuperar", [\App\Http\Controllers\UsuarioController::class, 'recoverDo'])->name('recover.do');
-Route::post("/updatepassword", [\App\Http\Controllers\UsuarioController::class, 'recoverPassword'])->name('update.password');
 
 #URL's AUTH GOOGLE
 Route::get('/google/redirect', [\App\Http\Controllers\UsuarioController::class, 'redirectToProvider'])->name('google.redirect');
