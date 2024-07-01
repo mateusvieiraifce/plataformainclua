@@ -60,6 +60,7 @@
                         <div class="input-group">
                             <button type="submit" class="btn btn-primary btn-round btn-lg">{{ __('Finalizar') }}</button>
                         </div>
+                        <input id="instituicao" type="hidden" name="instituicao" value="">
                         <input type="hidden" name="id_usuario" value="{{ $id_usuario }}">
                     </form>
                 </div>                    

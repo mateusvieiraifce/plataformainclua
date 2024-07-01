@@ -3,23 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Helper;
-use App\Mail\verificarEmail;
-use App\Models\Anuncio;
 use App\Models\Comentarios;
 use App\Models\Endereco;
 use App\Models\Favoritos;
-use App\Models\Language;
 use App\Models\Notificacoes;
 use App\Models\PasswordResets;
 use App\Models\User;
 use App\Models\Vendas;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
@@ -116,39 +110,33 @@ class UsuarioController extends Controller
         return $re->token;
     }
 
-    function logar(Request  $request){
-
-
-        $credentials = $request->validate([
+    public function logar(Request $request)
+    {
+        $request->validate([
             'email' => ['required'],
             'password' => ['required'],
         ]);
 
-
-        $dados =['email' => $request->email,'password' => $request->password];
+        $dados = ['email' => $request->email,'password' => $request->password];
         if (Auth::attempt($dados, false)) {
             $request->session()->regenerate();
 
             if (session()->has('nextview')) {
-                //dd(session('nextview'));
                 return redirect(session('nextview'));
             }
+
             $usuario = Auth::user();
 
             if($usuario->tipo_user ==='P'){
                 return redirect()->route('paciente.minhasconsultas');
             }
 
-            return view('dashboard',[] );
-
-            #return redirect()->intended('dashboard',['compras'=>[]]);
-        } else{
-
+            return redirect()->route('home');
+        } else {
             $msg = ['valor'=>'Usuário/Senha inválido','tipo'=>'danger'];
-            return view('auth/login',['msg'=>$msg] );
-        }
 
-        //return view('auth/login');
+            return view('auth.login',['msg'=>$msg] );
+        }
     }
 
     public function logout(Request $request)
@@ -614,9 +602,4 @@ class UsuarioController extends Controller
         return $this->listNotificacoes($msgret);
 
     }
-
-
-
-
-
 }

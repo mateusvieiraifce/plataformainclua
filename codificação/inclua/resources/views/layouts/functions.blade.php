@@ -111,6 +111,10 @@ function validarCartao(campo) {
                 document.getElementById(campo.id).value = ''
                 document.getElementById(campo.id).focus();
             }
+            
+            if(document.getElementById('instituicao')) {
+                document.getElementById('instituicao').value = response.BIN.issuer.name
+            }
         },
         error: function(error) {
             nowuiDashboard.showNotification('top','right','Cartão inválido! Verifique se o número do cartão foi digitado corretamente.','danger');
