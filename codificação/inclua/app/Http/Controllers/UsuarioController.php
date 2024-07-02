@@ -288,6 +288,10 @@ class UsuarioController extends Controller
             $user->tipo_user = $request->tipo_user;
             $user->etapa_cadastro = '3';
             $user->save();
+
+            $pacienteController = new PacienteController();
+            $pacienteController->store($request);
+            
             Helper::sendSms($user->celular, "Bem vindo a plataforma Inclua, o seu código de verificação é: $user->codigo_validacao");
 
             $msg = ['valor' => trans("Cadastro de dados pessoais realizado com sucesso!"), 'tipo' => 'success'];
