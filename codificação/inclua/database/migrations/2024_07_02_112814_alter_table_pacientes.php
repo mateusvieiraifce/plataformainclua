@@ -14,8 +14,8 @@ class AlterTablePacientes extends Migration
     public function up()
     {
         Schema::table('pacientes', function (Blueprint $table) {
-            $table->date('data_nascimento')->after('usuario_id');
-            $table->string('sexo', 1)->after('usuario_id');
+            $table->datetime('data_nascimento')->nullable($value = true)->after('usuario_id');
+            $table->string('sexo', 1)->nullable()->after('usuario_id');
         });
     }
 
