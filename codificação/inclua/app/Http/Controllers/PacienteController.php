@@ -15,6 +15,28 @@ use Illuminate\Support\Facades\Auth;
 
 class PacienteController extends Controller
 {
+   public function create(Request $request)
+   {
+   }
+
+   public function store(Request $request)
+   {
+      try {
+         $paciente = Paciente::find($request->id_usuario);
+         if (empty($paciente)) {
+            $paciente = new Paciente();
+         }
+         $paciente = new Paciente();
+         $paciente->nome = $request->nome;
+         $paciente->usuario_id = $request->id_usuario;
+         $paciente->data_nascimento = $request->data_nascimento;
+         $paciente->sexo = $request->sexo;
+         $paciente->save();
+      } catch (QueryException $e) {
+         session()->flash('msg', ['valor' => trans("Erro ao realizar o cadastro do paciente!"), 'tipo' => 'danger']);
+      }
+   }
+
    function historicoconsultas($msg = null)
    {
       $filtro = "";
