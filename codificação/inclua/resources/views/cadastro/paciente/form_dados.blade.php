@@ -103,7 +103,7 @@
                             <div class="input-group input-medium{{ $errors->has('sexo') ? ' has-danger' : '' }}">
                                 <select name="sexo" class="form-control border-full {{ $errors->has('sexo') ? 'is-invalid' : '' }}" required>
                                     <option value=""></option>
-                                    <option value="F" @if ((isset($user) && $user->sexo == 'F') || old('sexo') == 'F') selected @endif>Fenimino</option>
+                                    <option value="F" @if ((isset($user) && $user->sexo == 'F') || old('sexo') == 'F') selected @endif>Feminino</option>
                                     <option value="M" @if ((isset($user) && $user->sexo == 'M') || old('sexo') == 'M') selected @endif>Masculino</option>
                                     <option value="O" @if ((isset($user) && $user->sexo == 'O') || old('sexo') == 'O') selected @endif>Outro</option>
                                     <option value="N" @if ((isset($user) && $user->sexo == 'N') || old('sexo') == 'N') selected @endif>Prefiro não informar</option>
