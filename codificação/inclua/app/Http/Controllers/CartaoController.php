@@ -14,7 +14,7 @@ class CartaoController extends Controller
 {
     public function create($usuario_id)
     {
-        return view('cadastro.form_cartao', ['usuario_id' => $usuario_id]);
+        return view('cadastro.paciente.form_cartao', ['usuario_id' => $usuario_id]);
     }
     
     public function store($request)
