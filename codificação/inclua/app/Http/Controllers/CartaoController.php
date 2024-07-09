@@ -12,16 +12,16 @@ use Illuminate\Support\Facades\Crypt;
 
 class CartaoController extends Controller
 {
-    public function create($id_usuario)
+    public function create($usuario_id)
     {
-        return view('cadastro.form_cartao', ['id_usuario' => $id_usuario]);
+        return view('cadastro.form_cartao', ['usuario_id' => $usuario_id]);
     }
     
     public function store($request)
     {
         try {
             $cartao = new Cartao();
-            $cartao->user_id = $request->id_usuario;
+            $cartao->user_id = $request->usuario_id;
             $cartao->numero_cartao = Crypt::encrypt(Helper::removeMascaraDocumento($request->numero_cartao));
             $cartao->instituicao = $request->instituicao;
             $cartao->mes_validade = date("m",strtotime($request->validade));

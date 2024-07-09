@@ -223,6 +223,8 @@ class Helper
 
     public static function createCheckouSumup($renovacao = false)
     {
+        $route = ($renovacao) ? route('callback.payment.assinatura.renovar') : route('callback.payment.assinatura');
+        
         //CODIGO CREATE CHECKOUT
         $curl = curl_init();        
         curl_setopt_array($curl, array(
@@ -235,7 +237,7 @@ class Helper
                 "currency": "BRL",
                 "pay_to_email": "'.env('EMAIL_TO_PAY').'",
                 "description": "Plataforma Inclua - Assinatura",
-                "redirect_url": "'. route('callback.payment.assinatura') .'"
+                "redirect_url": "'. $route .'"
             }',
             CURLOPT_HTTPHEADER => array(
                 'accept: application/json',

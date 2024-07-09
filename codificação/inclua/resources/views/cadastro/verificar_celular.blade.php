@@ -40,10 +40,16 @@
                         </div>
 
                         <div class="input-group input-medium justify-content-between">
-                            <a href="{{ route('usuario.dados.edit', ['id_usuario' => $id_usuario])}}" class="btn btn-secundary btn-round btn-lg">{{ __('Voltar') }}</a>
+                            @if ($user->tipo_user == "P")
+                                <a href="{{ route('usuario.paciente.edit.dados', ['usuario_id' => $user->id])}}" class="btn btn-secundary btn-round btn-lg">{{ __('Voltar') }}</a>
+                            @elseif ($user->tipo_user == "E")
+                                <a href="{{ route('usuario.especialista.edit.dados', ['usuario_id' => $user->id])}}" class="btn btn-secundary btn-round btn-lg">{{ __('Voltar') }}</a>
+                            @elseif ($user->tipo_user == "C")
+                                <a href="{{ route('usuario.clinica.edit.dados', ['usuario_id' => $user->id])}}" class="btn btn-secundary btn-round btn-lg">{{ __('Voltar') }}</a>
+                            @endif
                             <button type="submit" class="btn btn-primary btn-round btn-lg">{{ __('Verificar') }}</button>
                         </div>
-                        <input type="hidden" id="id_usuario" name="id_usuario" value="{{ $id_usuario }}">
+                        <input type="hidden" id="usuario_id" name="usuario_id" value="{{ $user->id }}">
                     </form>
                 </div>                    
             </div>
@@ -56,7 +62,7 @@
                 type: 'GET',
                 url: '{{ route("validar.reenviar_sms") }}',
                 data: {
-                    usuario: $('#id_usuario').val()
+                    usuario: $('#usuario_id').val()
                 },
                 success: function(response) {
                     nowuiDashboard.showNotification('top', 'right', 'Código enviado! Um novo código foi enviado por SMS, verifique em seu smartphone.', 'success');

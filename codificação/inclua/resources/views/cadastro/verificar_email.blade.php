@@ -39,10 +39,10 @@
                         </div>
 
                         <div class="input-group input-medium justify-content-between">
-                            <a href="{{ route('usuario.edit', ['id_usuario' => $id_usuario])}}" class="btn btn-secundary btn-round btn-lg">{{ __('Voltar') }}</a>
+                            <a href="{{ route('usuario.edit', ['usuario_id' => $usuario_id])}}" class="btn btn-secundary btn-round btn-lg">{{ __('Voltar') }}</a>
                             <button type="submit" class="btn btn-primary btn-round btn-lg">{{ __('Verificar') }}</button>
                         </div>
-                        <input type="hidden" id="id_usuario" name="id_usuario" value="{{ $id_usuario }}">
+                        <input type="hidden" id="usuario_id" name="usuario_id" value="{{ $usuario_id }}">
                     </form>
                 </div>
             </div>
@@ -55,7 +55,7 @@
                 type: 'GET',
                 url: '{{ route("validar.reenviar_email") }}',
                 data: {
-                    usuario: $('#id_usuario').val()
+                    usuario: $('#usuario_id').val()
                 },
                 success: function(response) {
                     nowuiDashboard.showNotification('top', 'right', 'Código enviado! Um novo código foi enviado por Email, verifique sua caixa de entrada ou spam.', 'success');

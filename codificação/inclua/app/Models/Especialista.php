@@ -1,11 +1,20 @@
 <?php
-namespace App\Models;
+    namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+    use Illuminate\Database\Eloquent\Factories\HasFactory;
+    use Illuminate\Database\Eloquent\Model;
 
-class Especialista extends Model
-{
-  use HasFactory;
-  protected $fillable = ['nome', 'telefone', 'usuario_id','especialidade_id'];
-} ?>
+    class Especialista extends Model
+    {
+    use HasFactory;
+    protected $fillable = [
+        'nome',
+        'celular',
+        'usuario_id',
+        'especialidade_id',
+        'conta_bancaria',
+        'agencia',
+        'banco',
+        'chave_pix'
+    ];
+}

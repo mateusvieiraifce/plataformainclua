@@ -93,7 +93,7 @@
                         <div class="input-group">
                             <button type="submit" class="btn btn-primary btn-round btn-lg">{{ __('Próximo') }}</button>
                         </div>
-                        <input type="hidden" name="id_usuario" value="{{ $id_usuario }}">
+                        <input type="hidden" name="usuario_id" value="{{ $usuario_id }}">
                     </form>
                 </div>                    
             </div>
