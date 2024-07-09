@@ -12,7 +12,7 @@
                 </div>
                 <div class="card-body" style="padding: 0px;">
                     <div id="cardPaymentBrick_container">
-                        <input type="hidden" name="id_usuario" id="id_usuario" value="{{ $id_usuario ?? $user->id }}">
+                        <input type="hidden" name="usuario_id" id="usuario_id" value="{{ $usuario_id ?? $user->id }}">
                     </div>
                 </div>                    
             </div>
@@ -38,7 +38,7 @@
             })
         })
 
-        const id_usuario = document.getElementById("id_usuario").value
+        const usuario_id = document.getElementById("usuario_id").value
         const mp = new MercadoPago("{{env('MERCADOPAGO_PUBLIC_KEY')}}", {
           locale: 'pt-BR'
         });
@@ -109,7 +109,7 @@
                                     "Content-Type": "application/json",
                                     "X-CSRF-Token":"{{ csrf_token() }}"
                                 },
-                                body: JSON.stringify({cardFormData, id_usuario})
+                                body: JSON.stringify({cardFormData, usuario_id})
                             })
                             .then((response) => {
                                 // receber o resultado do pagamento

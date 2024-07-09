@@ -4,14 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Helper;
 use App\Models\User;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 
 class ValidacoesController extends Controller
 {
-    public function verificarEmail($id_usuario)
+    public function verificarEmail($usuario_id)
     {
-        $user = User::find($id_usuario);
-        return view('cadastro.verificar_email', ['id_usuario' => $id_usuario, 'email' => $user->email]);
+        $user = User::find($usuario_id);
+        return view('cadastro.verificar_email', ['usuario_id' => $usuario_id, 'email' => $user->email]);
     }
 
     public function reenviarEmail(Request $request)
@@ -38,13 +39,14 @@ class ValidacoesController extends Controller
         $request->validate($rules, $feedbacks);
 
         try {
-            $user = User::find($request->id_usuario);
+            $user = User::find($request->usuario_id);
             if ($request->codigo == $user->codigo_validacao) {
                 // CRIA UMA VARIAVEL E ARMAZENA A HORA ATUAL DO FUSO-HORÀRIO DEFINIDO (BRASÍLIA)
                 date_default_timezone_set('America/Sao_Paulo');
                 $dataLocal = date('Y-m-d H:i:s', time());
 
                 $user->email_verified_at = $dataLocal;
+                $user->etapa_cadastro = '2';
                 $user->save();
 
                 $msg = ['valor' => trans("Seu email foi verificado com sucesso!"), 'tipo' => 'success'];
@@ -62,14 +64,18 @@ class ValidacoesController extends Controller
             return back();
         }
 
-        return redirect()->route('usuario.dados.create', ['id_usuario' => $user->id]);
+        if ($user->tipo_user == "P") {
+            return redirect()->route('usuario.paciente.create.dados', ['usuario_id' => $user->id]);
+        } elseif ($user->tipo_use = "E") {
+            return redirect()->route('usuario.especialista.create.dados', ['usuario_id' => $user->id]);
+        }
     }
 
-    public function verificarCelular($id_usuario)
+    public function verificarCelular($usuario_id)
     {
-        $user = User::find($id_usuario);
+        $user = User::find($usuario_id);
 
-        return view('cadastro.verificar_celular', ['id_usuario' => $id_usuario, 'celular' => Helper::mascaraCelular($user->celular)]);
+        return view('cadastro.verificar_celular', ['user' => $user, 'celular' => Helper::mascaraCelular($user->celular)]);
     }
 
     public function reenviarSMS(Request $request)
@@ -95,9 +101,10 @@ class ValidacoesController extends Controller
         $request->validate($rules, $feedbacks);
 
         try {
-            $user = User::find($request->id_usuario);
+            $user = User::find($request->usuario_id);
             if ($request->codigo == $user->codigo_validacao) {
                 $user->celular_validado = "S";
+                $user->etapa_cadastro = '3';
                 $user->save();
 
                 $msg = ['valor' => trans("Seu celular foi verificado com sucesso!"), 'tipo' => 'success'];
@@ -115,6 +122,10 @@ class ValidacoesController extends Controller
             return back();
         }
 
-        return redirect()->route('endereco.create', ['id_usuario' => $user->id]);
+        if ($user->tipo_user == 'P') {
+            return redirect()->route('endereco.create', ['usuario_id' => $user->id]);
+        } elseif ($user->tipo_user == 'E') {
+            return redirect()->route('dados-bancarios.create', ['usuario_id' => $user->id]); 
+        }
     }
 }

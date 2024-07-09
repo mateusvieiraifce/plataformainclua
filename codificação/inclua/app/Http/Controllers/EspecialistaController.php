@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Helper;
 use App\Models\Especialista;
 use App\Models\Especialidade;
 use Illuminate\Database\QueryException;
@@ -24,6 +25,112 @@ class EspecialistaController extends Controller
 
       return view('especialista/list', ['lista' => $lista, 'filtro' => $filter, 'msg' => $msg]);
    }
+
+   public function createDadosUserEspecialista($usuario_id)
+   {
+      $especialidades = Especialidade::all();
+      return view('cadastro.especialista.form_dados', ['usuario_id' => $usuario_id, 'especialidades' => $especialidades]);
+   }
+
+   public function storeDadosUserEspecialista(Request $request)
+   {
+      //REMOÇÃO DA MASCARA DO CELULAR COMPARAR COM O BD
+      $request->request->set('celular', Helper::removerCaractereEspecial($request->celular));
+      $rules = [
+          "nome" => "required|min:5",
+          "celular" => "required|unique:users,celular,{$request->usuario_id}",
+          "especialidade" => "required"          
+      ];
+      $feedbacks = [
+         "nome.required" => "O campo nome é obrigatório.",
+         "nome.min" => "O campo nome deve ter no mínomo 5 caracteres.",
+         "celular.required" => "O campo Celular é obrigatório.",
+         "celular.unique" => "Este número de celular já foi utilizado.",
+         "especialidade.required" => "O campo Especialidade é obrigatório."
+      ];
+      $request->validate($rules, $feedbacks);
+
+      try {
+         if ($request->especialista_id) {
+            $especialista = Especialista::find($request->especialista_id);
+         } else {
+            $especialista = new Especialista();
+         }
+         
+         $especialista->nome = $request->nome;
+         $especialista->celular = $request->celular;
+         $especialista->especialidade_id = $request->especialidade;
+         $especialista->usuario_id = $request->usuario_id;
+         $especialista->save();
+
+         $userController = new UsuarioController();
+         $userController->storeDados($request);
+
+         $msg = ['valor' => trans("Cadastro de dados realizado com sucesso!"), 'tipo' => 'success'];
+         session()->flash('msg', $msg);
+      } catch (QueryException $e) {
+         $msg = ['valor' => trans("Erro ao executar a operação!"), 'tipo' => 'danger'];
+         session()->flash('msg', $msg);
+
+         return back();
+      }
+
+      return redirect()->route('view.verificar_celular', ['usuario_id' => $especialista->usuario_id]);
+   }
+
+   public function editDadosUserEspecialista($usuario_id)
+   {
+      $user = User::find($usuario_id);
+      $user->celular = $user->celular != null ? Helper::mascaraCelular($user->celular) : '';
+      $especialidades = Especialidade::all();
+
+      return view('cadastro.especialista.form_dados', ['user' => $user, 'especialidades' => $especialidades]);
+   }
+
+   public function createDadosBancarios($usuario_id)
+   {
+      return view('cadastro.especialista.form_bancario', ['usuario_id' => $usuario_id]);
+   }
+
+   public function storeDadosBancarios(Request $request)
+   {
+      $rules = [
+         "conta_bancaria" => "required",
+         "agencia" => "required",
+         "banco" => "required",
+         "chave_pix" => "required"
+      ];
+      $feedbacks = [
+         "conta_bancaria.required" => "O campo Conta Bancária é obrigatório.",
+         "agencia.required" => "O Agência é obrigatório.",
+         "banco.required" => "O campo Banco é obrigatório.",
+         "chave_pix.required" => "O campo Pix é obrigatório.",
+      ];
+      $request->validate($rules, $feedbacks);
+
+      try {
+         $especialista = Especialista::where("usuario_id", $request->usuario_id)->first();
+         $especialista->conta_bancaria = $request->contaconta_bancaria;
+         $especialista->agencia = $request->agencia;
+         $especialista->banco = $request->banco;
+         $especialista->chave_pix = $request->chave_pix;
+         $especialista->save();
+
+         $user = User::find($request->usuario_id);
+         $user->etapa_cadastro = "F";
+         $user->save();
+
+         Auth::loginUsingId($user->id);
+         session()->flash('msg', ['valor' => trans("Seu cadastro foi realizado com sucesso!"), 'tipo' => 'success']);
+      } catch (QueryException $e) {
+         $msg = ['valor' => trans("Erro ao executar a operação!"), 'tipo' => 'danger'];
+         session()->flash('msg', $msg);
+
+         return back();
+      }
+      return redirect()->route('home');
+   }
+
    function new()
    {
       return view('especialista/form', ['entidade' => new Especialista(), 'especialidades' => Especialidade::all(), 'usuario' => new User()]);
@@ -105,4 +212,4 @@ class EspecialistaController extends Controller
       $usuario = User::find($entidade->usuario_id);
       return view('especialista/form', ['entidade' => $entidade, 'especialidades' => Especialidade::all(),'usuario' => $usuario]);
    }
-} ?>
+}

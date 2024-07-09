@@ -34,7 +34,7 @@
                             </label>
                             <div class="input-group input-medium{{ $errors->has('email') ? ' has-danger' : '' }}">
                                 <input type="email" id="email" class="form-control border-full {{ $errors->has('email') ? ' is-invalid' : '' }}"
-                                    name="email" autocomplete="email" placeholder="Email" value="{{ (isset($user) ? $user->email : null) ?? old('email') }}" >
+                                    name="email" autocomplete="email" placeholder="Email" value="{{ (isset($user) ? $user->email : null) ?? old('email') }}" required>
                                 @include('alerts.feedback', ['field' => 'email'])
                             </div>
                         </div>
@@ -45,7 +45,7 @@
                             </label>
                             <div class="input-group input-medium{{ $errors->has('password') ? ' has-danger' : '' }}">
                                 <input type="password" id="password" class="form-control border-full {{ $errors->has('password') ? ' is-invalid' : '' }}"
-                                    name="password" autocomplete="password" placeholder="Senha" value="{{ old('password') }}" >
+                                    name="password" autocomplete="password" placeholder="Senha" minlength="8" maxlength="15" value="{{ old('password') }}" required>
                                 @include('alerts.feedback', ['field' => 'password'])
                             </div>
                         </div>
@@ -56,7 +56,7 @@
                             </label>
                             <div class="input-group input-medium{{ $errors->has('password_confirmation') ? ' has-danger' : '' }}">
                                 <input type="password" id="password_confirmation" class="form-control border-full {{ $errors->has('password_confirmation') ? ' is-invalid' : '' }}"
-                                    name="password_confirmation" autocomplete="password_confirmation" placeholder="Confirmar senha" value="{{ old('password_confirmation') }}" >
+                                    name="password_confirmation" autocomplete="password_confirmation" minlength="8" maxlength="15" placeholder="Confirmar senha" value="{{ old('password_confirmation') }}" required>
                                 @include('alerts.feedback', ['field' => 'password_confirmation'])
                             </div>
                         </div>
@@ -66,12 +66,52 @@
                         </div>
                         <input type="hidden" name="tipo_pessoa" value="F">
                         <input type="hidden" name="tipo_user" value="P">
-                        <input type="hidden" id="id_usuario" name="id_usuario" value="{{ isset($user) ? $user->id : '' }}">
+                        <input type="hidden" id="usuario_id" name="usuario_id" value="{{ isset($user) ? $user->id : '' }}">
                     </form>
-                    <form id="formEspecialista" class="form" method="post" action="">
+                    
+                    <form id="formEspecialista" class="form" method="post" action="{{ route('usuario.store') }}">
                         @csrf
-                        Form Especialista
+                        <div class="form-group">
+                            <label for="email">
+                                Email <span class="required">*</span>
+                            </label>
+                            <div class="input-group input-medium{{ $errors->has('email') ? ' has-danger' : '' }}">
+                                <input type="email" id="email" class="form-control border-full {{ $errors->has('email') ? ' is-invalid' : '' }}"
+                                    name="email" autocomplete="email" placeholder="Email" value="{{ (isset($user) ? $user->email : null) ?? old('email') }}" required>
+                                @include('alerts.feedback', ['field' => 'email'])
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="password">
+                                Senha <span class="required">*</span>
+                            </label>
+                            <div class="input-group input-medium{{ $errors->has('password') ? ' has-danger' : '' }}">
+                                <input type="password" id="password" class="form-control border-full {{ $errors->has('password') ? ' is-invalid' : '' }}"
+                                    name="password" autocomplete="password" placeholder="Senha" minlength="8" maxlength="15" value="{{ old('password') }}" required>
+                                @include('alerts.feedback', ['field' => 'password'])
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="password_confirmation">
+                                Confirme a senha <span class="required">*</span>
+                            </label>
+                            <div class="input-group input-medium{{ $errors->has('password_confirmation') ? ' has-danger' : '' }}">
+                                <input type="password" id="password_confirmation" class="form-control border-full {{ $errors->has('password_confirmation') ? ' is-invalid' : '' }}"
+                                    name="password_confirmation" autocomplete="password_confirmation" minlength="8" maxlength="15" placeholder="Confirmar senha" value="{{ old('password_confirmation') }}" required>
+                                @include('alerts.feedback', ['field' => 'password_confirmation'])
+                            </div>
+                        </div>
+                        
+                        <div class="input-group">
+                            <button type="submit" class="btn btn-primary btn-round btn-lg">{{ __('Próximo') }}</button>
+                        </div>
+                        <input type="hidden" name="tipo_pessoa" value="F">
+                        <input type="hidden" name="tipo_user" value="E">
+                        <input type="hidden" id="usuario_id" name="usuario_id" value="{{ isset($user) ? $user->id : '' }}">
                     </form>
+
                     <form id="formClinica" class="form" method="post" action="">
                         @csrf
                         Form Clínica

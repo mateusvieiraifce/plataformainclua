@@ -31,20 +31,34 @@ Route::get('/checkout', [\App\Http\Controllers\CheckoutControler::class, "checko
 
 Route::post('/mail', [\App\Http\Controllers\MailController::class, "sendMail"])->name('sendmail');
 
-#CADASTRO DE USUARIO
-Route::get("/cadastrar/usuario/create",[\App\Http\Controllers\UsuarioController::class,'createUser'])->name('usuario.create');
-Route::post("/cadastrar/usuario/store",[\App\Http\Controllers\UsuarioController::class,'storeUser'])->name('usuario.store');
-Route::get("/cadastrar/usuario/edit/{id_usuario}",[\App\Http\Controllers\UsuarioController::class,'editUser'])->name('usuario.edit');
-Route::get("/cadastrar/dados/create/{id_usuario}",[\App\Http\Controllers\UsuarioController::class,'createDadosPessoais'])->name('usuario.dados.create');
-Route::post("/cadastrar/dados/store",[\App\Http\Controllers\UsuarioController::class,'storeDadosPessoais'])->name('usuario.dados.store');
-Route::get("/cadastrar/dados/edit/{id_usuario}",[\App\Http\Controllers\UsuarioController::class,'editDadosPessoais'])->name('usuario.dados.edit');
-Route::get("/cadastrar/endereço/create/{id_usuario}",[\App\Http\Controllers\EnderecoController::class,'createEndereco'])->name('endereco.create');
-Route::post("/cadastrar/endereço/store",[\App\Http\Controllers\EnderecoController::class,'storeEndereco'])->name('endereco.store');
-Route::get("/cadastrar/cartao/create/{id_usuario}",[\App\Http\Controllers\CartaoController::class,'create'])->name('cartao.create');
-
 #URL's AUTH GOOGLE
 Route::get('/google/redirect', [\App\Http\Controllers\UsuarioController::class, 'redirectToProvider'])->name('google.redirect');
 Route::get('/auth/google/callback', [\App\Http\Controllers\UsuarioController::class, 'handleProviderCallback'])->name('google.callback');
+
+#CADASTRO DE USUARIO
+Route::get("/cadastrar/usuario/create",[\App\Http\Controllers\UsuarioController::class,'createUser'])->name('usuario.create');
+Route::post("/cadastrar/usuario/store",[\App\Http\Controllers\UsuarioController::class,'storeUser'])->name('usuario.store');
+Route::get("/cadastrar/usuario/edit/{usuario_id}",[\App\Http\Controllers\UsuarioController::class,'editUser'])->name('usuario.edit');
+
+#USUARIO PACIENTE
+Route::get("/cadastrar/usuario/paciente/dados/create/{usuario_id}",[\App\Http\Controllers\PacienteController::class,'createDadosUserPaciente'])->name('usuario.paciente.create.dados');
+Route::post("/cadastrar/usuario/paciente/dados/store",[\App\Http\Controllers\PacienteController::class,'storeDadosUserPaciente'])->name('usuario.paciente.store.dados');
+Route::get("/cadastrar/usuario/paciente/dados/edit/{usuario_id}",[\App\Http\Controllers\PacienteController::class,'editDadosUserPaciente'])->name('usuario.paciente.edit.dados');
+
+#CADASTRO CARTAO
+Route::get("/cadastrar/cartao/create/{usuario_id}",[\App\Http\Controllers\CartaoController::class,'create'])->name('cartao.create');
+
+#USUARIO ESPECIALISTA
+Route::get("/cadastrar/usuario/especialista/dados/create/{usuario_id}", [\App\Http\Controllers\EspecialistaController::class, 'createDadosUserEspecialista'])->name('usuario.especialista.create.dados');
+Route::post("/cadastrar/usuario/especialista/store", [\App\Http\Controllers\EspecialistaController::class, 'storeDadosUserEspecialista'])->name('usuario.especialista.store.dados');
+Route::get("/cadastrar/usuario/especialista/dados/edit/{usuario_id}",[\App\Http\Controllers\EspecialistaController::class,'editDadosUserEspecialista'])->name('usuario.especialista.edit.dados');
+
+Route::get("/cadastrar/dados-bancários/create/{usuario_id}",[\App\Http\Controllers\EspecialistaController::class,'createDadosBancarios'])->name('dados-bancarios.create');
+Route::post("/cadastrar/dados-bancários/store",[\App\Http\Controllers\EspecialistaController::class,'storeDadosBancarios'])->name('dados-bancarios.store');
+
+#CADASTRO ENDERECO
+Route::get("/cadastrar/endereço/create/{usuario_id}",[\App\Http\Controllers\EnderecoController::class,'createEndereco'])->name('endereco.create');
+Route::post("/cadastrar/endereço/store",[\App\Http\Controllers\EnderecoController::class,'storeEndereco'])->name('endereco.store');
 
 #TESTES API
 Route::get("/checkout",[\App\Http\Controllers\CartaoController::class,'create_checkout']);
@@ -55,13 +69,13 @@ Route::get("/callback-payment/assinatura/renovar",[\App\Http\Controllers\Assinat
 
 #ASSINATURA
 Route::post("/assinatura/aprovar",[\App\Http\Controllers\AssinaturaController::class,'lancarAssinatura'])->name('assinatura.aprovar');
-Route::get("/assinatura/renovar/{id_usuario}",[\App\Http\Controllers\AssinaturaController::class,'renovarAssinatura'])->name('assiantura.renovar');
+Route::get("/assinatura/renovar/{usuario_id}",[\App\Http\Controllers\AssinaturaController::class,'renovarAssinatura'])->name('assiantura.renovar');
 
 #VALIDAÇÕES
-Route::get("/email/verificar/{id_usuario}",[\App\Http\Controllers\ValidacoesController::class,'verificarEmail'])->name('view.verificar_email');
+Route::get("/email/verificar/{usuario_id}",[\App\Http\Controllers\ValidacoesController::class,'verificarEmail'])->name('view.verificar_email');
 Route::get("/email/reenviar-sms/",[\App\Http\Controllers\ValidacoesController::class,'reenviarEmail'])->name('validar.reenviar_email');
 Route::post("/email/validar",[\App\Http\Controllers\ValidacoesController::class,'validarEmail'])->name('validar.email');
-Route::get("/celular/verificar/{id_usuario}",[\App\Http\Controllers\ValidacoesController::class,'verificarCelular'])->name('view.verificar_celular');
+Route::get("/celular/verificar/{usuario_id}",[\App\Http\Controllers\ValidacoesController::class,'verificarCelular'])->name('view.verificar_celular');
 Route::get("/celular/reenviar-sms/",[\App\Http\Controllers\ValidacoesController::class,'reenviarSMS'])->name('validar.reenviar_sms');
 Route::post("/celular/validar",[\App\Http\Controllers\ValidacoesController::class,'validarCelular'])->name('validar.celular');
 

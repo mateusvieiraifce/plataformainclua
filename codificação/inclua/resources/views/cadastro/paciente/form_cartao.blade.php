@@ -19,7 +19,7 @@
                             </label>
                             <div class="input-group {{ $errors->has('numero_cartao') ? ' has-danger' : '' }} input-medium">
                                 <input type="text" id="numero_cartao" class="form-control border-full {{ $errors->has('numero_cartao') ? ' is-invalid' : '' }}"
-                                    name="numero_cartao" maxlength="19" placeholder="0000 0000 0000 0000" value="{{ old('numero_cartao') }}" >
+                                    name="numero_cartao" maxlength="19" placeholder="0000 0000 0000 0000" value="{{ old('numero_cartao') }}" required>
                                 @include('alerts.feedback', ['field' => 'numero_cartao'])
                             </div>
                         </div>
@@ -30,7 +30,7 @@
                             </label>
                             <div class="input-group {{ $errors->has('validade') ? ' has-danger' : '' }} input-medium">
                                 <input type="month" id="validade" class="form-control border-full {{ $errors->has('validade') ? ' is-invalid' : '' }}"
-                                    name="validade" placeholder="Validade" value="{{ old('validade') }}" >
+                                    name="validade" placeholder="Validade" value="{{ old('validade') }}" required>
                                 @include('alerts.feedback', ['field' => 'validade'])
                             </div>
                         </div>
@@ -41,7 +41,7 @@
                             </label>
                             <div class="input-group {{ $errors->has('codigo_seguranca') ? ' has-danger' : '' }} input-medium">
                                 <input type="text" id="codigo_seguranca" class="form-control border-full {{ $errors->has('codigo_seguranca') ? ' is-invalid' : '' }}"
-                                    name="codigo_seguranca" maxlength="3" placeholder="***" value="{{ old('codigo_seguranca') }}">
+                                    name="codigo_seguranca" maxlength="3" placeholder="***" value="{{ old('codigo_seguranca') }}" required>
                                 @include('alerts.feedback', ['field' => 'codigo_seguranca'])
                             </div>
                         </div>
@@ -52,7 +52,7 @@
                             </label>
                             <div class="input-group {{ $errors->has('nome_titular') ? ' has-danger' : '' }} input-medium">
                                 <input type="text" id="nome_titular" class="form-control border-full {{ $errors->has('nome_titular') ? ' is-invalid' : '' }}"
-                                    name="nome_titular" placeholder="Nome do titular igual ao cartão" value="{{ old('nome_titular') }}">
+                                    name="nome_titular" placeholder="Nome do titular igual ao cartão" value="{{ old('nome_titular') }}" required>
                                 @include('alerts.feedback', ['field' => 'nome_titular'])
                             </div>
                         </div>
@@ -61,7 +61,7 @@
                             <button type="submit" class="btn btn-primary btn-round btn-lg">{{ __('Finalizar') }}</button>
                         </div>
                         <input id="instituicao" type="hidden" name="instituicao" value="">
-                        <input type="hidden" name="id_usuario" value="{{ $id_usuario }}">
+                        <input type="hidden" name="usuario_id" value="{{ $usuario_id }}">
                     </form>
                 </div>                    
             </div>
