@@ -254,6 +254,12 @@
                     <p>{{ __('Dashboard') }}</p>
                 </a>
             </li> -->
+            <li @if ($pageSlug=='home' ) class="active " @endif>
+                <a href="{{route('paciente.home')}}">
+                    <i class="tim-icons icon-bank"></i>
+                    <p>{{ __('HOME') }}</p>
+                </a>
+            </li>
             <li @if ($pageSlug=='minhasconsultas' ) class="active " @endif>
                 <a href="{{route('paciente.minhasconsultas')}}">
                     <i class="tim-icons icon-notes"></i>

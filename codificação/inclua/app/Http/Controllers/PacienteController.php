@@ -15,6 +15,17 @@ use Illuminate\Support\Facades\Auth;
 
 class PacienteController extends Controller
 {
+   function home($msg = null)
+   {
+      $filtro = "";
+      if (isset($_GET['filtro'])) {
+         $filtro = $_GET['filtro'];
+      }
+    
+      return view('userPaciente/home', ['msg' => $msg,'filtro' => $filtro]);
+   }
+
+
    function historicoconsultas($msg = null)
    {
       $filtro = "";
@@ -55,9 +66,7 @@ class PacienteController extends Controller
    {
       return view('userPaciente/marcarconsulta');
    }
-
-
-   
+  
 
    function marcarConsultaViaEspecialidadePasso1()
    {
