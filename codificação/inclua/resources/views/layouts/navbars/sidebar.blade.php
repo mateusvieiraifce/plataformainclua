@@ -268,7 +268,7 @@
             </li>
             <li @if ($pageSlug=='marcarconsulta' ) class="active " @endif>
                 <a href="{{route('paciente.marcarconsulta')}}">
-                    <i class="tim-icons icon-components"></i>
+                    <i class="tim-icons icon-calendar-60"></i>
                     <p>{{ __('Marcação de consultas') }}</p>
                 </a>
             </li>
@@ -292,7 +292,7 @@
             </li>
             <li @if ($pageSlug=='favoritos' ) class="active " @endif>
                 <a href="{{route('user.favoritos')}}">
-                    <i class="tim-icons icon-notes"></i>
+                    <i class="tim-icons  icon-components"></i>
                     <p>{{ __('Exames') }}</p>
                 </a>
             </li>

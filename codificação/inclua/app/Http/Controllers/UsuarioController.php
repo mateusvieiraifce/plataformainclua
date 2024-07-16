@@ -128,7 +128,8 @@ class UsuarioController extends Controller
             $usuario = Auth::user();
 
             if($usuario->tipo_user ==='P'){
-                return redirect()->route('paciente.minhasconsultas');
+               //home usuario Paciente
+               return redirect()->route('paciente.home');
             }
 
             return redirect()->route('home');
