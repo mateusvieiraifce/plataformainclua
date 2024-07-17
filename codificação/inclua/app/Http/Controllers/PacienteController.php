@@ -21,8 +21,20 @@ class PacienteController extends Controller
       if (isset($_GET['filtro'])) {
          $filtro = $_GET['filtro'];
       }
-    
-      return view('userPaciente/home', ['msg' => $msg,'filtro' => $filtro]);
+
+      $paciente =  Paciente::where('usuario_id', '=', Auth::user()->id)->first();
+      $statusConsulta = "Aguardando atendimento";
+      $lista = Consulta::join('especialistas', 'especialistas.id', '=', 'consultas.especialista_id')->
+      join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')->
+      join('especialidades', 'especialidades.id', '=', 'especialistas.especialidade_id')
+      ->where('paciente_id', '=', $paciente->id)->where('status', '=', $statusConsulta)->select(
+            'consultas.id',
+            'horario_agendado',
+            'especialistas.nome as nome_especialista',
+            'clinicas.nome as nome_clinica',
+            'especialidades.descricao as descricao_especialidade'
+         )->orderBy('horario_agendado', 'asc')->take(3)->get();  
+      return view('userPaciente/home', ['lista' => $lista,'msg' => $msg,'filtro' => $filtro]);
    }
 
 
