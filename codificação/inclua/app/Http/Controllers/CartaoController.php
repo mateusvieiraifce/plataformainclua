@@ -22,7 +22,7 @@ class CartaoController extends Controller
         try {
             $cartao = new Cartao();
             $cartao->user_id = $request->usuario_id;
-            $cartao->numero_cartao = Crypt::encrypt(Helper::removeMascaraDocumento($request->numero_cartao));
+            $cartao->numero_cartao = Crypt::encrypt(Helper::removerCaractereEspecial($request->numero_cartao));
             $cartao->instituicao = $request->instituicao;
             $cartao->mes_validade = date("m",strtotime($request->validade));
             $cartao->ano_validade = date("Y",strtotime($request->validade));

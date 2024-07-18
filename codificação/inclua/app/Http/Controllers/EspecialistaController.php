@@ -37,16 +37,18 @@ class EspecialistaController extends Controller
       //REMOÇÃO DA MASCARA DO CELULAR COMPARAR COM O BD
       $request->request->set('celular', Helper::removerCaractereEspecial($request->celular));
       $rules = [
-          "nome" => "required|min:5",
-          "celular" => "required|unique:users,celular,{$request->usuario_id}",
-          "especialidade" => "required"          
+         "nome" => "required|min:5",
+         "celular" => "required|unique:users,celular,{$request->usuario_id}",
+         "especialidade" => "required",
+         'consentimento'=>'required'
       ];
       $feedbacks = [
          "nome.required" => "O campo nome é obrigatório.",
          "nome.min" => "O campo nome deve ter no mínomo 5 caracteres.",
          "celular.required" => "O campo Celular é obrigatório.",
          "celular.unique" => "Este número de celular já foi utilizado.",
-         "especialidade.required" => "O campo Especialidade é obrigatório."
+         "especialidade.required" => "O campo Especialidade é obrigatório.",
+         "consentimento.required" => "O campo Termos e Condições de Uso é obrigatório."
       ];
       $request->validate($rules, $feedbacks);
 
@@ -69,7 +71,7 @@ class EspecialistaController extends Controller
          $msg = ['valor' => trans("Cadastro de dados realizado com sucesso!"), 'tipo' => 'success'];
          session()->flash('msg', $msg);
       } catch (QueryException $e) {
-         $msg = ['valor' => trans("Erro ao executar a operação!"), 'tipo' => 'danger'];
+         $msg = ['valor' => trans("Erro ao realizar o cadastro do especialista!"), 'tipo' => 'danger'];
          session()->flash('msg', $msg);
 
          return back();
@@ -128,6 +130,7 @@ class EspecialistaController extends Controller
 
          return back();
       }
+      
       return redirect()->route('home');
    }
 

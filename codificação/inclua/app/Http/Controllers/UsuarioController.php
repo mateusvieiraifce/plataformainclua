@@ -117,16 +117,21 @@ class UsuarioController extends Controller
             'password' => ['required'],
         ]);
 
+        //VERIFICA SE O CADASTRO FOI FINALIZADO
+        $usuario = User::where('email', $request->email)->first();
+        if ($usuario->etapa != "F") {
+            return $this->verifyCadastro($usuario->id);
+        }
+
         $dados = ['email' => $request->email, 'password' => $request->password];
         if (Auth::attempt($dados, false)) {
             $request->session()->regenerate();
-
+            
             if (session()->has('nextview')) {
                 return redirect(session('nextview'));
             }
-
             $usuario = Auth::user();
-
+            
             if($usuario->tipo_user ==='P'){
                 return redirect()->route('paciente.minhasconsultas');
             }
@@ -188,6 +193,7 @@ class UsuarioController extends Controller
                 $user = new User();
             }
             $user->email = $request->email;
+            $user->nome_completo = $request->nome ?? null;
             $user->password = bcrypt($request->password);
             $user->codigo_validacao = Helper::generateRandomNumberString(5);
             $user->tipo_pessoa = $request->tipo_pessoa;
@@ -221,10 +227,10 @@ class UsuarioController extends Controller
             //salvando a avatar do usuario
             if ($request->hasFile('image') && $request->file('image')->isValid()) {
                 //VERIFICANDO SE EXISTE ALGUM AVATAR JA CADASTRADO PARA DELETAR
-                $avatarSimbolico = User::find($request->usuario_id)->avatar;
-                if(!empty($avatarSimbolico)) {
+                $avatar = User::find($request->usuario_id)->avatar;
+                if(!empty($avatar)) {
                     //REMOÇÃO DE 'storage/' PARA DELETAR O ARQUIVO NA RAIZ
-                    $linkStorage = explode('/', $avatarSimbolico);
+                    $linkStorage = explode('/', $avatar);
                     $linkStorage = "$linkStorage[1]/$linkStorage[2]";
                     Storage::delete([$linkStorage]);
                 }
@@ -238,11 +244,13 @@ class UsuarioController extends Controller
                 // Faz o upload:
                 $pathAvatar = $request->file('image')->storeAs('avatar-user', $imageName);
             }
+
             $user = User::find($request->usuario_id);
             $user->avatar = !empty($pathAvatar) ? "storage/$pathAvatar" : null;
             $user->documento = Helper::removerCaractereEspecial($request->cpf) ?? null;
             $user->nome_completo = $request->nome;
-            $user->celular = Helper::removerCaractereEspecial($request->celular);
+            $user->telefone = Helper::removerCaractereEspecial($request->telefone) ?? null;
+            $user->celular = Helper::removerCaractereEspecial($request->celular) ?? null;
             $user->codigo_validacao = Helper::generateRandomNumberString(5);
             $user->rg = $request->rg ?? null;
             $user->data_nascimento = $request->data_nascimento ?? null;
@@ -256,6 +264,7 @@ class UsuarioController extends Controller
             $msg = ['valor' => trans("Cadastro de dados realizado com sucesso!"), 'tipo' => 'success'];
             session()->flash('msg', $msg);
         } catch (QueryException $e) {
+            dd($e);
             $msg = ['valor' => trans("Erro ao executar a operação!"), 'tipo' => 'danger'];
             session()->flash('msg', $msg);
         }
@@ -312,7 +321,7 @@ class UsuarioController extends Controller
             } elseif ($user->tipo_user == "E") {
                 return redirect()->route('usuario.especialista.edit.dados', ['usuario_id' => $user->id]);
             } elseif ($user->tipo_user == "C") {
-                dd('editar');
+                return redirect()->route('usuario.clinica.create.dados', ['usuario_id' => $user->id]);
             }
         } else if ($user->etapa_cadastro == '3') {
             session()->flash('msg', ['valor' => trans("Já existe um cadastro realizado com o e-mail utilizado, prossiga com o seu cadastro."), 'tipo' => 'success']);
@@ -322,7 +331,7 @@ class UsuarioController extends Controller
             } elseif ($user->tipo_user == "E") {
                 return redirect()->route('dados-bancarios.create', ['usuario_id' => $user->id]);
             } elseif ($user->tipo_user == "C") {
-                dd('editar');
+                return redirect()->route('clinica.create.endereco', ['usuario_id' => $user->id]);
             }
         } else if ($user->etapa_cadastro == '4') {
             session()->flash('msg', ['valor' => trans("Já existe um cadastro realizado com o e-mail utilizado, prossiga com o seu cadastro."), 'tipo' => 'success']);

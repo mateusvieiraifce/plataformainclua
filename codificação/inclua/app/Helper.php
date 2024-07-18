@@ -31,23 +31,9 @@ class Helper
 
     public static function removerCaractereEspecial($string)
     {
-        if ($string) {
-            $newString = str_replace("-", "", $string);
-            $newString = str_replace("(", "", $newString);
-            $newString = str_replace(")", "", $newString);
-            $newString = str_replace(".", "", $newString);
-            $newString = str_replace(" ", "", $newString);
-            return trim($newString);
-        }
-        return "";
+        $string = preg_replace('/\W/', '', $string);
+        return trim($string);
     }
-
-    public static function removeMascaraDocumento($documento)
-    {
-        $documento = preg_replace('/\W/', '', $documento);
-        return trim($documento);
-    }
-
 
     public static function removeMascaraCep($cep)
     {
@@ -171,12 +157,31 @@ class Helper
         return '(' . $ddd . ') ' . $prefixo . '-' . $sufixo;
     }
 
-    public static function mascaraCPF($documento){
-        $docFormatado = substr($documento, 0, 3) . '.' .
-            substr($documento, 3, 3) . '.' .
-            substr($documento, 6, 3) . '-' .
-            substr($documento, 9, 2);
-        return $docFormatado;
+    public static function mascaraTelefone($telefone)
+    {
+        // Remove qualquer caractere que não seja número
+        $telefone = preg_replace('/[^0-9]/', '', $telefone);
+
+        // Aplica a máscara
+        return preg_replace('/(\d{2})(\d{4})(\d{4})/', '($1) $2-$3', $telefone);
+    }
+
+    public static function mascaraCPF($cpf)
+    {
+        // Remove qualquer caractere que não seja número
+        $cpf = preg_replace('/[^0-9]/', '', $cpf);
+
+        // Aplica a máscara
+        return preg_replace('/(\d{3})(\d{3})(\d{3})(\d{2})/', '$1.$2.$3-$4', $cpf);
+    }
+
+    public static function mascaraCNPJ($cnpj)
+    {
+        // Remove qualquer caractere que não seja número
+        $cnpj = preg_replace('/[^0-9]/', '', $cnpj);
+
+        // Aplica a máscara
+        return preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $cnpj);
     }
     
 
@@ -264,7 +269,7 @@ class Helper
                 "payment_type": "card",
                 "card": {
                     "name": "'.$dados->nome_titular.'",
-                    "number": "'.Helper::removeMascaraDocumento($dados->numero_cartao).'",
+                    "number": "'.Helper::removerCaractereEspecial($dados->numero_cartao).'",
                     "expiry_month": "'.date("m", strtotime($dados->validade)).'",
                     "expiry_year": "'.date("Y", strtotime($dados->validade)).'",
                     "cvv": "'.$dados->codigo_seguranca.'"

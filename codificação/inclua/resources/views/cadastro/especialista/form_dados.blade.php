@@ -30,7 +30,8 @@
                             </label>
                             <div class="input-group input-medium{{ $errors->has('celular') ? ' has-danger' : '' }}">
                                 <input type="text" id="celular" class="form-control border-full {{ $errors->has('celular') ? 'is-invalid' : '' }}"
-                                    name="celular" maxlength="15" placeholder="Fone:(**) 9****-****" value="{{ (isset($user) && $user->celular ? $user->celular : null) ?? old('celular') }}">
+                                    name="celular" maxlength="15" placeholder="(**) 9****-****"  oninput="mascaraCelular(this)"
+                                    value="{{ (isset($user) && $user->celular ? $user->celular : null) ?? old('celular') }}">
                                 @include('alerts.feedback', ['field' => 'celular'])
                             </div>
                         </div>
@@ -74,11 +75,4 @@
             </div>
         </div>
     </div>
-
-    <script>
-        //APLICAÇÃO DA MASCARA NO CELULAR
-        document.getElementById('celular').addEventListener('input', function() {
-            mascaraCelular(this)
-        })
-    </script>
 @endsection
