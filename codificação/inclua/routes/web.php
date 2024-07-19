@@ -229,6 +229,9 @@ Route::middleware('auth')->group(function () {
     #CONSULTAS_POR_ESPECIALISTA
     Route::get("/consulta/listconsultas/", [\App\Http\Controllers\ConsultaController::class, 'listconsultaporespecialista'])->name('consulta.listconsultaporespecialista')->middleware('auth');
 
+    #ROTAS_USER_PACIENTE +++++++++++++++++++++++++++++
+    Route::get("/paciente/home/", [\App\Http\Controllers\PacienteController::class, 'home'])->name('paciente.home')->middleware('auth');
+  
     #MARCAR_CONSULTA_USUARIO_PACIENTE
     Route::get("/paciente/marcarconsulta/", [\App\Http\Controllers\PacienteController::class, 'marcarconsulta'])->name('paciente.marcarconsulta')->middleware('auth');
 
@@ -249,6 +252,8 @@ Route::middleware('auth')->group(function () {
     #CONSULTAS_USER_PACIENTE
     Route::get("/paciente/minhasconsultas/", [\App\Http\Controllers\PacienteController::class, 'minhasconsultas'])->name('paciente.minhasconsultas')->middleware('auth');
     Route::get("/paciente/historicoconsultas/", [\App\Http\Controllers\PacienteController::class, 'historicoconsultas'])->name('paciente.historicoconsultas')->middleware('auth');
+    
+    
 });
 
 /* ROTAS PARA SEREM ANALISADAS */
