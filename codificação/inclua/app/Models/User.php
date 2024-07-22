@@ -68,4 +68,34 @@ class User extends Authenticatable
     {
         return $this->hasMany(Endereco::class, 'user_id', 'id');
     }
+
+    public function getIdPaciente($usuario_id)
+    {
+        $paciente = Paciente::where('usuario_id', $usuario_id)->first();
+        if ($paciente) {
+            return $paciente->id;
+        } else {
+            return null;
+        }
+    }
+
+    public function getIdEspecialidade($usuario_id)
+    {
+        $especialista = Especialista::where('usuario_id', $usuario_id)->first();
+        if ($especialista) {
+            return $especialista->especialidade_id;
+        } else {
+            return null;
+        }
+    }
+    
+    public function getIdEspecialista($usuario_id)
+    {
+        $especialista = Especialista::where('usuario_id', $usuario_id)->first();
+        if ($especialista) {
+            return $especialista->id;
+        } else {
+            return null;
+        }
+    }
 }

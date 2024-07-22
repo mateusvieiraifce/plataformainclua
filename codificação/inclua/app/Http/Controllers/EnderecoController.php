@@ -11,9 +11,9 @@ use Illuminate\Support\Facades\Auth;
 
 class EnderecoController extends Controller
 {
-    public function createEndereco($id_usuario)
+    public function createEndereco($usuario_id)
     {
-        return view('cadastro.form_endereco', ['id_usuario' => $id_usuario]);
+        return view('cadastro.form_endereco', ['usuario_id' => $usuario_id]);
     }
 
     public function storeEndereco(Request $request)
@@ -38,7 +38,7 @@ class EnderecoController extends Controller
 
         try {
             $endereco = new Endereco();
-            $endereco->user_id = $request->id_usuario;
+            $endereco->user_id = $request->usuario_id;
             $endereco->cep = Helper::removeMascaraCep($request->cep);
             $endereco->cidade = $request->cidade;
             $endereco->estado = $request->estado;
@@ -49,7 +49,7 @@ class EnderecoController extends Controller
             $endereco->principal = true;
             $endereco->save();
 
-            $user = User::find($request->id_usuario);
+            $user = User::find($request->usuario_id);
             $user->etapa_cadastro = '4';
             $user->save();
 
@@ -62,6 +62,6 @@ class EnderecoController extends Controller
             return back();
         }
 
-        return redirect()->route('cartao.create', ['id_usuario' => $request->id_usuario]);
+        return redirect()->route('cartao.create', ['usuario_id' => $request->usuario_id]);
     }
 }

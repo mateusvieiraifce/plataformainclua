@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Http\Controllers\AssinaturaController;
+use App\Http\Controllers\UsuarioController;
 use App\Models\Assinatura;
 use App\Models\User;
 use Closure;
@@ -20,19 +21,31 @@ class VerifyPaymentSignature
     public function handle(Request $request, Closure $next)
     {
         $user = User::where('email', $request->email)->first();
-        $assinatura = Assinatura::where('user_id', $user->id)->first();
-        if ($assinatura->status == "RENOVAÇÂO PENDENTE" && $assinatura->situacao == "CANCELADA") {
-            $assinaturaController = new AssinaturaController();
-            $response = $assinaturaController->renovacaoManual($assinatura->id);
-            
-            return $response;
-        } elseif ($assinatura->status == "NEGADA" && $assinatura->situcao == "CANCELADA") {
-            dd('direcionar para o formulario');
-        } elseif ($assinatura->status == "APROVADA" && $assinatura->situcao == "ATIVA") {
-            return $next($request);
+
+        if (isset($user) && $user->tipo_user == "P") {   
+            $assinatura = Assinatura::where('user_id', $user->id)->first();
+            //PARA O CASO DO CARTÃO NECESSITAR DE TELA INTERMEDIÁRIA
+            if ($assinatura->status == "RENOVAÇÂO PENDENTE" && $assinatura->situacao == "CANCELADA") {
+                $assinaturaController = new AssinaturaController();
+                $response = $assinaturaController->renovacaoManual($assinatura->id);
+                
+                return $response;
+            } elseif ($assinatura->status == "NEGADA" && $assinatura->situacao == "CANCELADA") {
+                //PARA O CASO DO CARTÃO NÃO TER SIDO APROVADO PARA RENOVAR A ASSINATURA
+                session()->flash('msg', ['valor' => trans("Não foi possível renovar a assinatura com o cartão cadastrado. Informe um novo cartão para continuar a utilizar os serviços da plataforma."), 'tipo' => 'danger']);
+                
+                return redirect()->route('cartao.create', ['usuario_id' => $user->id]);
+            } elseif ($assinatura->status == "APROVADA" && $assinatura->situacao == "ATIVA") {
+                //PARA O CASO DA ASSINATURA ESTAR ATIVA
+                
+                return $next($request);
+            }
+
+            //PARA O CASO DE O CADASTRO INCOMPLETO
+            $usuarioController = new UsuarioController();
+            return $usuarioController->verifyCadastro($user->id);
         }
-    
-        session()->flash('msg', ['valor' => trans("Não foi possível renovar sua assinatura."), 'tipo' => 'danger']);
-        return back();
+        
+        return $next($request);
     }
 }

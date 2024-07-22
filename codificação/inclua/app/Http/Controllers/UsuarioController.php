@@ -117,7 +117,7 @@ class UsuarioController extends Controller
             'password' => ['required'],
         ]);
 
-        $dados = ['email' => $request->email,'password' => $request->password];
+        $dados = ['email' => $request->email, 'password' => $request->password];
         if (Auth::attempt($dados, false)) {
             $request->session()->regenerate();
 
@@ -136,7 +136,7 @@ class UsuarioController extends Controller
         } else {
             $msg = ['valor'=>'Usuário/Senha inválido','tipo'=>'danger'];
 
-            return view('auth.login',['msg'=>$msg] );
+            return view('auth.login', ['msg' => $msg] );
         }
     }
 
@@ -159,7 +159,7 @@ class UsuarioController extends Controller
     public function storeUser(Request $request)
     {
         //QUANDO O USUARIO INSERIR UM E-MAIL JÁ CADASTRADO
-        if ($request->id_usuario == null) {
+        if ($request->usuario_id == null) {
             $user = User::where('email', $request->email)->first();
             
             if ($user) {
@@ -168,8 +168,8 @@ class UsuarioController extends Controller
         }
 
         $rules = [
-            "email" => "required|unique:users,email,{$request->id_usuario}",
-            'password' => 'required|min:5|confirmed',
+            "email" => "required|unique:users,email,{$request->usuario_id}",
+            'password' => 'required|min:8|confirmed',
             'password_confirmation' => 'required',
         ];
         $feedbacks = [
@@ -177,14 +177,14 @@ class UsuarioController extends Controller
             "email.unique" => "O email utilizado já foi cadastrado.",
             "password.required" => "O campo Senha é obrigatório.",
             "password.confirmed" => "As senhas não são correspondentes.",
-            "password.min" => "O campo senha deve ter no mínimo 5 caracteres.",
+            "password.min" => "O campo senha deve ter no mínimo 8 caracteres.",
             "password_confirmation.required" => "O campo Confirmar a senha é obrigatório."
         ];
         $request->validate($rules, $feedbacks);
 
         try {
-            if($request->id_usuario) {
-                $user = User::find($request->id_usuario );
+            if($request->usuario_id) {
+                $user = User::find($request->usuario_id );
             } else {
                 $user = new User();
             }
@@ -193,7 +193,6 @@ class UsuarioController extends Controller
             $user->codigo_validacao = Helper::generateRandomNumberString(5);
             $user->tipo_pessoa = $request->tipo_pessoa;
             $user->tipo_user = $request->tipo_user;
-            $user->etapa_cadastro = '2';
             $user->save();
             //ENVIAR O EMAIL COM CÓDIGO DE CONFIRMAÇÃO
             //Mail::to($user->email)->send(new verificarEmail($user->codigo_validacao));
@@ -208,55 +207,22 @@ class UsuarioController extends Controller
             return back();
         }
 
-        return redirect()->route('view.verificar_email', ['id_usuario' => $user->id]);
+        return redirect()->route('view.verificar_email', ['usuario_id' => $user->id]);
     }
 
-    public function editUser($id_usuario)
+    public function editUser($usuario_id)
     {
-        $user = User::find($id_usuario);
+        $user = User::find($usuario_id);
         return view('cadastro.form_usuario', ['user' => $user]);
     }
 
-    public function createDadosPessoais($id_usuario)
+    public function storeDados(Request $request)
     {
-        return view('cadastro.form_dados_pessoais', ['id_usuario' => $id_usuario]);
-    }
-
-    public function storeDadosPessoais(Request $request)
-    {
-        //REMOÇÃO DA MASCARA DO CELULAR E DOCUMENTO PARA COMPARAR COM O BD
-        $request->request->set('celular', Helper::removerCaractereEspecial($request->celular));
-        $request->request->set('cpf', Helper::removerCaractereEspecial($request->cpf));
-        $rules = [
-            "image" => "required",
-            "cpf" => "required|unique:users,documento,{$request->id_usuario}",
-            "nome" => "required|min:5",
-            "celular" => "required|unique:users,celular,{$request->id_usuario}",
-            "data_nascimento" => "required",
-            "estado_civil" => "required",
-            "sexo" => "required",
-            'consentimento'=>'required',
-        ];
-        $feedbacks = [
-            "image.required" => "O campo Imagem é obrigatório.",
-            "cpf.required" => "O campo CPF é obrigatório.",
-            "cpf.unique" => "Este CPF já foi utilizado.",
-            "nome.required" => "O campo nome é obrigatório.",
-            "nome.min" => "O campo nome deve ter no mínomo 5 caracteres.",
-            "celular.required" => "O campo Celular é obrigatório.",
-            "celular.unique" => "Este número de celular já foi utilizado.",
-            "data_nascimento.required" => "O campo Data de Nascimento é obrigatório.",
-            "estado_civil.required" => "O campo Estado Civil é obrigatório.",
-            "sexo.required" => "O campo Gênero é obrigatório.",
-            "consentimento.required" => "O campo Termos e Condições de Uso é obrigatório.",
-        ];
-        $request->validate($rules, $feedbacks);
-
         try {
             //salvando a avatar do usuario
             if ($request->hasFile('image') && $request->file('image')->isValid()) {
                 //VERIFICANDO SE EXISTE ALGUM AVATAR JA CADASTRADO PARA DELETAR
-                $avatarSimbolico = User::find($request->id_usuario)->avatar;
+                $avatarSimbolico = User::find($request->usuario_id)->avatar;
                 if(!empty($avatarSimbolico)) {
                     //REMOÇÃO DE 'storage/' PARA DELETAR O ARQUIVO NA RAIZ
                     $linkStorage = explode('/', $avatarSimbolico);
@@ -273,43 +239,29 @@ class UsuarioController extends Controller
                 // Faz o upload:
                 $pathAvatar = $request->file('image')->storeAs('avatar-user', $imageName);
             }
-
-            $user = User::find($request->id_usuario);
-            $user->avatar = "storage/$pathAvatar";
-            $user->documento = Helper::removerCaractereEspecial($request->cpf);
+            $user = User::find($request->usuario_id);
+            $user->avatar = !empty($pathAvatar) ? "storage/$pathAvatar" : null;
+            $user->documento = Helper::removerCaractereEspecial($request->cpf) ?? null;
             $user->nome_completo = $request->nome;
             $user->celular = Helper::removerCaractereEspecial($request->celular);
             $user->codigo_validacao = Helper::generateRandomNumberString(5);
-            $user->rg = $request->rg;
-            $user->data_nascimento = $request->data_nascimento;
-            $user->estado_civil = $request->estado_civil;
-            $user->sexo = $request->sexo;
-            $user->consentimento = $request->consentimento;
-            $user->tipo_pessoa = $request->tipo_pessoa;
-            $user->tipo_user = $request->tipo_user;
-            $user->etapa_cadastro = '3';
+            $user->rg = $request->rg ?? null;
+            $user->data_nascimento = $request->data_nascimento ?? null;
+            $user->estado_civil = $request->estado_civil ?? null;
+            $user->sexo = $request->sexo ?? null;
+            $user->consentimento = $request->consentimento ?? null;
             $user->save();
+
             Helper::sendSms($user->celular, "Bem vindo a plataforma Inclua, o seu código de verificação é: $user->codigo_validacao");
 
-            $msg = ['valor' => trans("Cadastro de dados pessoais realizado com sucesso!"), 'tipo' => 'success'];
+            $msg = ['valor' => trans("Cadastro de dados realizado com sucesso!"), 'tipo' => 'success'];
             session()->flash('msg', $msg);
         } catch (QueryException $e) {
             $msg = ['valor' => trans("Erro ao executar a operação!"), 'tipo' => 'danger'];
             session()->flash('msg', $msg);
-
-            return back();
         }
 
-        return redirect()->route('view.verificar_celular', ['id_usuario' => $user->id]);
-    }
-
-    public function editDadosPessoais($id_usuario)
-    {
-        $user = User::find($id_usuario);
-        $user->celular = $user->celular == null ? '' : Helper::mascaraCelular($user->celular);
-        $user->documento = $user->documento == null ? '' : Helper::mascaraCPF($user->documento);
-
-        return view('cadastro.form_dados_pessoais', ['user' => $user]);
+        return $user;
     }
 
     public function handleProviderCallback()
@@ -346,25 +298,37 @@ class UsuarioController extends Controller
         return Socialite::driver('google')->redirect();
     }
 
-    public function verifyCadastro($id_usuario)
+    public function verifyCadastro($usuario_id)
     {
-        $user = User::find($id_usuario);
+        $user = User::find($usuario_id);
         if ($user->etapa_cadastro == "1") {
             session()->flash('msg', ['valor' => trans("Autenticação com Google realizada com sucesso, prossiga com o seu cadastro."), 'tipo' => 'success']);
 
-            return redirect()->route('usuario.edit', ['id_usuario' => $user->id]);
+            return redirect()->route('usuario.edit', ['usuario_id' => $user->id]);
         } else if ($user->etapa_cadastro == '2') {
             session()->flash('msg', ['valor' => trans("Já existe um cadastro realizado com o e-mail utilizado, prossiga com o seu cadastro."), 'tipo' => 'success']);
             
-            return redirect()->route('usuario.dados.edit', ['id_usuario' => $user->id]);
+            if ($user->tipo_user == "P") {
+                return redirect()->route('usuario.paciente.edit.dados', ['usuario_id' => $user->id]);
+            } elseif ($user->tipo_user == "E") {
+                return redirect()->route('usuario.especialista.edit.dados', ['usuario_id' => $user->id]);
+            } elseif ($user->tipo_user == "C") {
+                dd('editar');
+            }
         } else if ($user->etapa_cadastro == '3') {
             session()->flash('msg', ['valor' => trans("Já existe um cadastro realizado com o e-mail utilizado, prossiga com o seu cadastro."), 'tipo' => 'success']);
             
-            return redirect()->route('endereco.create', ['id_usuario' => $user->id]);
+            if ($user->tipo_user == "P") {
+                return redirect()->route('endereco.create', ['usuario_id' => $user->id]);
+            } elseif ($user->tipo_user == "E") {
+                return redirect()->route('dados-bancarios.create', ['usuario_id' => $user->id]);
+            } elseif ($user->tipo_user == "C") {
+                dd('editar');
+            }
         } else if ($user->etapa_cadastro == '4') {
             session()->flash('msg', ['valor' => trans("Já existe um cadastro realizado com o e-mail utilizado, prossiga com o seu cadastro."), 'tipo' => 'success']);
             
-            return redirect()->route('cartao.create', ['id_usuario' => $user->id]);
+            return redirect()->route('cartao.create', ['usuario_id' => $user->id]);
         } else if ($user->etapa_cadastro == 'F') {
             session()->flash('msg', ['valor' => trans("Seu cadastro foi finalizado com sucesso!"), 'tipo' => 'success']);
             auth()->login($user, true);

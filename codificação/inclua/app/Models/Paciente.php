@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Paciente extends Model
 {
-  use HasFactory;
-  protected $fillable = ['nome', 'usuario_id'];
-} ?>
+    use HasFactory;
+    protected $fillable = [
+        'nome',
+        'usuario_id',
+        'data_nascimente',
+        'sexo'
+    ];
+}

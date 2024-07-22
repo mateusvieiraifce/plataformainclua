@@ -1,5 +1,5 @@
 @extends('layouts.app', ['class' => 'register-page', 'contentClass' => 'register-page', 'pageSlug' => 'registre'])
-@section('title', 'Formulário de dados pessoais')
+@section('title', 'Formulário de dados')
 @section('content')
     <div class="row">
         <div class="col-md-7 mr-auto">
@@ -8,10 +8,10 @@
                     <img class="img-card" src="{{ asset('assets/img/logo-01.png') }}" alt="Card image" >
                 </div>
                 <div class="card-header">
-                    <h2 class="title">Cadastro de dados pessoais</h2>
+                    <h2 class="title">Cadastro de dados</h2>
                 </div>
                 <div class="card-body">
-                    <form class="form" method="post" action="{{ route('usuario.dados.store') }}" enctype="multipart/form-data">
+                    <form class="form" method="post" action="{{ route('usuario.paciente.store.dados') }}" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group">
                             <label for="image">
@@ -32,7 +32,7 @@
                             </label>
                             <div class="input-group input-medium{{ $errors->has('cpf') ? ' has-danger' : '' }}">
                                 <input type="text" id="cpf" class="form-control border-full {{ $errors->has('cpf') ? 'is-invalid' : '' }}"
-                                    name="cpf" maxlength="14" placeholder="000.000.000-00" value="{{ (isset($user) && $user->documento ? $user->documento : null) ?? old('cpf') }}">
+                                    name="cpf" maxlength="14" placeholder="000.000.000-00" value="{{ (isset($user) && $user->documento ? $user->documento : null) ?? old('cpf') }}" required>
                                 @include('alerts.feedback', ['field' => 'cpf'])
                             </div>
                         </div>
@@ -43,7 +43,7 @@
                             </label>
                             <div class="input-group input-medium{{ $errors->has('nome') ? ' has-danger' : '' }}">
                                 <input type="text" id="nome" class="form-control border-full {{ $errors->has('nome') ? 'is-invalid' : '' }}"
-                                    name="nome" placeholder="Nome Completo" value="{{ (isset($user) ? $user->nome_completo : null) ?? old('nome') }}">
+                                    name="nome" placeholder="Nome Completo" value="{{ (isset($user) ? $user->nome_completo : null) ?? old('nome') }}" required>
                                 @include('alerts.feedback', ['field' => 'nome'])
                             </div>
                         </div>
@@ -54,7 +54,7 @@
                             </label>
                             <div class="input-group input-medium{{ $errors->has('celular') ? ' has-danger' : '' }}">
                                 <input type="text" id="celular" class="form-control border-full {{ $errors->has('celular') ? 'is-invalid' : '' }}"
-                                    name="celular" maxlength="15" placeholder="Fone:(**) 9****-****" value="{{ (isset($user) && $user->celular ? $user->celular : null) ?? old('celular') }}">
+                                    name="celular" maxlength="15" placeholder="Fone:(**) 9****-****" value="{{ (isset($user) && $user->celular ? $user->celular : null) ?? old('celular') }}" required>
                                 @include('alerts.feedback', ['field' => 'celular'])
                             </div>
                         </div>
@@ -76,7 +76,7 @@
                             </label>
                             <div class="input-group input-medium{{ $errors->has('data_nascimento') ? ' has-danger' : '' }}">
                                 <input type="date" id="data_nascimento" class="form-control border-full {{ $errors->has('data_nascimento') ? 'is-invalid' : '' }}"
-                                    name="data_nascimento" placeholder="Nome Completo" value="{{ (isset($user) ? $user->data_nascimento : null) ?? old('data_nascimento') }}">
+                                    name="data_nascimento" placeholder="Nome Completo" value="{{ (isset($user) ? $user->data_nascimento : null) ?? old('data_nascimento') }}" required>
                                 @include('alerts.feedback', ['field' => 'data_nascimento'])
                             </div>
                         </div>
@@ -86,7 +86,7 @@
                                 Estado Civil <span class="required">*</span>
                             </label>
                             <div class="input-group input-medium{{ $errors->has('estado_civil') ? ' has-danger' : '' }}">
-                                <select name="estado_civil" class="form-control border-full {{ $errors->has('estado_civil') ? 'is-invalid' : '' }}">
+                                <select name="estado_civil" class="form-control border-full {{ $errors->has('estado_civil') ? 'is-invalid' : '' }}" required>
                                     <option value=""></option>
                                     <option value="S" @if ((isset($user) && $user->estado_civil == 'S') || old('estado_civil') == 'S') selected @endif>Solteiro(a)</option>
                                     <option value="C" @if ((isset($user) && $user->estado_civil == 'C') || old('estado_civil') == 'C') selected @endif>Casado(a)</option>
@@ -101,9 +101,9 @@
                                 Gênero <span class="required">*</span>
                             </label>
                             <div class="input-group input-medium{{ $errors->has('sexo') ? ' has-danger' : '' }}">
-                                <select name="sexo" class="form-control border-full {{ $errors->has('sexo') ? 'is-invalid' : '' }}">
+                                <select name="sexo" class="form-control border-full {{ $errors->has('sexo') ? 'is-invalid' : '' }}" required>
                                     <option value=""></option>
-                                    <option value="F" @if ((isset($user) && $user->sexo == 'F') || old('sexo') == 'F') selected @endif>Fenimino</option>
+                                    <option value="F" @if ((isset($user) && $user->sexo == 'F') || old('sexo') == 'F') selected @endif>Feminino</option>
                                     <option value="M" @if ((isset($user) && $user->sexo == 'M') || old('sexo') == 'M') selected @endif>Masculino</option>
                                     <option value="O" @if ((isset($user) && $user->sexo == 'O') || old('sexo') == 'O') selected @endif>Outro</option>
                                     <option value="N" @if ((isset($user) && $user->sexo == 'N') || old('sexo') == 'N') selected @endif>Prefiro não informar</option>
@@ -127,9 +127,8 @@
                         <div class="input-group">
                             <button type="submit" class="btn btn-primary btn-round btn-lg">{{ __('Próximo') }}</button>
                         </div>
-                        <input type="hidden" name="tipo_pessoa" value="F">
-                        <input type="hidden" name="tipo_user" value="P">
-                        <input type="hidden" name="id_usuario" value="{{ $id_usuario ?? $user->id }}">
+                        <input type="hidden" name="usuario_id" value="{{ $usuario_id ?? $user->id }}">
+                        <input type="hidden" name="id_paciente" value="{{ isset($user) ? $user->getIdPaciente($user->id) : null }}">
                     </form>
                 </div>
             </div>
