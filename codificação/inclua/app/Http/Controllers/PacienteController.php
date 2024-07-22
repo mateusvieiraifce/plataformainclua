@@ -101,10 +101,9 @@ class PacienteController extends Controller
             'especialistas.nome as nome_especialista',
             'clinicas.nome as nome_clinica',
             'especialidades.descricao as descricao_especialidade'
-        )->orderBy('horario_agendado', 'asc')->paginate(8);
-        return view('userPaciente/minhasconsultas', ['lista' => $lista, 'msg' => $msg, 'filtro' => $filtro]);
-    }
-
+         )->orderBy('horario_agendado', 'asc')->paginate(8);
+      return view('userPaciente/minhasconsultas', ['lista' => $lista,  'msg' => $msg,'filtro' => $filtro]);
+   }
 
     function marcarConsultaViaClinicaFinalizar(Request $request)
     {
@@ -159,11 +158,10 @@ class PacienteController extends Controller
         return view('userPaciente/historicoconsultas', ['lista' => $lista, 'msg' => $msg, 'filtro' => $filtro]);
     }
 
-    function marcarconsulta()
-    {
-        return view('userPaciente/marcarconsulta');
-    }
-
+   function marcarconsulta()
+   {
+      return view('userPaciente/marcarconsulta');
+   }
 
     function marcarConsultaViaEspecialidadePasso1()
     {
@@ -276,5 +274,88 @@ class PacienteController extends Controller
         $lista = Consulta::where('especialista_id', '=', $especialista_id)->where('clinica_id', '=', $clinica_id)->where('status', '=', $statusConsulta)->select('consultas.id', 'horario_agendado')->orderBy('horario_agendado', 'asc')->paginate(8);
         return view('userPaciente/marcarConsultaViaClinicaPasso4', ['lista' => $lista, 'especialista' => $especialista, 'clinica' => $clinica, 'especialidade' => $especialidade, 'paciente' => $paciente]);
     }
-}
+
+    function marcarConsultaViaClinicaFinalizar(Request $request)
+    {
+        $paciente =  Paciente::where('usuario_id', '=', Auth::user()->id)->first();
+
+        $ent = Consulta::find($request->consulta_id);
+        $ent->status = "Aguardando atendimento";
+        $ent->paciente_id = $paciente->id;
+        $ent->save();
+        $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
+        return  $this->minhasconsultas($msg);
+    }
+    
+    public function createDadosUserPaciente($usuario_id)
+    {
+        return view('cadastro.paciente.form_dados', ['usuario_id' => $usuario_id]);
+    }
+
+    public function storeDadosUserPaciente(Request $request)
+    {
+        //REMOÇÃO DA MASCARA DO CELULAR E DOCUMENTO PARA COMPARAR COM O BD
+        $request->request->set('celular', Helper::removerCaractereEspecial($request->celular));
+        $request->request->set('cpf', Helper::removerCaractereEspecial($request->cpf));
+        $rules = [
+            "image" => "required",
+            "cpf" => "required|unique:users,documento,{$request->usuario_id}",
+            "nome" => "required|min:5",
+            "celular" => "required|unique:users,celular,{$request->usuario_id}",
+            "data_nascimento" => "required",
+            "estado_civil" => "required",
+            "sexo" => "required",
+            'consentimento'=>'required',
+        ];
+        $feedbacks = [
+            "image.required" => "O campo Imagem é obrigatório.",
+            "cpf.required" => "O campo CPF é obrigatório.",
+            "cpf.unique" => "Este CPF já foi utilizado.",
+            "nome.required" => "O campo nome é obrigatório.",
+            "nome.min" => "O campo nome deve ter no mínomo 5 caracteres.",
+            "celular.required" => "O campo Celular é obrigatório.",
+            "celular.unique" => "Este número de celular já foi utilizado.",
+            "data_nascimento.required" => "O campo Data de Nascimento é obrigatório.",
+            "estado_civil.required" => "O campo Estado Civil é obrigatório.",
+            "sexo.required" => "O campo Gênero é obrigatório.",
+            "consentimento.required" => "O campo Termos e Condições de Uso é obrigatório.",
+        ];
+        $request->validate($rules, $feedbacks);
+
+        try {
+            if($request->id_paciente) {
+                $paciente = Paciente::find($request->id_paciente);
+            } else {
+                $paciente = new Paciente();
+            }
+            
+            $paciente->nome = $request->nome;
+            $paciente->usuario_id = $request->usuario_id;
+            $paciente->data_nascimento = $request->data_nascimento;
+            $paciente->sexo = $request->sexo;
+            $paciente->save();
+
+            $userController = new UsuarioController();
+            $userController->storeDados($request);
+
+            $msg = ['valor' => trans("Cadastro de dados realizado com sucesso!"), 'tipo' => 'success'];
+            session()->flash('msg', $msg);
+        } catch (QueryException $e) {
+            session()->flash('msg', ['valor' => trans("Erro ao realizar o cadastro do paciente!"), 'tipo' => 'danger']);
+
+            return back();
+        }
+
+        return redirect()->route('view.verificar_celular', ['usuario_id' => $paciente->usuario_id]);
+    }
+
+    public function editDadosUserPaciente($usuario_id)
+    {
+        $user = User::find($usuario_id);
+        $user->celular = $user->celular == null ? '' : Helper::mascaraCelular($user->celular);
+        $user->documento = $user->documento == null ? '' : Helper::mascaraCPF($user->documento);
+
+        return view('cadastro.paciente.form_dados', ['user' => $user]);
+    }
+   }
 

@@ -15,7 +15,7 @@
                         @csrf
                         <div class="form-group">
                             <label for="image">
-                                Imagem <span class="required">*</span>
+                                Imagem de perfil <span class="required">*</span>
                             </label>
                             <br>
                             <img class="img-avatar" src="{{ asset('assets/img/default-avatar.png') }}" id="preview" alt="Avatar">
@@ -32,7 +32,8 @@
                             </label>
                             <div class="input-group input-medium{{ $errors->has('cpf') ? ' has-danger' : '' }}">
                                 <input type="text" id="cpf" class="form-control border-full {{ $errors->has('cpf') ? 'is-invalid' : '' }}"
-                                    name="cpf" maxlength="14" placeholder="000.000.000-00" value="{{ (isset($user) && $user->documento ? $user->documento : null) ?? old('cpf') }}" required>
+                                    name="cpf" maxlength="14" placeholder="000.000.000-00" oninput="mascaraCpf(this)" onblur="validarCPF(this)"
+                                    value="{{ (isset($user) && $user->documento ? $user->documento : null) ?? old('cpf') }}" required>
                                 @include('alerts.feedback', ['field' => 'cpf'])
                             </div>
                         </div>
@@ -54,7 +55,8 @@
                             </label>
                             <div class="input-group input-medium{{ $errors->has('celular') ? ' has-danger' : '' }}">
                                 <input type="text" id="celular" class="form-control border-full {{ $errors->has('celular') ? 'is-invalid' : '' }}"
-                                    name="celular" maxlength="15" placeholder="Fone:(**) 9****-****" value="{{ (isset($user) && $user->celular ? $user->celular : null) ?? old('celular') }}" required>
+                                    name="celular" maxlength="15" placeholder="(**) 9****-****" oninput="mascaraCelular(this)"
+                                    value="{{ (isset($user) && $user->celular ? $user->celular : null) ?? old('celular') }}" required>
                                 @include('alerts.feedback', ['field' => 'celular'])
                             </div>
                         </div>
@@ -136,23 +138,13 @@
     </div>
 
     <script>
-        //APLICAÇÃO DA MASCARA NO CPF
-        document.getElementById('cpf').addEventListener('input', function() {
-            formatarDocumento(this)
-        })
-
         //VALIDAÇÃO DO CPF
         $('#cpf').blur(function() {
             if (this.value != '') {
                 var retorno = validarDocumento(this, 'cpf')
             }
         });
-
-        //APLICAÇÃO DA MASCARA NO CELULAR
-        document.getElementById('celular').addEventListener('input', function() {
-            mascaraCelular(this)
-        })
-
+        
         document.getElementById('image').addEventListener('change', function() {
             var fileName = $(this).val().split('\\').pop();
             //  $(this).next('.custom-file-label').html(fileName);

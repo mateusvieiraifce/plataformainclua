@@ -1,4 +1,14 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js"></script>
+
 <script>
+//FUNÇÃO PARA ADICINAR MARCARA DO TELEFONE
+function mascaraTelefone(campo) {
+    //REMOVE A EXISTENCIA DE ALGUM CARACTERE ESPECIAL
+    campo.value = campo.value.replace(/\D/g, '')
+    //APLICA A MASCARA
+    campo.value = campo.value.replace(/(\d{2})(\d{4})(\d{4})/g,"(\$1) \$2-\$3");
+}
+
 //FUNÇÃO PARA ADICINAR MARCARA DO CELULAR
 function mascaraCelular(campo) {
     //REMOVE A EXISTENCIA DE ALGUM CARACTERE ESPECIAL
@@ -7,37 +17,23 @@ function mascaraCelular(campo) {
     campo.value = campo.value.replace(/(\d{2})(\d{5})(\d{4})/g,"(\$1) \$2-\$3");
 }
 
-//FUNÇÃO ORQUESTRADORA DAS MASCARA DE DOCUMENTO
-function formatarDocumento(campo) {
-    retirarFormatacao(campo)
-    if (campo.value.length <= 11) {
-        campo.value = mascaraCpf(campo.value);
-        return campo.value;
-    } else if (campo.value.length >= 14) {
-        campo.value = mascaraCnpj(campo.value);
-        return campo.value;
-    }
-}
-
 //FUNÇÃO PARA RERTIRAR MARCARA DO DOCUMENTO
 function retirarFormatacao(campo) {
-    campo.value = campo.value.replace(/(\.|\/|\-)/g,"");
+    return campo.value.replace(/(\.|\/|\-)/g,"");
 }
 
-//FUNÇÃO PARA ADICINAR MARCARA DO CPF
-function mascaraCpf(valor) {
-    
-    return valor.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/g,"\$1.\$2.\$3\-\$4");
+function mascaraCpf(campo) {
+    $("#"+campo.id).mask("000.000.000-00");
 }
 
-//FUNÇÃO PARA ADICINAR MARCARA DO CNPJ
-function mascaraCnpj(valor) {
-    return valor.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/g,"\$1.\$2.\$3\/\$4\-\$5");
+function mascaraCnpj(campo) {
+    $("#"+campo.id).mask("00.000.000/0000-00");
 }
+
 //FUNÇÃO PARA VALIDAÇÃO DO DOCUMENTO
-function validarDocumento(campo, tipoDocumento) {
+function validarCPF(campo) {
     $.ajax({
-        url: "https://api.invertexto.com/v1/validator?token={{env('TOKEN_API_VALIDATOR_DOCUMENTO')}}&value="+campo.value+"&type="+tipoDocumento+"",
+        url: "https://api.invertexto.com/v1/validator?token={{env('TOKEN_API_VALIDATOR_DOCUMENTO')}}&value="+campo.value+"&type=cpf",
         method: 'GET',
         dataType: 'json',
         success: function(response) {
@@ -46,6 +42,25 @@ function validarDocumento(campo, tipoDocumento) {
                 document.getElementById(campo.id).value = ''
                 document.getElementById(campo.id).focus()
             }
+        }
+    });
+}
+
+//FUNÇÃO PARA CONSULTAR CNPJ
+function consultarCNPJ(campo) {
+    let cnpj = retirarFormatacao(campo)
+    $.ajax({
+        url: "https://api.invertexto.com/v1/cnpj/"+cnpj+"?token={{env('TOKEN_API_VALIDATOR_DOCUMENTO')}}",
+        method: 'GET',
+        dataType: 'json',
+        success: function(response) {
+            $('#nome_fantasia').val(response.nome_fantasia)
+            $('#razao_social').val(response.razao_social)
+        },
+        error: function(error) {
+            nowuiDashboard.showNotification('top', 'right', 'CNPJ inválido! Verifique se o seu CNPJ foi digitado corretamente.', 'danger');
+            document.getElementById(campo.id).value = ''
+            document.getElementById(campo.id).focus()
         }
     });
 }

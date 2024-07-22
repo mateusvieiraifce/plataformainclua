@@ -22,7 +22,7 @@ class VerifyPaymentSignature
     {
         $user = User::where('email', $request->email)->first();
 
-        if (isset($user) && $user->tipo_user == "P") {
+        if (isset($user) && $user->tipo_user == "P" && $user->etapa == "F") {   
             $assinatura = Assinatura::where('user_id', $user->id)->first();
             //PARA O CASO DO CARTÃO NECESSITAR DE TELA INTERMEDIÁRIA
             //TODO para obrigar assinatura.
