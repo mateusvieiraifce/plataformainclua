@@ -25,19 +25,23 @@ class VerifyPaymentSignature
         if (isset($user) && $user->tipo_user == "P" && $user->etapa == "F") {   
             $assinatura = Assinatura::where('user_id', $user->id)->first();
             //PARA O CASO DO CARTÃO NECESSITAR DE TELA INTERMEDIÁRIA
+            //TODO para obrigar assinatura.
+            if (!$assinatura) {
+                return $next($request);
+            }
             if ($assinatura->status == "RENOVAÇÂO PENDENTE" && $assinatura->situacao == "CANCELADA") {
                 $assinaturaController = new AssinaturaController();
                 $response = $assinaturaController->renovacaoManual($assinatura->id);
-                
+
                 return $response;
             } elseif ($assinatura->status == "NEGADA" && $assinatura->situacao == "CANCELADA") {
                 //PARA O CASO DO CARTÃO NÃO TER SIDO APROVADO PARA RENOVAR A ASSINATURA
                 session()->flash('msg', ['valor' => trans("Não foi possível renovar a assinatura com o cartão cadastrado. Informe um novo cartão para continuar a utilizar os serviços da plataforma."), 'tipo' => 'danger']);
-                
+
                 return redirect()->route('cartao.create', ['usuario_id' => $user->id]);
             } elseif ($assinatura->status == "APROVADA" && $assinatura->situacao == "ATIVA") {
                 //PARA O CASO DA ASSINATURA ESTAR ATIVA
-                
+
                 return $next($request);
             }
 
@@ -45,7 +49,7 @@ class VerifyPaymentSignature
             $usuarioController = new UsuarioController();
             return $usuarioController->verifyCadastro($user->id);
         }
-        
+
         return $next($request);
     }
 }
