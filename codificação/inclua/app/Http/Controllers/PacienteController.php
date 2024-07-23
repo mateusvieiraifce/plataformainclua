@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helper;
 use App\Models\Clinica;
 use App\Models\Especialidadeclinica;
 use App\Models\Especialistaclinica;
