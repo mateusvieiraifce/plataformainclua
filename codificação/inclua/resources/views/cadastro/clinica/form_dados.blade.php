@@ -61,14 +61,14 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="telefone_fixo">
+                            <label for="telefone">
                                 Telefone Fixo
                             </label>
-                            <div class="input-group input-medium{{ $errors->has('telefone_fixo') ? ' has-danger' : '' }}">
-                                <input type="text" id="telefone_fixo" class="form-control border-full {{ $errors->has('telefone_fixo') ? 'is-invalid' : '' }}"
-                                    name="telefone_fixo" maxlength="14" placeholder="(**) ****-****"  oninput="mascaraTelefone(this)"
-                                    value="{{ (isset($clinica) && $clinica->telefone ? $clinica->telefone : null) ?? old('telefone_fixo') }}">
-                                @include('alerts.feedback', ['field' => 'telefone_fixo'])
+                            <div class="input-group input-medium{{ $errors->has('telefone') ? ' has-danger' : '' }}">
+                                <input type="text" id="telefone" class="form-control border-full {{ $errors->has('telefone') ? 'is-invalid' : '' }}"
+                                    name="telefone" maxlength="14" placeholder="(**) ****-****" oninput="mascaraTelefone(this)"
+                                    value="{{ (isset($clinica) ? $clinica->getTelefone($clinica->usuario_id) : null) ?? old('telefone') }}">
+                                @include('alerts.feedback', ['field' => 'telefone'])
                             </div>
                         </div>
 
@@ -77,8 +77,9 @@
                                 Celular <span class="required">*</span>
                             </label>
                             <div class="input-group input-medium{{ $errors->has('celular') ? ' has-danger' : '' }}">
-                                <input type="text" id="celular" class="form-control border-full {{ $errors->has('celular') ? 'is-invalid' : '' }}" oninput="mascaraCelular(this)"
-                                    name="celular" maxlength="15" placeholder="(**) 9****-****" value="{{ (isset($clinica) && $clinica->celular ? $clinica->celular : null) ?? old('celular') }}" required>
+                                <input type="text" id="celular" class="form-control border-full {{ $errors->has('celular') ? 'is-invalid' : '' }}"
+                                    name="celular" maxlength="15" placeholder="(**) 9****-****" oninput="mascaraCelular(this)"
+                                    value="{{ (isset($clinica) ? $clinica->getCelular($clinica->usuario_id) : null) ?? old('celular') }}" required>
                                 @include('alerts.feedback', ['field' => 'celular'])
                             </div>
                         </div>

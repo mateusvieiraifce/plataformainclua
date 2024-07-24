@@ -45,6 +45,8 @@ class EnderecoController extends Controller
             $endereco->rua = $request->endereco;
             $endereco->numero = $request->numero;
             $endereco->complemento = $request->complemento;
+            $endereco->longitude = $request->longitude ?? null;
+            $endereco->latitude = $request->latitude ?? null;
             $endereco->bairro = $request->bairro;
             $endereco->principal = true;
             $endereco->save();

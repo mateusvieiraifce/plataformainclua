@@ -60,7 +60,6 @@ class EspecialistaController extends Controller
          }
          
          $especialista->nome = $request->nome;
-         $especialista->celular = $request->celular;
          $especialista->especialidade_id = $request->especialidade;
          $especialista->usuario_id = $request->usuario_id;
          $especialista->save();
