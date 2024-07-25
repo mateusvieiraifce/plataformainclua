@@ -21,12 +21,30 @@ class ConsultaController extends Controller
       if (isset($_GET['filtro'])) {
          $filter = $_GET['filtro'];
       }
+
+
+       //todoas as clinicas que o especialista eh vinculado
+       $clinicas =  Especialistaclinica::
+       join('clinicas', 'clinicas.id','=','especialistaclinicas.clinica_id')->
+       where('especialista_id',$especialista->id)->
+       orderBy('clinicas.nome', 'asc')->
+       select('clinicas.id','clinicas.nome')->
+       get(); 
+       //caso o especialista esteja vinculado a apenas uma clinicar, ja estou deixando o select selecionando a clinica
+       if(sizeof($clinicas)==1){
+          $clinicaselecionada_id = $clinicas[0]->id;
+       }
+      $statusConsulta = "Disponível";
+     
+     
+     
       $lista = Consulta::
       join('clinicas', 'clinicas.id','=','consultas.clinica_id')->
       where('especialista_id', '=', $especialista_id)->
+      where('status', '=', $statusConsulta)->
       select('consultas.id','status','horario_agendado','clinicas.nome as nome_clinica')->
       orderBy('horario_agendado', 'asc')->paginate(8);
-      return view('userEspecialista/listTodasConsultas', ['lista' => $lista, 'filtro' => $filter, 'especialista' => $especialista, 'msg' => $msg]);
+      return view('userEspecialista/listTodasConsultas', ['lista' => $lista,'clinicas' =>$clinicas, 'clinicaselecionada_id' => $clinicaselecionada_id, 'status'=> $statusConsulta,'filtro' => $filter, 'especialista' => $especialista, 'msg' => $msg]);
    }
   
   
