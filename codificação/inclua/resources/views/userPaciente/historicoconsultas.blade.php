@@ -23,11 +23,11 @@
                         @if(sizeof($lista) > 0)
                         @foreach($lista as $ent)
                      <tr>
-                     <td>{{date( 'H:i' , strtotime($ent->horario_agendado))}}</td>                     
-                     <td>{{date( 'd/m/Y' , strtotime($ent->horario_agendado))}}</td>
-                     <td>{{$ent->nome_especialista}}</td>
-                     <td>{{$ent->descricao_especialidade}}</td>
-                     <td>{{$ent->nome_clinica}}</td>  
+                     <td style="padding: 12px;">{{date( 'H:i' , strtotime($ent->horario_agendado))}}</td>                     
+                     <td  style="padding: 12px;">{{date( 'd/m/Y' , strtotime($ent->horario_agendado))}}</td>
+                     <td  style="padding: 12px;">{{$ent->nome_especialista}}</td>
+                     <td  style="padding: 12px;">{{$ent->descricao_especialidade}}</td>
+                     <td  style="padding: 12px;">{{$ent->nome_clinica}}</td>  
                               
                      </tr>
                   @endforeach 
