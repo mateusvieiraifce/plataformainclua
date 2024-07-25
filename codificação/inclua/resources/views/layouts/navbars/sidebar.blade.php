@@ -308,14 +308,14 @@
             @if(\Illuminate\Support\Facades\Auth::user()->tipo_user ==='E')
             <li @if ($pageSlug=='dashboard' ) class="active " @endif>
                 <a href="{{route('home')}}">
-                    <i class="tim-icons icon-chart-pie-36"></i>
-                    <p>{{ __('Dashboard') }}</p>
+                    <i class="tim-icons icon-bank"></i>
+                    <p>{{ __('Home') }}</p>
                 </a>
             </li>
 
             <li @if ($pageSlug=='listconsultaporespecialista' ) class="active " @endif>
                 <a href="{{route('consulta.listconsultaporespecialista')}}">
-                    <i class="tim-icons icon-bullet-list-67"></i>
+                    <i class="tim-icons icon-notes"></i>
                     <p>{{ __('Consultas') }}</p>
                 </a>
             </li>
