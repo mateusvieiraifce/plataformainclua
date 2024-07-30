@@ -17,41 +17,49 @@
               <div class="form-group">
                 <label id="labelFormulario">Nome fantasia</label>
                 <input style="border-color: #C0C0C0" type="text" class="form-control" name="nome" required
-                  value="{{ old('nome', $entidade->nome)}}" maxlength="150">
+                  value="{{ old('nome', $clinica->nome)}}" maxlength="150">
               </div>
             </div>
             <div class="col-md-12 px-8">
               <div class="form-group">
                 <label id="labelFormulario">Razão social</label>
                 <input style="border-color: #C0C0C0" type="text" class="form-control" name="razaosocial" required
-                  value="{{old('razaosocial', $entidade->razaosocial)}}" maxlength="150">
+                  value="{{old('razaosocial', $clinica->razaosocial)}}" maxlength="150">
               </div>
             </div>
             <div class="col-md-12 px-8">
               <div class="form-group">
                 <label id="labelFormulario">CNPJ</label>
                 <input style="border-color: #C0C0C0" type="text" class="form-control" name="cnpj" required
-                  value="{{old('cnpj', $entidade->cnpj)}}" maxlength="150">
+                  value="{{old('cnpj', $clinica->cnpj)}}" maxlength="150">
                 @error('cnpj')
-          O campo CNPJ não é um CNPJ válido ou já foi usado.
-        @enderror
+                  O campo CNPJ não é um CNPJ válido ou já foi usado.
+                @enderror
               </div>
             </div>
-
 
             <div class="col-md-12 px-8">
               <div class="form-group">
                 <label id="labelFormulario">Telefone</label>
-                <input style="border-color: #C0C0C0" type="tel" value="{{old('telefone', $entidade->telefone)}}"
+                <input style="border-color: #C0C0C0" type="tel" value="{{old('telefone', $usuario->telefone)}}"
                   name="telefone" id="telefone" class="form-control" maxlength="150" required>
               </div>
             </div>
+
+            <div class="col-md-12 px-8">
+              <div class="form-group">
+                <label id="labelFormulario">Celular</label>
+                <input style="border-color: #C0C0C0" type="tel" value="{{old('celular', $usuario->celular)}}"
+                  name="celular" id="celular" class="form-control" maxlength="150" required>
+              </div>
+            </div>
+
             <div class="col-md-12 px-8">
               <div class="form-group">
                 <label id="labelFormulario">Nº de atendimentos sociais mensais</label>
                 <input style="border-color: #C0C0C0" type="number" class="form-control"
                   name="numero_atendimento_social_mensal" required
-                  value="{{old('numero_atendimento_social_mensal', $entidade->numero_atendimento_social_mensal)}}"
+                  value="{{old('numero_atendimento_social_mensal', $clinica->numero_atendimento_social_mensal)}}"
                   maxlength="150">
               </div>
             </div>
@@ -72,42 +80,42 @@
                 <label id="cep">{{ __('CEP') }}</label>
                 <input style="border-color: #C0C0C0" id="cep_input" type="text" name="cep"
                   class="form-control{{ $errors->has('cep') ? ' is-invalid' : '' }}"
-                  value="{{ old('cep', $entidade->cep) }}" onblur="pesquisacep(this.value);" maxlength="150">
+                  value="{{ old('cep', $endereco->cep) }}" onblur="pesquisacep(this.value);" maxlength="150">
               </div>
             </div>
             <div class="col-md-12 px-8">
               <div class="form-group">
                 <label id="labelFormulario">Estado</label>
                 <input id="estado" style="border-color: #C0C0C0" type="text" class="form-control" name="estado"
-                  value="{{ old('estado', $entidade->estado)}}" maxlength="150">
+                  value="{{ old('estado', $endereco->estado)}}" maxlength="150">
               </div>
             </div>
             <div class="col-md-12 px-8">
               <div class="form-group">
                 <label id="labelFormulario">Cidade</label>
                 <input id="cidade" style="border-color: #C0C0C0" type="text" class="form-control" name="cidade" required
-                  value="{{old('cidade', $entidade->cidade)}}" maxlength="150">
+                  value="{{old('cidade', $endereco->cidade)}}" maxlength="150">
               </div>
             </div>
             <div class="col-md-12 px-8">
               <div class="form-group">
                 <label id="labelFormulario">Bairro</label>
                 <input id="bairro" style="border-color: #C0C0C0" type="text" class="form-control" name="bairro" required
-                  value="{{old('bairro', $entidade->bairro)}}" maxlength="150">
+                  value="{{old('bairro', $endereco->bairro)}}" maxlength="150">
               </div>
             </div>
             <div class="col-md-12 px-8">
               <div class="form-group">
                 <label id="labelFormulario">Rua</label>
                 <input id="rua" style="border-color: #C0C0C0" type="text" class="form-control" name="rua" required
-                  value="{{old('rua', $entidade->rua)}}" maxlength="150">
+                  value="{{old('rua', $endereco->rua)}}" maxlength="150">
               </div>
             </div>
             <div class="col-md-12 px-8">
               <div class="form-group">
                 <label id="labelFormulario">Número</label>
                 <input id="numero" style="border-color: #C0C0C0" type="text" class="form-control" name="numero" required
-                  value="{{old('numero', $entidade->numero)}}" maxlength="150">
+                  value="{{old('numero', $endereco->numero)}}" maxlength="150">
               </div>
             </div>
 
@@ -115,19 +123,19 @@
               <div class="form-group">
                 <label id="labelFormulario">Longitude</label>
                 <input style="border-color: #C0C0C0" type="number" step="0.000000000000001" class="form-control"
-                  name="longitude"   id="longitude"  required value="{{old('longitude', $entidade->longitude)}}" maxlength="150">
+                  name="longitude"   id="longitude"  required value="{{old('longitude', $endereco->longitude)}}" maxlength="150">
               </div>
             </div>
             <div class="col-md-12 px-8">
               <div class="form-group">
                 <label id="labelFormulario">Latitude</label>
                 <input style="border-color: #C0C0C0" type="number" step="0.000000000000001" class="form-control"
-                  name="latitude"   id="latitude"  required value="{{old('latitude', $entidade->latitude)}}" maxlength="150">
+                  name="latitude"   id="latitude"  required value="{{old('latitude', $endereco->latitude)}}" maxlength="150">
               </div>
             </div>
 
 
-            <input type="hidden" name="id" value="{{$entidade->id}}">
+            <input type="hidden" name="id" value="{{$clinica->id}}">
           </div>
         </div>
       </div>
@@ -161,7 +169,7 @@
               <div class="form-group">
                 <label id="labelFormulario">Senha</label>
                 <input type="password" style="border-color: #C0C0C0" class="form-control" name="password"
-                  @if(!$entidade->usuario_id) 
+                  @if(!$clinica->usuario_id) 
                       required  minlength="8"
                   @else
                       minlength="8"
@@ -172,15 +180,15 @@
             <div class="form-group">
               <label id="labelFormulario">Confirmar senha</label>
               <input type="password" style="border-color: #C0C0C0" class="form-control" name="password_confirmation"
-                @if(!$entidade->usuario_id) required @endif value="" maxlength="15">
+                @if(!$clinica->usuario_id) required @endif value="" maxlength="15">
                 @error('password')
                 Por favor, verifique se a senha corresponde ao campo de confirmação da senha.
                 @enderror
             </div>
               </div>
           </div>
-          <input type="hidden" name="id" value="{{$entidade->id}}">
-          <input type="hidden" name="usuario_id" value="{{$entidade->usuario_id}}">
+          <input type="hidden" name="id" value="{{$clinica->id}}">
+          <input type="hidden" name="usuario_id" value="{{$clinica->usuario_id}}">
         </div>
       </div>
 
@@ -199,17 +207,14 @@
             <div class="block block-two"></div>
             <div class="block block-three"></div>
             <h3 class="title">Logo da clínica</h3>
-
-            <?php 
-                                //verificando se existe imagem 
-            if (isset($entidade->logotipo)) {
-                                ?>
-            <img id="preview" src={{"/images/logosclinicas/" . $entidade->logotipo}} alt="IMG-LOGO"
-              style="max-width: 200px; max-height: 200px;">
-            <?php } else { ?>
-            <img id="preview" src={{"/assets/img/logo-01.png"}} alt="IMG-LOGO"
-              style="max-width: 200px; max-height: 200px;">
-            <?php } ?>
+            {{-- verificando se existe imagem  --}}
+            @if (isset($clinica->logotipo)) 
+              <img id="preview" src={{ asset($clinica->logotipo)}} alt="IMG-LOGO"
+                style="max-width: 200px; max-height: 200px;">
+            @else
+              <img id="preview" src={{ "/assets/img/logo-01.png" }} alt="IMG-LOGO"
+                style="max-width: 200px; max-height: 200px;">
+            @endif
 
             </br>
             </br>
@@ -286,9 +291,9 @@
                         zoom: 12 // Zoom inicial do mapa
                     });
 
-                    @if(isset($entidade->latitude))
-                       var latitude = {{ $entidade->latitude }};                
-                       var longitude = {{ $entidade->longitude }};                       
+                    @if(isset($endereco->latitude))
+                       var latitude = {{ $endereco->latitude }};                
+                       var longitude = {{ $endereco->longitude }};                       
                        var myLatLng = {lat: latitude, lng: longitude};
                        placeMarker(myLatLng, map);
                      @endif
@@ -350,7 +355,8 @@
 <script>
   $(document).ready(function ($) {
     $("#cep_input").mask("00000-000");
-    $('#telefone').mask("(00) 0 0000-0000");
+    $('#telefone').mask("(00) 0000-0000");
+    $('#celular').mask("(00) 00000-0000");
   });
 
   function meu_callback(conteudo) {

@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Helper;
 use App\Models\Clinica;
+use App\Models\Endereco;
 use App\Models\Especialidadeclinica;
 use App\Models\User;
 use Illuminate\Database\QueryException;
@@ -19,10 +20,8 @@ class ClinicaController extends Controller
       if (isset($_GET['filtro'])) {
          $filter = $_GET['filtro'];
       }
-      $lista = Clinica::join('users', 'users.id', '=', 'usuario_id')->
-         where('nome', 'like', "%" . "%")->
+      $lista = Clinica::where('nome', 'like', "%" . "%")->
          orderBy('nome', 'asc')->
-         select('clinicas.id', 'users.nome_completo as nome_responsavel', 'nome', 'cnpj', 'clinicas.telefone', 'clinicas.ativo')->
          paginate(8);
       return view('clinica/list', ['lista' => $lista, 'filtro' => $filter, 'msg' => $msg]);
    }
@@ -157,10 +156,11 @@ class ClinicaController extends Controller
    }
    function edit($id)
    {
-      $entidade = Clinica::find($id);
-
-      $usuario = User::find($entidade->usuario_id);
-      return view('clinica/form', ['entidade' => $entidade, 'usuario' => $usuario]);
+      $clinica = Clinica::find($id);
+      $usuario = User::find($clinica->usuario_id);
+      $endereco = Endereco::where('user_id', $usuario->id)->where('principal', true)->first();
+      
+      return view('clinica/form', ['clinica' => $clinica, 'usuario' => $usuario, 'endereco' => $endereco]);
    }
    
    public function createDadosUserClinica($usuario_id)
@@ -179,8 +179,8 @@ class ClinicaController extends Controller
          "nome_fantasia" => "required",
          "razao_social" => "required",
          "cnpj" => "required",
-         "telefone" => "unique:clinicas,telefone,{$request->clinica_id}|unique:users,telefone,{$request->usuario_id}",
-         "celular" => "required|unique:clinicas,celular,{$request->clinica_id}|unique:users,celular,{$request->usuario_id}",
+         "telefone" => "unique:users,telefone,{$request->usuario_id}",
+         "celular" => "required|unique:users,celular,{$request->usuario_id}",
          "numero_atendimento_social_mensal" => "required",
          'consentimento'=>'required'
       ];
@@ -228,8 +228,6 @@ class ClinicaController extends Controller
          $clinica->nome = $request->nome_fantasia;
          $clinica->razaosocial = $request->razao_social;
          $clinica->cnpj = Helper::removerCaractereEspecial($request->cnpj);
-         $clinica->telefone = isset($request->telefone) ? Helper::removerCaractereEspecial($request->telefone) : null;
-         $clinica->celular = Helper::removerCaractereEspecial($request->celular);
          $clinica->logotipo = "storage/$pathAvatar" ;
          $clinica->numero_atendimento_social_mensal = $request->numero_atendimento_social_mensal;
          $clinica->save();
@@ -288,22 +286,16 @@ class ClinicaController extends Controller
       $request->validate($rules, $feedbacks);
 
       try {
-         $clinica = Clinica::find($request->clinica_id);
-         $clinica->cep = Helper::removeMascaraCep($request->cep);
-         $clinica->cidade = $request->cidade;
-         $clinica->estado = $request->estado;
-         $clinica->rua = $request->endereco;
-         $clinica->numero = $request->numero;
-         $clinica->bairro = $request->bairro;
-         $clinica->complemento = $request->complemento;
-         $clinica->longitude = $request->longitude;
-         $clinica->latitude = $request->latitude;
-         $clinica->ativo = 1;
-         $clinica->save();
+         $enderecoController = new EnderecoController();
+         $enderecoController->storeEndereco($request);
 
          $user = User::find($request->usuario_id);
          $user->etapa_cadastro = "F";
          $user->save();
+
+         $clinica = Clinica::find($request->clinica_id);
+         $clinica->ativo = 1;
+         $clinica->save();
 
          Auth::loginUsingId($user->id);
          $msg = ['valor' => trans("Seu cadastro foi finalizado com sucesso!"), 'tipo' => 'success'];

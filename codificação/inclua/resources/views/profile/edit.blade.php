@@ -1,5 +1,5 @@
-@extends('layouts.app', ['page' => __('Perfil'), 'pageSlug' => 'profile','class'=>'profile'])
-
+@extends('layouts.app', ['page' => __('Perfil'), 'pageSlug' => 'profile', 'class' => 'profile'])
+@section('title', 'Editar Perfil')
 @section('content')
     <div class="row">
         <div class="col-md-8">

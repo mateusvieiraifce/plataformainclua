@@ -9,7 +9,6 @@
     use HasFactory;
     protected $fillable = [
         'nome',
-        'celular',
         'usuario_id',
         'especialidade_id',
         'conta_bancaria',
