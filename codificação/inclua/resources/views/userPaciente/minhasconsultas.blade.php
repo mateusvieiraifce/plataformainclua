@@ -31,7 +31,7 @@
                    
                      <td>
                         <a href="{{route('consulta.delete', $ent->id)}}"
-                           onclick="return confirm('Deseja relamente excluir?')" rel="tooltip" title="Excluir"
+                           onclick="return confirm('Deseja relamente cancelar?')" rel="tooltip" title="Cancelar"
                            class="btn btn-link" data-original-title="Remove">
                            <i class="tim-icons icon-simple-remove"></i>
                         </a>

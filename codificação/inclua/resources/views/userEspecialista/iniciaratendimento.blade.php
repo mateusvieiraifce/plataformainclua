@@ -146,18 +146,16 @@
                <div class="row">
                   <div class="tab-container">
                      <div class="tabs">
-                        <button class="tab-button active btn-primary" onclick="openTab(event, 'home')">Anamnese</button>
-                        <button class="tab-button btn-primary" onclick="openTab(event, 'services')">Prescrições</button>
-                        <button class="tab-button btn-primary" onclick="openTab(event, 'about')"> Pedidos de exames</button>
-                        <button class="tab-button btn-primary" onclick="openTab(event, 'contact')">Atestados</button>
+                        <button class="tab-button active btn-primary" onclick="openTab(event, 'anamnese')">Anamnese</button>
+                        <button class="tab-button btn-primary" onclick="openTab(event, 'prescricoes')">Prescrições</button>
+                        <button class="tab-button btn-primary" onclick="openTab(event, 'exames')"> Pedidos de exames</button>
+                        <button class="tab-button btn-primary" onclick="openTab(event, 'atestados')">Atestados</button>
                         <button class="tab-button btn-primary" onclick="openTab(event, 'prontuario')">  Prontuário completo</button>
                       
                      </div>
                      <div class="tab-content">
-                        <div id="home" class="tab-pane active">
-                           <h1>Bem-vindo à página inicial!</h1>
-                           <p>Conteúdo da aba Início.</p>
-                           Anamnese -
+                        <div id="anamnese" class="tab-pane active">
+                           <p>Conteúdo da aba Anamnese.</p>
                            <!-- Tela com lista de anamnese precadastradas
                            no cad de anamnese vai ter id e descricao
                            na tela de atendimento o especialista vai poder inserir um texto    cada anamnese    
@@ -165,49 +163,17 @@
                            <!-- Tela com Queixa principal-->
                            <!-- História do problema = História-->
                         </div>
-                        <div id="services" class="tab-pane">
-                           <h1>Nossos Serviços</h1>
-                           <p>Conteúdo da aba Serviços.</p>
+                        <div id="prescricoes" class="tab-pane">
+                           <p>Conteúdo da aba prescriçoes.</p>
                         </div>
-                        <div id="about" class="tab-pane">
-                           <h1>Sobre Nós</h1>
-                           <p>Conteúdo da aba Sobre.</p>
+                        <div id="exames" class="tab-pane">
+                           <p>Conteúdo da aba exames.</p>
                         </div>
-                        <div id="contact" class="tab-pane">
-                           <h1>Contato</h1>
-                           <p>Conteúdo da aba Contato.</p>
-                           <div class="col-lg-2">
-
-<h6 class="title d-inline">Impressões</h6>
-<a rel="tooltip" title="tela com " class="btn btn-primary" data-original-title="Edit" href="{{route('especialista.iniciarAtendimento',1)}}">
-  
-</a>
-
-<a rel="tooltip" title="Iniciar atendimento" class="btn btn-primary" data-original-title="Edit" href="{{route('especialista.iniciarAtendimento',1)}}">
-   Prescrições
-   <!--  Tela que vai aparecer um botao para inserir nova prescricao
-add medicamentos e formas de usos.
-
-*vai mostrar as ultimas prescriçoes.
--->
-</a>
-<a rel="tooltip" title="Iniciar atendimento" class="btn btn-primary" data-original-title="Edit" href="{{route('especialista.iniciarAtendimento',1)}}">
-   Pedidos de exames
-   <!-- tela para add novo pedido
-    *vai mostrar os ultimos pedidos -->
-</a>
-<a rel="tooltip" title="Iniciar atendimento" class="btn btn-primary" data-original-title="Edit" href="{{route('especialista.iniciarAtendimento',1)}}">
-   Atestados
-   <!-- tela que vai auxiliar a criar um novo atestado -->
-</a>
-
-<a rel="tooltip" title="Iniciar atendimento" class="btn btn-primary" data-original-title="Edit" href="{{route('especialista.iniciarAtendimento',1)}}">
-   Prontuário completo
-   <!-- dados completos com todas as consultas, exames e prescrições -->
-</a>
-
-
-</div>
+                        <div id="atestados" class="tab-pane">
+                           <p>Conteúdo da aba atestados.</p>
+                        </div>
+                        <div id="prontuario" class="tab-pane">
+                           <p>Conteúdo da aba prontuário.</p>
                         </div>
                      </div>
                   </div>
@@ -230,7 +196,8 @@ add medicamentos e formas de usos.
 
             </div>
             <div class="col-lg-2">
-            <a rel="tooltip" title="Finalizar" class="btn btn-primary" style="margin-bottom: 0px;" data-original-title="Edit" href="{{route('especialista.iniciarAtendimento',1)}}">
+            <a rel="tooltip" title="Finalizar" class="btn btn-primary" style="margin-bottom: 0px;" data-original-title="Edit" 
+            href="{{route('especialista.iniciarAtendimento',1)}}">
    Finalizar
    <!-- dados completos com todas as consultas, exames e prescrições -->
 </a> </div>
