@@ -66,9 +66,11 @@ class ValidacoesController extends Controller
 
         if ($user->tipo_user == "P") {
             return redirect()->route('usuario.paciente.create.dados', ['usuario_id' => $user->id]);
-        } elseif ($user->tipo_use = "E") {
+        } elseif ($user->tipo_user == "E") {
             return redirect()->route('usuario.especialista.create.dados', ['usuario_id' => $user->id]);
-        }
+        } elseif ($user->tipo_user == "C") {
+            return redirect()->route('usuario.clinica.create.dados', ['usuario_id' => $user->id]);
+        } 
     }
 
     public function verificarCelular($usuario_id)
@@ -126,6 +128,8 @@ class ValidacoesController extends Controller
             return redirect()->route('endereco.create', ['usuario_id' => $user->id]);
         } elseif ($user->tipo_user == 'E') {
             return redirect()->route('dados-bancarios.create', ['usuario_id' => $user->id]); 
+        } elseif ($user->tipo_user == 'C') {
+            return redirect()->route('clinica.create.endereco', ['usuario_id' => $user->id]);
         }
     }
 }

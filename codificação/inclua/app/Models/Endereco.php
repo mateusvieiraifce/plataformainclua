@@ -10,7 +10,19 @@ class Endereco extends Model
     use HasFactory;
 
     protected $fillable = [
-        'recebedor','cep','estado','cidade','bairro','rua','numero','complemento','informacoes','user_id','principal'
+        'recebedor',
+        'cep',
+        'estado',
+        'cidade',
+        'bairro',
+        'rua',
+        'numero',
+        'complemento',
+        'longitude',
+        'latitude',
+        'informacoes',
+        'user_id',
+        'principal'
     ];
     protected $table='enderecos';
     public $timestamps=false;

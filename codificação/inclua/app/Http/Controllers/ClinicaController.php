@@ -1,13 +1,16 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Helper;
 use App\Models\Clinica;
+use App\Models\Endereco;
 use App\Models\Especialidadeclinica;
 use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Rules\CnpjValidationRule;
+use Illuminate\Support\Facades\Storage;
 
 class ClinicaController extends Controller
 {
@@ -17,10 +20,8 @@ class ClinicaController extends Controller
       if (isset($_GET['filtro'])) {
          $filter = $_GET['filtro'];
       }
-      $lista = Clinica::join('users', 'users.id', '=', 'usuario_id')->
-         where('nome', 'like', "%" . "%")->
+      $lista = Clinica::where('nome', 'like', "%" . "%")->
          orderBy('nome', 'asc')->
-         select('clinicas.id', 'users.nome_completo as nome_responsavel', 'nome', 'cnpj', 'clinicas.telefone', 'clinicas.ativo')->
          paginate(8);
       return view('clinica/list', ['lista' => $lista, 'filtro' => $filter, 'msg' => $msg]);
    }
@@ -49,7 +50,7 @@ class ClinicaController extends Controller
          $requestImage = $request->image;
          $extension = $requestImage->extension();
          $imageName = md5($requestImage->getClientOriginalName() . strtotime("now")) . "." . $extension;
-         $request->image->move(public_path('images/logosclinicas'), $imageName);
+         $pathAvatar = $request->file('image')->storeAs('logos-clinicas', $imageName);
       }
 
       if ($request->id) {
@@ -75,7 +76,7 @@ class ClinicaController extends Controller
          $ent->numero_atendimento_social_mensal = $request->numero_atendimento_social_mensal;
          $ent->usuario_id = $request->usuario_id;
          //salvando o nome da imagem
-         $ent->logotipo = $imageName;
+         $ent->logotipo = !empty($pathAvatar) ? "storage/$pathAvatar" : null;
          $ent->ativo = 1;
          $ent->save();
 
@@ -155,12 +156,158 @@ class ClinicaController extends Controller
    }
    function edit($id)
    {
-      $entidade = Clinica::find($id);
-
-      $usuario = User::find($entidade->usuario_id);
-      return view('clinica/form', ['entidade' => $entidade, 'usuario' => $usuario]);
+      $clinica = Clinica::find($id);
+      $usuario = User::find($clinica->usuario_id);
+      $endereco = Endereco::where('user_id', $usuario->id)->where('principal', true)->first();
+      
+      return view('clinica/form', ['clinica' => $clinica, 'usuario' => $usuario, 'endereco' => $endereco]);
+   }
+   
+   public function createDadosUserClinica($usuario_id)
+   {
+      return view('cadastro.clinica.form_dados', ['usuario_id' => $usuario_id]);
    }
 
+   public function storeDadosUserClinica(Request $request)
+   {
+      //REMOÇÃO DA MASCARA DO CELULAR, TELEFONE E CNPJ PARA COMPARAR COM O BD
+      $request->request->set('telefone', Helper::removerCaractereEspecial($request->telefone));
+      $request->request->set('celular', Helper::removerCaractereEspecial($request->celular));
+      $request->request->set('cnpj', Helper::removerCaractereEspecial($request->cnpj));
+      $rules = [
+         "logo" => "required",
+         "nome_fantasia" => "required",
+         "razao_social" => "required",
+         "cnpj" => "required",
+         "telefone" => "unique:users,telefone,{$request->usuario_id}",
+         "celular" => "required|unique:users,celular,{$request->usuario_id}",
+         "numero_atendimento_social_mensal" => "required",
+         'consentimento'=>'required'
+      ];
+      $feedbacks = [
+         "logo.required" => "O campo Logo da Clínica é obrigatório.",
+         'nome_fantasia.required' => 'O campo Nome Fantasia é obrigatório.',
+         'razao_social.required' => 'O campo Razão Social é obrigatório.',
+         'cnpj.required' => 'O campo CNPJ é obrigatório.',
+         'telefone.unique' => 'Já existe uma clínica cadastrada com este telefone.',
+         'celular.required' => 'O campo Celular é obrigatório.',
+         'celular.unique' => 'Este número de celular já foi utilizado.',
+         'numero_atendimento_social_mensal.required' => "O campo N° de atendimentos sociais mensais é obrigatório.",
+         "consentimento.required" => "O campo Termos e Condições de Uso é obrigatório."
+      ];
+      $request->validate($rules, $feedbacks);
 
+      try {
+         //SALVAR LOGO DA CLÍNICA
+         if ($request->hasFile('logo') && $request->file('logo')->isValid()) {
+            //VERIFICANDO SE EXISTE ALGUMA LOGO JA CADASTRADA PARA DELETAR
+            $logotipo = Clinica::where('usuario_id', $request->usuario_id);
+            if(!empty($logotipo->logotipo)) {
+               //REMOÇÃO DE 'storage/' PARA DELETAR O ARQUIVO NA RAIZ
+               $linkStorage = explode('/', $logotipo);
+               $linkStorage = "$linkStorage[1]/$linkStorage[2]";
+               Storage::delete([$linkStorage]);
+            }
 
-} ?>
+            // Nome do Arquivo
+            $requestImage = $request->logo;
+            // Recupera a extensão do arquivo
+            $extension = $requestImage->extension();
+            // Define o nome
+            $imageName = md5($requestImage->getClientOriginalName() . strtotime("now")) . "." . $extension;
+            // Faz o upload:
+            $pathAvatar = $request->file('logo')->storeAs('logos-clinicas', $imageName);
+         }
+
+         $clinica = Clinica::where('usuario_id', $request->usuario_id)->first();
+         if(empty($clinica)) {
+            $clinica = new Clinica();
+         }
+
+         $clinica->usuario_id = $request->usuario_id;
+         $clinica->nome = $request->nome_fantasia;
+         $clinica->razaosocial = $request->razao_social;
+         $clinica->cnpj = Helper::removerCaractereEspecial($request->cnpj);
+         $clinica->logotipo = "storage/$pathAvatar" ;
+         $clinica->numero_atendimento_social_mensal = $request->numero_atendimento_social_mensal;
+         $clinica->save();
+
+         $userController = new UsuarioController();
+         $userController->storeDados($request);
+
+         $msg = ['valor' => trans("Cadastro de dados realizado com sucesso!"), 'tipo' => 'success'];
+         session()->flash('msg', $msg);
+     } catch (QueryException $e) {
+         session()->flash('msg', ['valor' => trans("Erro ao realizar o cadastro da clínica!"), 'tipo' => 'danger']);
+
+         return back();
+     }
+
+     return redirect()->route('view.verificar_celular', ['usuario_id' => $clinica->usuario_id]);
+   }
+
+   public function editDadosUserClinica($usuario_id)
+   {
+      $clinica = Clinica::where('usuario_id', $usuario_id)->first();
+      $clinica->cnpj = $clinica->cnpj != null ? Helper::mascaraCNPJ($clinica->cnpj) : '';
+      $clinica->celular = $clinica->celular != null ? Helper::mascaraCelular($clinica->celular) : '';
+
+      return view('cadastro.clinica.form_dados', ['usuario_id' => $usuario_id, 'clinica' => $clinica]);
+   }
+
+   public function createEnderecoClinica($usuario_id)
+   {
+      $clinica = Clinica::where('usuario_id', $usuario_id)->first();
+      return view('cadastro.clinica.form_endereco', ['usuario_id' => $usuario_id, 'clinica' => $clinica]);
+   }
+
+   public function storeEnderecoClinica(Request $request)
+   {
+      $rules = [
+         "cep" => "required",
+         "cidade" => "required",
+         "estado" => "required",
+         "endereco" => "required",
+         "numero" => "required",
+         "bairro" => "required",
+         "longitude" => "required",
+         "latitude" => "required"
+      ];
+      $feedbacks = [
+         "cep.required" => "O campo CEP é obrigatório.",
+         "cidade.required" => "O campo Cidade é obrigatório.",
+         "estado.required" => "O campo Estado é obrigatório.",
+         "endereco.required" => "O campo Endereço é obrigatório.",
+         "numero.required" => "O campo Número é obrigatório.",
+         "bairro.required" => "O campo Bairro é obrigatório.",
+         "longitude.required" => "O campo Longitude é obrigatório.",
+         "latitude.required" => "O campo Latitude é obrigatório."
+      ];
+      $request->validate($rules, $feedbacks);
+
+      try {
+         $enderecoController = new EnderecoController();
+         $enderecoController->storeEndereco($request);
+
+         $user = User::find($request->usuario_id);
+         $user->etapa_cadastro = "F";
+         $user->save();
+
+         $clinica = Clinica::find($request->clinica_id);
+         $clinica->ativo = 1;
+         $clinica->save();
+
+         Auth::loginUsingId($user->id);
+         $msg = ['valor' => trans("Seu cadastro foi finalizado com sucesso!"), 'tipo' => 'success'];
+         session()->flash('msg', $msg);
+      } catch (QueryException $e) {
+         $msg = ['valor' => trans("Erro ao executar a operação!"), 'tipo' => 'danger'];
+         session()->flash('msg', $msg);
+
+         return back();
+      }
+
+      return redirect()->route('home');
+   }
+}
+   

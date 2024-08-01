@@ -79,10 +79,6 @@
     color: #11181C;
 }
 
-#formPaciente, #formEspecialista, #formClinica {
-    display: none;
-}
-
 .input-medium {
     width: 50%;
 }
@@ -137,6 +133,11 @@ label.link {
 
 .card p {
     color: #344675;
+}
+
+.mapa {
+    height: 17em;
+    width: 24em;
 }
 
 @media (max-width: 768px) {

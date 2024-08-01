@@ -53,6 +53,14 @@ Route::get("/cadastrar/usuario/especialista/dados/create/{usuario_id}", [\App\Ht
 Route::post("/cadastrar/usuario/especialista/store", [\App\Http\Controllers\EspecialistaController::class, 'storeDadosUserEspecialista'])->name('usuario.especialista.store.dados');
 Route::get("/cadastrar/usuario/especialista/dados/edit/{usuario_id}",[\App\Http\Controllers\EspecialistaController::class,'editDadosUserEspecialista'])->name('usuario.especialista.edit.dados');
 
+#USUARIO CLINICA
+Route::get("/cadastrar/usuario/clinica/dados/create/{usuario_id}", [\App\Http\Controllers\ClinicaController::class, 'createDadosUserClinica'])->name('usuario.clinica.create.dados');
+Route::post("/cadastrar/usuario/clinica/store", [\App\Http\Controllers\ClinicaController::class, 'storeDadosUserClinica'])->name('usuario.clinica.store.dados');
+Route::get("/cadastrar/usuario/clinica/dados/edit/{usuario_id}",[\App\Http\Controllers\ClinicaController::class,'editDadosUserClinica'])->name('usuario.clinica.edit.dados');
+Route::get("/clinica/endereco/create/{usuario_id}", [\App\Http\Controllers\ClinicaController::class, 'createEnderecoClinica'])->name('clinica.create.endereco');
+Route::post("/clinica/endereco/store", [\App\Http\Controllers\ClinicaController::class, 'storeEnderecoClinica'])->name('clinica.store.endereco');
+
+#DADOS BANCARIOS
 Route::get("/cadastrar/dados-bancários/create/{usuario_id}",[\App\Http\Controllers\EspecialistaController::class,'createDadosBancarios'])->name('dados-bancarios.create');
 Route::post("/cadastrar/dados-bancários/store",[\App\Http\Controllers\EspecialistaController::class,'storeDadosBancarios'])->name('dados-bancarios.store');
 
@@ -60,16 +68,12 @@ Route::post("/cadastrar/dados-bancários/store",[\App\Http\Controllers\Especiali
 Route::get("/cadastrar/endereço/create/{usuario_id}",[\App\Http\Controllers\EnderecoController::class,'createEndereco'])->name('endereco.create');
 Route::post("/cadastrar/endereço/store",[\App\Http\Controllers\EnderecoController::class,'storeEndereco'])->name('endereco.store');
 
-#TESTES API
+#ASSINATURA
 Route::get("/checkout",[\App\Http\Controllers\CartaoController::class,'create_checkout']);
 Route::post("/pagamento/assinatura",[\App\Http\Controllers\AssinaturaController::class,'lancarAssinatura'])->name('pagamento.assinatura');
 Route::get("/callback-payment/assinatura",[\App\Http\Controllers\AssinaturaController::class,'callbackPaymentAssinatura'])->name('callback.payment.assinatura');
 Route::get("/pagamento/assinatura/renovar",[\App\Http\Controllers\AssinaturaController::class,'renovacaoAutomatica'])->name('pagamento.22');
 Route::get("/callback-payment/assinatura/renovar",[\App\Http\Controllers\AssinaturaController::class,'callbackPaymentRenovarAssinatura'])->name('callback.payment.assinatura.renovar');
-
-#ASSINATURA
-Route::post("/assinatura/aprovar",[\App\Http\Controllers\AssinaturaController::class,'lancarAssinatura'])->name('assinatura.aprovar');
-Route::get("/assinatura/renovar/{usuario_id}",[\App\Http\Controllers\AssinaturaController::class,'renovarAssinatura'])->name('assiantura.renovar');
 
 #VALIDAÇÕES
 Route::get("/email/verificar/{usuario_id}",[\App\Http\Controllers\ValidacoesController::class,'verificarEmail'])->name('view.verificar_email');

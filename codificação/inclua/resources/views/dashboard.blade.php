@@ -1,4 +1,4 @@
-@extends('layouts.app', ['pageSlug' => 'dashboard','class'=>'dashboard'])
+@extends('layouts.app', ['pageSlug' => 'dashboard', 'class' => 'dashboard'])
 @section('title', 'Dashboard')
 @section('content')
     @if(\Illuminate\Support\Facades\Auth::user()->tipouser ==='R')

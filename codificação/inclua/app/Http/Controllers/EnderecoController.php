@@ -13,7 +13,7 @@ class EnderecoController extends Controller
 {
     public function createEndereco($usuario_id)
     {
-        return view('cadastro.form_endereco', ['usuario_id' => $usuario_id]);
+        return view('cadastro.paciente.form_endereco', ['usuario_id' => $usuario_id]);
     }
 
     public function storeEndereco(Request $request)
@@ -45,6 +45,8 @@ class EnderecoController extends Controller
             $endereco->rua = $request->endereco;
             $endereco->numero = $request->numero;
             $endereco->complemento = $request->complemento;
+            $endereco->longitude = $request->longitude ?? null;
+            $endereco->latitude = $request->latitude ?? null;
             $endereco->bairro = $request->bairro;
             $endereco->principal = true;
             $endereco->save();
