@@ -253,6 +253,10 @@ Route::middleware('auth')->group(function () {
     Route::get("/paciente/minhasconsultas/", [\App\Http\Controllers\PacienteController::class, 'minhasconsultas'])->name('paciente.minhasconsultas')->middleware('auth');
     Route::get("/paciente/historicoconsultas/", [\App\Http\Controllers\PacienteController::class, 'historicoconsultas'])->name('paciente.historicoconsultas')->middleware('auth');
     
+
+    #ESPECIALISTA
+    Route::get("/especialista/atendimento/{consulta_id}", [\App\Http\Controllers\EspecialistaController::class, 'inicarAtendimento'])->name('especialista.iniciarAtendimento')->middleware('auth');
+
     
 });
 

@@ -214,4 +214,12 @@ class EspecialistaController extends Controller
       $usuario = User::find($entidade->usuario_id);
       return view('especialista/form', ['entidade' => $entidade, 'especialidades' => Especialidade::all(),'usuario' => $usuario]);
    }
+
+   function inicarAtendimento($consulta_id){
+
+      //aqui verificar se a consulta pertece realmente ao especialista
+      //pois o usuario pode alterar o id da consulta na url
+      return view('userEspecialista/iniciaratendimento');
+
+   }
 }

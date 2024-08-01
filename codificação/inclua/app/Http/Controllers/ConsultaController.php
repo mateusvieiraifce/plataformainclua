@@ -21,27 +21,33 @@ class ConsultaController extends Controller
       if (isset($_GET['filtro'])) {
          $filter = $_GET['filtro'];
       }
+
+
+       //todoas as clinicas que o especialista eh vinculado
+       $clinicas =  Especialistaclinica::
+       join('clinicas', 'clinicas.id','=','especialistaclinicas.clinica_id')->
+       where('especialista_id',$especialista->id)->
+       orderBy('clinicas.nome', 'asc')->
+       select('clinicas.id','clinicas.nome')->
+       get(); 
+       //caso o especialista esteja vinculado a apenas uma clinicar, ja estou deixando o select selecionando a clinica
+       if(sizeof($clinicas)==1){
+          $clinicaselecionada_id = $clinicas[0]->id;
+       }
+      $statusConsulta = "Disponível";
+     
+     
+     
       $lista = Consulta::
       join('clinicas', 'clinicas.id','=','consultas.clinica_id')->
       where('especialista_id', '=', $especialista_id)->
+      where('status', '=', $statusConsulta)->
       select('consultas.id','status','horario_agendado','clinicas.nome as nome_clinica')->
       orderBy('horario_agendado', 'asc')->paginate(8);
-      return view('consulta/list', ['lista' => $lista, 'filtro' => $filter, 'especialista' => $especialista, 'msg' => $msg]);
+      return view('userEspecialista/listTodasConsultas', ['lista' => $lista,'clinicas' =>$clinicas, 'clinicaselecionada_id' => $clinicaselecionada_id, 'status'=> $statusConsulta,'filtro' => $filter, 'especialista' => $especialista, 'msg' => $msg]);
    }
-   function new($especialista_id)
-   {
-      $especialista = Especialista::find($especialista_id);
-      return view('consulta/form', ['entidade' => new Consulta(), 'especialista' => $especialista]);
-   }
-
-
-   function search(Request $request, $especialista_id)
-   {
-      $especialista = Especialista::find($especialista_id);
-      $filter = $request->query('filtro');
-      $lista = Consulta::where('nome', 'like', "%" . $request->filtro . "%")->orderBy('id', 'desc')->paginate(8);
-      return view('consulta/list', ['lista' => $lista, 'filtro' => $request->filtro, 'especialista' => $especialista])->with('filter', $filter);
-   }
+  
+  
    function save(Request $request)
    {
       $especialista_id = $request->especialista_id;
@@ -90,7 +96,7 @@ class ConsultaController extends Controller
       } catch (QueryException $exp) {
          $msg = ['valor' => $exp->getMessage(), 'tipo' => 'primary'];
       }
-      return $this->list($msg);
+      return $this->listconsultaporespecialista($msg);
    }
    function edit($id)
    {
@@ -110,7 +116,7 @@ class ConsultaController extends Controller
       orderBy('clinicas.nome', 'asc')->
       select('clinicas.id','clinicas.nome')->
       get();
-      return view('consulta/agenda', ['entidade' => new Consulta(), 'especialista' => $especialista, 'clinicas' => $clinicas]);
+      return view('userEspecialista/agenda', ['entidade' => new Consulta(), 'especialista' => $especialista, 'clinicas' => $clinicas]);
    }
 
    function saveVariasConsultas(Request $request)
@@ -195,7 +201,7 @@ class ConsultaController extends Controller
       select('consultas.id','status','horario_agendado','clinicas.nome as nome_clinica','pacientes.nome as nome_paciente')->
       orderBy('horario_agendado', 'asc')->paginate(8);
      
-      return view('consulta/listconsultaporespecialista', ['lista' => $lista, 
+      return view('userEspecialista/listconsultaporespecialista', ['lista' => $lista, 
       'clinicas' =>$clinicas, 'clinicaselecionada_id' => $clinicaselecionada_id,  'status'=> $statusConsulta ,'filtro' => $filter,
        'especialista' => $especialista, 'msg' => $msg]);
    }

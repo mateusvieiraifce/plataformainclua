@@ -6,7 +6,7 @@
 <div class="card">
    <div class="row">
       <div class="col-lg-12 col-md-12">
-         <div class="card card-tasks">
+         <div class="card card-tasks" style="height: auto; min-height: 500px;">
             <div class="card-header">
 
                <div class="col-lg-12 col-md-12">
@@ -97,40 +97,42 @@
                <div class="table-responsive">                  
                   <table class="table">
                      <thead>
-                        <th> Status </th>
-                        <th> Ação </th>
+                        <th> Status </th>                       
                         <th> Horário agendado </th>
                         <th> Paciente </th>
                         <th> Clínica </th>
-                        <th> </th>
+                        <th> Ação </th>
                      </thead>
                      <tbody>
                         @if(sizeof($lista) > 0)
                         @foreach($lista as $ent)
                      <tr>
-                     <td style="max-width:100px">{{$ent->status}}</td>
-                     <td >
-                        <a style="max-width:100px; max-height: 50px;" rel="tooltip" title="Iniciar atendimento" class="btn btn-primary" data-original-title="Edit"
-                           href="{{route('consulta.edit', $ent->id)}}">
-                           <i class="tim-icons icon-check-2"></i>
-                        </a>                    
-                        <br>
-                        <a style="max-width:100px; max-height: 20px;" rel="tooltip" title="Cancelar" class="btn btn-warning" data-original-title="Edit"
-                           href="{{route('consulta.edit', $ent->id)}}">
-                           <i class="tim-icons icon-simple-remove"></i>
-                        </a>                       
-                     </td>
+                     <td >{{$ent->status}}</td>
+                    
                      <td>{{date( 'd/m/Y H:i' , strtotime($ent->horario_agendado))}}
                   </td>
                   <td>{{$ent->nome_paciente}}</td>
                      <td>{{$ent->nome_clinica}}</td>
-                     <td>
+                     <td >
+                        <a rel="tooltip" title="Iniciar atendimento" class="btn btn-primary" data-original-title="Edit"
+                           href="{{route('especialista.iniciarAtendimento', $ent->id)}}">
+                           Iniciar atendimento
+                        </a>                    
+                        <a style="max-width:120px; text-align: left;padding:10px " rel="tooltip" title="Cancelar" class="btn btn-secondary" data-original-title="Edit"
+                           href="{{route('consulta.edit', $ent->id)}}">
+                          Prontuário
+                        </a>  
+                        <a style="max-width:80px; text-align: left;padding:10px " rel="tooltip" title="Cancelar" class="btn btn-warning" data-original-title="Edit"
+                           href="{{route('consulta.edit', $ent->id)}}">
+                           Cancelar
+                        </a>   
+                                            
+                    <!--
                         <a rel="tooltip" title="Editar" class="btn btn-link" data-original-title="Edit"
                            href="{{route('consulta.edit', $ent->id)}}">
                            <i class="tim-icons icon-pencil"></i>
                         </a>
-                     </td>
-                     <td>
+-->
                         <a href="{{route('consulta.delete', $ent->id)}}"
                            onclick="return confirm('Deseja relamente excluir?')" rel="tooltip" title="Excluir"
                            class="btn btn-link" data-original-title="Remove">
@@ -145,7 +147,7 @@
                      @if ($lista->lastPage() > 1)
                                  @php
                            $paginator = $lista;
-                           $paginator->url = route('consulta.list');
+                           $paginator->url = route('consulta.listconsultaporespecialista');
                         @endphp
                                  <ul class="pagination">
                                     <li class="{{ ($paginator->currentPage() == 1) ? ' disabled' : '' }}">
