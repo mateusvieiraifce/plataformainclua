@@ -1,5 +1,49 @@
 @extends('layouts.app', ['page' => __('minhas consultas'), 'exibirPesquisa' => false, 'pageSlug' => 'minhasconsultas', 'class' => 'consulta'])
 @section('content')
+
+ <!-- Modal canclear consulta-->
+ <div class="modal mais-baixo fade" id="meuModal" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <label>Favor inserir o motivo do cancelamento!</label>
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <!--aqui a rota de salvar as configuracoes -->
+                        <form method="post" action="#">
+                            @csrf
+                            <div class="row">
+
+                                <div class="col-md-12 px-8">
+                                    <div class="form-group">
+                                        <input type="text" style="color:black" class="form-control"
+                                               id="validade_orcamentoM" name="validade_orcamentoM" required
+                                        >
+                                    </div>
+                                </div>
+                                <input type="hidden" value="" id="consulta_idM" name="consulta_idM">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i
+                                        class="fa fa-reply"></i> Voltar
+                                </button>
+                                <button type="submit" class="btn btn-primary">Cancelar consulta</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 <section class="bg0 p-t-104 p-b-116">
 <div class="card">
    <div class="row">
@@ -29,11 +73,17 @@
                      <td>{{$ent->descricao_especialidade}}</td>
                      <td>{{$ent->nome_clinica}}</td>                  
                    
-                     <td>
-                        <a href="{{route('consulta.delete', $ent->id)}}"
-                           onclick="return confirm('Deseja relamente cancelar?')" rel="tooltip" title="Cancelar"
-                           class="btn btn-link" data-original-title="Remove">
-                           <i class="tim-icons icon-simple-remove"></i>
+                     <td>  
+                    
+                        <a href="#"
+                           target="_blank" rel="tooltip"
+                           title="Cancelar consulta"
+                           class="btn btn-link"
+                           data-original-title="Cancelar consulta" href="#"
+                           data-target="#meuModal"
+                           data-toggle="modal" data-whatever="@mdo"
+                           onclick="setModal({{$ent->id}})">
+                          <i class="tim-icons icon-simple-remove"></i>
                         </a>
                      </td>
                      </tr>
@@ -81,4 +131,12 @@
       </div>
    </div>
 </div>
+
+<script>
+
+function setModal(consulta_id) {
+   //  alert(consulta_id);
+    $("#consulta_idM").val(consulta_id);   
+}
+</script>
 @endsection
