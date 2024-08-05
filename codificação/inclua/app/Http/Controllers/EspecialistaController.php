@@ -3,6 +3,8 @@ namespace App\Http\Controllers;
 
 use App\Helper;
 use App\Models\Especialista;
+use App\Models\Consulta;
+use App\Models\Paciente;
 use App\Models\Especialidade;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -17,11 +19,11 @@ class EspecialistaController extends Controller
       if (isset($_GET['filtro'])) {
          $filter = $_GET['filtro'];
       }
-     
-      $lista = Especialista::join('especialidades', 'especialidades.id', '=', 'especialidade_id')->          
-      orderBy('especialistas.nome', 'asc')->
-      select('especialistas.id','especialistas.nome', 'especialistas.telefone','especialidades.descricao as especialidade')->
-      paginate(8);
+
+      $lista = Especialista::join('especialidades', 'especialidades.id', '=', 'especialidade_id')->
+         orderBy('especialistas.nome', 'asc')->
+         select('especialistas.id', 'especialistas.nome', 'especialistas.telefone', 'especialidades.descricao as especialidade')->
+         paginate(8);
 
       return view('especialista/list', ['lista' => $lista, 'filtro' => $filter, 'msg' => $msg]);
    }
@@ -40,7 +42,7 @@ class EspecialistaController extends Controller
          "nome" => "required|min:5",
          "celular" => "required|unique:users,celular,{$request->usuario_id}",
          "especialidade" => "required",
-         'consentimento'=>'required'
+         'consentimento' => 'required'
       ];
       $feedbacks = [
          "nome.required" => "O campo nome é obrigatório.",
@@ -58,7 +60,7 @@ class EspecialistaController extends Controller
          } else {
             $especialista = new Especialista();
          }
-         
+
          $especialista->nome = $request->nome;
          $especialista->especialidade_id = $request->especialidade;
          $especialista->usuario_id = $request->usuario_id;
@@ -129,7 +131,7 @@ class EspecialistaController extends Controller
 
          return back();
       }
-      
+
       return redirect()->route('home');
    }
 
@@ -161,8 +163,8 @@ class EspecialistaController extends Controller
          $usuario->nome_completo = $request->nome;
          $usuario->telefone = $request->telefone;
          $usuario->email = $request->email;
-         if(isset($request->password)){
-             $usuario->password = bcrypt($request->password);
+         if (isset($request->password)) {
+            $usuario->password = bcrypt($request->password);
          }
          $usuario->save();
       } else {
@@ -173,8 +175,8 @@ class EspecialistaController extends Controller
             'telefone' => $request->telefone,
             'tipo_user' => 'E' //E eh especialista
          ]);
-        
-       
+
+
 
          $entidade = Especialista::create([
             'nome' => $request->nome,
@@ -183,11 +185,11 @@ class EspecialistaController extends Controller
             'usuario_id' => $request->usuario_id
          ]);
 
-        
-          //salvando o id do usuario no especialista
-          $entidade->usuario_id = $usuario->id;
-          $entidade->save();
-        
+
+         //salvando o id do usuario no especialista
+         $entidade->usuario_id = $usuario->id;
+         $entidade->save();
+
       }
       $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
       return $this->list($msg);
@@ -209,17 +211,67 @@ class EspecialistaController extends Controller
    }
    function edit($id)
    {
-     
+
       $entidade = Especialista::find($id);
       $usuario = User::find($entidade->usuario_id);
-      return view('especialista/form', ['entidade' => $entidade, 'especialidades' => Especialidade::all(),'usuario' => $usuario]);
+      return view('especialista/form', ['entidade' => $entidade, 'especialidades' => Especialidade::all(), 'usuario' => $usuario]);
    }
 
-   function inicarAtendimento($consulta_id){
+   function inicarAtendimento($consulta_id)
+   {
+      if (!($this->consultaPertenceEspecialistaLogado($consulta_id))) {
+         return redirect()->route('consulta.listconsultaporespecialista');
+      }
+      $consulta = Consulta::find($consulta_id);
 
-      //aqui verificar se a consulta pertece realmente ao especialista
+      $paciente = Paciente::find($consulta->paciente_id);
+
+      $usuarioPaciente= User::find($paciente->usuario_id);
+
+      $primeiraConsulta = Consulta:: where('status','=','Finalizada')->
+      where('paciente_id','=',$consulta->paciente_id)->
+      where('especialista_id','=',$consulta->especialista_id)->
+      orderBy('horario_iniciado', 'asc')->first();
+
+      $qtdConsultasRealizadas = Consulta:: where('status','=','Finalizada')->
+      where('paciente_id','=',$consulta->paciente_id)->
+      where('especialista_id','=',$consulta->especialista_id)->
+      orderBy('horario_iniciado', 'asc')->count();
+
+
+      return view('userEspecialista/iniciaratendimento', ['consulta' => $consulta,
+      'paciente' => $paciente,'usuarioPaciente' => $usuarioPaciente,
+      'primeiraConsulta' => $primeiraConsulta,
+      'qtdConsultasRealizadas' => $qtdConsultasRealizadas
+   ]);
+
+   }
+
+
+   function finalizarAtendimento($consulta_id)
+   {
+      $ent = Consulta::find($consulta_id);
+      $ent->status = "Finalizada";
+      //  $ent->horario_iniciado = $request->horario_iniciado;
+      //  $ent->horario_finalizado = $request->horario_finalizado;
+      $ent->save();
+      $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
+
+      $consultaController = new ConsultaController();
+      return $consultaController->listconsultaporespecialista($msg);
+   }
+
+   function consultaPertenceEspecialistaLogado($consulta_id)
+   {
+      //aqui verifica se a consulta pertece realmente ao especialista
       //pois o usuario pode alterar o id da consulta na url
-      return view('userEspecialista/iniciaratendimento');
-
+      $consulta = Consulta::find($consulta_id);
+      $especialista = Especialista::where('usuario_id', '=', Auth::user()->id)->first();
+      if ($consulta->especialista_id != $especialista->id) {
+         return false;
+      } else {
+         return true;
+      }
    }
+
 }

@@ -112,7 +112,6 @@
 
 
 
-
 <div class="card">
    <div class="row">
       <div class="col-lg-12 col-md-12">
@@ -125,14 +124,19 @@
                      </div>
                   </div>
                   <div class="col-6 col-lg-3">
-                     <h6 class="title d-inline">Paciente: nome fulanto de tal</h6>
+                     <h6 class="title d-inline">Paciente: {{$paciente->nome}}</h6>
                      <br>
-                     <h6 class="title d-inline">Idade: 30 anos</h6>
+                     <h6   id="idadePaciente" class="title d-inline" >{{date( 'd/m/Y' , strtotime($usuarioPaciente->data_nascimento))}}</h6>
+                   
                   </div>
                   <div class="col-6 col-lg-4">
-                     <h6 class="title d-inline">Primeira consulta em DATA</h6>
+                     @if(isset($primeiraConsulta))
+                     <h6 class="title d-inline">Primeira consulta em  {{date( 'd/m/Y H:i' , strtotime($primeiraConsulta->horario_agendado))}}</h6>
+                     @else
+                     <h6 class="title d-inline">Primeira consulta.</h6>
+                     @endif
                      <br>
-                     <h6 class="title d-inline">Total de consultas realizadas: qtd</h6>
+                     <h6 class="title d-inline">Total de consultas realizadas: {{$qtdConsultasRealizadas}}</h6>
                   </div>
                   <div class="col-6 col-lg-2">
                      <div id="chronometer">00:00:00</div>
@@ -195,12 +199,18 @@
              
 
             </div>
-            <div class="col-lg-2">
-            <a rel="tooltip" title="Finalizar" class="btn btn-primary" style="margin-bottom: 0px;" data-original-title="Edit" 
-            href="{{route('especialista.iniciarAtendimento',1)}}">
-   Finalizar
-   <!-- dados completos com todas as consultas, exames e prescrições -->
-</a> </div>
+            <div class="row">          
+               <div class="col-6" style="margin-left: 10px;">             
+
+               <a href="{{route('consulta.listconsultaporespecialista')}}" class="btn btn-primary"><i
+                  class="fa fa-reply"></i>
+                Voltar</a>
+                <a rel="tooltip" title="Finalizar" class="btn btn-success"  data-original-title="Edit" 
+                     href="{{route('especialista.finalizarAtendimento',$consulta->id)}}">
+              <i class="fa fa-save"></i> Finalizar
+               </a>  
+               </div>        
+               </div>
          </div>
       
       </div>
@@ -232,4 +242,26 @@
 
    startTimer();
 </script>
+
+
+
+<script>
+        // Função para calcular a idade
+        function calcularIdade(dataNascimento) { 
+            const hoje = new Date();
+            const nascimento = new Date(dataNascimento);
+            let idade = hoje.getFullYear() - nascimento.getFullYear();
+            const mes = hoje.getMonth() - nascimento.getMonth();
+            if (mes < 0 || (mes === 0 && hoje.getDate() < nascimento.getDate())) {
+                idade--;
+            }
+            return idade;
+        }     
+        // Data de nascimento no formato YYYY-MM-DD
+        var dataNascimento = '{{$usuarioPaciente->data_nascimento}}';
+        var idade = calcularIdade(dataNascimento);      
+        // Exibir a idade no HTML
+        document.getElementById('idadePaciente').textContent  = "IDADE: "+ idade+" anos";
+    </script>
+
 @endsection

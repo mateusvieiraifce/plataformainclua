@@ -221,6 +221,13 @@
                             </a>
                         </li>
 
+                        <li @if ($pageSlug=='exames' ) class="active " @endif>
+                            <a href="{{route('exame.list')}}">
+                                <i class="tim-icons  icon-components"></i>
+                                <p>{{ __('Exames') }}</p>
+                            </a>
+                        </li>
+
 
                     </ul>
                 </div>

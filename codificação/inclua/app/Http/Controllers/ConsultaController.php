@@ -178,7 +178,8 @@ class ConsultaController extends Controller
       if (isset($_GET['filtro'])) {
          $filter = $_GET['filtro'];
       }
-      
+
+     
       //todoas as clinicas que o especialista eh vinculado
       $clinicas =  Especialistaclinica::
       join('clinicas', 'clinicas.id','=','especialistaclinicas.clinica_id')->
@@ -192,7 +193,7 @@ class ConsultaController extends Controller
          $clinicaselecionada_id = $clinicas[0]->id;
       }
       $statusConsulta = "Aguardando atendimento";
-
+       
       $lista = Consulta::
       join('clinicas', 'clinicas.id','=','consultas.clinica_id')->
       join('pacientes', 'pacientes.id','=','consultas.paciente_id')->
@@ -200,11 +201,10 @@ class ConsultaController extends Controller
       where('status', '=', 'Aguardando atendimento')->
       select('consultas.id','status','horario_agendado','clinicas.nome as nome_clinica','pacientes.nome as nome_paciente')->
       orderBy('horario_agendado', 'asc')->paginate(8);
-     
+      
       return view('userEspecialista/listconsultaporespecialista', ['lista' => $lista, 
       'clinicas' =>$clinicas, 'clinicaselecionada_id' => $clinicaselecionada_id,  'status'=> $statusConsulta ,'filtro' => $filter,
        'especialista' => $especialista, 'msg' => $msg]);
    }
-
 
 } ?>
