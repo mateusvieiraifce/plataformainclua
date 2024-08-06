@@ -147,8 +147,17 @@ class PacienteController extends Controller
         if (isset($_GET['filtro'])) {
             $filter = $_GET['filtro'];
         }
-        $lista = Clinica::join('especialidadeclinicas', 'especialidadeclinicas.id', '=', 'clinica_id')
-            ->where('especialidade_id', $especialidade_id)->orderBy('nome', 'asc')->select('clinicas.id', 'nome')->paginate(8);
+        $lista =  Especialidadeclinica::join('clinicas', 'clinicas.id', '=', 'especialidadeclinicas.clinica_id')
+        ->where('especialidade_id', $especialidade_id)
+        ->orderBy('nome', 'asc')
+        ->select('clinicas.id', 'nome')->paginate(8);
+        
+     /*   Clinica::join('especialidadeclinicas', 'especialidadeclinicas.id', '=', 'clinica_id')
+            ->where('especialidade_id', $especialidade_id)
+            ->orderBy('nome', 'asc')
+            ->select('clinicas.id', 'nome')->paginate(8);*/
+
+       // dd($lista);
         return view('userPaciente/marcarConsultaViaEspecialidadePasso2', ['lista' => $lista, 'filtro' => $filter, 'especialidade_id' => $especialidade_id]);
     }
 
@@ -190,7 +199,7 @@ class PacienteController extends Controller
         }
         $lista = Clinica::where('ativo', '1')->
         orderBy('nome', 'asc')
-            ->select('clinicas.id', 'nome', 'clinicas.telefone')->paginate(8);
+            ->select('clinicas.id', 'nome')->paginate(8);
         return view('userPaciente/marcarConsultaViaClinicaPasso1', ['lista' => $lista, 'filtro' => $filter]);
     }
 
@@ -203,7 +212,7 @@ class PacienteController extends Controller
         }
         $lista = Clinica::where('nome', 'like', "%" . $filtro . "%")
             ->orderBy('nome', 'asc')
-            ->select('clinicas.id', 'nome', 'clinicas.telefone')->paginate(8);
+            ->select('clinicas.id', 'nome')->paginate(8);
         $msg = null;
         if ($lista->isEmpty()) {
             $msg = ['valor' => trans("Não foi encontrado nenhuma clínica com o nome digitado!"), 'tipo' => 'primary'];

@@ -133,7 +133,6 @@
                <table class="table">
                   <thead>
                      <th> Clínica </th>
-                     <th> Telefone </th>
                      <th> </th>
                   </thead>
                   <tbody>
@@ -141,7 +140,6 @@
                      @foreach($lista as $ent)
                      <tr>
                         <td>{{$ent->nome}}</td>
-                        <td>{{$ent->telefone}}</td>
                         <td>
                            <a style="max-height: 35px;" href="{{route('paciente.marcarConsultaViaClinicaPasso2',$ent->id)}}" class="btn btn-success">Próximo <i class="tim-icons icon-double-right"> </i> </a>
                         </td>
