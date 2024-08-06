@@ -1,7 +1,7 @@
 @extends('layouts.app', ['page' => __('minhas consultas'), 'exibirPesquisa' => false, 'pageSlug' => 'minhasconsultas', 'class' => 'consulta'])
 @section('content')
 
- <!-- Modal canclear consulta-->
+ <!-- Modal cancelar consulta-->
  <div class="modal mais-baixo fade" id="meuModal" tabindex="-1" role="dialog"
          aria-labelledby="exampleModalLabel"
          aria-hidden="true">
@@ -18,15 +18,13 @@
                 <div class="modal-body">
                     <div class="container">
                         <!--aqui a rota de salvar as configuracoes -->
-                        <form method="post" action="#">
+                        <form method="post" action="{{route('consulta.cancelarviapaciente')}}">
                             @csrf
                             <div class="row">
 
                                 <div class="col-md-12 px-8">
-                                    <div class="form-group">
-                                        <input type="text" style="color:black" class="form-control"
-                                               id="validade_orcamentoM" name="validade_orcamentoM" required
-                                        >
+                                    <div class="form-group">                                      
+                                        <textarea id="motivocancelamento" name="motivocancelamento" rows="5" cols="50" maxlength="200" placeholder="Digite o motivo do cancelamento aqui..."></textarea>
                                     </div>
                                 </div>
                                 <input type="hidden" value="" id="consulta_idM" name="consulta_idM">
