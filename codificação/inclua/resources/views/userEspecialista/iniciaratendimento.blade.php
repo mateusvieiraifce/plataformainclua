@@ -53,7 +53,7 @@
       background-color: #fff;
       border-top: 2px solid #007bff;
       font-weight: bold;
-      font-size: 18px;      
+      font-size: 18px;
    }
 
    .tab-content {
@@ -67,21 +67,22 @@
    }
 
    .tab-pane.active {
-      display: block;     
+      display: block;
    }
+
    @media (max-width: 768px) {
-    .tabs {
-        flex-direction: column;
-    }
+      .tabs {
+         flex-direction: column;
+      }
 
-    .tab-button {
-        border-bottom: 1px solid #ddd;
-    }
+      .tab-button {
+         border-bottom: 1px solid #ddd;
+      }
 
-    .tab-button:last-child {
-        border-bottom: none;
-    }
-}
+      .tab-button:last-child {
+         border-bottom: none;
+      }
+   }
 </style>
 <script>
    function openTab(event, tabId) {
@@ -120,21 +121,24 @@
                <div class="row">
                   <div class="col-6 col-lg-2">
                      <div class="photo">
-                        <img src="/assets/img/anime3.png" alt="{{ __('Profile Photo') }}" style="height: 100px; width: 100px;">
+                        <img src="/assets/img/anime3.png" alt="{{ __('Profile Photo') }}"
+                           style="height: 100px; width: 100px;">
                      </div>
                   </div>
                   <div class="col-6 col-lg-3">
                      <h6 class="title d-inline">Paciente: {{$paciente->nome}}</h6>
                      <br>
-                     <h6   id="idadePaciente" class="title d-inline" >{{date( 'd/m/Y' , strtotime($usuarioPaciente->data_nascimento))}}</h6>
-                   
+                     <h6 id="idadePaciente" class="title d-inline">
+                        {{date('d/m/Y', strtotime($usuarioPaciente->data_nascimento))}}</h6>
+
                   </div>
                   <div class="col-6 col-lg-4">
                      @if(isset($primeiraConsulta))
-                     <h6 class="title d-inline">Primeira consulta em  {{date( 'd/m/Y H:i' , strtotime($primeiraConsulta->horario_agendado))}}</h6>
-                     @else
-                     <h6 class="title d-inline">Primeira consulta.</h6>
-                     @endif
+                   <h6 class="title d-inline">Primeira consulta em
+                     {{date('d/m/Y H:i', strtotime($primeiraConsulta->horario_agendado))}}</h6>
+                @else
+                <h6 class="title d-inline">Primeira consulta.</h6>
+             @endif
                      <br>
                      <h6 class="title d-inline">Total de consultas realizadas: {{$qtdConsultasRealizadas}}</h6>
                   </div>
@@ -150,12 +154,16 @@
                <div class="row">
                   <div class="tab-container">
                      <div class="tabs">
-                        <button class="tab-button active btn-primary" onclick="openTab(event, 'anamnese')">Anamnese</button>
-                        <button class="tab-button btn-primary" onclick="openTab(event, 'prescricoes')">Prescrições</button>
-                        <button class="tab-button btn-primary" onclick="openTab(event, 'exames')"> Pedidos de exames</button>
+                        <button class="tab-button active btn-primary"
+                           onclick="openTab(event, 'anamnese')">Anamnese</button>
+                        <button class="tab-button btn-primary"
+                           onclick="openTab(event, 'prescricoes')">Prescrições</button>
+                        <button class="tab-button btn-primary" onclick="openTab(event, 'exames')"> Pedidos de
+                           exames</button>
                         <button class="tab-button btn-primary" onclick="openTab(event, 'atestados')">Atestados</button>
-                        <button class="tab-button btn-primary" onclick="openTab(event, 'prontuario')">  Prontuário completo</button>
-                      
+                        <button class="tab-button btn-primary" onclick="openTab(event, 'prontuario')"> Prontuário
+                           completo</button>
+
                      </div>
                      <div class="tab-content">
                         <div id="anamnese" class="tab-pane active">
@@ -171,97 +179,129 @@
                            <p>Conteúdo da aba prescriçoes.</p>
                         </div>
                         <div id="exames" class="tab-pane">
-                           <p>Conteúdo da aba exames.</p>
-                        </div>
-                        <div id="atestados" class="tab-pane">
-                           <p>Conteúdo da aba atestados.</p>
-                        </div>
-                        <div id="prontuario" class="tab-pane">
-                           <p>Conteúdo da aba prontuário.</p>
+
+                           <div class="row">
+                              <div class="col-2">
+                                 <a rel="tooltip" title="Finalizar" class="btn btn-success" data-original-title="Edit"
+                                    href="{{route('especialista.finalizarAtendimento', $consulta->id)}}">
+                                    <i class="tim-icons  icon-components"></i> Pedir exame
+                                 </a>
+                              </div>
+                              <div class="col-8">
+                                 <div class="table-responsive">
+                                    <table class="table">
+                                       <thead>
+                                          <th> Status </th>
+                                          <th> Horário agendado </th>
+                                          <th> Clínica </th>
+                                          <th> </th>
+                                       </thead>
+                                       <tbody>
+                                       <td> Status </td>
+                                          <td> Horário agendado </td>
+                                          <td> Clínica </td>
+                                          <td> </td>
+                                      </tbody>
+                                    </table>
+                                    <div>
+
+                                    </div>
+                                 </div>
+                              </div>
+
+
+
+
+                           </div>
+                           <div id="atestados" class="tab-pane">
+                              <p>Conteúdo da aba atestados.</p>
+                           </div>
+                           <div id="prontuario" class="tab-pane">
+                              <p>Conteúdo da aba prontuário.</p>
+                           </div>
                         </div>
                      </div>
                   </div>
+
+
+                  <div class="row">
+                     <div class="col-lg-2">
+
+                     </div>
+                     <div class="col-lg-3">
+
+                     </div>
+                     <div class="col-4">
+
+                     </div>
+
+                  </div>
+
+
                </div>
-
-
                <div class="row">
-                  <div class="col-lg-2">
+                  <div class="col-6" style="margin-left: 10px;">
 
+                     <a href="{{route('consulta.listconsultaporespecialista')}}" class="btn btn-primary"><i
+                           class="fa fa-reply"></i>
+                        Voltar</a>
+                     <a rel="tooltip" title="Finalizar" class="btn btn-success" data-original-title="Edit"
+                        href="{{route('especialista.finalizarAtendimento', $consulta->id)}}">
+                        <i class="fa fa-save"></i> Finalizar
+                     </a>
                   </div>
-                  <div class="col-lg-3">
-
-                  </div>
-                  <div class="col-4">
-
-                  </div>
-                
                </div>
-             
-
             </div>
-            <div class="row">          
-               <div class="col-6" style="margin-left: 10px;">             
 
-               <a href="{{route('consulta.listconsultaporespecialista')}}" class="btn btn-primary"><i
-                  class="fa fa-reply"></i>
-                Voltar</a>
-                <a rel="tooltip" title="Finalizar" class="btn btn-success"  data-original-title="Edit" 
-                     href="{{route('especialista.finalizarAtendimento',$consulta->id)}}">
-              <i class="fa fa-save"></i> Finalizar
-               </a>  
-               </div>        
-               </div>
          </div>
-      
       </div>
    </div>
-</div>
 
-<script>
-   const chronometer = document.getElementById('chronometer');
-   let startTime = Date.now();
-   let elapsedTime = 0;
-   let timerInterval;
+   <script>
+      const chronometer = document.getElementById('chronometer');
+      let startTime = Date.now();
+      let elapsedTime = 0;
+      let timerInterval;
 
-   function updateChronometer() {
-      elapsedTime = Date.now() - startTime;
-      const hours = Math.floor(elapsedTime / (1000 * 60 * 60));
-      const minutes = Math.floor((elapsedTime % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((elapsedTime % (1000 * 60)) / 1000);
+      function updateChronometer() {
+         elapsedTime = Date.now() - startTime;
+         const hours = Math.floor(elapsedTime / (1000 * 60 * 60));
+         const minutes = Math.floor((elapsedTime % (1000 * 60 * 60)) / (1000 * 60));
+         const seconds = Math.floor((elapsedTime % (1000 * 60)) / 1000);
 
-      const formattedHours = String(hours).padStart(2, '0');
-      const formattedMinutes = String(minutes).padStart(2, '0');
-      const formattedSeconds = String(seconds).padStart(2, '0');
+         const formattedHours = String(hours).padStart(2, '0');
+         const formattedMinutes = String(minutes).padStart(2, '0');
+         const formattedSeconds = String(seconds).padStart(2, '0');
 
-      chronometer.textContent = `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
-   }
+         chronometer.textContent = `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+      }
 
-   function startTimer() {
-      timerInterval = setInterval(updateChronometer, 1000);
-   }
+      function startTimer() {
+         timerInterval = setInterval(updateChronometer, 1000);
+      }
 
-   startTimer();
-</script>
-
+      startTimer();
+   </script>
 
 
-<script>
-        // Função para calcular a idade
-        function calcularIdade(dataNascimento) { 
-            const hoje = new Date();
-            const nascimento = new Date(dataNascimento);
-            let idade = hoje.getFullYear() - nascimento.getFullYear();
-            const mes = hoje.getMonth() - nascimento.getMonth();
-            if (mes < 0 || (mes === 0 && hoje.getDate() < nascimento.getDate())) {
-                idade--;
-            }
-            return idade;
-        }     
-        // Data de nascimento no formato YYYY-MM-DD
-        var dataNascimento = '{{$usuarioPaciente->data_nascimento}}';
-        var idade = calcularIdade(dataNascimento);      
-        // Exibir a idade no HTML
-        document.getElementById('idadePaciente').textContent  = "IDADE: "+ idade+" anos";
-    </script>
 
-@endsection
+   <script>
+      // Função para calcular a idade
+      function calcularIdade(dataNascimento) {
+         const hoje = new Date();
+         const nascimento = new Date(dataNascimento);
+         let idade = hoje.getFullYear() - nascimento.getFullYear();
+         const mes = hoje.getMonth() - nascimento.getMonth();
+         if (mes < 0 || (mes === 0 && hoje.getDate() < nascimento.getDate())) {
+            idade--;
+         }
+         return idade;
+      }
+      // Data de nascimento no formato YYYY-MM-DD
+      var dataNascimento = '{{$usuarioPaciente->data_nascimento}}';
+      var idade = calcularIdade(dataNascimento);
+      // Exibir a idade no HTML
+      document.getElementById('idadePaciente').textContent = "IDADE: " + idade + " anos";
+   </script>
+
+   @endsection

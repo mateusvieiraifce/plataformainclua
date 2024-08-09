@@ -1,5 +1,20 @@
 @extends('layouts.app', ['page' => __('Histórico de consultas'), 'exibirPesquisa' => false, 'pageSlug' => 'historicoconsultas', 'class' => 'consulta'])
 @section('content')
+<style>
+     .star-rating {
+            display: flex;
+            gap: 5px;
+        }
+
+        .star {
+            font-size: 40px;
+            cursor: pointer;
+        }
+
+        .star.selected {
+            color: gold;
+        }
+</style>
 
  <!-- Modal avaliar consulta-->
  <div class="modal mais-baixo fade" id="meuModal" tabindex="-1" role="dialog"
@@ -9,7 +24,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">
-                        <label>O que você deseja avaliar?</label>
+                        <label style="font-size:20px">Como foi a sua consulta?</label>
                     </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
                         <span aria-hidden="true">&times;</span>
@@ -21,13 +36,14 @@
                         <form method="post" action="{{route('consulta.cancelarviapaciente')}}">
                             @csrf
                             <div class="row">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i
-                                        class="fa fa-reply"></i> Especilista
-                                </button>
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i
-                                        class="fa fa-reply"></i> Clínica
-                                </button>                             
- <!-- #region -->                                <input type="hidden" value="" id="consulta_idM" name="consulta_idM">
+                            <div class="star-rating" style="margin-left:50px">
+                              <span class="star" style="margin:15px" id="s1" data-value="1">&#9733;</span>
+                              <span class="star" style="margin:15px" id="s2" data-value="2">&#9733;</span>
+                              <span class="star" style="margin:15px" id="s3" data-value="3">&#9733;</span>
+                              <span class="star" style="margin:15px" id="s4" data-value="4">&#9733;</span>
+                              <span class="star" style="margin:15px" id="s5" data-value="5">&#9733;</span>
+                           </div>
+                           <input type="hidden" value="" id="consulta_idM" name="consulta_idM">
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal"><i
@@ -144,5 +160,26 @@ function setModal(consulta_id) {
     // alert(consulta_id);
     $("#consulta_idM").val(consulta_id);   
 }
+</script>
+
+<script>
+ // Gerenciar a seleção das estrelas - para modal
+ document.querySelectorAll('.star').forEach(function (star) {
+            star.addEventListener('click', function () {
+                document.querySelectorAll('.star').forEach(function (s) {
+                      s.classList.remove('selected');
+                });
+                var qtd = star.getAttribute('data-value');
+                for (var i = 0; i <= qtd; i++) {
+                    var id = 's' + i;
+                    var estrela = document.getElementById(id);
+                    if (estrela) {
+                       estrela.classList.add('selected');
+                    }
+                }
+            });
+        });
+
+   
 </script>
 @endsection
