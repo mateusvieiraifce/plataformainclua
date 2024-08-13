@@ -166,7 +166,7 @@ class ConsultaController extends Controller
          
       }
        
-     
+      $qtdConsutasCriadas--;
       $msg = ['valor' => trans("Operação realizada com sucesso! Foram criadas ". $qtdConsutasCriadas." consultas."), 'tipo' => 'success'];
       return $this->list($msg);
    }

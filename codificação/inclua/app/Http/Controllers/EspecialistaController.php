@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Helper;
 use App\Models\Especialista;
+use App\Models\Especialistaclinica;
 use App\Models\Consulta;
 use App\Models\Paciente;
 use App\Models\Especialidade;
@@ -10,6 +11,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class EspecialistaController extends Controller
 {
@@ -22,7 +24,7 @@ class EspecialistaController extends Controller
 
       $lista = Especialista::join('especialidades', 'especialidades.id', '=', 'especialidade_id')->
          orderBy('especialistas.nome', 'asc')->
-         select('especialistas.id', 'especialistas.nome', 'especialistas.telefone', 'especialidades.descricao as especialidade')->
+         select('especialistas.id', 'especialistas.nome', 'especialidades.descricao as especialidade')->
          paginate(8);
 
       return view('especialista/list', ['lista' => $lista, 'filtro' => $filter, 'msg' => $msg]);
@@ -226,24 +228,26 @@ class EspecialistaController extends Controller
 
       $paciente = Paciente::find($consulta->paciente_id);
 
-      $usuarioPaciente= User::find($paciente->usuario_id);
+      $usuarioPaciente = User::find($paciente->usuario_id);
 
-      $primeiraConsulta = Consulta:: where('status','=','Finalizada')->
-      where('paciente_id','=',$consulta->paciente_id)->
-      where('especialista_id','=',$consulta->especialista_id)->
-      orderBy('horario_iniciado', 'asc')->first();
+      $primeiraConsulta = Consulta::where('status', '=', 'Finalizada')->
+         where('paciente_id', '=', $consulta->paciente_id)->
+         where('especialista_id', '=', $consulta->especialista_id)->
+         orderBy('horario_iniciado', 'asc')->first();
 
-      $qtdConsultasRealizadas = Consulta:: where('status','=','Finalizada')->
-      where('paciente_id','=',$consulta->paciente_id)->
-      where('especialista_id','=',$consulta->especialista_id)->
-      orderBy('horario_iniciado', 'asc')->count();
+      $qtdConsultasRealizadas = Consulta::where('status', '=', 'Finalizada')->
+         where('paciente_id', '=', $consulta->paciente_id)->
+         where('especialista_id', '=', $consulta->especialista_id)->
+         orderBy('horario_iniciado', 'asc')->count();
 
 
-      return view('userEspecialista/iniciaratendimento', ['consulta' => $consulta,
-      'paciente' => $paciente,'usuarioPaciente' => $usuarioPaciente,
-      'primeiraConsulta' => $primeiraConsulta,
-      'qtdConsultasRealizadas' => $qtdConsultasRealizadas
-   ]);
+      return view('userEspecialista/iniciaratendimento', [
+         'consulta' => $consulta,
+         'paciente' => $paciente,
+         'usuarioPaciente' => $usuarioPaciente,
+         'primeiraConsulta' => $primeiraConsulta,
+         'qtdConsultasRealizadas' => $qtdConsultasRealizadas
+      ]);
 
    }
 
@@ -273,5 +277,36 @@ class EspecialistaController extends Controller
          return true;
       }
    }
+
+   function listaPacientes($msg = null)
+   {
+      $especialista = Especialista::where('usuario_id', '=', Auth::user()->id)->first();
+      $filter = "";
+      if (isset($_GET['filtro'])) {
+         $filter = $_GET['filtro'];
+      }
+
+
+      $statusConsulta = "Finalizada";
+
+      // Obter pacientes e o número de consultas que cada um teve
+      $lista = Paciente::select('pacientes.id', 'pacientes.nome as nome_paciente', DB::raw('COUNT(consultas.id) as total_consultas'))
+         ->leftJoin('consultas', 'pacientes.id', '=', 'consultas.paciente_id')
+         ->where('status', '=', $statusConsulta)
+         ->where('especialista_id', '=', $especialista->id)
+         ->groupBy('pacientes.id', 'pacientes.nome')
+         ->paginate(8);
+
+
+
+      return view('userEspecialista/listpacienteporespecialista', [
+         'lista' => $lista,
+         'filtro' => $filter,
+         'especialista' => $especialista,
+         'msg' => $msg
+      ]);
+
+   }
+
 
 }

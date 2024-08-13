@@ -336,8 +336,8 @@
 
 
 
-            <li @if ($pageSlug=='users' ) class="active " @endif>
-                <a href="#">
+            <li @if ($pageSlug=='pacientes' ) class="active " @endif>
+                <a href="{{route('especialista.listaPacientes')}}">
                     <i class="tim-icons icon-single-02"></i>
                     <p>{{ __('Pacientes') }}</p>
                 </a>

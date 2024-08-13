@@ -267,6 +267,7 @@ Route::middleware('auth')->group(function () {
     #ESPECIALISTA
     Route::get("/especialista/atendimento/{consulta_id}", [\App\Http\Controllers\EspecialistaController::class, 'inicarAtendimento'])->name('especialista.iniciarAtendimento')->middleware('auth');
     Route::get("/especialista/atendimento/finalizar/{consulta_id}", [\App\Http\Controllers\EspecialistaController::class, 'finalizarAtendimento'])->name('especialista.finalizarAtendimento')->middleware('auth');
+    Route::get("/especialista/pacientes/", [\App\Http\Controllers\EspecialistaController::class, 'listaPacientes'])->name('especialista.listaPacientes')->middleware('auth');
 
 
     

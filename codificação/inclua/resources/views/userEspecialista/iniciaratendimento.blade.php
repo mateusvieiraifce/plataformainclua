@@ -239,7 +239,9 @@
 
 
                </div>
-               <div class="row">
+             
+            </div>
+            <div class="row">
                   <div class="col-6" style="margin-left: 10px;">
 
                      <a href="{{route('consulta.listconsultaporespecialista')}}" class="btn btn-primary"><i
@@ -251,8 +253,6 @@
                      </a>
                   </div>
                </div>
-            </div>
-
          </div>
       </div>
    </div>
