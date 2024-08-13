@@ -27,6 +27,7 @@ class populacaoTesteSeeder extends Seeder
             'updated_at'=>now(),
             'telefone'=>"88888888",
             'tipo_user' => 'R',
+            'etapa_cadastro' => 'F',
         ]);
 
         //usuario paciente
@@ -38,6 +39,7 @@ class populacaoTesteSeeder extends Seeder
             'updated_at'=>now(),
             'telefone'=>"88888888",
             'tipo_user' => 'P',
+            'etapa_cadastro' => 'F',
         ]);
         DB::table('pacientes')->insert([
             'nome'=>"Paciente 01",
@@ -54,6 +56,7 @@ class populacaoTesteSeeder extends Seeder
             'updated_at'=>now(),
             'telefone'=>"88888888",
             'tipo_user' => 'E',
+            'etapa_cadastro' => 'F',
         ]);
         $especialidade = Especialidade::create([ 
             'descricao'=>"Neuro 01",
@@ -76,6 +79,7 @@ class populacaoTesteSeeder extends Seeder
             'updated_at'=>now(),
             'telefone'=>"88888888",
             'tipo_user' => 'C',
+            'etapa_cadastro' => 'F',
         ]);
         DB::table('clinicas')->insert([
             'nome'=>"Clinica 01",
@@ -92,6 +96,7 @@ class populacaoTesteSeeder extends Seeder
             'updated_at'=>now(),
             'telefone'=>"88888888",
             'tipo_user' => 'C',
+            'etapa_cadastro' => 'F',
         ]);
         DB::table('clinicas')->insert([
             'nome'=>"Clinica 02",
