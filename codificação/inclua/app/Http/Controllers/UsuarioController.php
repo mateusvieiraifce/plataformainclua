@@ -341,7 +341,11 @@ class UsuarioController extends Controller
         } else if ($user->etapa_cadastro == 'F') {
             session()->flash('msg', ['valor' => trans("Seu cadastro foi finalizado com sucesso!"), 'tipo' => 'success']);
             auth()->login($user, true);
-
+            if($user->tipo_user ==='P'){
+                //home usuario Paciente
+                return redirect()->route('paciente.home');
+             }
+             
             return redirect()->route('home');
         } else {
             session()->flash('msg', ['valor' => trans("Realize o seu cadastro"), 'tipo' => 'danger']);

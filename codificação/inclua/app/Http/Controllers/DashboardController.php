@@ -12,8 +12,8 @@ class DashboardController extends Controller
     public function home()
     {
         $usuario = Auth::user();
-        $compras = Vendas::where('comprador_id', $usuario->id)->orderBy('created_at', 'desc')->get();
+      //  $compras = Vendas::where('comprador_id', $usuario->id)->orderBy('created_at', 'desc')->get();
 
-        return view('dashboard', ['compras'=>$compras]);
+        return view('dashboard');
     }
 }

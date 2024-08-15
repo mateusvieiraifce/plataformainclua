@@ -13,8 +13,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call(start_populate::class);
-        $this->call(TamanhoSeeder::class);
         $this->call(userSeeder::class);
         $this->call(populacaoTesteSeeder::class);
         

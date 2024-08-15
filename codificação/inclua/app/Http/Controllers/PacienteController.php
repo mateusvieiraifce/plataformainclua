@@ -132,7 +132,7 @@ class PacienteController extends Controller
             'clinicas.nome as nome_clinica',
             'especialidades.descricao as descricao_especialidade',
             'status'
-        )->orderBy('horario_agendado', 'asc')->paginate(8);
+        )->orderBy('horario_agendado', 'desc')->paginate(8);
         return view('userPaciente/historicoconsultas', ['lista' => $lista, 'msg' => $msg, 'filtro' => $filtro]);
     }
 
@@ -257,6 +257,7 @@ class PacienteController extends Controller
         $statusConsulta = "Disponível";
 
         $lista = Consulta::where('especialista_id', '=', $especialista_id)->where('clinica_id', '=', $clinica_id)->where('status', '=', $statusConsulta)->select('consultas.id', 'horario_agendado')->orderBy('horario_agendado', 'asc')->paginate(8);
+      // dd($especialista,$lista);
         return view('userPaciente/marcarConsultaViaClinicaPasso4', ['lista' => $lista, 'especialista' => $especialista, 'clinica' => $clinica, 'especialidade' => $especialidade, 'paciente' => $paciente]);
     }
 
