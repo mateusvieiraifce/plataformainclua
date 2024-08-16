@@ -346,7 +346,11 @@ class UsuarioController extends Controller
         } else if ($user->tipo_user == 'R') {
             session()->flash('msg', ['valor' => trans("Bem vindo a Plataforma Inclua!"), 'tipo' => 'success']);
             auth()->login($user, true);
-
+            if($user->tipo_user ==='P'){
+                //home usuario Paciente
+                return redirect()->route('paciente.home');
+             }
+             
             return redirect()->route('home');
         } else {
             session()->flash('msg', ['valor' => trans("Realize o seu cadastro"), 'tipo' => 'danger']);

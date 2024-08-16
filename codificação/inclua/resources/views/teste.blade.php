@@ -1,206 +1,147 @@
-@extends('layouts.app', ['page' => __('Marcar Consulta'),'exibirPesquisa' => false, 'pageSlug' => 'marcarconsulta', 'class' => 'especialidade'])
+@extends('layouts.app', ['page' => __('Marcar Consulta'), 'exibirPesquisa' => false, 'pageSlug' => 'marcarconsulta', 'class' => 'especialidade'])
 @section('title', 'Marcar Consulta')
 @section('content')
+<!DOCTYPE html>
+<html lang="pt-BR">
 
-<style>
-    .calendar {
-        max-width: 100%;
-        margin: 0 auto;
-        padding: 10px;
-    }
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avaliação de Consulta</title>
+    <style>
+        /* Estilos do Modal */
+        .modal {
+            display: none;
+            /* Esconde o modal por padrão */
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0, 0, 0);
+            background-color: rgba(0, 0, 0, 0.4);
+        }
 
-    .weekdays {
-        display: flex;
-        justify-content: space-around;
-        margin-bottom: 5px;
-    }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+        }
 
-    .weekdays span {
-        width: 100px;
-        text-align: center;
-    }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
 
-    .days {
-        display: flex;
-        flex-wrap: wrap;
-    }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
 
-    .day {
-        width: 80px;
-        height: 80px;
-        border: 1px solid #ccc;
-        text-align: center;
-        line-height: 1.5;
-        margin-right: 10px;
-        margin-bottom: 10px;
-        padding-top: 20px;
-        cursor: pointer;
-        border-radius: 10px;
-        color: white;
-    }
+        .star-rating {
+            display: flex;
+            gap: 5px;
+        }
 
-    .navigation {
-        margin-top: 5px;
-        padding: 5px;
-        text-align: center;
-        border: 1px solid #ccc;
-    }
+        .star {
+            font-size: 40px;
+            cursor: pointer;
+        }
 
-    .navigation button {
-        margin: 0 10px;
-        padding: 10px 20px;
-        font-size: 16px;
-        cursor: pointer;
-    }
-</style>
-<div class="row">
-    <div class="col-lg-12 col-md-12">
-        <div class="card card-tasks">
-            <div class="card-header">
-                <div class="navigation">
-                    <button onclick="previousWeek()">
-                        <i class="tim-icons icon-minimal-left">
-                        </i> </button>
-                    <span id="intervalodias">Segunda-feira</span>
-                    <button onclick="nextWeek()"> <i class="tim-icons icon-minimal-right">
-                        </i></button>
-                </div>
+        .star.selected {
+            color: gold;
+        }
+    </style>
+</head>
 
+<body>
+
+    <!-- O botão que abre o modal -->
+    <button id="openModal">Avaliar Consulta</button>
+
+    <!-- O Modal -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Avalie sua Consulta</h2>
+            <div class="star-rating">
+                <span class="star" id="s1" data-value="1">&#9733;</span>
+                <span class="star" id="s2" data-value="2">&#9733;</span>
+                <span class="star" id="s3" data-value="3">&#9733;</span>
+                <span class="star" id="s4" data-value="4">&#9733;</span>
+                <span class="star" id="s5" data-value="5">&#9733;</span>
             </div>
-            <div class="card-body">
-                <div class="calendar">
-                    <div class="weekdays">
-                    </div>
-                    <p>Selecione o dia</p>
-                    <div class="days" id="calendarDays">
-                        <!-- Dias da semana serão gerados dinamicamente pelo JavaScript -->
-                    </div>
-                    <p id="paragrafohora"></p>
-                    <div class="days" id="consultasDisponivel">
-                        <!-- Dias da semana serão gerados dinamicamente pelo JavaScript -->
-                    </div>
-
-                </div>
-            </div>
+            <button id="submitRating">Enviar Avaliação</button>
         </div>
     </div>
-</div>
 
-<script>
-    var currentWeekStart; // Variável global para armazenar o início da semana atual
+    <script>
+        // Obter o modal
+        var modal = document.getElementById("myModal");
 
-    // Função para gerar o calendário semanal
-    function generateWeeklyCalendar(startDate) {
-        var meses = [
-            "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-            "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
-        ];
-        var intervalodias = document.getElementById('intervalodias');
+        // Obter o botão que abre o modal
+        var btn = document.getElementById("openModal");
 
-        var daysContainer = document.getElementById('calendarDays');
-        daysContainer.innerHTML = ''; // Limpa o conteúdo anterior
+        // Obter o elemento <span> que fecha o modal
+        var span = document.getElementsByClassName("close")[0];
 
-        // Define a data de início da semana
-        currentWeekStart = new Date(startDate);
-        var currentDay = currentWeekStart.getDay(); // 0 = Domingo, 1 = Segunda, ..., 6 = Sábado
-        //o codigo abaixo serve para definir o primeiro dia da semana sendo domingo
-        //   currentWeekStart.setDate(currentWeekStart.getDate() - currentDay); // Define o primeiro dia da semana (segunda-feira)
-
-        geraDias(currentWeekStart, daysContainer);
-
-        var day = new Date(currentWeekStart);
-        var dayMais7 = new Date(currentWeekStart);
-        dayMais7.setDate(currentWeekStart.getDate() + 6);
-        //  var dayText = dayMais7.getDate();
-        var dayText = day.getDate() + ' de ' + (meses[day.getMonth()]) + ' a ' + dayMais7.getDate() + ' de ' + ((meses[dayMais7.getMonth()]));
-        intervalodias.innerHTML = dayText;
-    }
-
-    function geraDias(currentWeekStart, daysContainer) {
-
-        // Loop para gerar os dias da semana
-        for (var i = 0; i < 7; i++) {
-            var day = new Date(currentWeekStart);
-            day.setDate(currentWeekStart.getDate() + i);
-
-            var dayElement = document.createElement('div');
-            dayElement.id = "" + day.getDate() + '/' + (day.getMonth() + 1) + "/" + day.getFullYear();
-            dayElement.classList.add('day');
-            // Monta o conteúdo do dia com nome do dia e data completa
-            //aqui desenhar o dia apenas se tiver consulta disponível
-            var dayName = getDayName(day.getDay());
-            var dayText = dayName + '<br>' + day.getDate() + '/' + (day.getMonth() + 1);
-            dayElement.innerHTML = dayText;
-            dayElement.onclick = function() {
-                consultasDisponiveis(this);
-            };
-            daysContainer.appendChild(dayElement);
+        // Quando o usuário clicar no botão, abre o modal
+        btn.onclick = function () {
+            modal.style.display = "block";
         }
-    }
 
-    function consultasDisponiveis(dayElement) {
-        var paragrafohora = document.getElementById('paragrafohora');
-        paragrafohora.innerText = 'Selecione a hora'; // Limpa o conteúdo anterior
-      var dataDoElemento =  dayElement.innerHTML;
-        var consultasContainer = document.getElementById('consultasDisponivel');
-        consultasContainer.innerHTML = ''; // Limpa o conteúdo anterior
+        // Quando o usuário clicar no <span> (x), fecha o modal
+        span.onclick = function () {
+            modal.style.display = "none";
+        }
 
-        var divs = document.querySelectorAll('.day');
-        // Iterar sobre cada div e mudar o estilo
-        divs.forEach(function(div) {
-            div.style.backgroundColor = 'transparent';
+        // Quando o usuário clicar fora do modal, fecha o modal
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        // Gerenciar a seleção das estrelas
+        document.querySelectorAll('.star').forEach(function (star) {
+            star.addEventListener('click', function () {
+                document.querySelectorAll('.star').forEach(function (s) {
+                      s.classList.remove('selected');
+                });
+                var qtd = star.getAttribute('data-value');
+                for (var i = 0; i <= qtd; i++) {
+                    var id = 's' + i;
+                    var estrela = document.getElementById(id);
+                    if (estrela) {
+                       estrela.classList.add('selected');
+                    }
+                }
+            });
         });
-        dayElement.style.backgroundColor = 'lightblue';
 
-        for (var i = 0; i < 20; i++) {
-            var dayElement = document.createElement('div');
-            dayElement.id = i;
-            dayElement.classList.add('day');
-            // Monta o conteúdo do dia com nome do dia e data completa
-            //aqui desenhar o dia apenas se tiver consulta disponível
-            dayElement.innerHTML = i +dataDoElemento;
-            dayElement.onclick = function() {
-                finalizar(this);
-            };
-            consultasContainer.appendChild(dayElement);
-        }
-    }
+        // Enviar avaliação
+        document.getElementById('submitRating').addEventListener('click', function () {
+            let rating = document.querySelector('.star.selected')?.getAttribute('data-value');
+            if (rating) {
+                alert('Você avaliou com ' + rating + ' estrelas.');
+                modal.style.display = 'none';
+            } else {
+                alert('Por favor, selecione uma avaliação.');
+            }
+        });
+    </script>
 
-    function finalizar(consultaElement) {
-        alert('aqui chama modal finalizar:' + consultaElement.innerHTML);
-    }
+</body>
 
-    // Função auxiliar para obter o nome do dia
-    function getDayName(dayIndex) {
-        var weekdays = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
-        return weekdays[dayIndex];
-    }
+</html>
 
-    // Função para navegar para a semana anterior
-    function previousWeek() {
-        var diaAtual = new Date();
-        // deixando voltar apenas ateh a data atual
-        if (currentWeekStart > diaAtual) {
-            currentWeekStart.setDate(currentWeekStart.getDate() - 7); // Subtrai 7 dias (uma semana)
-        }
-        generateWeeklyCalendar(currentWeekStart);
-        var consultasContainer = document.getElementById('consultasDisponivel');
-        consultasContainer.innerHTML = ''; // Limpa o conteúdo anterior
-        var paragrafohora = document.getElementById('paragrafohora');
-        paragrafohora.innerText = ''; // Limpa o conteúdo anterior
-    }
-
-    // Função para navegar para a próxima semana
-    function nextWeek() {
-        currentWeekStart.setDate(currentWeekStart.getDate() + 7); // Adiciona 7 dias (uma semana)
-        generateWeeklyCalendar(currentWeekStart);
-        var consultasContainer = document.getElementById('consultasDisponivel');
-        consultasContainer.innerHTML = ''; // Limpa o conteúdo anterior
-        var paragrafohora = document.getElementById('paragrafohora');
-        paragrafohora.innerText = ''; // Limpa o conteúdo anterior
-    }
-
-    // Chamada inicial para gerar o calendário ao carregar a página
-    generateWeeklyCalendar(new Date()); // Começa com a data atual
-</script>
 @endsection

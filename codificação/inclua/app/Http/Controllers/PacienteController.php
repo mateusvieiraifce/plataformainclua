@@ -96,7 +96,12 @@ class PacienteController extends Controller
         }
         $paciente = Paciente::where('usuario_id', '=', Auth::user()->id)->first();
         $statusConsulta = "Aguardando atendimento";
-        $lista = Consulta::join('especialistas', 'especialistas.id', '=', 'consultas.especialista_id')->join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')->join('especialidades', 'especialidades.id', '=', 'especialistas.especialidade_id')->where('paciente_id', '=', $paciente->id)->where('status', '=', $statusConsulta)->select(
+        $lista = Consulta::join('especialistas', 'especialistas.id', '=', 'consultas.especialista_id')->
+        join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')->
+        join('especialidades', 'especialidades.id', '=', 'especialistas.especialidade_id')->
+        where('paciente_id', '=', $paciente->id)->
+        where('status', '=', $statusConsulta)->
+        select(
             'consultas.id',
             'horario_agendado',
             'especialistas.nome as nome_especialista',
@@ -114,13 +119,20 @@ class PacienteController extends Controller
         }
         $paciente = Paciente::where('usuario_id', '=', Auth::user()->id)->first();
         $statusConsulta = "Finalizada";
-        $lista = Consulta::join('especialistas', 'especialistas.id', '=', 'consultas.especialista_id')->join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')->join('especialidades', 'especialidades.id', '=', 'especialistas.especialidade_id')->where('paciente_id', '=', $paciente->id)->where('status', '=', $statusConsulta)->select(
+        $lista = Consulta::join('especialistas', 'especialistas.id', '=', 'consultas.especialista_id')->
+        join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')->
+        join('especialidades', 'especialidades.id', '=', 'especialistas.especialidade_id')->
+        where('paciente_id', '=', $paciente->id)->
+        where('status', '=', $statusConsulta)->
+        orWhere('status', '=', 'Cancelada')->
+        select(
             'consultas.id',
             'horario_agendado',
             'especialistas.nome as nome_especialista',
             'clinicas.nome as nome_clinica',
-            'especialidades.descricao as descricao_especialidade'
-        )->orderBy('horario_agendado', 'asc')->paginate(8);
+            'especialidades.descricao as descricao_especialidade',
+            'status'
+        )->orderBy('horario_agendado', 'desc')->paginate(8);
         return view('userPaciente/historicoconsultas', ['lista' => $lista, 'msg' => $msg, 'filtro' => $filtro]);
     }
 
@@ -147,8 +159,17 @@ class PacienteController extends Controller
         if (isset($_GET['filtro'])) {
             $filter = $_GET['filtro'];
         }
-        $lista = Clinica::join('especialidadeclinicas', 'especialidadeclinicas.id', '=', 'clinica_id')
-            ->where('especialidade_id', $especialidade_id)->orderBy('nome', 'asc')->select('clinicas.id', 'nome')->paginate(8);
+        $lista =  Especialidadeclinica::join('clinicas', 'clinicas.id', '=', 'especialidadeclinicas.clinica_id')
+        ->where('especialidade_id', $especialidade_id)
+        ->orderBy('nome', 'asc')
+        ->select('clinicas.id', 'nome')->paginate(8);
+        
+     /*   Clinica::join('especialidadeclinicas', 'especialidadeclinicas.id', '=', 'clinica_id')
+            ->where('especialidade_id', $especialidade_id)
+            ->orderBy('nome', 'asc')
+            ->select('clinicas.id', 'nome')->paginate(8);*/
+
+       // dd($lista);
         return view('userPaciente/marcarConsultaViaEspecialidadePasso2', ['lista' => $lista, 'filtro' => $filter, 'especialidade_id' => $especialidade_id]);
     }
 
@@ -190,7 +211,7 @@ class PacienteController extends Controller
         }
         $lista = Clinica::where('ativo', '1')->
         orderBy('nome', 'asc')
-            ->select('clinicas.id', 'nome', 'clinicas.telefone')->paginate(8);
+            ->select('clinicas.id', 'nome')->paginate(8);
         return view('userPaciente/marcarConsultaViaClinicaPasso1', ['lista' => $lista, 'filtro' => $filter]);
     }
 
@@ -203,7 +224,7 @@ class PacienteController extends Controller
         }
         $lista = Clinica::where('nome', 'like', "%" . $filtro . "%")
             ->orderBy('nome', 'asc')
-            ->select('clinicas.id', 'nome', 'clinicas.telefone')->paginate(8);
+            ->select('clinicas.id', 'nome')->paginate(8);
         $msg = null;
         if ($lista->isEmpty()) {
             $msg = ['valor' => trans("Não foi encontrado nenhuma clínica com o nome digitado!"), 'tipo' => 'primary'];
@@ -236,6 +257,7 @@ class PacienteController extends Controller
         $statusConsulta = "Disponível";
 
         $lista = Consulta::where('especialista_id', '=', $especialista_id)->where('clinica_id', '=', $clinica_id)->where('status', '=', $statusConsulta)->select('consultas.id', 'horario_agendado')->orderBy('horario_agendado', 'asc')->paginate(8);
+      // dd($especialista,$lista);
         return view('userPaciente/marcarConsultaViaClinicaPasso4', ['lista' => $lista, 'especialista' => $especialista, 'clinica' => $clinica, 'especialidade' => $especialidade, 'paciente' => $paciente]);
     }
 
@@ -271,6 +293,23 @@ class PacienteController extends Controller
             'especialidades.descricao as descricao_especialidade'
          )->orderBy('horario_agendado', 'asc')->take(3)->get();
       return view('userPaciente/home', ['lista' => $lista,'msg' => $msg,'filtro' => $filtro]);
+   }
+
+   function canelarconsulta(Request $request)
+   {
+    //ver a questao financeira
+    $consultaCancelada = Consulta::find($request->consulta_idM);
+
+    $consultaNova = $consultaCancelada->replicate();
+    $consultaNova->status="Disponível";
+    $consultaNova->paciente_id = null;
+    $consultaNova->save();
+
+    $consultaCancelada->status="Cancelada";
+    $consultaCancelada->motivocancelamento= $request->motivocancelamento;
+    $consultaCancelada->save();
+    $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
+    return  $this->minhasconsultas($msg);
    }
 }
 

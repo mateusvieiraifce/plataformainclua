@@ -37,7 +37,7 @@
                   @endphp
                   <ul class="pagination">
                      <li class="{{ ($paginator->currentPage() == 1) ? ' disabled' : '' }}">
-                        <a href="{{$paginator->url . "?page=1&filtro=" . $filtro }}">&nbsp;<<&nbsp;&nbsp;< /a>
+                        <a href="{{$paginator->url . "?page=1&filtro=" . $filtro }}">&nbsp;<< &nbsp;&nbsp; </a>
                      </li>
                      @for ($i = 1; $i <= $paginator->lastPage(); $i++)
                         <?php
@@ -53,9 +53,9 @@
                         }    ?>
                         @if ($from < $i && $i < $to) <li class="{{ ($paginator->currentPage() == $i) ? ' active' : '' }}">
                            @if($paginator->currentPage() == $i)
-                           <a href="{{ $paginator->url . "?page=" . $i . "&filtro=" . $filtro }} "> <b>{{ $i }}</b> &nbsp; </a>
+                           <a href="{{ $paginator->url . "?page=" . $i . "&filtro=" . $filtro }} "> <b>   {{ $i }}</b> &nbsp;  </a>
                            @else
-                           <a href="{{ $paginator->url . "?page=" . $i . "&filtro=" . $filtro }} ">{{ $i }} &nbsp; </a>
+                           <a href="{{ $paginator->url . "?page=" . $i . "&filtro=" . $filtro }} ">  {{ $i }} &nbsp;  </a>
                            @endif
                            </li>
                            @endif

@@ -2,9 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Models\Clinica;
 use App\Models\Permission;
 use App\Models\User;
 use App\Models\Especialidade;
+use App\Models\Especialista;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -27,6 +29,7 @@ class populacaoTesteSeeder extends Seeder
             'updated_at'=>now(),
             'telefone'=>"88888888",
             'tipo_user' => 'R',
+            'etapa_cadastro' => 'F',
         ]);
 
         //usuario paciente
@@ -38,6 +41,7 @@ class populacaoTesteSeeder extends Seeder
             'updated_at'=>now(),
             'telefone'=>"88888888",
             'tipo_user' => 'P',
+            'etapa_cadastro' => 'F',
         ]);
         DB::table('pacientes')->insert([
             'nome'=>"Paciente 01",
@@ -54,6 +58,7 @@ class populacaoTesteSeeder extends Seeder
             'updated_at'=>now(),
             'telefone'=>"88888888",
             'tipo_user' => 'E',
+            'etapa_cadastro' => 'F',
         ]);
         $especialidade = Especialidade::create([ 
             'descricao'=>"Neuro 01",
@@ -61,7 +66,7 @@ class populacaoTesteSeeder extends Seeder
             'created_at'=>now(),
             'updated_at'=>now(),
         ]);        
-        DB::table('especialistas')->insert([
+       $especialista = Especialista::create([
             'nome'=>"Especialista 01",
             'usuario_id'=>$entidade->id, 
             'especialidade_id'=>$especialidade->id,          
@@ -76,12 +81,28 @@ class populacaoTesteSeeder extends Seeder
             'updated_at'=>now(),
             'telefone'=>"88888888",
             'tipo_user' => 'C',
+            'etapa_cadastro' => 'F',
         ]);
-        DB::table('clinicas')->insert([
+        $clinica01 =  Clinica::create([
             'nome'=>"Clinica 01",
             'usuario_id'=>$entidade->id, 
             'ativo'=>"1",
         ]);
+        DB::table('especialidadeclinicas')->insert([
+            'valor'=>200,
+            'clinica_id'=>$clinica01->id, 
+            'especialidade_id'=>$especialidade->id,          
+        ]);
+
+
+        DB::table('especialistaclinicas')->insert([           
+            'clinica_id'=>$clinica01->id, 
+            'especialista_id'=>$especialista->id,          
+        ]);
+
+
+
+        
 
          //usuario clinica 02
          $entidade = User::create([ 
@@ -92,10 +113,12 @@ class populacaoTesteSeeder extends Seeder
             'updated_at'=>now(),
             'telefone'=>"88888888",
             'tipo_user' => 'C',
+            'etapa_cadastro' => 'F',
         ]);
         DB::table('clinicas')->insert([
             'nome'=>"Clinica 02",
             'usuario_id'=>$entidade->id, 
+            'ativo'=>"1",
         ]);
 
         //fazer clinica vinculada a especialista

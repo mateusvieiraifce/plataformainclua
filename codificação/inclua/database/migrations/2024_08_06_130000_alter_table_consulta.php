@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTagsAdv extends Migration
+class AlterTableConsulta extends Migration
 {
     /**
      * Run the migrations.
@@ -12,13 +12,9 @@ class CreateTagsAdv extends Migration
      * @return void
      */
     public function up()
-    {
-        Schema::create('tags_adv', function (Blueprint $table) {
-            $table->id();
-            $table->string('descricao');
-            $table->unsignedBigInteger('adv_id');
-
-            $table->timestamps();
+    {     
+        Schema::table('consultas', function (Blueprint $table) {
+            $table->string('motivocancelamento', 255)->nullable()->after('especialista_id');
         });
     }
 
@@ -28,7 +24,9 @@ class CreateTagsAdv extends Migration
      * @return void
      */
     public function down()
-    {
-        Schema::dropIfExists('tags_adv');
+    {       
+        Schema::table('consultas', function (Blueprint $table) {
+            $table->dropColumn('motivocancelamento');
+        });
     }
 }
