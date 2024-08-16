@@ -121,6 +121,14 @@ class populacaoTesteSeeder extends Seeder
             'ativo'=>"1",
         ]);
 
+
+        //add exames
+        DB::table('exames')->insert([
+            'nome'=>"Glicemia ",
+            'descricao'=>"Mede o nível de glicose no sangue após um período de jejum de pelo menos 8 horas.", 
+            'tipo'=>"Sangue",
+        ]);
+
         //fazer clinica vinculada a especialista
 
 

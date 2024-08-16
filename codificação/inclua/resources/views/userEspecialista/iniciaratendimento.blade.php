@@ -107,6 +107,68 @@
 
 
 
+<!-- Modal add exames-->
+<div class="modal fade" id="modalPedirExame" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+   aria-hidden="true">
+   <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h4 class="modal-title">
+               <label>Favor selecionar o exame desejado</label>
+            </h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+               <span aria-hidden="true">&times;</span>
+            </button>
+         </div>
+         <div class="modal-body">
+            <div class="container">
+               <form method="post" action="#">
+                  @csrf
+                  <div class="row">
+                     <div class="col-md-5">
+                        <div class="form-group">
+                           <label>&nbsp; &nbsp; Exame:</label>
+                           <input style="border-color: #C0C0C0" type="text" placeholder="Digite o nome do exame"
+                              name="pesquisaexame" id="pesquisaexame" class="form-control" value="">
+                        </div>
+                     </div>
+                     <div class="col-md-5">
+                        <div class="form-group">
+                           <label>&nbsp; &nbsp; Tipo:</label>
+                           <input style="border-color: #C0C0C0" type="text" placeholder="Digite o nome do exame"
+                              name="pesquisaexame" id="pesquisaexame" class="form-control" value="">
+                        </div>
+                     </div>
+
+                     <div class="col-md-1">
+                        <div class="form-group">
+                           <label id="labelFormulario"></label>
+                           <a href="#" rel="tooltip" title="Adicionar " data-original-title="Adicionar " href="#"
+                              data-target="#addProdutoBDModal" data-toggle="modal" data-whatever="@mdo">
+                              <button style="width: 10px;" type="button" rel="tooltip" title="" class="btn btn-success"
+                                 data-original-title="Edit Task">
+                                 <i class="tim-icons icon-simple-add"></i>
+                              </button>
+                           </a>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="row">
+
+                     aqui tabela com todos os tipos de exames
+                  </div>
+                  <div class="modal-footer">
+                     <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        <i class="fa fa-reply"></i> Voltar
+                     </button>
+                     <input type="submit" name="mover" class="btn btn-success" value="Adicionar pedido"></input>
+                  </div>
+               </form>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
 
 
 
@@ -129,13 +191,15 @@
                      <h6 class="title d-inline">Paciente: {{$paciente->nome}}</h6>
                      <br>
                      <h6 id="idadePaciente" class="title d-inline">
-                        {{date('d/m/Y', strtotime($usuarioPaciente->data_nascimento))}}</h6>
+                        {{date('d/m/Y', strtotime($usuarioPaciente->data_nascimento))}}
+                     </h6>
 
                   </div>
                   <div class="col-6 col-lg-4">
                      @if(isset($primeiraConsulta))
                    <h6 class="title d-inline">Primeira consulta em
-                     {{date('d/m/Y H:i', strtotime($primeiraConsulta->horario_agendado))}}</h6>
+                     {{date('d/m/Y H:i', strtotime($primeiraConsulta->horario_agendado))}}
+                   </h6>
                 @else
                 <h6 class="title d-inline">Primeira consulta.</h6>
              @endif
@@ -179,29 +243,42 @@
                            <p>Conteúdo da aba prescriçoes.</p>
                         </div>
                         <div id="exames" class="tab-pane">
-
                            <div class="row">
                               <div class="col-2">
-                                 <a rel="tooltip" title="Finalizar" class="btn btn-success" data-original-title="Edit"
-                                    href="{{route('especialista.finalizarAtendimento', $consulta->id)}}">
+                                 <a id="adicionarExame" rel="tooltip" title="Finalizar" class="btn btn-success"
+                                    data-original-title="Edit" href="#">
                                     <i class="tim-icons  icon-components"></i> Pedir exame
                                  </a>
                               </div>
-                              <div class="col-8">
+                           </div>
+
+
+                           <div class="row">
+
+                              <div class="col-12" style="background-color: Aquamarine;">
                                  <div class="table-responsive">
                                     <table class="table">
                                        <thead>
-                                          <th> Status </th>
-                                          <th> Horário agendado </th>
-                                          <th> Clínica </th>
-                                          <th> </th>
+                                          <tr>
+                                             <th> Exame </th>
+                                             <th> </th>
+                                          </tr>
                                        </thead>
                                        <tbody>
-                                       <td> Status </td>
-                                          <td> Horário agendado </td>
-                                          <td> Clínica </td>
-                                          <td> </td>
-                                      </tbody>
+                                          <tr>
+                                             <td> teste </td>
+                                             <td>
+                                                <a rel="tooltip" class="btn btn-link" href="#">
+                                                   <i class="tim-icons icon-pencil"></i>
+                                                </a>
+                                                <a href="{{route('exame.delete', 0)}}"
+                                                   onclick="return confirm('Deseja relamente excluir?')" rel="tooltip"
+                                                   title="Excluir" class="btn btn-link" data-original-title="Remove">
+                                                   <i class="tim-icons icon-simple-remove"></i>
+                                                </a>
+                                             </td>
+                                          </tr>
+                                       </tbody>
                                     </table>
                                     <div>
 
@@ -239,20 +316,20 @@
 
 
                </div>
-             
+
             </div>
             <div class="row">
-                  <div class="col-6" style="margin-left: 10px;">
+               <div class="col-6" style="margin-left: 10px;">
 
-                     <a href="{{route('consulta.listconsultaporespecialista')}}" class="btn btn-primary"><i
-                           class="fa fa-reply"></i>
-                        Voltar</a>
-                     <a rel="tooltip" title="Finalizar" class="btn btn-success" data-original-title="Edit"
-                        href="{{route('especialista.finalizarAtendimento', $consulta->id)}}">
-                        <i class="fa fa-save"></i> Finalizar
-                     </a>
-                  </div>
+                  <a href="{{route('consulta.listconsultaporespecialista')}}" class="btn btn-primary"><i
+                        class="fa fa-reply"></i>
+                     Voltar</a>
+                  <a rel="tooltip" title="Finalizar" class="btn btn-success" data-original-title="Edit"
+                     href="{{route('especialista.finalizarAtendimento', $consulta->id)}}">
+                     <i class="fa fa-save"></i> Finalizar
+                  </a>
                </div>
+            </div>
          </div>
       </div>
    </div>
@@ -304,4 +381,13 @@
       document.getElementById('idadePaciente').textContent = "IDADE: " + idade + " anos";
    </script>
 
+   <!-- abrindo o modal de add exames -->
+   <script>
+      document.getElementById('adicionarExame').addEventListener('click', function () {
+         //  mandaDadosFormPrincipalParaModal();
+         //  preencheModalCustos();
+         // Abra o modal
+         $('#modalPedirExame').modal('show');
+      });
+   </script>
    @endsection
