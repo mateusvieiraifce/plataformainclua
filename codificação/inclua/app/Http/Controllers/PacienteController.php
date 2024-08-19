@@ -10,6 +10,7 @@ use App\Models\Consulta;
 use App\Models\Especialista;
 use App\Models\Especialidade;
 use App\Models\Paciente;
+use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -163,7 +164,7 @@ class PacienteController extends Controller
         ->where('especialidade_id', $especialidade_id)
         ->orderBy('nome', 'asc')
         ->select('clinicas.id', 'nome')->paginate(8);
-        
+
      /*   Clinica::join('especialidadeclinicas', 'especialidadeclinicas.id', '=', 'clinica_id')
             ->where('especialidade_id', $especialidade_id)
             ->orderBy('nome', 'asc')
