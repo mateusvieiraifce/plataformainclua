@@ -249,6 +249,15 @@ Route::middleware('auth')->group(function () {
     Route::get("/paciente/marcarconsulta/viaespecialidade/etapa3/{especialidade_id}/{clinica_id}", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaEspecialidadePasso3'])->name('paciente.marcarConsultaViaEspecialidadePasso3')->middleware('auth');
     Route::get("/paciente/marcarconsulta/viaespecialidade/etapa4/{clinica_id}/{especialista_id}", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaEspecialidadePasso4'])->name('paciente.marcarConsultaViaEspecialidadePasso4')->middleware('auth');
 
+    #CAD_TIPO_EXAMES_USER_ROOT
+    Route::get("/tipoexame/list",[\App\Http\Controllers\TipoexameController::class,'list'])->name('tipoexame.list')->middleware('auth');
+    Route::get("/tipoexame/new",[\App\Http\Controllers\TipoexameController::class,'new'])->name('tipoexame.new')->middleware('auth');
+    Route::post("/tipoexame/search",[\App\Http\Controllers\TipoexameController::class,'search'])->name('tipoexame.search')->middleware('auth');
+    Route::post("/tipoexame/save",[\App\Http\Controllers\TipoexameController::class,'save'])->name('tipoexame.save')->middleware('auth');
+    Route::get("/tipoexame/delete/{id}",[\App\Http\Controllers\TipoexameController::class,'delete'])->name('tipoexame.delete')->middleware('auth');
+    Route::get("/tipoexame/edit/{id}",[\App\Http\Controllers\TipoexameController::class,'edit'])->name('tipoexame.edit')->middleware('auth');
+    
+    
     #CAD_EXAMES_USER_ROOT
     Route::get("/exame/list",[\App\Http\Controllers\ExameController::class,'list'])->name('exame.list')->middleware('auth');
     Route::get("/exame/new",[\App\Http\Controllers\ExameController::class,'new'])->name('exame.new')->middleware('auth');
@@ -257,6 +266,7 @@ Route::middleware('auth')->group(function () {
     Route::get("/exame/delete/{id}",[\App\Http\Controllers\ExameController::class,'delete'])->name('exame.delete')->middleware('auth');
     Route::get("/exame/edit/{id}",[\App\Http\Controllers\ExameController::class,'edit'])->name('exame.edit')->middleware('auth');
     
+
     
     #CONSULTAS_USER_PACIENTE
     Route::get("/paciente/minhasconsultas/", [\App\Http\Controllers\PacienteController::class, 'minhasconsultas'])->name('paciente.minhasconsultas')->middleware('auth');

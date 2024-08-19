@@ -104,13 +104,32 @@
    }
 </script>
 
+<!--Customização para centralizar o modal verticalmente-->
+<style>
+   .modal-dialog {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      /* Alinha o modal ao topo da tela */
+      height: 10vh;
+      /* Garante que o modal usa toda a altura da viewport */
+      margin-left: 20%;
+      /* Remove qualquer margem padrão */
+   }
 
+   .modal-content {
+      border-radius: 0;
+      /* Remove bordas arredondadas se necessário */
+      height: auto;
+      /* Ajusta a altura conforme o conteúdo */
+   }
+</style>
 
 
 <!-- Modal add exames-->
 <div class="modal fade" id="modalPedirExame" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
    aria-hidden="true">
-   <div class="modal-dialog modal-lg" role="document">
+   <div class="modal-dialog  modal-dialog-top modal-lg" role="document">
       <div class="modal-content">
          <div class="modal-header">
             <h4 class="modal-title">
@@ -125,18 +144,25 @@
                <form method="post" action="#">
                   @csrf
                   <div class="row">
-                     <div class="col-md-5">
+                     <div class="col-md-6">
                         <div class="form-group">
                            <label>&nbsp; &nbsp; Exame:</label>
-                           <input style="border-color: #C0C0C0" type="text" placeholder="Digite o nome do exame"
+                           <input style="color: #111" type="text" placeholder="Digite o nome do exame"
                               name="pesquisaexame" id="pesquisaexame" class="form-control" value="">
                         </div>
                      </div>
-                     <div class="col-md-5">
+                     <div class="col-md-4">
                         <div class="form-group">
-                           <label>&nbsp; &nbsp; Tipo:</label>
-                           <input style="border-color: #C0C0C0" type="text" placeholder="Digite o nome do exame"
-                              name="pesquisaexame" id="pesquisaexame" class="form-control" value="">
+                           <label id="labelFormulario">Tipo</label>
+                           <select style="color: #111;" name="tipoexame_id" id="tipoexame_id" class="form-control"
+                              title="Por favor selecionar um tipo de exame ..." required>
+                              <option style="color: #2d3748" value="">Todos </option>
+                              @foreach($tipoexames as $entLista)
+                          <option style="color: #2d3748" value="{{old('tipoexame_id', $entLista->id)}}">
+                            {{$entLista->descricao}}
+                          </option>
+                       @endforeach
+                           </select>
                         </div>
                      </div>
 
@@ -153,9 +179,25 @@
                         </div>
                      </div>
                   </div>
-                  <div class="row">
+                  <div id="checkboxContainer">
+                     <div class="row">
+                        @foreach($exames as $entExame)                        
+                     <div class="col-4">
+                        <label>
+                          <input type="checkbox" style="color: #2d3748" value="{{old('exame_id', $entExame->id)}}">
+                          {{$entExame->nome}}
+                        </label>
+                     </div>
+                  @endforeach
+                     </div>
 
-                     aqui tabela com todos os tipos de exames
+
+                     <div class="selected-items">
+                        <h2>Selecionados:</h2>
+                        <ul style="color: #2d3748" id="selectedList" class="list-group"></ul>
+                    </div>
+
+
                   </div>
                   <div class="modal-footer">
                      <button type="button" class="btn btn-secondary" data-dismiss="modal">
@@ -170,6 +212,82 @@
    </div>
 </div>
 
+<!-- scpritp para filtrar os exames a medida que eh digitado algo-->
+<script>
+   // Lista de itens simulada que poderia vir do controlador
+   const itemsExames = JSON.parse('{!! $exames !!}');
+
+   function renderCheckboxes(filteredItems) {
+      const container = document.getElementById('checkboxContainer');
+      container.innerHTML = ''; // Limpa o conteúdo anterior
+
+      for (var i = 0; i < filteredItems.length; i++) {
+         exame = filteredItems[i];
+         const checkbox = document.createElement('div');
+         checkbox.innerHTML = `              
+                    <input class="form-check-input" type="checkbox" id="checkbox${i}" value=" 1">
+                    <label class="form-check-label">
+                          ${exame.nome}
+                    </label>                  
+                `;
+         
+         checkbox.querySelector('input').addEventListener('change', updateSelectedList);
+         container.appendChild(checkbox);
+
+      }
+      //container.innerHTML =  container.innerHTML+'</div>';      
+   }
+
+   function filterItems(query) {     
+      var tipoSelecionado = document.getElementById('tipoexame_id');
+      if (tipoSelecionado.value != "") {
+         var filtraPeloTipo = itemsExames.filter(item => item.tipoexame_id == tipoSelecionado.value);
+      } else {
+         var filtraPeloTipo = itemsExames;
+      }
+      const filteredItems = filtraPeloTipo.filter(item => item.nome.toLowerCase().includes(query.toLowerCase()));
+      renderCheckboxes(filteredItems);
+   }
+
+   document.getElementById('pesquisaexame').addEventListener('input', function () {
+      const query = this.value.trim();
+      filterItems(query);
+   });
+
+   // Renderizar todos os itens no início
+   renderCheckboxes(itemsExames);
+
+   function tipoAlterado(event) {
+      var textoPesquisa = document.getElementById('pesquisaexame').value.trim();
+      filterItems(textoPesquisa);
+   }
+
+   // Adiciona um ouvinte de eventos ao select do tipo 
+   const selectElement = document.getElementById('tipoexame_id');
+   selectElement.addEventListener('change', tipoAlterado);
+
+
+   function updateSelectedList() {
+      alert('aqui');
+            const selectedList = document.getElementById('selectedList');
+            alert('2');
+          //  selectedList.innerHTML = ''; // Limpa o conteúdo anterior
+            alert('2.1');
+            // Seleciona todos os checkboxes marcados
+            const selectedCheckboxes = document.querySelectorAll('#checkboxContainer input:checked');
+            
+            alert('3');
+            selectedCheckboxes.forEach(checkbox => {
+                const itemValue = checkbox.value;
+                const listItem = document.createElement('li');
+                listItem.className = 'list-group-item';
+                listItem.textContent = itemValue;
+                selectedList.appendChild(listItem);
+            });
+
+            alert('4');
+        }
+</script>
 
 
 

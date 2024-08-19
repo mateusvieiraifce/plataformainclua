@@ -12,6 +12,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Models\Tipoexame;
+use App\Models\Exame;
 
 class EspecialistaController extends Controller
 {
@@ -240,13 +242,18 @@ class EspecialistaController extends Controller
          where('especialista_id', '=', $consulta->especialista_id)->
          orderBy('horario_iniciado', 'asc')->count();
 
+         $tipoexames = Tipoexame::all();
+
+         $exames = Exame::all();
 
       return view('userEspecialista/iniciaratendimento', [
          'consulta' => $consulta,
          'paciente' => $paciente,
          'usuarioPaciente' => $usuarioPaciente,
          'primeiraConsulta' => $primeiraConsulta,
-         'qtdConsultasRealizadas' => $qtdConsultasRealizadas
+         'qtdConsultasRealizadas' => $qtdConsultasRealizadas,
+         'tipoexames' => $tipoexames,
+         'exames' => $exames
       ]);
 
    }
