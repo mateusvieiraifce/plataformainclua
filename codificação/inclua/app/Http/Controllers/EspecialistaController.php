@@ -242,9 +242,9 @@ class EspecialistaController extends Controller
          where('especialista_id', '=', $consulta->especialista_id)->
          orderBy('horario_iniciado', 'asc')->count();
 
-         $tipoexames = Tipoexame::all();
+         $tipoexames = Tipoexame::orderBy('descricao', 'asc')->get();
 
-         $exames = Exame::all();
+         $exames = Exame::orderBy('nome', 'asc')->get();
 
       return view('userEspecialista/iniciaratendimento', [
          'consulta' => $consulta,

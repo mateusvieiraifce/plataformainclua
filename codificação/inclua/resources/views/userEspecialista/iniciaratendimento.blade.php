@@ -178,25 +178,31 @@
                            </a>
                         </div>
                      </div>
-                  </div>
-                  <div id="checkboxContainer">
-                     <div class="row">
-                        @foreach($exames as $entExame)                        
-                     <div class="col-4">
-                        <label>
-                          <input type="checkbox" style="color: #2d3748" value="{{old('exame_id', $entExame->id)}}">
-                          {{$entExame->nome}}
-                        </label>
-                     </div>
-                  @endforeach
-                     </div>
 
 
-                     <div class="selected-items">
-                        <h2>Selecionados:</h2>
-                        <ul style="color: #2d3748" id="selectedList" class="list-group"></ul>
-                    </div>
+                     <fieldset style="  margin:15px; width:95%;">
+                        <legend>Selecionar exames</legend>
+                        <div id="checkboxContainer" style="margin-left:30px">
+                           <div class="row">
+                              @foreach($exames as $entExame)                        
+                          <div class="col-4">
+                            <label>
+                              <input type="checkbox" style="color: #2d3748"
+                                 value="{{old('exame_id', $entExame->id)}}">
+                              {{$entExame->nome}}
+                            </label>
+                          </div>
+                       @endforeach                     
+                           </div>
+                        </div>
+                     </fieldset>
 
+                     <fieldset style="  margin:15px; width:95%;">
+                        <legend>Exames selecionados</legend>
+                        <div class="selected-items">                        
+                           <ul style="color: #2d3748" id="selectedList"></ul>
+                        </div>
+                     </fieldset>
 
                   </div>
                   <div class="modal-footer">
@@ -217,6 +223,9 @@
    // Lista de itens simulada que poderia vir do controlador
    const itemsExames = JSON.parse('{!! $exames !!}');
 
+   const itemsExamesSelecionados = [];
+
+
    function renderCheckboxes(filteredItems) {
       const container = document.getElementById('checkboxContainer');
       container.innerHTML = ''; // Limpa o conteúdo anterior
@@ -224,21 +233,20 @@
       for (var i = 0; i < filteredItems.length; i++) {
          exame = filteredItems[i];
          const checkbox = document.createElement('div');
-         checkbox.innerHTML = `              
-                    <input class="form-check-input" type="checkbox" id="checkbox${i}" value=" 1">
-                    <label class="form-check-label">
+         checkbox.innerHTML = `       
+           <label class="form-check-label">       
+                    <input class="form-check-input" type="checkbox" id="${exame.id}" value="${exame.id}">                  
                           ${exame.nome}
                     </label>                  
                 `;
-         
-         checkbox.querySelector('input').addEventListener('change', updateSelectedList);
-         container.appendChild(checkbox);
 
+      checkbox.querySelector('input').addEventListener('change', updateSelectedList);
+           container.appendChild(checkbox);
       }
       //container.innerHTML =  container.innerHTML+'</div>';      
    }
 
-   function filterItems(query) {     
+   function filterItems(query) {
       var tipoSelecionado = document.getElementById('tipoexame_id');
       if (tipoSelecionado.value != "") {
          var filtraPeloTipo = itemsExames.filter(item => item.tipoexame_id == tipoSelecionado.value);
@@ -266,26 +274,45 @@
    const selectElement = document.getElementById('tipoexame_id');
    selectElement.addEventListener('change', tipoAlterado);
 
+  
 
    function updateSelectedList() {
-      alert('aqui');
-            const selectedList = document.getElementById('selectedList');
-            alert('2');
-          //  selectedList.innerHTML = ''; // Limpa o conteúdo anterior
-            alert('2.1');
-            // Seleciona todos os checkboxes marcados
-            const selectedCheckboxes = document.querySelectorAll('#checkboxContainer input:checked');
-            
-            alert('3');
-            selectedCheckboxes.forEach(checkbox => {
-                const itemValue = checkbox.value;
-                const listItem = document.createElement('li');
-                listItem.className = 'list-group-item';
-                listItem.textContent = itemValue;
-                selectedList.appendChild(listItem);
-            });
+      const selectedList = document.getElementById('selectedList');
+      const selectedCheckboxes = document.querySelectorAll('#checkboxContainer input:checked');    
 
-            alert('4');
+      selectedCheckboxes.forEach(checkbox => {  
+         const label = checkbox.parentNode; 
+         const descricao = label.textContent.trim();             
+         const novoExame = {
+                nome: descricao,
+                id: checkbox.value
+            };        
+            const existe = itemsExamesSelecionados.some(objeto => objeto.id === novoExame.id);
+            if (!existe) {
+               itemsExamesSelecionados.push(novoExame);
+            } 
+      });
+    
+      let listaHTML = '<ul>';
+      itemsExamesSelecionados.forEach(objeto => { 
+            listaHTML += `<li style="color:#111" id="${objeto.id}">                          
+             ${objeto.nome}  <button class="btn" onclick="removerItem(this)">Remover</button>  
+            </li>`;    
+      });
+      listaHTML += '</ul>'; 
+      const resultado = document.getElementById('selectedList');
+      resultado.innerHTML = listaHTML || '<p>Nenhum checkbox selecionado.</p>';
+       
+
+   }
+
+   function removerItem(botao) {
+            const li = botao.parentNode; // Obtém o <li> pai do botão
+            li.remove(); // Remove o <li> da lista
+            const index = itemsExamesSelecionados.findIndex(objeto => objeto.id === li.id);
+            if (index !== -1) {
+                itemsExamesSelecionados.splice(index, 1);              
+            }
         }
 </script>
 
