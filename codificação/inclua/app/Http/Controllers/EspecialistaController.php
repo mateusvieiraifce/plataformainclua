@@ -285,6 +285,7 @@ class EspecialistaController extends Controller
       }
    }
 
+   //lista dos pacientes que fez alguma consulta com o especialista logado
    function listaPacientes($msg = null)
    {
       $especialista = Especialista::where('usuario_id', '=', Auth::user()->id)->first();
@@ -292,7 +293,6 @@ class EspecialistaController extends Controller
       if (isset($_GET['filtro'])) {
          $filter = $_GET['filtro'];
       }
-
 
       $statusConsulta = "Finalizada";
 

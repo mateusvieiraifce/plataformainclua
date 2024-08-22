@@ -141,7 +141,7 @@
          </div>
          <div class="modal-body">
             <div class="container">
-               <form method="post" action="#">
+               <form method="post" action="{{route('pedido_exame.salveVarios')}}">
                   @csrf
                   <div class="row">
                      <div class="col-md-6">
@@ -155,7 +155,7 @@
                         <div class="form-group">
                            <label id="labelFormulario">Tipo</label>
                            <select style="color: #111;" name="tipoexame_id" id="tipoexame_id" class="form-control"
-                              title="Por favor selecionar um tipo de exame ..." required>
+                              title="Por favor selecionar um tipo de exame ..." >
                               <option style="color: #2d3748" value="">Todos </option>
                               @foreach($tipoexames as $entLista)
                           <option style="color: #2d3748" value="{{old('tipoexame_id', $entLista->id)}}">
@@ -179,9 +179,10 @@
                         </div>
                      </div>
 
-
-                     <fieldset style="  margin:15px; width:95%;">
-                        <legend>Selecionar exames</legend>
+                  <div class="row" style="width: 100%;">
+                  <div class="col-6">
+                     <fieldset >
+                        <legend  style="font-size: 14px;">Selecionar exames</legend>
                         <div id="checkboxContainer" style="margin-left:30px">
                            <div class="row">
                               @foreach($exames as $entExame)                        
@@ -196,19 +197,23 @@
                            </div>
                         </div>
                      </fieldset>
-
-                     <fieldset style="  margin:15px; width:95%;">
-                        <legend>Exames selecionados</legend>
+                     </div>
+                     <div class="col-6">
+                     <fieldset>
+                        <legend  style="font-size: 14px;">Exames selecionados</legend>
                         <div class="selected-items">                        
                            <ul style="color: #2d3748" id="selectedList"></ul>
                         </div>
                      </fieldset>
+                     </div>
+                     </div>
 
                   </div>
                   <div class="modal-footer">
                      <button type="button" class="btn btn-secondary" data-dismiss="modal">
                         <i class="fa fa-reply"></i> Voltar
                      </button>
+                     <input type="hidden" name="consulta_id" value="{{$consulta->id}}">
                      <input type="submit" name="mover" class="btn btn-success" value="Adicionar pedido"></input>
                   </div>
                </form>
@@ -229,21 +234,19 @@
    function renderCheckboxes(filteredItems) {
       const container = document.getElementById('checkboxContainer');
       container.innerHTML = ''; // Limpa o conteúdo anterior
-
       for (var i = 0; i < filteredItems.length; i++) {
          exame = filteredItems[i];
          const checkbox = document.createElement('div');
-         checkbox.innerHTML = `       
-           <label class="form-check-label">       
+         checkbox.innerHTML = `          
+         <label class="form-check-label"  style="color:#111">       
                     <input class="form-check-input" type="checkbox" id="${exame.id}" value="${exame.id}">                  
                           ${exame.nome}
-                    </label>                  
-                `;
-
+                    </label>              
+                    `;
       checkbox.querySelector('input').addEventListener('change', updateSelectedList);
-           container.appendChild(checkbox);
+      container.appendChild(checkbox);
       }
-      //container.innerHTML =  container.innerHTML+'</div>';      
+     // container.innerHTML =  container.innerHTML+'</div></div>';      
    }
 
    function filterItems(query) {
@@ -293,11 +296,15 @@
             } 
       });
     
-      let listaHTML = '<ul>';
+      let listaHTML = '<ul style="list-style-type: none; padding: 0; margin: 0;">';
       itemsExamesSelecionados.forEach(objeto => { 
-            listaHTML += `<li style="color:#111" id="${objeto.id}">                          
-             ${objeto.nome}  <button class="btn" onclick="removerItem(this)">Remover</button>  
-            </li>`;    
+            listaHTML += `<li  style="color:#111" id="${objeto.id}">     
+            
+            <input type="hidden" name="pedidosExames[]" value="${objeto.id}">
+
+             ${objeto.nome}  <a onclick="removerItem(this)">
+              <i class="tim-icons icon-simple-remove"></i>
+              </a></li>`;    
       });
       listaHTML += '</ul>'; 
       const resultado = document.getElementById('selectedList');

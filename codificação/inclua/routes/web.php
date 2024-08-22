@@ -228,6 +228,7 @@ Route::middleware('auth')->group(function () {
 
     #CONSULTAS_POR_ESPECIALISTA
     Route::get("/consulta/listconsultas/", [\App\Http\Controllers\ConsultaController::class, 'listconsultaporespecialista'])->name('consulta.listconsultaporespecialista')->middleware('auth');
+    Route::get("/consulta/listconsultas/search", [\App\Http\Controllers\ConsultaController::class, 'listConsultaPorEspecialistaPesquisar'])->name('consulta.listConsultaPorEspecialistaPesquisar')->middleware('auth');
 
     #ROTAS_USER_PACIENTE +++++++++++++++++++++++++++++
     Route::get("/paciente/home/", [\App\Http\Controllers\PacienteController::class, 'home'])->name('paciente.home')->middleware('auth');
@@ -278,7 +279,12 @@ Route::middleware('auth')->group(function () {
     Route::get("/especialista/atendimento/{consulta_id}", [\App\Http\Controllers\EspecialistaController::class, 'inicarAtendimento'])->name('especialista.iniciarAtendimento')->middleware('auth');
     Route::get("/especialista/atendimento/finalizar/{consulta_id}", [\App\Http\Controllers\EspecialistaController::class, 'finalizarAtendimento'])->name('especialista.finalizarAtendimento')->middleware('auth');
     Route::get("/especialista/pacientes/", [\App\Http\Controllers\EspecialistaController::class, 'listaPacientes'])->name('especialista.listaPacientes')->middleware('auth');
-
+    
+    Route::get("/especialista/pedidoexame/list",[\App\Http\Controllers\PedidoExameController::class,'list'])->name('pedido_exame.list')->middleware('auth');
+    Route::post("/especialista/pedidoexame/save",[\App\Http\Controllers\PedidoExameController::class,'salveVarios'])->name('pedido_exame.salveVarios')->middleware('auth');
+    Route::get("/especialista/pedidoexame/delete/{id}",[\App\Http\Controllers\PedidoExameController::class,'delete'])->name('pedido_exame.delete')->middleware('auth');
+    
+    
 
     
 });

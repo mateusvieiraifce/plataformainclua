@@ -340,8 +340,11 @@ class UsuarioController extends Controller
             return redirect()->route('cartao.create', ['usuario_id' => $user->id]);
         } else if ($user->etapa_cadastro == 'F') {
             session()->flash('msg', ['valor' => trans("Seu cadastro foi finalizado com sucesso. Bem vindo a Plataforma Inclua!"), 'tipo' => 'success']);
-            auth()->login($user, true);
-
+            auth()->login($user, true);           
+            if($user->tipo_user ==='E'){
+                //home usuario Especialista
+                return redirect()->route('consulta.listconsultaporespecialista');
+             }
             return redirect()->route('home');
         } else if ($user->tipo_user == 'R') {
             session()->flash('msg', ['valor' => trans("Bem vindo a Plataforma Inclua!"), 'tipo' => 'success']);
