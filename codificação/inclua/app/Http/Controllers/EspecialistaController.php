@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Tipoexame;
 use App\Models\Exame;
+use App\Models\Pedidoexame;
 
 class EspecialistaController extends Controller
 {
@@ -246,6 +247,14 @@ class EspecialistaController extends Controller
 
          $exames = Exame::orderBy('nome', 'asc')->get();
 
+      $listaPedidosExames = Pedidoexame::
+      join('exames', 'exames.id', '=', 'pedido_exames.exame_id')->
+      where('consulta_id',$consulta->id)->
+      orderBy('pedido_exames.created_at', 'desc')->
+      select('pedido_exames.id as id', 'nome','laudo')->get(); 
+    
+      //dd($listaPedidosExames);
+
       return view('userEspecialista/iniciaratendimento', [
          'consulta' => $consulta,
          'paciente' => $paciente,
@@ -253,7 +262,8 @@ class EspecialistaController extends Controller
          'primeiraConsulta' => $primeiraConsulta,
          'qtdConsultasRealizadas' => $qtdConsultasRealizadas,
          'tipoexames' => $tipoexames,
-         'exames' => $exames
+         'exames' => $exames,
+         'listaPedidosExames' => $listaPedidosExames
       ]);
 
    }

@@ -397,39 +397,42 @@
                         <div id="exames" class="tab-pane">
                            <div class="row">
                               <div class="col-2">
-                                 <a id="adicionarExame" rel="tooltip" title="Finalizar" class="btn btn-success"
+                                 <a id="adicionarExame" rel="tooltip" title="Pedir Exame" class="btn btn-success"
                                     data-original-title="Edit" href="#">
                                     <i class="tim-icons  icon-components"></i> Pedir exame
                                  </a>
+                              </div>    
+                              <div class="col-4">
+                                 
                               </div>
-                           </div>
-
-
-                           <div class="row">
-
-                              <div class="col-12" style="background-color: Aquamarine;">
+                              <div class="col-6" style="background-color: Aquamarine;">
                                  <div class="table-responsive">
                                     <table class="table">
                                        <thead>
                                           <tr>
                                              <th> Exame </th>
                                              <th> </th>
+                                            
                                           </tr>
                                        </thead>
                                        <tbody>
+                                       @if(sizeof($listaPedidosExames) > 0)
+                                       @foreach($listaPedidosExames as $pedidoexame)
                                           <tr>
-                                             <td> teste </td>
-                                             <td>
-                                                <a rel="tooltip" class="btn btn-link" href="#">
-                                                   <i class="tim-icons icon-pencil"></i>
+                                             <td> {{$pedidoexame->nome}} </td>
+                                             <td> <a rel="tooltip" class="btn btn-link" href="#">
+                                                  Inserir Laudo
                                                 </a>
-                                                <a href="{{route('exame.delete', 0)}}"
+                                                                                          
+                                                <a href="{{route('pedido_exame.delete',[$pedidoexame->id,$consulta->id] )}}"
                                                    onclick="return confirm('Deseja relamente excluir?')" rel="tooltip"
                                                    title="Excluir" class="btn btn-link" data-original-title="Remove">
                                                    <i class="tim-icons icon-simple-remove"></i>
                                                 </a>
                                              </td>
                                           </tr>
+                                          @endforeach 
+                                          @endif   
                                        </tbody>
                                     </table>
                                     <div>
@@ -437,10 +440,6 @@
                                     </div>
                                  </div>
                               </div>
-
-
-
-
                            </div>
                            <div id="atestados" class="tab-pane">
                               <p>Conteúdo da aba atestados.</p>

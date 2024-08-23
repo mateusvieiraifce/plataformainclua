@@ -22,30 +22,33 @@ class PedidoExameController extends Controller
 
    function salveVarios(Request $request)
    {
-      $pedidosExames = $request->input('pedidosExames');   
-      foreach ($pedidosExames as $item) {        
+      $pedidosExames = $request->input('pedidosExames');
+      foreach ($pedidosExames as $item) {
          $entidade = Pedidoexame::create([
             'consulta_id' => $request->consulta_id,
             'exame_id' => $item
          ]);
       }
-      return redirect()->route('especialista.iniciarAtendimento',$request->consulta_id);
+      return redirect()->route('especialista.iniciarAtendimento', $request->consulta_id);
    }
 
-   function delete($id)
+   function delete($id, $consulta_id)
    {
-      try {
-         $entidade = Pedidoexame::find($id);
-         if ($entidade) {
-            $entidade->delete();
-            $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
-         } else {
-            $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
+      $especialidadeController = new EspecialistaController();
+      if ($especialidadeController->consultaPertenceEspecialistaLogado($consulta_id)) {
+         try {
+            $entidade = Pedidoexame::find($id);
+            if ($entidade) {
+               $entidade->delete();
+               $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
+            } else {
+               $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
+            }
+         } catch (QueryException $exp) {
+            $msg = ['valor' => $exp->getMessage(), 'tipo' => 'primary'];
          }
-      } catch (QueryException $exp) {
-         $msg = ['valor' => $exp->getMessage(), 'tipo' => 'primary'];
       }
-      return $this->list($msg);
+      return redirect()->route('especialista.iniciarAtendimento', $consulta_id);
    }
 
 } ?>

@@ -43,7 +43,8 @@
                        </a>
                      </td>
                @endforeach 
-                     @endif                      </tbody>
+                     @endif                     
+                   </tbody>
                   </table>
                   <div>
                      @if ($lista->lastPage() > 1)

@@ -282,7 +282,7 @@ Route::middleware('auth')->group(function () {
     
     Route::get("/especialista/pedidoexame/list",[\App\Http\Controllers\PedidoExameController::class,'list'])->name('pedido_exame.list')->middleware('auth');
     Route::post("/especialista/pedidoexame/save",[\App\Http\Controllers\PedidoExameController::class,'salveVarios'])->name('pedido_exame.salveVarios')->middleware('auth');
-    Route::get("/especialista/pedidoexame/delete/{id}",[\App\Http\Controllers\PedidoExameController::class,'delete'])->name('pedido_exame.delete')->middleware('auth');
+    Route::get("/especialista/pedidoexame/delete/{id}/{consulta_id}",[\App\Http\Controllers\PedidoExameController::class,'delete'])->name('pedido_exame.delete')->middleware('auth');
     
     
 
