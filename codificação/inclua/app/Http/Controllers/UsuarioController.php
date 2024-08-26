@@ -117,31 +117,26 @@ class UsuarioController extends Controller
             'password' => ['required'],
         ]);
 
-        //VERIFICA SE O CADASTRO FOI FINALIZADO
-        $usuario = User::where('email', $request->email)->first();
-        if ($usuario->etapa != "F") {
-            return $this->verifyCadastro($usuario->id);
-        }
-
         $dados = ['email' => $request->email, 'password' => $request->password];
-        if (Auth::attempt($dados, false)) {
+        if (Auth::validate($dados)) {
+            //VERIFICA SE O CADASTRO FOI FINALIZADO
+            $usuario = User::where('email', $request->email)->first();
+            if ($usuario) {
+                return $this->verifyCadastro($usuario->id);
+            }
+
+            Auth::loginUsingId($usuario->id);
             $request->session()->regenerate();
             
             if (session()->has('nextview')) {
                 return redirect(session('nextview'));
-            }
-            $usuario = Auth::user();
-            
-            if($usuario->tipo_user ==='P'){
-               //home usuario Paciente
-               return redirect()->route('paciente.home');
-            }
+            }            
 
             return redirect()->route('home');
         } else {
-            $msg = ['valor'=>'Usuário/Senha inválido','tipo'=>'danger'];
-
-            return view('auth.login', ['msg' => $msg] );
+            session()->flash('msg', ['valor' => trans("Usuário/Senha inválido"), 'tipo' => 'danger']);
+            
+            return redirect()->route('index');
         }
     }
 
@@ -339,25 +334,15 @@ class UsuarioController extends Controller
             
             return redirect()->route('cartao.create', ['usuario_id' => $user->id]);
         } else if ($user->etapa_cadastro == 'F') {
-            session()->flash('msg', ['valor' => trans("Seu cadastro foi finalizado com sucesso. Bem vindo a Plataforma Inclua!"), 'tipo' => 'success']);
-            auth()->login($user, true);
-
-            return redirect()->route('home');
-        } else if ($user->tipo_user == 'R') {
             session()->flash('msg', ['valor' => trans("Bem vindo a Plataforma Inclua!"), 'tipo' => 'success']);
             auth()->login($user, true);
-            if($user->tipo_user ==='P'){
-                //home usuario Paciente
-                return redirect()->route('paciente.home');
-             }
-             
+
             return redirect()->route('home');
         } else {
             session()->flash('msg', ['valor' => trans("Realize o seu cadastro"), 'tipo' => 'danger']);
             
             return redirect()->route('index');
         }
-         
     }
 
     public function preEdit($id=null){

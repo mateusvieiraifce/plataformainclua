@@ -12,8 +12,11 @@ class DashboardController extends Controller
     public function home()
     {
         $usuario = Auth::user();
-      //  $compras = Vendas::where('comprador_id', $usuario->id)->orderBy('created_at', 'desc')->get();
-
+        session()->flash('msg', ['valor' => trans("Bem vindo a Plataforma Inclua!"), 'tipo' => 'success']);
+        if ($usuario->tipo_user == 'P') {
+            //home usuario Paciente
+            return redirect()->route('paciente.home');
+        }
         return view('dashboard');
     }
 }

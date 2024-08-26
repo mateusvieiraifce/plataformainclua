@@ -140,6 +140,19 @@ label.link {
     width: 24em;
 }
 
+.justify-content-center {
+    display: flex;
+    justify-content: center !important;
+}
+
+.text-sm.font-medium.text-gray-500.bg-white.border.border-gray-300.cursor-default.leading-5.rounded-md {
+    font-size: 0.75rem;
+}
+
+.br-4 {
+    border-radius: 4px;
+}
+
 @media (max-width: 768px) {
     .input-medium {
         width: 100%;

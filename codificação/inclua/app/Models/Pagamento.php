@@ -15,7 +15,15 @@ class Pagamento extends Model
         'assinatura_id',
         'data_pagamento',
         'valor',
+        'transaction_code',
+        'status'
     ];
     
     public $timestamps=false;
+
+    public function getCard()
+    {
+        
+        return $this->hasOne(Cartao::class, 'id', 'cartao_id');
+    }
 }

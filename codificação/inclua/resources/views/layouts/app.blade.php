@@ -20,7 +20,7 @@
         <!-- CSS -->
         <link href="/assets/css/black-dashboard.css" rel="stylesheet" />
         <link href="/assets/css/theme.css" rel="stylesheet" />
-        <link href="/assets/css/custom.css" rel="stylesheet" />
+        <link href="{{ asset('assets/css/custom.css') }}" rel="stylesheet" />
         <script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
     </head>
     <body class="{{ $class ?? '' }}">

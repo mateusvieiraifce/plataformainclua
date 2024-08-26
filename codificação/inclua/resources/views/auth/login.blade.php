@@ -50,11 +50,8 @@
             @csrf
 
             <div class="card card-login card-white">
-                <div class="card-header">
-                    <img src="/assets/img/logo-01.png" alt=""
-                         style="width: 250px; height: auto;
-                          margin-left: 25%; margin-top:10%" >
-                    <h2 class="card-title"></h2>
+                <div class="card-img justify-content-center">
+                    <img src="{{ asset('assets/img/logo-01.png') }}" alt="Logo Plataforma Inclua" width="250px">
                 </div>
                 <div class="card-body">
                     <p class="text-dark mb-2">Entre com seu usuário e senha</p>

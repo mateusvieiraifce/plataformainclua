@@ -22,13 +22,14 @@ class VerifyPaymentSignature
     {
         $user = User::where('email', $request->email)->first();
 
-        if (isset($user) && $user->tipo_user == "P" && $user->etapa == "F") {   
+        if (isset($user) && $user->tipo_user == "P" && $user->etapa_cadastro == "F") {   
             $assinatura = Assinatura::where('user_id', $user->id)->first();
-            //PARA O CASO DO CARTÃO NECESSITAR DE TELA INTERMEDIÁRIA
             //TODO para obrigar assinatura.
             if (!$assinatura) {
                 return $next($request);
             }
+
+            //PARA O CASO DO CARTÃO NECESSITAR DE TELA INTERMEDIÁRIA DE CONFIRMAÇÃO DE COMPRA
             if ($assinatura->status == "RENOVAÇÂO PENDENTE" && $assinatura->situacao == "CANCELADA") {
                 $assinaturaController = new AssinaturaController();
                 $response = $assinaturaController->renovacaoManual($assinatura->id);
@@ -41,7 +42,6 @@ class VerifyPaymentSignature
                 return redirect()->route('cartao.create', ['usuario_id' => $user->id]);
             } elseif ($assinatura->status == "APROVADA" && $assinatura->situacao == "ATIVA") {
                 //PARA O CASO DA ASSINATURA ESTAR ATIVA
-
                 return $next($request);
             }
 

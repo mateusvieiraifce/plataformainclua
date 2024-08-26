@@ -10,6 +10,7 @@ use App\Models\Consulta;
 use App\Models\Especialista;
 use App\Models\Especialidade;
 use App\Models\Paciente;
+use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

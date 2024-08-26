@@ -21,4 +21,9 @@ class Assinatura extends Model
     ];
     
     public $timestamps=false;
+
+    public function getCard()
+    {
+        return $this->hasOne(Cartao::class, 'id', 'cartao_id');
+    }
 }

@@ -21,7 +21,7 @@ class EspecialistaclinicaController extends Controller
       join('especialidades', 'especialidades.id', '=', 'especialistas.especialidade_id')->  
       where('clinica_id', '=', $clinica_id)->
       orderBy('especialistas.nome', 'asc')->
-      select('especialistaclinicas.id','especialistas.nome', 'especialistas.telefone','especialidades.descricao as especialidade')->
+      select('especialistaclinicas.id','especialistas.nome', 'especialidades.descricao as especialidade')->
       paginate(8);
       $clinica = clinica::find($clinica_id);
       return view('especialistaclinica/list', ['lista' => $lista, 'filtro' => $filter, 'clinica' => $clinica, 'msg' => $msg]);
