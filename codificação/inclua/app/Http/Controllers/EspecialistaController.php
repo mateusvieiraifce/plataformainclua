@@ -222,7 +222,7 @@ class EspecialistaController extends Controller
       return view('especialista/form', ['entidade' => $entidade, 'especialidades' => Especialidade::all(), 'usuario' => $usuario]);
    }
 
-   function inicarAtendimento($consulta_id)
+   function inicarAtendimento($consulta_id,$aba)
    {
       if (!($this->consultaPertenceEspecialistaLogado($consulta_id))) {
          return redirect()->route('consulta.listconsultaporespecialista');
@@ -263,7 +263,8 @@ class EspecialistaController extends Controller
          'qtdConsultasRealizadas' => $qtdConsultasRealizadas,
          'tipoexames' => $tipoexames,
          'exames' => $exames,
-         'listaPedidosExames' => $listaPedidosExames
+         'listaPedidosExames' => $listaPedidosExames,
+         'aba'=>$aba
       ]);
 
    }

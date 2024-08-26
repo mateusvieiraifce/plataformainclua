@@ -29,7 +29,7 @@ class PedidoExameController extends Controller
             'exame_id' => $item
          ]);
       }
-      return redirect()->route('especialista.iniciarAtendimento', $request->consulta_id);
+      return redirect()->route('especialista.iniciarAtendimento', [$request->consulta_id,"exames"]);
    }
 
    function delete($id, $consulta_id)
@@ -48,7 +48,7 @@ class PedidoExameController extends Controller
             $msg = ['valor' => $exp->getMessage(), 'tipo' => 'primary'];
          }
       }
-      return redirect()->route('especialista.iniciarAtendimento', $consulta_id);
+      return redirect()->route('especialista.iniciarAtendimento', [$consulta_id, "exames"]);
    }
 
 } ?>

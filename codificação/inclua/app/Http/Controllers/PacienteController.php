@@ -295,7 +295,7 @@ class PacienteController extends Controller
       return view('userPaciente/home', ['lista' => $lista,'msg' => $msg,'filtro' => $filtro]);
    }
 
-   function canelarconsulta(Request $request)
+   function cancelarConsulta(Request $request)
    {
     //ver a questao financeira
     $consultaCancelada = Consulta::find($request->consulta_idM);

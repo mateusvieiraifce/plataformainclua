@@ -47,9 +47,7 @@ class TipoexameController extends Controller
          if ($entidade) {
             $entidade->delete();
             $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
-         } else {
-            $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
-         }
+         } 
       } catch (QueryException $exp) {
          $msg = ['valor' => $exp->getMessage(), 'tipo' => 'primary'];
       }

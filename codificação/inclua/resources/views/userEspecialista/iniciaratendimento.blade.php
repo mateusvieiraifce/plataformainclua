@@ -370,19 +370,44 @@
                <div class="row">
                   <div class="tab-container">
                      <div class="tabs">
-                        <button class="tab-button active btn-primary"
+                        <button class="tab-button 
+                         @if($aba == "anamnese")
+                              <?php echo 'active'; ?>
+                         @endif                        
+                         btn-primary"
                            onclick="openTab(event, 'anamnese')">Anamnese</button>
-                        <button class="tab-button btn-primary"
+                        <button class="tab-button 
+                        @if($aba == "prescricoes")
+                              <?php echo 'active'; ?>
+                         @endif                        
+                         btn-primary"
                            onclick="openTab(event, 'prescricoes')">Prescrições</button>
-                        <button class="tab-button btn-primary" onclick="openTab(event, 'exames')"> Pedidos de
+                        <button class="tab-button  
+                        @if($aba == "exames")
+                              <?php echo ' active '; ?>
+                         @endif 
+                         btn-primary"
+                        onclick="openTab(event, 'exames')"> Pedidos de
                            exames</button>
-                        <button class="tab-button btn-primary" onclick="openTab(event, 'atestados')">Atestados</button>
-                        <button class="tab-button btn-primary" onclick="openTab(event, 'prontuario')"> Prontuário
+                        <button class="tab-button
+                         @if($aba == "atestados")
+                              <?php echo 'active'; ?>
+                         @endif                        
+                         btn-primary" onclick="openTab(event, 'atestados')">Atestados</button>
+                        <button class="tab-button 
+                        @if($aba == "prontuario")
+                              <?php echo 'active'; ?>
+                         @endif   
+                        btn-primary" onclick="openTab(event, 'prontuario')"> Prontuário
                            completo</button>
 
                      </div>
                      <div class="tab-content">
-                        <div id="anamnese" class="tab-pane active">
+                        <div id="anamnese" class="tab-pane
+                         @if($aba == "anamnese")
+                              <?php echo 'active'; ?>
+                         @endif 
+                         ">
                            <p>Conteúdo da aba Anamnese.</p>
                            <!-- Tela com lista de anamnese precadastradas
                            no cad de anamnese vai ter id e descricao
@@ -391,10 +416,18 @@
                            <!-- Tela com Queixa principal-->
                            <!-- História do problema = História-->
                         </div>
-                        <div id="prescricoes" class="tab-pane">
+                        <div id="prescricoes" class="tab-pane
+                         @if($aba == "prescricoes")
+                              <?php echo 'active'; ?>
+                         @endif 
+                         ">
                            <p>Conteúdo da aba prescriçoes.</p>
                         </div>
-                        <div id="exames" class="tab-pane">
+                        <div id="exames" class="tab-pane
+                          @if($aba == "exames")
+                              <?php echo 'active'; ?>
+                         @endif 
+                         ">
                            <div class="row">
                               <div class="col-2">
                                  <a id="adicionarExame" rel="tooltip" title="Pedir Exame" class="btn btn-success"
@@ -405,14 +438,13 @@
                               <div class="col-4">
                                  
                               </div>
-                              <div class="col-6" style="background-color: Aquamarine;">
+                              <div class="col-6 btn-primary">
                                  <div class="table-responsive">
                                     <table class="table">
                                        <thead>
                                           <tr>
                                              <th> Exame </th>
                                              <th> </th>
-                                            
                                           </tr>
                                        </thead>
                                        <tbody>
@@ -441,10 +473,18 @@
                                  </div>
                               </div>
                            </div>
-                           <div id="atestados" class="tab-pane">
+                           <div id="atestados" class="tab-pane
+                            @if($aba == "atestados")
+                              <?php echo 'active'; ?>
+                            @endif
+                           ">
                               <p>Conteúdo da aba atestados.</p>
                            </div>
-                           <div id="prontuario" class="tab-pane">
+                           <div id="prontuario" class="tab-pane
+                             @if($aba == "prontuario")
+                              <?php echo 'active'; ?>
+                            @endif
+                            ">
                               <p>Conteúdo da aba prontuário.</p>
                            </div>
                         </div>
