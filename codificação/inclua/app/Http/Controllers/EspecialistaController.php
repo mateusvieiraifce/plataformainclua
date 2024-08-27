@@ -12,6 +12,9 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Models\Tipoexame;
+use App\Models\Exame;
+use App\Models\Pedidoexame;
 
 class EspecialistaController extends Controller
 {
@@ -219,7 +222,7 @@ class EspecialistaController extends Controller
       return view('especialista/form', ['entidade' => $entidade, 'especialidades' => Especialidade::all(), 'usuario' => $usuario]);
    }
 
-   function inicarAtendimento($consulta_id)
+   function inicarAtendimento($consulta_id,$aba)
    {
       if (!($this->consultaPertenceEspecialistaLogado($consulta_id))) {
          return redirect()->route('consulta.listconsultaporespecialista');
@@ -240,13 +243,28 @@ class EspecialistaController extends Controller
          where('especialista_id', '=', $consulta->especialista_id)->
          orderBy('horario_iniciado', 'asc')->count();
 
+         $tipoexames = Tipoexame::orderBy('descricao', 'asc')->get();
+
+         $exames = Exame::orderBy('nome', 'asc')->get();
+
+      $listaPedidosExames = Pedidoexame::
+      join('exames', 'exames.id', '=', 'pedido_exames.exame_id')->
+      where('consulta_id',$consulta->id)->
+      orderBy('pedido_exames.created_at', 'desc')->
+      select('pedido_exames.id as id', 'nome','laudo')->get(); 
+    
+      //dd($listaPedidosExames);
 
       return view('userEspecialista/iniciaratendimento', [
          'consulta' => $consulta,
          'paciente' => $paciente,
          'usuarioPaciente' => $usuarioPaciente,
          'primeiraConsulta' => $primeiraConsulta,
-         'qtdConsultasRealizadas' => $qtdConsultasRealizadas
+         'qtdConsultasRealizadas' => $qtdConsultasRealizadas,
+         'tipoexames' => $tipoexames,
+         'exames' => $exames,
+         'listaPedidosExames' => $listaPedidosExames,
+         'aba'=>$aba
       ]);
 
    }
@@ -278,6 +296,7 @@ class EspecialistaController extends Controller
       }
    }
 
+   //lista dos pacientes que fez alguma consulta com o especialista logado
    function listaPacientes($msg = null)
    {
       $especialista = Especialista::where('usuario_id', '=', Auth::user()->id)->first();
@@ -285,7 +304,6 @@ class EspecialistaController extends Controller
       if (isset($_GET['filtro'])) {
          $filter = $_GET['filtro'];
       }
-
 
       $statusConsulta = "Finalizada";
 

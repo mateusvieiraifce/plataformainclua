@@ -5,6 +5,7 @@ use App\Models\Exame;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Tipoexame;
 
 class ExameController extends Controller
 {
@@ -14,12 +15,13 @@ class ExameController extends Controller
       if (isset($_GET['filtro'])) {
          $filter = $_GET['filtro'];
       }
-      $lista = Exame::where('nome', 'like', "%" . "%")->orderBy('id', 'desc')->paginate(10);
+      $lista = Exame::where('nome', 'like', "%" . "%")->orderBy('nome', 'asc')->paginate(10);
       return view('exame/list', ['lista' => $lista, 'filtro' => $filter, 'msg' => $msg]);
    }
    function new()
    {
-      return view('exame/form', ['entidade' => new Exame()]);
+      $tipoexames = Tipoexame::all();
+      return view('exame/form', ['entidade' => new Exame(), 'tipoexames' => $tipoexames]);
    }
    function search(Request $request)
    {
@@ -33,13 +35,13 @@ class ExameController extends Controller
          $ent = Exame::find($request->id);
          $ent->nome = $request->nome;
          $ent->descricao = $request->descricao;
-         $ent->tipo = $request->tipo;
+         $ent->tipoexame_id = $request->tipoexame_id;
          $ent->save();
       } else {
          $entidade = Exame::create([
             'nome' => $request->nome,
             'descricao' => $request->descricao,
-            'tipo' => $request->tipo
+            'tipoexame_id' => $request->tipoexame_id
          ]);
       }
       $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
@@ -62,7 +64,8 @@ class ExameController extends Controller
    }
    function edit($id)
    {
+      $tipoexames = Tipoexame::all();
       $entidade = Exame::find($id);
-      return view('exame/form', ['entidade' => $entidade]);
+      return view('exame/form', ['entidade' => $entidade ,'tipoexames' => $tipoexames]);
    }
 } ?>

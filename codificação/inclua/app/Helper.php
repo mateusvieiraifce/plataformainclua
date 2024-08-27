@@ -355,4 +355,18 @@ class Helper
         $output = str_replace(",", ".", $output);
         return (float) $output;
     }
+
+    public static function descryptNumberCard($numeroCartao)
+    {
+        $numero = Crypt::decrypt($numeroCartao);
+        $numero = Helper::encodeNumberCard($numero);
+        return $numero;
+    }
+
+    public static function encodeNumberCard($numeroCartao)
+    {
+        $numeroCartao = preg_replace('/(\d{4})(\d{4})(\d{4})(\d{4})/', '**** **** **** $4', $numeroCartao);
+        
+        return $numeroCartao;
+    }
 }

@@ -8,7 +8,7 @@
                     <img class="img-card" src="{{ asset('assets/img/logo-01.png') }}" alt="Card image" >
                 </div>
                 <div class="card-header">
-                    <h2 class="title">Cadastro de dados</h2>
+                    <h2 class="title">Cadastro de dados {{ env('APP_NODE') }}</h2>
                 </div>
                 <div class="card-body">
                     <form class="form" method="post" action="{{ route('usuario.clinica.store.dados') }}" enctype="multipart/form-data">

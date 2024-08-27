@@ -37,4 +37,26 @@ class CartaoController extends Controller
             session()->flash('msg', $msg);
         }
     }
+    
+    public function update($cartao_id, $status, $principal = null)
+    {
+        try {
+            $cartao = Cartao::find($cartao_id);
+            $cartao->status = $status;
+            $cartao->principal = $principal;
+            $cartao->save();
+            
+            return $cartao;
+        } catch (QueryException $e) {
+            $msg = ['valor' => trans("Erro ao executar a operação!"), 'tipo' => 'danger'];
+            session()->flash('msg', $msg);
+        }
+    }
+
+    public function getCartoes($user_id)
+    {
+        $cartoes = Cartao::where('user_id', $user_id)->get();
+
+        return $cartoes;
+    }
 }

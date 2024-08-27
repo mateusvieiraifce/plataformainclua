@@ -25,6 +25,7 @@ class userSeeder extends Seeder
             'updated_at'=>now(),
             'telefone'=>"88888888",
             'tipo_user' => 'R',
+            'etapa_cadastro' => 'F',
         ]);
     }
 }
