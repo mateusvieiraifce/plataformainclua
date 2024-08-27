@@ -53,6 +53,6 @@ class PagamentoController extends Controller
         $cartaoController = new CartaoController();
         $cartoes = $cartaoController->getCartoes($user->id);
         
-        return view('userPaciente.pagamentos.lista', ['pagamentos' => $pagamentos, 'assinatura' => $assinatura, 'cartoes' => $cartoes]);
+        return view('userPaciente.financeiro.lista', ['pagamentos' => $pagamentos, 'assinatura' => $assinatura, 'cartoes' => $cartoes]);
     }
 }

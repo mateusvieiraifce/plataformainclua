@@ -153,8 +153,29 @@ label.link {
     border-radius: 4px;
 }
 
+.card-header > a.header-links {
+    width: calc((100% - 8px) / 2);
+}
+
+.card-header > a.header-links:hover {
+    color: #c4c4d4;
+    transition: all 0.15s ease;
+}
+
+@media (max-width: 576px) {
+    .card-header > a.header-links {
+        width: 100%;
+    }
+}
+
 @media (max-width: 768px) {
     .input-medium {
         width: 100%;
+    }
+}
+
+@media (min-width: 1400px) {
+    .card-header > a.header-links {
+        width: calc((100% - 20px) / 4);
     }
 }
