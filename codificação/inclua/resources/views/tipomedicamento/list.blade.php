@@ -1,4 +1,4 @@
-@extends('layouts.app', ['page' => __('exame'), 'rotaPesquisa' => 'exame.search', 'pageSlug' => 'exame', 'class' => 'exame'])
+@extends('layouts.app', ['page' => __('tipomedicamento'), 'rotaPesquisa' => 'tipomedicamento.search', 'pageSlug' => 'tipomedicamento', 'class' => 'tipomedicamento'])
 @section('content')
 <div class="card">
 
@@ -7,13 +7,13 @@
       <div class="col-lg-12 col-md-12">
          <div class="card card-tasks">
             <div class="card-header">
-               <h6 class="title d-inline">Lista de exames </h6>
+               <h6 class="title d-inline">Lista de tipo medicamentos </h6>
                <div class="dropdown">
                   <button type="button" class="btn btn-link dropdown-toggle btn-icon" data-toggle="dropdown">
                      <i class="tim-icons icon-settings-gear-63"></i>
                   </button>
                   <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-                     <a class="dropdown-item" href="{{route('exame.new')}}">Adicionar</a>
+                     <a class="dropdown-item" href="{{route('tipomedicamento.new')}}">Adicionar</a>
                   </div>
                </div>
             </div>
@@ -21,28 +21,24 @@
                <div class="table-responsive">
                   <table class="table">
                      <thead>
-                        <th> Nome </th>
-
                         <th> Descrição </th>
-
+                        <th> Quantidade de folhas </th>
                         <th> </th>
                      </thead>
                      <tbody>
                         @if(sizeof($lista) > 0)
                      @foreach($lista as $ent)
                    <tr>
-                     <td>{{$ent->nome}}</td>
-
                      <td>{{$ent->descricao}}</td>
-
+                     <td>{{$ent->qtdFolha}}</td>
                      <td>
                        <a rel="tooltip" title="Editar" class="btn btn-link" data-original-title="Edit"
-                        href="{{route('exame.edit', $ent->id)}}">
+                        href="{{route('tipomedicamento.edit', $ent->id)}}">
                         <i class="tim-icons icon-pencil"></i>
                        </a>
                      </td>
                      <td>
-                       <a href="{{route('exame.delete', $ent->id)}}"
+                       <a href="{{route('tipomedicamento.delete', $ent->id)}}"
                         onclick="return confirm('Deseja relamente excluir?')" rel="tooltip" title="Excluir"
                         class="btn btn-link" data-original-title="Remove">
                         <i class="tim-icons icon-simple-remove"></i>
@@ -55,7 +51,7 @@
                      @if ($lista->lastPage() > 1)
                                   @php
                             $paginator = $lista;
-                            $paginator->url = route('exame.list');
+                            $paginator->url = route('tipomedicamento.list');
                         @endphp
                                   <ul class="pagination">
                                     <li class="{{ ($paginator->currentPage() == 1) ? ' disabled' : '' }}">

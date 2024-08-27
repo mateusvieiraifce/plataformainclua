@@ -1,11 +1,9 @@
 <?php
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
-class Exame extends Model
+class PedidoExame extends Model
 {
   use HasFactory;
-  protected $fillable = ['nome', 'descricao', 'tipoexame_id'];
+  protected $fillable = ['consulta_id', 'exame_id', 'laudo'];
 } ?>

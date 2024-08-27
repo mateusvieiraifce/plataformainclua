@@ -121,6 +121,7 @@ class populacaoTesteSeeder extends Seeder
             'ativo'=>"1",
         ]);
 
+
         //fazer clinica vinculada a especialista
 
 

@@ -219,6 +219,20 @@
                                 </a>
                             </li>
 
+                        <li @if ($pageSlug=='tipoexames' ) class="active " @endif>
+                            <a href="{{route('tipoexame.list')}}">
+                                <i class="tim-icons  icon-components"></i>
+                                <p>{{ __('Tipo de Exames') }}</p>
+                            </a>
+                        </li> 
+
+                        <li @if ($pageSlug=='tipomedicamento' ) class="active " @endif>
+                            <a href="{{route('tipomedicamento.list')}}">
+                                <i class="tim-icons  icon-components"></i>
+                                <p>{{ __('Tipo de Medicamentos') }}</p>
+                            </a>
+                        </li>
+
                             <li @if ($pageSlug=='exames' ) class="active " @endif>
                                 <a href="{{route('exame.list')}}">
                                     <i class="tim-icons  icon-components"></i>
@@ -315,12 +329,7 @@
 
             <!-- usuario tipo Especialista -->
             @if(\Illuminate\Support\Facades\Auth::user()->tipo_user ==='E')
-                <li @if ($pageSlug=='dashboard' ) class="active " @endif>
-                    <a href="{{route('home')}}">
-                        <i class="tim-icons icon-bank"></i>
-                        <p>{{ __('Home') }}</p>
-                    </a>
-                </li>
+           
 
                 <li @if ($pageSlug=='listconsultaporespecialista' ) class="active " @endif>
                     <a href="{{route('consulta.listconsultaporespecialista')}}">
