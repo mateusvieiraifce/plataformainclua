@@ -1,10 +1,9 @@
 @extends('layouts.app', ['page' => __('exame'), 'rotaPesquisa' => 'exame.search', 'pageSlug' => 'exame', 'class' => 'exame'])
 @section('content')
-<section class="bg0 p-t-104 p-b-116">
-  <div class="container">
-    <div class="row">
 
-      <div class="col-md-12">
+
+  <div class="row">
+  <div class="col-md-12">
         <div class="card">
           <div class="card-header">
             <h5 class="title">Editar</h5>
