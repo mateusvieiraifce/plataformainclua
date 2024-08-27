@@ -44,7 +44,7 @@ class ConsultaController extends Controller
          where('status', '=', $statusConsulta)->
          select('consultas.id', 'status', 'horario_agendado', 'clinicas.nome as nome_clinica')->
          orderBy('horario_agendado', 'asc')->paginate(8);
-      return view('userEspecialista/listTodasConsultas', ['lista' => $lista, 'clinicas' => $clinicas, 'clinicaselecionada_id' => $clinicaselecionada_id, 'status' => $statusConsulta, 'filtro' => $filter, 'especialista' => $especialista, 'msg' => $msg]);
+      return view('userEspecialista.listtodasconsultas', ['lista' => $lista, 'clinicas' => $clinicas, 'clinicaselecionada_id' => $clinicaselecionada_id, 'status' => $statusConsulta, 'filtro' => $filter, 'especialista' => $especialista, 'msg' => $msg]);
    }
 
 

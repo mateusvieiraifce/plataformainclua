@@ -11,12 +11,15 @@ class DashboardController extends Controller
 {
     public function home()
     {
-        $usuario = Auth::user();
+        $user = Auth::user();
         session()->flash('msg', ['valor' => trans("Bem vindo a Plataforma Inclua!"), 'tipo' => 'success']);
-        if ($usuario->tipo_user == 'P') {
-            //home usuario Paciente
+        if ($user->tipo_user == 'P') {
+            //home user Paciente
             return redirect()->route('paciente.home');
-        }
+        } elseif ($user->tipo_user ==='E') {
+            //home user Especialista
+            return redirect()->route('consulta.listconsultaporespecialista');
+         }
         return view('dashboard');
     }
 }
