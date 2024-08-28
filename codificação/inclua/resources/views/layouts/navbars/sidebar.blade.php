@@ -233,6 +233,13 @@
                             </a>
                         </li>
 
+                        <li @if ($pageSlug=='medicamento' ) class="active " @endif>
+                            <a href="{{route('medicamento.list')}}">
+                                <i class="tim-icons  icon-components"></i>
+                                <p>{{ __('Medicamentos') }}</p>
+                            </a>
+                        </li>
+
                             <li @if ($pageSlug=='exames' ) class="active " @endif>
                                 <a href="{{route('exame.list')}}">
                                     <i class="tim-icons  icon-components"></i>
