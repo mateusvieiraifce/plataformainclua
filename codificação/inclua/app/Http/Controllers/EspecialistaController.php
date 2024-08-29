@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Tipoexame;
 use App\Models\Exame;
 use App\Models\Pedidoexame;
+use App\Models\Medicamento;
 
 class EspecialistaController extends Controller
 {
@@ -228,24 +229,21 @@ class EspecialistaController extends Controller
          return redirect()->route('consulta.listconsultaporespecialista');
       }
       $consulta = Consulta::find($consulta_id);
-
       $paciente = Paciente::find($consulta->paciente_id);
-
       $usuarioPaciente = User::find($paciente->usuario_id);
-
       $primeiraConsulta = Consulta::where('status', '=', 'Finalizada')->
          where('paciente_id', '=', $consulta->paciente_id)->
          where('especialista_id', '=', $consulta->especialista_id)->
          orderBy('horario_iniciado', 'asc')->first();
-
       $qtdConsultasRealizadas = Consulta::where('status', '=', 'Finalizada')->
          where('paciente_id', '=', $consulta->paciente_id)->
          where('especialista_id', '=', $consulta->especialista_id)->
          orderBy('horario_iniciado', 'asc')->count();
+     
+      $tipoexames = Tipoexame::orderBy('descricao', 'asc')->get();
+      $exames = Exame::orderBy('nome', 'asc')->get();
 
-         $tipoexames = Tipoexame::orderBy('descricao', 'asc')->get();
-
-         $exames = Exame::orderBy('nome', 'asc')->get();
+      $medicamentos = Medicamento::orderBy('nome_comercial', 'asc')->get();
 
       $listaPedidosExames = Pedidoexame::
       join('exames', 'exames.id', '=', 'pedido_exames.exame_id')->
@@ -264,6 +262,7 @@ class EspecialistaController extends Controller
          'tipoexames' => $tipoexames,
          'exames' => $exames,
          'listaPedidosExames' => $listaPedidosExames,
+         'medicamentos' => $medicamentos ,
          'aba'=>$aba
       ]);
 

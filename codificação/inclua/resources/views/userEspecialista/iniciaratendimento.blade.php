@@ -1,5 +1,51 @@
 @extends('layouts.app', ['page' => __('Consultas'), 'exibirPesquisa' => false, 'pageSlug' => 'listconsultaporespecialista', 'class' => 'agenda'])
 @section('content')
+
+<!-- script para add funcao select2 do medicamento-->
+<script>
+    // Concept: Render select2 fields after all javascript has finished loading
+    var initSelect2 = function() {
+        // function that will initialize the select2 plugin, to be triggered later
+        var renderSelect = function() {
+            $('#medicamento_id').each(function() {
+                $(this).select2({
+                    dropdownParent: $('#modalPedirMedicamento')
+                });
+            })
+        };
+        // create select2 HTML elements
+        var style = document.createElement('link');
+        var script = document.createElement('script');
+        style.rel = 'stylesheet';
+        style.href = 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/css/select2.min.css';
+        script.type = 'text/javascript';
+        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/js/select2.full.min.js';
+
+        // trigger the select2 initialization once the script tag has finished loading
+        script.onload = renderSelect;
+
+        // render the style and script tags into the DOM
+        document.getElementsByTagName('head')[0].appendChild(style);
+        document.getElementsByTagName('head')[0].appendChild(script);
+
+    };
+    //  initSelect2();
+</script>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    var select2Inicializado = false;
+    $(document).ready(function() {
+        if (!select2Inicializado) {
+            // Inicializar o select2
+            initSelect2();
+            select2Inicializado = true;
+        }        
+    });
+</script>
+
 <style>
    #chronometer {
       font-size: 1.5rem;
@@ -19,7 +65,6 @@
       height: 70px;
    }
 </style>
-
 
 
 <!-- menu em forma de abas-->
@@ -223,14 +268,108 @@
    </div>
 </div>
 
-<!-- scpritp para filtrar os exames a medida que eh digitado algo-->
+
+
+<!-- Modal add medicamento-->
+<div class="modal fade" id="modalPedirMedicamento" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+   aria-hidden="true">
+   <div class="modal-dialog  modal-dialog-top modal-lg" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h4 class="modal-title">
+               <label>Favor selecionar o medicamento desejado</label>
+            </h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+               <span aria-hidden="true">&times;</span>
+            </button>
+         </div>
+         <div class="modal-body">
+            <div class="container">
+               <form method="post" action="{{route('pedido_exame.salveVarios')}}">
+                  @csrf
+                  <div class="row">
+                     <div class="col-md-10">
+                        <div class="form-group"  style="color:#2d3748">
+                              <label id="labelFormulario">Selecionar medicamento</label>
+                                    <select class="select2"  name="mySelect[]" multiple="multiple" 
+                                    style="color:#2d3748; width: 100%; height: 39px; " 
+                                    name="medicamento_id" id="medicamento_id" class="form-control"
+                                     title="Por favor selecionar medicamento...">                                       
+                                        @foreach($medicamentos as $ent)
+                                        <option data-color="red" value="{{old('medicamento_id', $ent->id)}}"                                       
+                                        >
+                                           {{$ent->nome_comercial}}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                        </div>
+                     </div>
+                   
+                     <div class="col-md-1">
+                        <div class="form-group">
+                           <label id="labelFormulario"></label>
+                           <a href="#" rel="tooltip" title="Adicionar " data-original-title="Adicionar " href="#"
+                              data-target="#addProdutoBDModal" data-toggle="modal" data-whatever="@mdo">
+                              <button style="width: 10px;" type="button" rel="tooltip" title="" class="btn btn-success"
+                                 data-original-title="Edit Task">
+                                 <i class="tim-icons icon-simple-add"></i>
+                              </button>
+                           </a>
+                        </div>
+                     </div>
+
+                  <div class="row" style="width: 100%;">
+                  <div class="col-6">
+                     <fieldset >
+                        <legend  style="font-size: 14px;">Selecionar medicamento</legend>
+                        <div id="checkboxContainerMedicamentos" style="margin-left:30px">
+                           <div class="row">
+                              @foreach($medicamentos as $entMedicamentos)                        
+                          <div class="col-4">
+                            <label>
+                              <input type="checkbox" style="color: #2d3748"
+                                 value="{{old('medicamento_id', $entMedicamentos->id)}}">
+                              {{$entMedicamentos->nome_comercial}}
+                            </label>
+                          </div>
+                       @endforeach                     
+                           </div>
+                        </div>
+                     </fieldset>
+                     </div>
+                     <div class="col-6">
+                     <fieldset>
+                        <legend  style="font-size: 14px;">Medicamentos selecionados</legend>
+                        <div class="selected-items">                        
+                           <ul style="color: #2d3748" id="selectedListMedicamentos"></ul>
+                        </div>
+                     </fieldset>
+                     </div>
+                     </div>
+
+                  </div>
+                  <div class="modal-footer">
+                     <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        <i class="fa fa-reply"></i> Voltar
+                     </button>
+                     <input type="hidden" name="consulta_id" value="{{$consulta->id}}">
+                     <input type="submit" name="mover" class="btn btn-success" value="Adicionar medicamentos"></input>
+                  </div>
+               </form>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+
+
+
+
+<!-- scpritp para filtrar os EXAMES a medida que eh digitado algo-->
 <script>
    // Lista de itens simulada que poderia vir do controlador
    const itemsExames = JSON.parse('{!! $exames !!}');
-
    const itemsExamesSelecionados = [];
-
-
    function renderCheckboxes(filteredItems) {
       const container = document.getElementById('checkboxContainer');
       container.innerHTML = ''; // Limpa o conteúdo anterior
@@ -277,8 +416,6 @@
    const selectElement = document.getElementById('tipoexame_id');
    selectElement.addEventListener('change', tipoAlterado);
 
-  
-
    function updateSelectedList() {
       const selectedList = document.getElementById('selectedList');
       const selectedCheckboxes = document.querySelectorAll('#checkboxContainer input:checked');    
@@ -323,6 +460,85 @@
         }
 </script>
 
+<!-- scpritp para filtrar os MEDICAMENTOS a medida que eh digitado algo-->
+<script>
+   // Lista de itens simulada que poderia vir do controlador
+   const itemsMedicamentos = JSON.parse('{!! $medicamentos !!}');
+   const itemsMedicamentosSelecionados = [];
+   function renderCheckboxes(filteredItems) {
+      const container = document.getElementById('checkboxContainerMedicamentos');
+      container.innerHTML = ''; // Limpa o conteúdo anterior
+      for (var i = 0; i < filteredItems.length; i++) {
+         medicamento = filteredItems[i];
+         const checkbox = document.createElement('div');
+         checkbox.innerHTML = `          
+         <label class="form-check-label"  style="color:#111">       
+                    <input class="form-check-input" type="checkbox" id="${medicamento.id}" value="${medicamento.id}">                  
+                          ${medicamento.nome_comercial}
+                    </label>              
+                    `;
+      checkbox.querySelector('input').addEventListener('change', updateSelectedListMedicamentos);
+      container.appendChild(checkbox);
+      }
+   }
+
+   function filterItems(query) {     
+      const filteredItems = itemsMedicamentos.filter(item => item.nome_comercial.toLowerCase().includes(query.toLowerCase()));
+      renderCheckboxes(filteredItems);
+   }
+
+   document.getElementById('pesquisamedicamento').addEventListener('input', function () {
+      const query = this.value.trim();
+      filterItems(query);
+   });
+
+   // Renderizar todos os itens no início
+   renderCheckboxes(itemsMedicamentos);
+   
+   
+   function updateSelectedListMedicamentos() {
+      const selectedList = document.getElementById('selectedListMedicamentos');
+      const selectedCheckboxes = document.querySelectorAll('#checkboxContainerMedicamentos input:checked');    
+
+      selectedCheckboxes.forEach(checkbox => {  
+         const label = checkbox.parentNode; 
+         const descricao = label.textContent.trim();             
+         const novoExame = {
+                nome: descricao,
+                id: checkbox.value
+            };        
+            const existe = itemsMedicamentosSelecionados.some(objeto => objeto.id === novoExame.id);
+            if (!existe) {
+               itemsMedicamentosSelecionados.push(novoExame);
+            } 
+      });
+    
+      let listaHTML = '<ul style="list-style-type: none; padding: 0; margin: 0;">';
+      itemsMedicamentosSelecionados.forEach(objeto => { 
+            listaHTML += `<li  style="color:#111" id="${objeto.id}">     
+            
+            <input type="hidden" name="pedidosExames[]" value="${objeto.id}">
+
+             ${objeto.nome}  <a onclick="removerItemMedicamentos(this)">
+              <i class="tim-icons icon-simple-remove"></i>
+              </a></li>`;    
+      });
+      listaHTML += '</ul>'; 
+      const resultado = document.getElementById('selectedListMedicamentos');
+      resultado.innerHTML = listaHTML || '<p>Nenhum medicamento selecionado.</p>';
+       
+
+   }
+
+   function removerItemMedicamentos(botao) {
+            const li = botao.parentNode; // Obtém o <li> pai do botão
+            li.remove(); // Remove o <li> da lista
+            const index = itemsMedicamentosSelecionados.findIndex(objeto => objeto.id === li.id);
+            if (index !== -1) {
+               itemsMedicamentosSelecionados.splice(index, 1);              
+            }
+        }
+</script>
 
 
 
@@ -345,7 +561,6 @@
                      <h6 id="idadePaciente" class="title d-inline">
                         {{date('d/m/Y', strtotime($usuarioPaciente->data_nascimento))}}
                      </h6>
-
                   </div>
                   <div class="col-6 col-lg-4">
                      @if(isset($primeiraConsulta))
@@ -365,17 +580,15 @@
 
             </div>
             <div class="card-body">
-
-
                <div class="row">
                   <div class="tab-container">
                      <div class="tabs">
                         <button class="tab-button 
-                         @if($aba == "anamnese")
+                         @if($aba == "prontuarioatual")
                               <?php echo 'active'; ?>
                          @endif                        
                          btn-primary"
-                           onclick="openTab(event, 'anamnese')">Anamnese</button>
+                           onclick="openTab(event, 'prontuarioatual')">Pronturário Atual</button>
                         <button class="tab-button 
                         @if($aba == "prescricoes")
                               <?php echo 'active'; ?>
@@ -403,25 +616,69 @@
 
                      </div>
                      <div class="tab-content">
-                        <div id="anamnese" class="tab-pane
-                         @if($aba == "anamnese")
+                        <div id="prontuarioatual" class="tab-pane
+                         @if($aba == "prontuarioatual")
                               <?php echo 'active'; ?>
                          @endif 
                          ">
-                           <p>Conteúdo da aba Anamnese.</p>
-                           <!-- Tela com lista de anamnese precadastradas
-                           no cad de anamnese vai ter id e descricao
-                           na tela de atendimento o especialista vai poder inserir um texto    cada anamnese    
-                           * quando abrir o modal mostrar dados já preenchidos de consultas anteriores-->
-                           <!-- Tela com Queixa principal-->
-                           <!-- História do problema = História-->
+                        <div class="row">
+                           <div class="col-md-12">
+                              <div class="form-group">
+                                 <label style="color: #111">&nbsp; &nbsp; Dados da consulta:</label>
+                                 <input style="color: #111" type="area" placeholder="Digite os dados da consulta aqui"
+                                    name="dadosconsulta" id="dadosconsulta" class="form-control" value="">
+                              </div>
+                           </div>
+                        </div>
                         </div>
                         <div id="prescricoes" class="tab-pane
                          @if($aba == "prescricoes")
                               <?php echo 'active'; ?>
                          @endif 
                          ">
-                           <p>Conteúdo da aba prescriçoes.</p>
+                         <div class="row">
+                              <div class="col-2">
+                                 <a id="adicionarMedicamento" rel="tooltip" title="Pedir medicamento" class="btn btn-success"
+                                    data-original-title="Edit" href="#">
+                                    <i class="tim-icons  icon-components"></i> Prescrever medicamento
+                                 </a>
+                              </div>    
+                              <div class="col-4">
+                                 
+                              </div>
+                              <div class="col-6 btn-primary">
+                                 <div class="table-responsive">
+                                    <table class="table">
+                                       <thead>
+                                          <tr>
+                                             <th> Medicamento </th>
+                                             <th> </th>
+                                          </tr>
+                                       </thead>
+                                       <tbody>
+                                       @if(sizeof($listaPedidosExames) > 0)
+                                       @foreach($listaPedidosExames as $pedidoexame)
+                                          <tr>
+                                             <td> {{$pedidoexame->nome}} </td>
+                                             <td>                                                                                           
+                                                <a href="{{route('pedido_exame.delete',[$pedidoexame->id,$consulta->id] )}}"
+                                                   onclick="return confirm('Deseja relamente excluir?')" rel="tooltip"
+                                                   title="Excluir" class="btn btn-link" data-original-title="Remove">
+                                                   <i class="tim-icons icon-simple-remove"></i>
+                                                </a>
+                                             </td>
+                                          </tr>
+                                          @endforeach 
+                                          @endif   
+                                       </tbody>
+                                    </table>
+                                    <div>
+
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                           
                         </div>
                         <div id="exames" class="tab-pane
                           @if($aba == "exames")
@@ -452,10 +709,7 @@
                                        @foreach($listaPedidosExames as $pedidoexame)
                                           <tr>
                                              <td> {{$pedidoexame->nome}} </td>
-                                             <td> <a rel="tooltip" class="btn btn-link" href="#">
-                                                  Inserir Laudo
-                                                </a>
-                                                                                          
+                                             <td>                                                                                           
                                                 <a href="{{route('pedido_exame.delete',[$pedidoexame->id,$consulta->id] )}}"
                                                    onclick="return confirm('Deseja relamente excluir?')" rel="tooltip"
                                                    title="Excluir" class="btn btn-link" data-original-title="Remove">
@@ -473,6 +727,7 @@
                                  </div>
                               </div>
                            </div>
+                           </div>
                            <div id="atestados" class="tab-pane
                             @if($aba == "atestados")
                               <?php echo 'active'; ?>
@@ -485,7 +740,17 @@
                               <?php echo 'active'; ?>
                             @endif
                             ">
-                              <p>Conteúdo da aba prontuário.</p>
+                            <div class="row">
+                              <div class="col-2">
+                                 <a id="adicionarExame" rel="tooltip" title="Pedir Exame" class="btn btn-success"
+                                    data-original-title="Edit" href="#">
+                                    <i class="tim-icons  icon-components"></i> Anamnese
+                                 </a>
+                              </div>    
+                              <div class="col-4">
+                                 
+                              </div>                              
+                           </div>
                            </div>
                         </div>
                      </div>
@@ -572,13 +837,18 @@
       document.getElementById('idadePaciente').textContent = "IDADE: " + idade + " anos";
    </script>
 
-   <!-- abrindo o modal de add exames -->
+  
    <script>
+       <!-- abrindo o modal de add exames -->
       document.getElementById('adicionarExame').addEventListener('click', function () {
-         //  mandaDadosFormPrincipalParaModal();
-         //  preencheModalCustos();
          // Abra o modal
          $('#modalPedirExame').modal('show');
+      });
+
+      <!-- abrindo o modal de add medicamento -->
+      document.getElementById('adicionarMedicamento').addEventListener('click', function () {
+         // Abra o modal
+         $('#modalPedirMedicamento').modal('show');
       });
    </script>
    @endsection

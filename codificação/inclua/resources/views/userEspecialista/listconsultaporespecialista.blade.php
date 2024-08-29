@@ -118,7 +118,7 @@
                      <td>{{$ent->nome_clinica}}</td>
                      <td >
                         <a rel="tooltip" title="Iniciar atendimento" class="btn btn-primary" data-original-title="Edit"
-                           href="{{route('especialista.iniciarAtendimento', [$ent->id,"anamnese"])}}">
+                           href="{{route('especialista.iniciarAtendimento', [$ent->id,"prontuarioatual"])}}">
                            Iniciar atendimento
                         </a>                    
                         <a style="max-width:120px; text-align: left;padding:10px " rel="tooltip" title="Cancelar" class="btn btn-secondary" data-original-title="Edit"
