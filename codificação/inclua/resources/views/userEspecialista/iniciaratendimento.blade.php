@@ -20,21 +20,17 @@
         style.href = 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/css/select2.min.css';
         script.type = 'text/javascript';
         script.src = 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/js/select2.full.min.js';
-
         // trigger the select2 initialization once the script tag has finished loading
         script.onload = renderSelect;
-
         // render the style and script tags into the DOM
         document.getElementsByTagName('head')[0].appendChild(style);
         document.getElementsByTagName('head')[0].appendChild(script);
 
     };
-    //  initSelect2();
 </script>
 
-
+<!-- inicializando o select2-->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 <script>
     var select2Inicializado = false;
     $(document).ready(function() {
@@ -45,7 +41,19 @@
         }        
     });
 </script>
+<!-- formatacao css do select2-->
+<style>  
+   /* Estiliza o texto das opções no dropdown */
+   .select2-container .select2-results__option {
+      color: #111; 
+   }
+   .select2-container .select2-results__option--selected {
+    color: red !important; /* Altere para a cor desejada */
+}
+   
+</style>
 
+<!--formatacao do cronometro-->
 <style>
    #chronometer {
       font-size: 1.5rem;
