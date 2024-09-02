@@ -88,7 +88,7 @@ class AssinaturaController extends Controller
             $pagamentoController = new PagamentoController();
             $pagamentoController->update($response->transactions[0]->transaction_code, 'NEGADO');
 
-            session()->flash('msg', ['valor' => trans("Não foi possível realizar a renovação da assinatura da plataforma com o cartão informado! Informe um novo cartão e tente novamente."), 'tipo' => 'danger']);
+            session()->flash('msg', ['valor' => trans("Não foi possível realizar a  assinatura da plataforma com o cartão informado! Informe um novo cartão e tente novamente."), 'tipo' => 'danger']);
 
             return redirect()->route('cartao.create', ['usuario_id' => $cartao->user_id]);
         } else if ($response->status == 'PAID') {
@@ -107,7 +107,7 @@ class AssinaturaController extends Controller
             session()->flash('msg', ['valor' => trans("Seu cadastro e assinatura da plataforma foram realizados com sucesso!"), 'tipo' => 'success']);
             return redirect()->route('home');
         }
-        session()->flash('msg', ['valor' => trans("Não foi possível realizar a renovação da assinatura da plataforma com o cartão informado! Informe um novo cartão e tente novamente."), 'tipo' => 'danger']);
+        session()->flash('msg', ['valor' => trans("Não foi possível realizar a  assinatura da plataforma com o cartão informado! Informe um novo cartão e tente novamente."), 'tipo' => 'danger']);
 
         return redirect()->route('cartao.create', ['usuario_id' => $cartao->user_id]);
     }

@@ -1,5 +1,5 @@
-@extends('layouts.app', ['page' => __('home'), 'exibirPesquisa' => false, 'pageSlug' => 'home', 'class' => 'consulta'])
-@section('title', 'Financeiro')
+@extends('layouts.app', ['page' => __('home'), 'exibirPesquisa' => false, 'pageSlug' => 'home', 'class' => 'home'])
+@section('title', 'Dashboard')
 @section('content')
     <div class="row">
         <div class="col-lg-12 col-md-12">
@@ -23,7 +23,7 @@
                     <a href="{{ route('paciente.financeiro') }}" class="btn btn-secundary btn-round btn-lg header-links">
                         <i class="tim-icons icon-money-coins"></i>
                         <br>
-                        Histórico de pagamentos
+                        Financeiro
                     </a>
                 </div>
                 <div class="card-body">

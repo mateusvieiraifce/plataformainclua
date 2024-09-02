@@ -162,6 +162,24 @@ label.link {
     transition: all 0.15s ease;
 }
 
+.form-control {
+    border-color: #C0C0C0;
+}
+
+.card-header .dropdown {
+    float: right;
+    color: #cccccc;
+}
+
+/* INVERTER COM A COR DO CALENDARIO EXIBIDO NO INPUT DO TIPO DATA */
+::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
+
+option {
+    color: #222a42;
+}
+
 @media (max-width: 576px) {
     .card-header > a.header-links {
         width: 100%;

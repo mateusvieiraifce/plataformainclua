@@ -17,6 +17,58 @@ use Illuminate\Support\Facades\Auth;
 
 class PacienteController extends Controller
 {
+    public function index()
+    {
+        $user = Auth::user();
+
+        if ($user->tipo_user == "P") {
+            $pacientes = Paciente::where('usuario_id', $user->id)->get();
+
+            return view('userPaciente.paciente.lista', ['pacientes' => $pacientes]);
+        }
+    }
+
+    public function create()
+    {
+        return view('userPaciente.paciente.form');
+    }
+
+    public function store(Request $request)
+    {
+        $rules = [
+            "nome" => "required|min:5",
+            "data_nascimento" => "required",
+            "sexo" => "required"
+        ];
+        $feedbacks = [
+            "nome.required" => "O campo Nome é obrigatório.",
+            "nome.min" => "O campo nome deve ter no mínomo 5 caracteres.",
+            "data_nascimento.required" => "O campo Data de nascimento é obrigatório.",
+            "estado_civil.required" => "O campo Estado civil é obrigatório.",
+            "sexo.required" => "O campo Gênero é obrigatório."
+        ];
+        $request->validate($rules, $feedbacks);
+
+        try {
+            $paciente = new Paciente();
+            $paciente->usuario_id = Auth::user()->id;
+            $paciente->nome = $request->nome;
+            $paciente->data_nascimento = $request->data_nascimento;
+            $paciente->sexo = $request->sexo;
+            $paciente->save();
+
+            $msg = ['valor' => trans("Cadastro do paciente realizado com sucesso!"), 'tipo' => 'success'];
+            session()->flash('msg', $msg);
+        } catch (QueryException $e) {
+            $msg = ['valor' => trans("Houve um erro ao realizar o cadastro do paciente. Tente novamente."), 'tipo' => 'danger'];
+            session()->flash('msg', $msg);
+
+            return back();
+        }
+
+        return redirect()->route('paciente.home');
+    }
+
     public function createDadosUserPaciente($usuario_id)
     {
         return view('cadastro.paciente.form_dados', ['usuario_id' => $usuario_id]);
@@ -41,12 +93,12 @@ class PacienteController extends Controller
             "image.required" => "O campo Imagem é obrigatório.",
             "cpf.required" => "O campo CPF é obrigatório.",
             "cpf.unique" => "Este CPF já foi utilizado.",
-            "nome.required" => "O campo nome é obrigatório.",
+            "nome.required" => "O campo Nome é obrigatório.",
             "nome.min" => "O campo nome deve ter no mínomo 5 caracteres.",
             "celular.required" => "O campo Celular é obrigatório.",
             "celular.unique" => "Este número de celular já foi utilizado.",
-            "data_nascimento.required" => "O campo Data de Nascimento é obrigatório.",
-            "estado_civil.required" => "O campo Estado Civil é obrigatório.",
+            "data_nascimento.required" => "O campo Data de nascimento é obrigatório.",
+            "estado_civil.required" => "O campo Estado civil é obrigatório.",
             "sexo.required" => "O campo Gênero é obrigatório.",
             "consentimento.required" => "O campo Termos e Condições de Uso é obrigatório.",
         ];
@@ -272,7 +324,8 @@ class PacienteController extends Controller
         $ent->paciente_id = $paciente->id;
         $ent->save();
         $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
-        return  $this->minhasconsultas($msg);
+
+        return redirect()->route('anamnese.create');
     }
     function home($msg = null)
    {
