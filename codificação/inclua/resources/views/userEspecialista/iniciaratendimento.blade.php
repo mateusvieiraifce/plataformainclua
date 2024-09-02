@@ -1,6 +1,5 @@
 @extends('layouts.app', ['page' => __('Consultas'), 'exibirPesquisa' => false, 'pageSlug' => 'listconsultaporespecialista', 'class' => 'agenda'])
 @section('content')
-
 <!-- script para add funcao select2 do medicamento-->
 <script>
     // Concept: Render select2 fields after all javascript has finished loading
@@ -9,10 +8,17 @@
         var renderSelect = function() {
             $('#medicamento_id').each(function() {
                 $(this).select2({
-                    dropdownParent: $('#modalPedirMedicamento')
-                });
+                    dropdownParent: $('#modalPedirMedicamento')                   
+                });               
+            })
+
+            $('#exame_id').each(function() {
+                $(this).select2({
+                    dropdownParent: $('#modalPedirExame')                   
+                });               
             })
         };
+
         // create select2 HTML elements
         var style = document.createElement('link');
         var script = document.createElement('script');
@@ -38,7 +44,11 @@
             // Inicializar o select2
             initSelect2();
             select2Inicializado = true;
-        }        
+        }    
+        
+        @if(isset($mostrarModalExame))
+           $('#modalPedirExame').modal('show');         
+        @endif
     });
 </script>
 <!-- formatacao css do select2-->
@@ -46,12 +56,12 @@
    /* Estiliza o texto das opções no dropdown */
    .select2-container .select2-results__option {
       color: #111; 
+   }    
+   .select2-container .select2-selection--multiple .select2-selection__choice {
+      color: black !important; /* Substitua "blue" pela cor desejada */
    }
-   .select2-container .select2-results__option--selected {
-    color: red !important; /* Altere para a cor desejada */
-}
-   
 </style>
+
 
 <!--formatacao do cronometro-->
 <style>
@@ -176,7 +186,23 @@
       height: auto;
       /* Ajusta a altura conforme o conteúdo */
    }
+
+   .modal-dialog-cad-exame {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;  
+       /* Alinha o modal ao topo da tela */
+       height: 10vh;
+      /* Garante que o modal usa toda a altura da viewport */
+      margin-left: 20%;
+      margin-top: 5%;
+      margin-right: 20%;
+      /* Remove qualquer margem padrão */  
+   }
 </style>
+
+
+
 
 
 <!-- Modal add exames-->
@@ -197,70 +223,33 @@
                <form method="post" action="{{route('pedido_exame.salveVarios')}}">
                   @csrf
                   <div class="row">
-                     <div class="col-md-6">
+                     <div class="col-md-12">
                         <div class="form-group">
-                           <label>&nbsp; &nbsp; Exame:</label>
-                           <input style="color: #111" type="text" placeholder="Digite o nome do exame"
-                              name="pesquisaexame" id="pesquisaexame" class="form-control" value="">
-                        </div>
-                     </div>
-                     <div class="col-md-4">
-                        <div class="form-group">
-                           <label id="labelFormulario">Tipo</label>
-                           <select style="color: #111;" name="tipoexame_id" id="tipoexame_id" class="form-control"
-                              title="Por favor selecionar um tipo de exame ..." >
-                              <option style="color: #2d3748" value="">Todos </option>
-                              @foreach($tipoexames as $entLista)
-                          <option style="color: #2d3748" value="{{old('tipoexame_id', $entLista->id)}}">
-                            {{$entLista->descricao}}
-                          </option>
-                       @endforeach
-                           </select>
-                        </div>
-                     </div>
-
-                     <div class="col-md-1">
-                        <div class="form-group">
-                           <label id="labelFormulario"></label>
-                           <a href="#" rel="tooltip" title="Adicionar " data-original-title="Adicionar " href="#"
-                              data-target="#addProdutoBDModal" data-toggle="modal" data-whatever="@mdo">
-                              <button style="width: 10px;" type="button" rel="tooltip" title="" class="btn btn-success"
-                                 data-original-title="Edit Task">
-                                 <i class="tim-icons icon-simple-add"></i>
-                              </button>
-                           </a>
-                        </div>
-                     </div>
-
-                  <div class="row" style="width: 100%;">
-                  <div class="col-6">
-                     <fieldset >
-                        <legend  style="font-size: 14px;">Selecionar exames</legend>
-                        <div id="checkboxContainer" style="margin-left:30px">
-                           <div class="row">
-                              @foreach($exames as $entExame)                        
-                          <div class="col-4">
-                            <label>
-                              <input type="checkbox" style="color: #2d3748"
-                                 value="{{old('exame_id', $entExame->id)}}">
-                              {{$entExame->nome}}
-                            </label>
+                           <label id="labelFormulario">Selecionar exame:</label>                       
+                           <select class="select2"  name="exames[]" multiple="multiple" 
+                                    style="color:#2d3748; width: 100%; height: 39px; " 
+                                    id="exame_id" class="form-control"
+                                     title="Por favor selecionar o exame...">                                       
+                                        @foreach($exames as $ent)
+                                        <option data-color="red" value="{{old('exame+id', $ent->id)}}"                                       
+                                        >
+                                           {{$ent->nome}}
+                                            </option>
+                                        @endforeach
+                                    </select>                         
                           </div>
-                       @endforeach                     
-                           </div>
-                        </div>
-                     </fieldset>
                      </div>
-                     <div class="col-6">
-                     <fieldset>
-                        <legend  style="font-size: 14px;">Exames selecionados</legend>
-                        <div class="selected-items">                        
-                           <ul style="color: #2d3748" id="selectedList"></ul>
-                        </div>
-                     </fieldset>
-                     </div>
-                     </div>
-
+                    
+                
+                     <div class="row" style="padding-top:10%; width: 100%;">               
+                  <div class="col-12">
+                    Não encontrou o exame? 
+                        <a href="#" rel="tooltip" title="Adicionar novo exame" 
+                        href="#" data-target="#addNovoExameBDModal" 
+                        data-toggle="modal" data-whatever="@mdo">                       
+                          Click aqui para cadastrar. </a>
+                     </div>                   
+                 </div>
                   </div>
                   <div class="modal-footer">
                      <button type="button" class="btn btn-secondary" data-dismiss="modal">
@@ -276,6 +265,67 @@
    </div>
 </div>
 
+<!-- Modal para add novo exame no bd caso nao seja encontrado -->
+<div class="modal mais-baixo fade" id="addNovoExameBDModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog-cad-exame modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <label>Adicionar novo exame:</label>
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <!--aqui a rota de salvar o novo exame -->
+                    <form method="post" action="{{route('especialista.salvaNovoExame')}}">
+                        @csrf
+                        <div class="row">
+                           
+                        <div class="col-md-12 px-8">
+                           <div class="form-group">
+                              <label id="labelFormulario">Nome</label>
+                              <input style="border-color: #111; color: #111;" type="text" class="form-control" name="nome" required
+                              value="" maxlength="150">
+                           </div>
+                        </div>
+                        <div class="col-md-12 px-8">
+                           <div class="form-group">
+                              <label id="labelFormulario">Descrição</label>
+                              <input style="border-color: #111;color: #111;" type="text" class="form-control" name="descricao" required
+                              value="" maxlength="150">
+                           </div>
+                        </div>
+                        <div class="col-md-12 px-8">
+                           <div class="form-group">
+                              <label id="labelFormulario">Tipo</label>
+                              <select  style="border-color: #111;color: #111;" name="tipoexame_id" id="tipoexame_id" class="form-control"
+                              title="Por favor selecionar um tipo de exame ..." required>
+                                 @foreach($tipoexames as $entLista)
+                                 <option style="border-color: #111;color: #2d3748"
+                                  value="{{old('tipoexame_id', $entLista->id)}}" 
+                                                 > {{$entLista->descricao}}</option>
+                                 @endforeach
+                              </select>
+                           </div>
+                        </div>                        
+                        </div>
+                        <input type="hidden" name="consulta_id" value="{{$consulta->id}}">
+                        
+                        
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-reply"></i> Voltar
+                            </button>
+                            <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Salvar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <!-- Modal add medicamento-->
@@ -293,15 +343,15 @@
          </div>
          <div class="modal-body">
             <div class="container">
-               <form method="post" action="{{route('pedido_exame.salveVarios')}}">
+               <form method="post" action="{{route('pedido_medicamento.salveVarios')}}">
                   @csrf
                   <div class="row">
-                     <div class="col-md-10">
+                     <div class="col-md-12">
                         <div class="form-group"  style="color:#2d3748">
-                              <label id="labelFormulario">Selecionar medicamento</label>
-                                    <select class="select2"  name="mySelect[]" multiple="multiple" 
+                              <label id="labelFormulario">Selecionar medicamento:</label>
+                                    <select class="select2"  name="medicamentos[]" multiple="multiple" 
                                     style="color:#2d3748; width: 100%; height: 39px; " 
-                                    name="medicamento_id" id="medicamento_id" class="form-control"
+                                    id="medicamento_id" class="form-control"
                                      title="Por favor selecionar medicamento...">                                       
                                         @foreach($medicamentos as $ent)
                                         <option data-color="red" value="{{old('medicamento_id', $ent->id)}}"                                       
@@ -311,50 +361,12 @@
                                         @endforeach
                                     </select>
                         </div>
-                     </div>
-                   
-                     <div class="col-md-1">
-                        <div class="form-group">
-                           <label id="labelFormulario"></label>
-                           <a href="#" rel="tooltip" title="Adicionar " data-original-title="Adicionar " href="#"
-                              data-target="#addProdutoBDModal" data-toggle="modal" data-whatever="@mdo">
-                              <button style="width: 10px;" type="button" rel="tooltip" title="" class="btn btn-success"
-                                 data-original-title="Edit Task">
-                                 <i class="tim-icons icon-simple-add"></i>
-                              </button>
-                           </a>
-                        </div>
-                     </div>
-
-                  <div class="row" style="width: 100%;">
-                  <div class="col-6">
-                     <fieldset >
-                        <legend  style="font-size: 14px;">Selecionar medicamento</legend>
-                        <div id="checkboxContainerMedicamentos" style="margin-left:30px">
-                           <div class="row">
-                              @foreach($medicamentos as $entMedicamentos)                        
-                          <div class="col-4">
-                            <label>
-                              <input type="checkbox" style="color: #2d3748"
-                                 value="{{old('medicamento_id', $entMedicamentos->id)}}">
-                              {{$entMedicamentos->nome_comercial}}
-                            </label>
-                          </div>
-                       @endforeach                     
-                           </div>
-                        </div>
-                     </fieldset>
-                     </div>
-                     <div class="col-6">
-                     <fieldset>
-                        <legend  style="font-size: 14px;">Medicamentos selecionados</legend>
-                        <div class="selected-items">                        
-                           <ul style="color: #2d3748" id="selectedListMedicamentos"></ul>
-                        </div>
-                     </fieldset>
-                     </div>
-                     </div>
-
+                     </div>                
+                  <div class="row" style="padding-top:10%; width: 100%;">               
+                  <div class="col-12">
+                    Não encontrou o medicamento? Click aqui para cadastrar.
+                     </div>                   
+                 </div>
                   </div>
                   <div class="modal-footer">
                      <button type="button" class="btn btn-secondary" data-dismiss="modal">
@@ -369,186 +381,6 @@
       </div>
    </div>
 </div>
-
-
-
-
-<!-- scpritp para filtrar os EXAMES a medida que eh digitado algo-->
-<script>
-   // Lista de itens simulada que poderia vir do controlador
-   const itemsExames = JSON.parse('{!! $exames !!}');
-   const itemsExamesSelecionados = [];
-   function renderCheckboxes(filteredItems) {
-      const container = document.getElementById('checkboxContainer');
-      container.innerHTML = ''; // Limpa o conteúdo anterior
-      for (var i = 0; i < filteredItems.length; i++) {
-         exame = filteredItems[i];
-         const checkbox = document.createElement('div');
-         checkbox.innerHTML = `          
-         <label class="form-check-label"  style="color:#111">       
-                    <input class="form-check-input" type="checkbox" id="${exame.id}" value="${exame.id}">                  
-                          ${exame.nome}
-                    </label>              
-                    `;
-      checkbox.querySelector('input').addEventListener('change', updateSelectedList);
-      container.appendChild(checkbox);
-      }
-     // container.innerHTML =  container.innerHTML+'</div></div>';      
-   }
-
-   function filterItems(query) {
-      var tipoSelecionado = document.getElementById('tipoexame_id');
-      if (tipoSelecionado.value != "") {
-         var filtraPeloTipo = itemsExames.filter(item => item.tipoexame_id == tipoSelecionado.value);
-      } else {
-         var filtraPeloTipo = itemsExames;
-      }
-      const filteredItems = filtraPeloTipo.filter(item => item.nome.toLowerCase().includes(query.toLowerCase()));
-      renderCheckboxes(filteredItems);
-   }
-
-   document.getElementById('pesquisaexame').addEventListener('input', function () {
-      const query = this.value.trim();
-      filterItems(query);
-   });
-
-   // Renderizar todos os itens no início
-   renderCheckboxes(itemsExames);
-
-   function tipoAlterado(event) {
-      var textoPesquisa = document.getElementById('pesquisaexame').value.trim();
-      filterItems(textoPesquisa);
-   }
-
-   // Adiciona um ouvinte de eventos ao select do tipo 
-   const selectElement = document.getElementById('tipoexame_id');
-   selectElement.addEventListener('change', tipoAlterado);
-
-   function updateSelectedList() {
-      const selectedList = document.getElementById('selectedList');
-      const selectedCheckboxes = document.querySelectorAll('#checkboxContainer input:checked');    
-
-      selectedCheckboxes.forEach(checkbox => {  
-         const label = checkbox.parentNode; 
-         const descricao = label.textContent.trim();             
-         const novoExame = {
-                nome: descricao,
-                id: checkbox.value
-            };        
-            const existe = itemsExamesSelecionados.some(objeto => objeto.id === novoExame.id);
-            if (!existe) {
-               itemsExamesSelecionados.push(novoExame);
-            } 
-      });
-    
-      let listaHTML = '<ul style="list-style-type: none; padding: 0; margin: 0;">';
-      itemsExamesSelecionados.forEach(objeto => { 
-            listaHTML += `<li  style="color:#111" id="${objeto.id}">     
-            
-            <input type="hidden" name="pedidosExames[]" value="${objeto.id}">
-
-             ${objeto.nome}  <a onclick="removerItem(this)">
-              <i class="tim-icons icon-simple-remove"></i>
-              </a></li>`;    
-      });
-      listaHTML += '</ul>'; 
-      const resultado = document.getElementById('selectedList');
-      resultado.innerHTML = listaHTML || '<p>Nenhum checkbox selecionado.</p>';
-       
-
-   }
-
-   function removerItem(botao) {
-            const li = botao.parentNode; // Obtém o <li> pai do botão
-            li.remove(); // Remove o <li> da lista
-            const index = itemsExamesSelecionados.findIndex(objeto => objeto.id === li.id);
-            if (index !== -1) {
-                itemsExamesSelecionados.splice(index, 1);              
-            }
-        }
-</script>
-
-<!-- scpritp para filtrar os MEDICAMENTOS a medida que eh digitado algo-->
-<script>
-   // Lista de itens simulada que poderia vir do controlador
-   const itemsMedicamentos = JSON.parse('{!! $medicamentos !!}');
-   const itemsMedicamentosSelecionados = [];
-   function renderCheckboxes(filteredItems) {
-      const container = document.getElementById('checkboxContainerMedicamentos');
-      container.innerHTML = ''; // Limpa o conteúdo anterior
-      for (var i = 0; i < filteredItems.length; i++) {
-         medicamento = filteredItems[i];
-         const checkbox = document.createElement('div');
-         checkbox.innerHTML = `          
-         <label class="form-check-label"  style="color:#111">       
-                    <input class="form-check-input" type="checkbox" id="${medicamento.id}" value="${medicamento.id}">                  
-                          ${medicamento.nome_comercial}
-                    </label>              
-                    `;
-      checkbox.querySelector('input').addEventListener('change', updateSelectedListMedicamentos);
-      container.appendChild(checkbox);
-      }
-   }
-
-   function filterItems(query) {     
-      const filteredItems = itemsMedicamentos.filter(item => item.nome_comercial.toLowerCase().includes(query.toLowerCase()));
-      renderCheckboxes(filteredItems);
-   }
-
-   document.getElementById('pesquisamedicamento').addEventListener('input', function () {
-      const query = this.value.trim();
-      filterItems(query);
-   });
-
-   // Renderizar todos os itens no início
-   renderCheckboxes(itemsMedicamentos);
-   
-   
-   function updateSelectedListMedicamentos() {
-      const selectedList = document.getElementById('selectedListMedicamentos');
-      const selectedCheckboxes = document.querySelectorAll('#checkboxContainerMedicamentos input:checked');    
-
-      selectedCheckboxes.forEach(checkbox => {  
-         const label = checkbox.parentNode; 
-         const descricao = label.textContent.trim();             
-         const novoExame = {
-                nome: descricao,
-                id: checkbox.value
-            };        
-            const existe = itemsMedicamentosSelecionados.some(objeto => objeto.id === novoExame.id);
-            if (!existe) {
-               itemsMedicamentosSelecionados.push(novoExame);
-            } 
-      });
-    
-      let listaHTML = '<ul style="list-style-type: none; padding: 0; margin: 0;">';
-      itemsMedicamentosSelecionados.forEach(objeto => { 
-            listaHTML += `<li  style="color:#111" id="${objeto.id}">     
-            
-            <input type="hidden" name="pedidosExames[]" value="${objeto.id}">
-
-             ${objeto.nome}  <a onclick="removerItemMedicamentos(this)">
-              <i class="tim-icons icon-simple-remove"></i>
-              </a></li>`;    
-      });
-      listaHTML += '</ul>'; 
-      const resultado = document.getElementById('selectedListMedicamentos');
-      resultado.innerHTML = listaHTML || '<p>Nenhum medicamento selecionado.</p>';
-       
-
-   }
-
-   function removerItemMedicamentos(botao) {
-            const li = botao.parentNode; // Obtém o <li> pai do botão
-            li.remove(); // Remove o <li> da lista
-            const index = itemsMedicamentosSelecionados.findIndex(objeto => objeto.id === li.id);
-            if (index !== -1) {
-               itemsMedicamentosSelecionados.splice(index, 1);              
-            }
-        }
-</script>
-
-
 
 
 <div class="card">
@@ -659,18 +491,18 @@
                                     <table class="table">
                                        <thead>
                                           <tr>
-                                             <th> Medicamento </th>
+                                             <th> Medicamentos </th>
                                              <th> </th>
                                           </tr>
                                        </thead>
                                        <tbody>
-                                       @if(sizeof($listaPedidosExames) > 0)
-                                       @foreach($listaPedidosExames as $pedidoexame)
+                                       @if(sizeof($listaPedidosMedicamentos) > 0)
+                                       @foreach($listaPedidosMedicamentos as $pedidoMedicamento)
                                           <tr>
-                                             <td> {{$pedidoexame->nome}} </td>
+                                             <td> {{$pedidoMedicamento->nome_comercial}} </td>
                                              <td>                                                                                           
-                                                <a href="{{route('pedido_exame.delete',[$pedidoexame->id,$consulta->id] )}}"
-                                                   onclick="return confirm('Deseja relamente excluir?')" rel="tooltip"
+                                                <a href="{{route('pedido_medicamento.delete',[$pedidoMedicamento->id,$consulta->id] )}}"
+                                                   rel="tooltip"
                                                    title="Excluir" class="btn btn-link" data-original-title="Remove">
                                                    <i class="tim-icons icon-simple-remove"></i>
                                                 </a>
@@ -708,7 +540,7 @@
                                     <table class="table">
                                        <thead>
                                           <tr>
-                                             <th> Exame </th>
+                                             <th> Exames </th>
                                              <th> </th>
                                           </tr>
                                        </thead>
@@ -719,7 +551,7 @@
                                              <td> {{$pedidoexame->nome}} </td>
                                              <td>                                                                                           
                                                 <a href="{{route('pedido_exame.delete',[$pedidoexame->id,$consulta->id] )}}"
-                                                   onclick="return confirm('Deseja relamente excluir?')" rel="tooltip"
+                                                  rel="tooltip"
                                                    title="Excluir" class="btn btn-link" data-original-title="Remove">
                                                    <i class="tim-icons icon-simple-remove"></i>
                                                 </a>

@@ -324,8 +324,12 @@ Route::middleware('auth')->group(function () {
     Route::get("/especialista/atendimento/finalizar/{consulta_id}", [\App\Http\Controllers\EspecialistaController::class, 'finalizarAtendimento'])->name('especialista.finalizarAtendimento')->middleware('auth');
     Route::get("/especialista/pacientes/", [\App\Http\Controllers\EspecialistaController::class, 'listaPacientes'])->name('especialista.listaPacientes')->middleware('auth');
     Route::get("/especialista/pedidoexame/list", [\App\Http\Controllers\PedidoExameController::class, 'list'])->name('pedido_exame.list')->middleware('auth');
-    Route::post("/especialista/pedidoexame/save", [\App\Http\Controllers\PedidoExameController::class, 'salveVarios'])->name('pedido_exame.salveVarios')->middleware('auth');
-    Route::get("/especialista/pedidoexame/delete/{id}/{consulta_id}", [\App\Http\Controllers\PedidoExameController::class, 'delete'])->name('pedido_exame.delete')->middleware('auth');
+    Route::post("/especialista/pedidoexame/save", [\App\Http\Controllers\PedidoExameController::class, 'salveVarios'])->name('pedido_exame.salveVarios');
+    Route::get("/especialista/pedidoexame/delete/{id}/{consulta_id}", [\App\Http\Controllers\PedidoExameController::class, 'delete'])->name('pedido_exame.delete');
+    Route::post("/especialista/pedidomedicamento/save", [\App\Http\Controllers\PedidoMedicamentoController::class, 'salveVarios'])->name('pedido_medicamento.salveVarios');
+    Route::get("/especialista/pedidomedicamento/delete/{id}/{consulta_id}", [\App\Http\Controllers\PedidoMedicamentoController::class, 'delete'])->name('pedido_medicamento.delete');
+    Route::post("/especialista/novoexame/", [\App\Http\Controllers\EspecialistaController::class, 'salvaNovoExame'])->name('especialista.salvaNovoExame');
+  
 
     #FINANCEIRO PACIENTE
     Route::get("/paciente/financeiro/", [\App\Http\Controllers\PagamentoController::class, 'historicoPagamentoPaciente'])->name('paciente.financeiro');

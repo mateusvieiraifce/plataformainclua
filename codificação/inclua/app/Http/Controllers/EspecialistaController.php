@@ -3,7 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Helper;
 use App\Models\Especialista;
-use App\Models\Especialistaclinica;
+use App\Models\PedidoMedicamento;
 use App\Models\Consulta;
 use App\Models\Paciente;
 use App\Models\Especialidade;
@@ -245,14 +245,22 @@ class EspecialistaController extends Controller
 
       $medicamentos = Medicamento::orderBy('nome_comercial', 'asc')->get();
 
+      //lista de pedidos de exames
       $listaPedidosExames = Pedidoexame::
       join('exames', 'exames.id', '=', 'pedido_exames.exame_id')->
       where('consulta_id',$consulta->id)->
       orderBy('pedido_exames.created_at', 'desc')->
       select('pedido_exames.id as id', 'nome','laudo')->get(); 
+
+      //lista de pedidos de medicamentos
+      $listaPedidosMedicamentos = PedidoMedicamento::
+      join('medicamentos', 'medicamentos.id', '=', 'pedido_medicamentos.medicamento_id')->
+      where('consulta_id',$consulta->id)->
+      orderBy('pedido_medicamentos.created_at', 'desc')->
+      select('pedido_medicamentos.id as id', 'nome_comercial','prescricao_indicada')->get(); 
     
       //dd($listaPedidosExames);
-
+     // dd($consulta_id,$aba);
       return view('userEspecialista/iniciaratendimento', [
          'consulta' => $consulta,
          'paciente' => $paciente,
@@ -263,6 +271,7 @@ class EspecialistaController extends Controller
          'exames' => $exames,
          'listaPedidosExames' => $listaPedidosExames,
          'medicamentos' => $medicamentos ,
+         'listaPedidosMedicamentos' =>  $listaPedidosMedicamentos,
          'aba'=>$aba
       ]);
 
@@ -323,6 +332,18 @@ class EspecialistaController extends Controller
          'msg' => $msg
       ]);
 
+   }
+
+   function salvaNovoExame(Request $request){    
+      $entidade = Exame::create([
+         'nome' => $request->nome,
+         'descricao' => $request->descricao,
+         'tipoexame_id' => $request->tipoexame_id
+      ]);
+
+      //tentar passar o valor de mostrar modal de exames apos cadastrodo.
+    //  $this->inicarAtendimento($request->consulta_id,"exames");
+      return redirect()->route('especialista.iniciarAtendimento', [$request->consulta_id,"exames"]);
    }
 
 
