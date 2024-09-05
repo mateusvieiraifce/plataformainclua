@@ -223,7 +223,7 @@ class EspecialistaController extends Controller
       return view('especialista/form', ['entidade' => $entidade, 'especialidades' => Especialidade::all(), 'usuario' => $usuario]);
    }
 
-   function inicarAtendimento($consulta_id,$aba)
+   function inicarAtendimento($consulta_id,$aba,$mostrarModalExame=null)
    {
       if (!($this->consultaPertenceEspecialistaLogado($consulta_id))) {
          return redirect()->route('consulta.listconsultaporespecialista');
@@ -260,7 +260,7 @@ class EspecialistaController extends Controller
       select('pedido_medicamentos.id as id', 'nome_comercial','prescricao_indicada')->get(); 
     
       //dd($listaPedidosExames);
-     // dd($consulta_id,$aba);
+    //  dd($consulta_id,$aba);
       return view('userEspecialista/iniciaratendimento', [
          'consulta' => $consulta,
          'paciente' => $paciente,
@@ -272,7 +272,8 @@ class EspecialistaController extends Controller
          'listaPedidosExames' => $listaPedidosExames,
          'medicamentos' => $medicamentos ,
          'listaPedidosMedicamentos' =>  $listaPedidosMedicamentos,
-         'aba'=>$aba
+         'aba'=>$aba,
+         'mostrarModalExame' =>$mostrarModalExame
       ]);
 
    }
@@ -341,9 +342,11 @@ class EspecialistaController extends Controller
          'tipoexame_id' => $request->tipoexame_id
       ]);
 
+      $mostrarModalExame = true;
       //tentar passar o valor de mostrar modal de exames apos cadastrodo.
-    //  $this->inicarAtendimento($request->consulta_id,"exames");
-      return redirect()->route('especialista.iniciarAtendimento', [$request->consulta_id,"exames"]);
+     return $this->inicarAtendimento($request->consulta_id,"exames",$mostrarModalExame);
+   
+    //  return redirect()->route('especialista.iniciarAtendimento', [$request->consulta_id,"exames"]);
    }
 
 

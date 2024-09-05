@@ -1,5 +1,6 @@
 @extends('layouts.app', ['page' => __('Consultas'), 'exibirPesquisa' => false, 'pageSlug' => 'listconsultaporespecialista', 'class' => 'agenda'])
 @section('content')
+
 <!-- script para add funcao select2 do medicamento-->
 <script>
     // Concept: Render select2 fields after all javascript has finished loading
@@ -44,8 +45,7 @@
             // Inicializar o select2
             initSelect2();
             select2Inicializado = true;
-        }    
-        
+        }            
         @if(isset($mostrarModalExame))
            $('#modalPedirExame').modal('show');         
         @endif
@@ -198,15 +198,31 @@
       margin-top: 5%;
       margin-right: 20%;
       /* Remove qualquer margem padrão */  
-   }
+   }  
+      
 </style>
 
+<script>
+   function closeModal(modalId) {
+      alert('fecha'); 
+     $('#addNovoExameBDModal').hide();    
+   //   $("#close-modal2").click();     
+  } 
+  
+  function openModal(modalId) {
+   alert('abri');  
+  
+      $('#addNovoExameBDModal').modal('show');         
+    //  document.getElementById('addNovoExameBDModal').classList.add('active');
+  } 
 
+ 
+</script>
 
 
 
 <!-- Modal add exames-->
-<div class="modal fade" id="modalPedirExame" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+<div class="modal fade" id="modalPedirExame" tabindex="-1" role="dialog" aria-labelledby="modalPedirExame"
    aria-hidden="true">
    <div class="modal-dialog  modal-dialog-top modal-lg" role="document">
       <div class="modal-content">
@@ -214,7 +230,7 @@
             <h4 class="modal-title">
                <label>Favor selecionar o exame desejado</label>
             </h4>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+            <button type="button" class="close" id="close-modal1" data-dismiss="modal" aria-label="Fechar">
                <span aria-hidden="true">&times;</span>
             </button>
          </div>
@@ -244,10 +260,9 @@
                      <div class="row" style="padding-top:10%; width: 100%;">               
                   <div class="col-12">
                     Não encontrou o exame? 
-                        <a href="#" rel="tooltip" title="Adicionar novo exame" 
-                        href="#" data-target="#addNovoExameBDModal" 
-                        data-toggle="modal" data-whatever="@mdo">                       
-                          Click aqui para cadastrar. </a>
+                        <a href="#" rel="tooltip" title="Adicionar novo exame"                         
+                        onclick="openModal('addNovoExameBDModal')">                       
+                          Click aqui para cadastrar.</a>
                      </div>                   
                  </div>
                   </div>
@@ -266,14 +281,16 @@
 </div>
 
 <!-- Modal para add novo exame no bd caso nao seja encontrado -->
-<div class="modal mais-baixo fade" id="addNovoExameBDModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal mais-baixo fade" id="addNovoExameBDModal" tabindex="-1" role="dialog"
+ aria-labelledby="addNovoExameBDModal" aria-hidden="true">
     <div class="modal-dialog-cad-exame modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">
                     <label>Adicionar novo exame:</label>
                 </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                <button type="button" class="close" id="close-modal2" onclick="closeModal('addNovoExameBDModal')"
+                 data-dismiss="modal" aria-label="Fechar">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -316,9 +333,12 @@
                         
                         
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-reply"></i> Voltar
+                            <button type="button" class="btn btn-secondary" onclick="closeModal('addNovoExameBDModal')"
+                             data-dismiss="modal">
+                              <i class="fa fa-reply"></i> Voltar
                             </button>
-                            <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Salvar</button>
+                            <button type="submit" class="btn btn-primary">
+                              <i class="fa fa-save"></i> Salvar</button>
                         </div>
                     </form>
                 </div>
