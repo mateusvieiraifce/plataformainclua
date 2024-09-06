@@ -45,10 +45,14 @@
             // Inicializar o select2
             initSelect2();
             select2Inicializado = true;
-        }            
-        @if(isset($mostrarModalExame))
-           $('#modalPedirExame').modal('show');         
-        @endif
+        }  
+        
+        //mostrar o modal
+        var mostrarModal = @json($mostrarModal);
+       if(mostrarModal){
+           $('#'+mostrarModal).modal('show');         
+       }
+       
     });
 </script>
 <!-- formatacao css do select2-->
@@ -199,6 +203,17 @@
       margin-right: 20%;
       /* Remove qualquer margem padrão */  
    }  
+   .modal-dialog-cad-medicamento{
+     
+      justify-content: center;
+      align-items: flex-start;  
+       /* Alinha o modal ao topo da tela */
+       height: 10vh;
+      /* Garante que o modal usa toda a altura da viewport */
+      margin-left: 20%;
+      margin-top: 5%;
+      margin-right: 20%;
+   }
       
 </style>
 
@@ -223,7 +238,7 @@
 
 
 
-<!-- Modal add exames-->
+<!-- Modal add EXAME-->
 <div class="modal fade" id="modalPedirExame" tabindex="-1" role="dialog" aria-labelledby="modalPedirExame"
    aria-hidden="true">
    <div class="modal-dialog  modal-dialog-top modal-lg" role="document">
@@ -284,7 +299,7 @@
    </div>
 </div>
 
-<!-- Modal para add novo exame no bd caso nao seja encontrado -->
+<!-- Modal para add novo EXAME no bd caso nao seja encontrado -->
 <div class="modal fade" id="addNovoExameBDModal" tabindex="-2" role="dialog"
  aria-labelledby="addNovoExameBDModal" aria-hidden="true">
     <div class="modal-dialog-cad-exame modal-dialog-centered" role="document">
@@ -353,7 +368,7 @@
 
 
 <!-- Modal add medicamento-->
-<div class="modal fade" id="modalPedirMedicamento" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+<div class="modal fade" id="modalPedirMedicamento" tabindex="-1" role="dialog" aria-labelledby="modalPedirMedicamento"
    aria-hidden="true">
    <div class="modal-dialog  modal-dialog-top modal-lg" role="document">
       <div class="modal-content">
@@ -361,7 +376,8 @@
             <h4 class="modal-title">
                <label>Favor selecionar o medicamento desejado</label>
             </h4>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Fechar"
+            onclick="closeModal('modalPedirMedicamento')">
                <span aria-hidden="true">&times;</span>
             </button>
          </div>
@@ -385,15 +401,21 @@
                                         @endforeach
                                     </select>
                         </div>
-                     </div>                
-                  <div class="row" style="padding-top:10%; width: 100%;">               
-                  <div class="col-12">
-                    Não encontrou o medicamento? Click aqui para cadastrar.
-                     </div>                   
-                 </div>
+                     </div>     
+                     <div class="row" style="padding-top:10%; width: 100%;">               
+                           <div class="col-12">
+                             <p> Não encontrou o medicamento? 
+                                 <a href="#"  rel="tooltip" title="Adicionar novo exame"                         
+                                 onclick="openModal('addNovoMedicamentoBDModal')">                       
+                                 Click aqui para cadastrar.</a>   
+                                 </p>
+                           </div>
+                     </div>     
+                 
                   </div>
                   <div class="modal-footer">
-                     <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                     <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                     onclick="closeModal('modalPedirMedicamento')">
                         <i class="fa fa-reply"></i> Voltar
                      </button>
                      <input type="hidden" name="consulta_id" value="{{$consulta->id}}">
@@ -406,6 +428,143 @@
    </div>
 </div>
 
+<!-- Modal para add novo MEDICAMENTO no bd caso nao seja encontrado -->
+<div class="modal fade" id="addNovoMedicamentoBDModal" tabindex="-3" role="dialog"
+ aria-labelledby="addNovoMedicamentoBDModal" aria-hidden="true">
+    <div class="modal-dialog-cad-medicamento modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <label>Adicionar novo medicamento:</label>
+                </h5>
+                <button type="button" class="close" id="close-modal2"
+                 data-dismiss="modal" aria-label="Fechar"  onclick="closeModal('addNovoMedicamentoBDModal')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <!--aqui a rota de salvar o novo medicamento -->
+                    <form method="post" action="{{route('especialista.salvaNovoMedicamento')}}">
+                        @csrf
+                        <div class="row">                           
+                        
+                           <div class="col-md-12 px-8">
+                              <div class="form-group">
+                              <label id="labelFormulario">Nome Comercial</label>
+                              <input style="border-color: #111; color: #111;" type="text" class="form-control" name="nome_comercial" required
+                                 value="" maxlength="150">
+                              </div>
+                           </div>
+                           <div class="col-md-12 px-8">
+                              <div class="form-group">
+                              <label id="labelFormulario">Nome Genérico</label>
+                              <input style="border-color: #111; color: #111;" type="text" class="form-control" name="nome_generico" 
+                                 value="" maxlength="150">
+                              </div>
+                           </div>
+                           <div class="col-md-12 px-8">
+                              <div class="form-group">
+                              <label id="labelFormulario">Forma</label>
+                              <input style="border-color: #111; color: #111;" type="text" class="form-control" name="forma" 
+                                 value="" maxlength="150">
+                              </div>
+                           </div>
+                           <div class="col-md-12 px-8">
+                              <div class="form-group">
+                              <label id="labelFormulario">Concentração</label>
+                              <input style="border-color: #111; color: #111;" type="text" class="form-control" name="concentracao" 
+                                 value="" maxlength="150">
+                              </div>
+                           </div>
+                           <div class="col-md-12 px-8">
+                              <div class="form-group">
+                              <label id="labelFormulario">Via</label>
+                              <input style="border-color: #111; color: #111;" type="text" class="form-control" name="via" 
+                                 value="" maxlength="150">
+                              </div>
+                           </div>
+                           <div class="col-md-12 px-8">
+                              <div class="form-group">
+                              <label id="labelFormulario">Indicação</label>
+                              <input style="border-color: #111; color: #111;" type="text" class="form-control" name="indicacao" 
+                                 value="" maxlength="150">
+                              </div>
+                           </div>
+                           <div class="col-md-12 px-8">
+                              <div class="form-group">
+                              <label id="labelFormulario">Posologia</label>
+                              <input style="border-color: #111; color: #111;" type="text" class="form-control" name="posologia" 
+                                 value="" maxlength="150">
+                              </div>
+                           </div>
+                           <div class="col-md-12 px-8">
+                              <div class="form-group">
+                              <label id="labelFormulario">Precaução</label>
+                              <input style="border-color: #111; color: #111;" type="text" class="form-control" name="precaucao" 
+                                 value="" maxlength="150">
+                              </div>
+                           </div>
+                           <div class="col-md-12 px-8">
+                              <div class="form-group">
+                              <label id="labelFormulario">Advertência</label>
+                              <input style="border-color: #111; color: #111;" type="text" class="form-control" name="advertencia" 
+                                 value="" maxlength="150">
+                              </div>
+                           </div>
+                           <div class="col-md-12 px-8">
+                              <div class="form-group">
+                              <label id="labelFormulario">Contraindicação</label>
+                              <input style="border-color: #111; color: #111;" type="text" class="form-control" name="contraindicacao" 
+                                 value="" maxlength="150">
+                              </div>
+                           </div>
+                           <div class="col-md-12 px-8">
+                              <div class="form-group">
+                              <label id="labelFormulario">Composição</label>
+                              <input style="border-color: #111; color: #111;" type="text" class="form-control" name="composicao" 
+                                 value="" maxlength="150">
+                              </div>
+                           </div>
+                           <div class="col-md-12 px-8">
+                              <div class="form-group">
+                              <label id="labelFormulario">Latoratório Fabricante</label>
+                              <input style="border-color: #111; color: #111;" type="text" class="form-control" name="latoratorio_fabricante"
+                                 value="" maxlength="150">
+                              </div>
+                           </div>
+
+                           <div class="col-md-12 px-8">
+                              <div class="form-group">
+                                 <label id="labelFormulario">Tipo de Medicamento</label>
+                                 <select  style="border-color: #111; color: #111;" name="tipo_medicamento_id" id="tipo_medicamento_id" class="form-control"
+                                    title="Por favor selecionar ..." required> style="border-color: white"
+                                    @foreach($tipo_medicamentos as $iten)
+                                       <option style="border-color: #111;color: #2d3748" value="{{$iten->id}}"
+                                         > {{$iten->descricao}}
+                                       </option>
+                                    @endforeach
+                                 </select>
+                               </div>
+                           </div>
+         
+                        </div>
+                        <input type="hidden" name="consulta_id" value="{{$consulta->id}}">
+                        
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" onclick="closeModal('addNovoMedicamentoBDModal')" 
+                             data-dismiss="modal" >
+                              <i class="fa fa-reply"></i> Voltar
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                              <i class="fa fa-save"></i> Salvar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="card">
    <div class="row">

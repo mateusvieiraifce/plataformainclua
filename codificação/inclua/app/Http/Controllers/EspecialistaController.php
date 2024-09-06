@@ -16,6 +16,8 @@ use App\Models\Tipoexame;
 use App\Models\Exame;
 use App\Models\Pedidoexame;
 use App\Models\Medicamento;
+use App\Models\TipoMedicamento;
+
 
 class EspecialistaController extends Controller
 {
@@ -223,7 +225,7 @@ class EspecialistaController extends Controller
       return view('especialista/form', ['entidade' => $entidade, 'especialidades' => Especialidade::all(), 'usuario' => $usuario]);
    }
 
-   function inicarAtendimento($consulta_id,$aba,$mostrarModalExame=null)
+   function inicarAtendimento($consulta_id,$aba,$mostrarModal=null)
    {
       if (!($this->consultaPertenceEspecialistaLogado($consulta_id))) {
          return redirect()->route('consulta.listconsultaporespecialista');
@@ -260,7 +262,7 @@ class EspecialistaController extends Controller
       select('pedido_medicamentos.id as id', 'nome_comercial','prescricao_indicada')->get(); 
     
       //dd($listaPedidosExames);
-    //  dd($consulta_id,$aba);
+    //  dd($mostrarModal);
       return view('userEspecialista/iniciaratendimento', [
          'consulta' => $consulta,
          'paciente' => $paciente,
@@ -272,8 +274,9 @@ class EspecialistaController extends Controller
          'listaPedidosExames' => $listaPedidosExames,
          'medicamentos' => $medicamentos ,
          'listaPedidosMedicamentos' =>  $listaPedidosMedicamentos,
+         'tipo_medicamentos' => TipoMedicamento::all(),
          'aba'=>$aba,
-         'mostrarModalExame' =>$mostrarModalExame
+         'mostrarModal' =>$mostrarModal
       ]);
 
    }
@@ -341,13 +344,34 @@ class EspecialistaController extends Controller
          'descricao' => $request->descricao,
          'tipoexame_id' => $request->tipoexame_id
       ]);
-
-      $mostrarModalExame = true;
       //tentar passar o valor de mostrar modal de exames apos cadastrodo.
-     return $this->inicarAtendimento($request->consulta_id,"exames",$mostrarModalExame);
-   
+     return $this->inicarAtendimento($request->consulta_id,"exames",'modalPedirExame');
     //  return redirect()->route('especialista.iniciarAtendimento', [$request->consulta_id,"exames"]);
    }
+
+   function salvaNovoMedicamento(Request $request){    
+      $entidade = Medicamento::create([
+         'nome_comercial' => $request->nome_comercial,
+         'nome_generico' => $request->nome_generico,
+         'forma' => $request->forma,
+         'concentracao' => $request->concentracao,
+         'via' => $request->via,
+         'indicacao' => $request->indicacao,
+         'posologia' => $request->posologia,
+         'precaucao' => $request->precaucao,
+         'advertencia' => $request->advertencia,
+         'contraindicacao' => $request->contraindicacao,
+         'composicao' => $request->composicao,
+         'latoratorio_fabricante' => $request->latoratorio_fabricante,
+         'tipo_medicamento_id' => $request->tipo_medicamento_id
+      ]);
+      //modal que vai ser exibido
+      $mostrarModalMedicamento = 'modalPedirMedicamento';
+      //tentar passar o valor de mostrar modal de medicamentos apos cadastrodo.
+     return $this->inicarAtendimento($request->consulta_id,"prescricoes",$mostrarModalMedicamento);
+   }
+
+   
 
 
 }
