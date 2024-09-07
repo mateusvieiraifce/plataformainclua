@@ -803,7 +803,7 @@
                   <a href="{{route('consulta.listconsultaporespecialista')}}" class="btn btn-primary"><i
                         class="fa fa-reply"></i>
                      Voltar</a>
-                  <a rel="tooltip" title="Finalizar" class="btn btn-success" data-original-title="Edit"
+                  <a rel="tooltip" title="Finalizar" class="btn btn-success" data-original-title="Edit"                  
                      href="{{route('especialista.finalizarAtendimento', $consulta->id)}}">
                      <i class="fa fa-save"></i> Finalizar
                   </a>

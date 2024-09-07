@@ -227,6 +227,7 @@ class EspecialistaController extends Controller
 
    function inicarAtendimento($consulta_id,$aba,$mostrarModal=null)
    {
+     // dd($consulta_id);
       if (!($this->consultaPertenceEspecialistaLogado($consulta_id))) {
          return redirect()->route('consulta.listconsultaporespecialista');
       }

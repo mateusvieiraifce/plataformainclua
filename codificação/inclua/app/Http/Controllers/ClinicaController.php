@@ -134,7 +134,6 @@ class ClinicaController extends Controller
       return $this->list($msg);
    }
 
-
    function delete($id)
    {
       try {
@@ -309,5 +308,7 @@ class ClinicaController extends Controller
 
       return redirect()->route('home');
    }
+
+   
 }
    
