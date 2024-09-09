@@ -8,29 +8,23 @@
             @if(\Illuminate\Support\Facades\Auth::user()->tipo_user ==='C')
                 <?php
                    $clinica = App\Models\Clinica::where('usuario_id', '=', Auth::user()->id)->first();
-                ?>
-                <li @if ($pageSlug=='dashboard' ) class="active " @endif>
-                    <a href="{{route('home')}}">
-                        <i class="tim-icons icon-chart-pie-36"></i>
-                        <p>{{ __('Dashboard') }}</p>
-                    </a>
-                </li>
+                ?>              
 
-                <li @if ($pageSlug=='users' ) class="active " @endif>
-                    <a href="#">
+                <li @if ($pageSlug=='listaAgenda' ) class="active " @endif>
+                    <a href="{{route('clinica.agendaConsultas')}}">
                         <i class="tim-icons icon-calendar-60"></i>
                         <p>{{ __('Agenda') }}</p>
                     </a>
                 </li>
 
                 <li @if ($pageSlug=='marcarconsulta' ) class="active " @endif>
-                    <a href="{{route('paciente.marcarconsulta')}}">
-                        <i class="tim-icons icon-calendar-60"></i>
+                    <a href="{{route('clinica.marcarConsultaSelecionarPaciente')}}">
+                        <i class="tim-icons icon-notes"></i>
                         <p>{{ __('Marcar consulta') }}</p>
                     </a>
                 </li>
 
-                <li @if ($pageSlug=='Consultas' ) class="active " @endif>
+                <li @if ($pageSlug=='listconsultaporclinica' ) class="active " @endif>
                     <a href="{{route('clinica.consultas')}}"> 
                         <i class="tim-icons icon-bullet-list-67"></i>
                         <p>{{ __('Histórico de Consultas') }}</p>

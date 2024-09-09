@@ -1,4 +1,4 @@
-@extends('layouts.app', ['page' => __('Consultas'), 'exibirPesquisa' => false, 'pageSlug' => 'listconsultaporclinica', 'class' => 'agenda'])
+@extends('layouts.app', ['page' => __('Consultas'), 'exibirPesquisa' => false, 'pageSlug' => 'listaAgenda', 'class' => 'agenda'])
 @section('content')
 
 
@@ -94,7 +94,7 @@
                   </form>
                </div>
 
-               <h6 class="title d-inline">Lista de consultas </h6>              
+               <h6 class="title d-inline">Lista de consultas agendadas </h6>              
             </div>
             <div class="card-body">
 
@@ -105,6 +105,7 @@
                         <th> Horário agendado </th>
                         <th> Paciente </th>
                         <th> Especialista </th>
+                        <th> Ação </th>
                      </thead>
                      <tbody>
                         @if(sizeof($lista) > 0)
@@ -116,7 +117,7 @@
                   </td>
                   <td>{{$ent->nome_paciente}}</td>
                      <td>{{$ent->nome_especialista}}</td>
-                    
+                     <td>  </td>
                      </tr>
                   @endforeach 
                         @endif                       </tbody>

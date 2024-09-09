@@ -20,6 +20,10 @@ class DashboardController extends Controller
             //home user Especialista
             return redirect()->route('consulta.listconsultaporespecialista');
          }
+         elseif ($user->tipo_user ==='C') {
+            //home user Clinica
+            return redirect()->route('clinica.agendaConsultas');
+         }
         return view('dashboard');
     }
 }
