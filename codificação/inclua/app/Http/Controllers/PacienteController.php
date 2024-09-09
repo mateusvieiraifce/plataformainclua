@@ -259,7 +259,8 @@ class PacienteController extends Controller
         $lista = Consulta::where('especialista_id', '=', $especialista_id)
             ->where('clinica_id', '=', $clinica_id)->
             where('status', '=', $statusConsulta)->
-            select('consultas.id', 'horario_agendado', 'status')->orderBy('horario_agendado', 'asc')->paginate(8);
+            select('consultas.id', 'horario_agendado', 'status')->orderBy('horario_agendado', 'asc')
+            ->get();
         //dd($lista);
         return view('userPaciente/marcarConsultaViaEspecialidadePasso4', ['lista' => $lista, 'especialista' => $especialista, 'clinica' => $clinica, 'especialidade' => $especialidade, 'paciente' => $paciente]);
     }

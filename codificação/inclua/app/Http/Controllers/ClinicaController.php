@@ -4,7 +4,12 @@ namespace App\Http\Controllers;
 use App\Helper;
 use App\Models\Clinica;
 use App\Models\Endereco;
+use App\Models\Paciente;
 use App\Models\Especialidadeclinica;
+use App\Models\Especialistaclinica;
+use App\Models\Especialista;
+use App\Models\Especialidade;
+use App\Models\Consulta;
 use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -133,7 +138,6 @@ class ClinicaController extends Controller
       $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
       return $this->list($msg);
    }
-
 
    function delete($id)
    {
@@ -310,5 +314,93 @@ class ClinicaController extends Controller
 
       return redirect()->route('home');
    }
+
+   function marcarConsultaSelecionarPaciente($msg=null)
+    {
+        //retonando todos os pacientes
+        $filter = "";
+        if (isset($_GET['filtro'])) {
+            $filter = $_GET['filtro'];
+        }
+        $lista = Paciente::select('id', 'nome','data_nascimento')->paginate(8);
+        return view('userClinica/marcarConsulta/selecionarPacientePasso1', ['lista' => $lista, 'msg' => $msg,'filtro' => $filter]);
+    }
+
+    function pesquisarPacienteMarcarconsulta()
+    {
+        //retonando a lista de pacientes
+        $filtro = "";
+        if (isset($_GET['filtro'])) {
+            $filtro = $_GET['filtro'];
+        }
+        $lista = Paciente::where('nome', 'like', "%" . $filtro . "%")
+            ->orderBy('nome', 'asc')
+            ->select('id', 'nome','data_nascimento')->paginate(8);
+        $msg = null;
+        if ($lista->isEmpty()) {
+            $msg = ['valor' => trans("Não foi encontrado nenhum paciente com o nome digitado!"), 'tipo' => 'primary'];
+        }
+        return view('userClinica/marcarConsulta/selecionarPacientePasso1', ['lista' => $lista, 'filtro' => $filtro, 'msg' => $msg]);
+   }
+
+   function marcarConsultaSelecionarEspecialidade($paciente_id)
+   {
+        $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
+        //todas as especialidades que eh vinculado a clinica
+        $lista = Especialidadeclinica::join('especialidades', 'especialidades.id', 
+        '=', 'especialidadeclinicas.especialidade_id')->
+        where('clinica_id', $clinica->id)->
+        orderBy('especialidades.descricao', 'asc')->
+        select('especialidades.id', 'especialidades.descricao')->paginate(8);       
+        return view('userClinica/marcarConsulta/selecionarEspecialidadePasso2', ['lista' => $lista, 'paciente_id' => $paciente_id]);
+   }
+
+   
+   function marcarConsultaSelecionarEspecialista($paciente_id, $especialidade_id)
+   {
+      $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
+       //retornar todos os especialista vinculados a clinica e com a especiladade selecionada
+       $lista = Especialistaclinica::join('especialistas', 'especialistas.id', '=',
+        'especialistaclinicas.especialista_id')->
+       where('clinica_id', $clinica->id)->
+       where('especialidade_id', $especialidade_id)->
+       orderBy('especialistas.nome', 'asc')->
+       select('especialistas.id', 'especialistas.nome')->paginate(8);
+       return view('userClinica/marcarConsulta/selecionarEspecialistaPasso3', ['lista' => $lista, 'paciente_id' => $paciente_id, 'especialidade_id' =>$especialidade_id]);
+   }
+
+   
+   function marcarConsultaSelecionarHoraConsulta($paciente_id, $especialista_id)
+   {
+       $especialista = Especialista::find($especialista_id);
+
+       $clinica =  Clinica::where('usuario_id', '=', Auth::user()->id)->first();
+       $especialidade = Especialidade::find($especialista->especialidade_id);
+       $paciente = Paciente::find($paciente_id);
+       //retornar todos a agenda(consultas) do especialista vinculados a clinica
+       $statusConsulta = "Disponível";
+
+       $lista = Consulta::where('especialista_id', '=', $especialista_id)->
+       where('clinica_id', '=', $clinica->id)->
+       where('status', '=', $statusConsulta)->
+       select('consultas.id', 'horario_agendado')->
+       orderBy('horario_agendado', 'asc')->get();
+     // dd($especialista,$lista);
+       return view('userClinica/marcarConsulta/selecionarHoraConsultaPasso4', ['lista' => $lista, 'especialista' => $especialista, 'clinica' => $clinica, 'especialidade' => $especialidade, 'paciente' => $paciente]);
+   }
+
+   function marcarConsultaFinalizar(Request $request)
+    {   
+        $paciente =  Paciente::find($request->paciente_id);
+        $ent = Consulta::find($request->consulta_id);
+
+        $ent->status = "Aguardando atendimento";
+        $ent->paciente_id = $paciente->id;
+        $ent->save();
+        $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
+        return  $this->marcarConsultaSelecionarPaciente($msg);
+    }
+
+   
 }
    
