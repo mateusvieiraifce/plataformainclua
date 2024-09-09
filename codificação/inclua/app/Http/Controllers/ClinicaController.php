@@ -314,7 +314,7 @@ class ClinicaController extends Controller
       return redirect()->route('home');
    }
 
-   function marcarConsultaSelecionarPaciente()
+   function marcarConsultaSelecionarPaciente($msg=null)
     {
         //retonando todos os pacientes
         $filter = "";
@@ -322,7 +322,7 @@ class ClinicaController extends Controller
             $filter = $_GET['filtro'];
         }
         $lista = Paciente::select('id', 'nome','data_nascimento')->paginate(8);
-        return view('userClinica/marcarConsulta/selecionarPacientePasso1', ['lista' => $lista, 'filtro' => $filter]);
+        return view('userClinica/marcarConsulta/selecionarPacientePasso1', ['lista' => $lista, 'msg' => $msg,'filtro' => $filter]);
     }
 
     function pesquisarPacienteMarcarconsulta()
@@ -383,10 +383,22 @@ class ClinicaController extends Controller
        where('clinica_id', '=', $clinica->id)->
        where('status', '=', $statusConsulta)->
        select('consultas.id', 'horario_agendado')->
-       orderBy('horario_agendado', 'asc')->paginate(8);
-      //dd($especialista,$lista);
+       orderBy('horario_agendado', 'asc')->get();
+     // dd($especialista,$lista);
        return view('userClinica/marcarConsulta/selecionarHoraConsultaPasso4', ['lista' => $lista, 'especialista' => $especialista, 'clinica' => $clinica, 'especialidade' => $especialidade, 'paciente' => $paciente]);
    }
+
+   function marcarConsultaFinalizar(Request $request)
+    {   
+        $paciente =  Paciente::find($request->paciente_id);
+        $ent = Consulta::find($request->consulta_id);
+
+        $ent->status = "Aguardando atendimento";
+        $ent->paciente_id = $paciente->id;
+        $ent->save();
+        $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
+        return  $this->marcarConsultaSelecionarPaciente($msg);
+    }
 
    
 }

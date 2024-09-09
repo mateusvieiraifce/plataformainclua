@@ -69,7 +69,7 @@
             <div class="modal-body">
             <div class="container">
                 <!--aqui a rota de salvar de confirmar consulta -->
-                <form method="post" action="{{route('paciente.marcarConsultaViaClinicaFinalizar')}}">
+                <form method="post" action="{{route('clinica.marcarConsultaFinalizar')}}">
                     @csrf
                     <div class="row">
                         <div class="col-md-12">
@@ -106,6 +106,7 @@
                         </div>
                     </div>
                     <input type="hidden" id="consulta_id" name="consulta_id">
+                    <input type="hidden" id="paciente_id" value=" {{$paciente->id}}" name="paciente_id">
             </div>
 
             <div class="modal-footer">
@@ -195,12 +196,12 @@
 
      //funcao para poder verificar se existe consulta na data criada 
      function existeConsulta(dataTela) {
-        @foreach($lista as $consulta) 
+        @foreach($lista as $consulta)           
             var dataString ={!! json_encode(date( 'd/m/Y' , strtotime($consulta->horario_agendado))) !!}; 
             var partesData = dataString.split('/');    
             // Constrói um objeto Date no formato esperado (mês-1 porque o mês no objeto Date é baseado em zero)
             var data = new Date(partesData[2], partesData[1] - 1, partesData[0]);
-            var data = normalizarDataParaComparacao(data);     
+            var data = normalizarDataParaComparacao(data);    
             if(data.getTime() === dataTela.getTime())
             {
                 return true;               
@@ -211,12 +212,13 @@
 
     function geraDias(currentWeekStart, daysContainer) {
         // Loop para gerar os dias da semana
+       
         for (var i = 0; i < 7; i++) {            
             var day = new Date(currentWeekStart);        
             var data1  =  new Date(day.setDate(currentWeekStart.getDate() + i));
             var data1 = normalizarDataParaComparacao(data1);
-            //aqui desenhar o dia apenas se tiver consulta disponível
-            if(existeConsulta(data1)){        
+            //aqui desenhar o dia apenas se tiver consulta disponível             
+            if(existeConsulta(data1)){   
                 var dayElement = document.createElement('div');
                 dayElement.id = "" + day.getDate() + '/' + (day.getMonth() + 1) + "/" + day.getFullYear();
                 dayElement.classList.add('day');  
