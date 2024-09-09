@@ -35,14 +35,19 @@ class PacienteController extends Controller
 
     public function store(Request $request)
     {
+        //REMOÇÃO DA MASCARA DOCUMENTO PARA COMPARAR COM O BD
+        $request->request->set('documento', Helper::removerCaractereEspecial($request->documento));
         $rules = [
             "nome" => "required|min:5",
+            "documento" => "required|unique:users,documento,{$request->usuario_id}",
             "data_nascimento" => "required",
             "sexo" => "required"
         ];
         $feedbacks = [
             "nome.required" => "O campo Nome é obrigatório.",
             "nome.min" => "O campo nome deve ter no mínomo 5 caracteres.",
+            "documento.required" => "O campo CPF é obrigatório.",
+            "documento.unique" => "Este CPF já foi utilizado.",
             "data_nascimento.required" => "O campo Data de nascimento é obrigatório.",
             "estado_civil.required" => "O campo Estado civil é obrigatório.",
             "sexo.required" => "O campo Gênero é obrigatório."
@@ -55,6 +60,7 @@ class PacienteController extends Controller
             $paciente->nome = $request->nome;
             $paciente->data_nascimento = $request->data_nascimento;
             $paciente->sexo = $request->sexo;
+            $paciente->cpf = $request->documento;
             $paciente->save();
 
             $msg = ['valor' => trans("Cadastro do paciente realizado com sucesso!"), 'tipo' => 'success'];
@@ -66,7 +72,7 @@ class PacienteController extends Controller
             return back();
         }
 
-        return redirect()->route('paciente.home');
+        return redirect()->route('paciente.index');
     }
 
     public function createDadosUserPaciente($usuario_id)
@@ -78,10 +84,10 @@ class PacienteController extends Controller
     {
         //REMOÇÃO DA MASCARA DO CELULAR E DOCUMENTO PARA COMPARAR COM O BD
         $request->request->set('celular', Helper::removerCaractereEspecial($request->celular));
-        $request->request->set('cpf', Helper::removerCaractereEspecial($request->cpf));
+        $request->request->set('documento', Helper::removerCaractereEspecial($request->documento));
         $rules = [
             "image" => "required",
-            "cpf" => "required|unique:users,documento,{$request->usuario_id}",
+            "documento" => "required|unique:users,documento,{$request->usuario_id}",
             "nome" => "required|min:5",
             "celular" => "required|unique:users,celular,{$request->usuario_id}",
             "data_nascimento" => "required",
@@ -91,8 +97,8 @@ class PacienteController extends Controller
         ];
         $feedbacks = [
             "image.required" => "O campo Imagem é obrigatório.",
-            "cpf.required" => "O campo CPF é obrigatório.",
-            "cpf.unique" => "Este CPF já foi utilizado.",
+            "documento.required" => "O campo CPF é obrigatório.",
+            "documento.unique" => "Este CPF já foi utilizado.",
             "nome.required" => "O campo Nome é obrigatório.",
             "nome.min" => "O campo nome deve ter no mínomo 5 caracteres.",
             "celular.required" => "O campo Celular é obrigatório.",
@@ -115,6 +121,8 @@ class PacienteController extends Controller
             $paciente->usuario_id = $request->usuario_id;
             $paciente->data_nascimento = $request->data_nascimento;
             $paciente->sexo = $request->sexo;
+            $paciente->cpf = $request->documento;
+            $paciente->responsavel = true;
             $paciente->save();
 
             $userController = new UsuarioController();

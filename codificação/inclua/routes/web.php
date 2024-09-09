@@ -326,7 +326,7 @@ Route::middleware('auth')->group(function () {
     Route::get("/paciente/financeiro/", [\App\Http\Controllers\PagamentoController::class, 'historicoPagamentoPaciente'])->name('paciente.financeiro');
 
     #LISTA PACIENTES E CADASTRO
-    Route::get("/pacientes", [\App\Http\Controllers\PacienteController::class, 'index'])->name('paciente.index');
+    Route::get("/pacientes/lista", [\App\Http\Controllers\PacienteController::class, 'index'])->name('paciente.index');
     Route::get("/pacientes/create", [\App\Http\Controllers\PacienteController::class, 'create'])->name('paciente.create');
     Route::post("/pacientes/store", [\App\Http\Controllers\PacienteController::class, 'store'])->name('paciente.store');
 

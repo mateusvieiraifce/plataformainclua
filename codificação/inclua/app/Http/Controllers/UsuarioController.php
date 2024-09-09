@@ -243,7 +243,7 @@ class UsuarioController extends Controller
 
             $user = User::find($request->usuario_id);
             $user->avatar = !empty($pathAvatar) ? "storage/$pathAvatar" : null;
-            $user->documento = Helper::removerCaractereEspecial($request->cpf) ?? null;
+            $user->documento = Helper::removerCaractereEspecial($request->documento)  ?? null;
             $user->nome_completo = $request->nome ?? $user->nome_completo;
             $user->telefone = Helper::removerCaractereEspecial($request->telefone) ?? null;
             $user->celular = Helper::removerCaractereEspecial($request->celular) ?? null;

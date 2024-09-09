@@ -173,12 +173,12 @@ class ClinicaController extends Controller
       //REMOÇÃO DA MASCARA DO CELULAR, TELEFONE E CNPJ PARA COMPARAR COM O BD
       $request->request->set('telefone', Helper::removerCaractereEspecial($request->telefone));
       $request->request->set('celular', Helper::removerCaractereEspecial($request->celular));
-      $request->request->set('cnpj', Helper::removerCaractereEspecial($request->cnpj));
+      $request->request->set('documento', Helper::removerCaractereEspecial($request->documento));
       $rules = [
          "logo" => "required",
          "nome_fantasia" => "required",
          "razao_social" => "required",
-         "cnpj" => "required",
+         "documento" => "required|unique:users,documento,{$request->usuario_id}",
          "telefone" => "unique:users,telefone,{$request->usuario_id}",
          "celular" => "required|unique:users,celular,{$request->usuario_id}",
          "numero_atendimento_social_mensal" => "required",
@@ -188,7 +188,8 @@ class ClinicaController extends Controller
          "logo.required" => "O campo Logo da Clínica é obrigatório.",
          'nome_fantasia.required' => 'O campo Nome Fantasia é obrigatório.',
          'razao_social.required' => 'O campo Razão Social é obrigatório.',
-         'cnpj.required' => 'O campo CNPJ é obrigatório.',
+         'documento.required' => 'O campo CNPJ é obrigatório.',
+         "documento.unique" => "Este CNPJ já foi utilizado.",
          'telefone.unique' => 'Já existe uma clínica cadastrada com este telefone.',
          'celular.required' => 'O campo Celular é obrigatório.',
          'celular.unique' => 'Este número de celular já foi utilizado.',
@@ -227,7 +228,7 @@ class ClinicaController extends Controller
          $clinica->usuario_id = $request->usuario_id;
          $clinica->nome = $request->nome_fantasia;
          $clinica->razaosocial = $request->razao_social;
-         $clinica->cnpj = Helper::removerCaractereEspecial($request->cnpj);
+         $clinica->cnpj = Helper::removerCaractereEspecial($request->documento);
          $clinica->logotipo = "storage/$pathAvatar" ;
          $clinica->numero_atendimento_social_mensal = $request->numero_atendimento_social_mensal;
          $clinica->save();

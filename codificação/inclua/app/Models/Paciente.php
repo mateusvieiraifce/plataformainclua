@@ -11,6 +11,8 @@ class Paciente extends Model
         'nome',
         'usuario_id',
         'data_nascimente',
-        'sexo'
+        'sexo',
+        'cpf',
+        'responsavel'
     ];
 }

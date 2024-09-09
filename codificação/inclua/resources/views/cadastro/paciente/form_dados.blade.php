@@ -27,14 +27,14 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="cpf">
+                            <label for="documento">
                                 CPF <span class="required">*</span>
                             </label>
-                            <div class="input-group input-medium{{ $errors->has('cpf') ? ' has-danger' : '' }}">
-                                <input type="text" id="cpf" class="form-control border-full {{ $errors->has('cpf') ? 'is-invalid' : '' }}"
-                                    name="cpf" maxlength="14" placeholder="000.000.000-00" oninput="mascaraCpf(this)" onblur="validarCPF(this)"
-                                    value="{{ (isset($user) && $user->documento ? $user->documento : null) ?? old('cpf') }}" required>
-                                @include('alerts.feedback', ['field' => 'cpf'])
+                            <div class="input-group input-medium{{ $errors->has('documento') ? ' has-danger' : '' }}">
+                                <input type="text" id="documento" class="form-control border-full {{ $errors->has('documento') ? 'is-invalid' : '' }}"
+                                    name="documento" maxlength="14" placeholder="000.000.000-00" oninput="mascaraCpf(this)" onblur="validarCPF(this)"
+                                    value="{{ (isset($user) && $user->documento ? $user->documento : null) ?? old('documento') }}" required>
+                                @include('alerts.feedback', ['field' => 'documento'])
                             </div>
                         </div>
 
