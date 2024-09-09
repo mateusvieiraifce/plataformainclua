@@ -344,9 +344,7 @@ Route::middleware('auth')->group(function () {
    Route::get("/clinica/marcarconsulta/especialidade/etapa3/{paciente_id}", [\App\Http\Controllers\ClinicaController::class, 'marcarConsultaSelecionarEspecialidade'])->name('clinica.marcarConsultaSelecionarEspecialidade');
    Route::get("/clinica/marcarconsulta/especialidade/etapa4/{paciente_id}/{especialidade_id}", [\App\Http\Controllers\ClinicaController::class, 'marcarConsultaSelecionarEspecialista'])->name('clinica.marcarConsultaSelecionarEspecialista');
    Route::get("/clinica/marcarconsulta/especialidade/etapa5/{paciente_id}/{especialista_id}", [\App\Http\Controllers\ClinicaController::class, 'marcarConsultaSelecionarHoraConsulta'])->name('clinica.marcarConsultaSelecionarHoraConsulta');
-
-   Route::get("/paciente/marcarconsulta/viaclinica/etapa5/{clinica_id}/{especialidade_id}", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaClinicaPasso4'])->name('paciente.marcarConsultaViaClinicaPasso4');
-    
+   Route::post("/clinica/marcarconsulta/finalizar/", [\App\Http\Controllers\ClinicaController::class, 'marcarConsultaFinalizar'])->name('clinica.marcarConsultaFinalizar');
 
     #FINANCEIRO PACIENTE
     Route::get("/paciente/financeiro/", [\App\Http\Controllers\PagamentoController::class, 'historicoPagamentoPaciente'])->name('paciente.financeiro');
