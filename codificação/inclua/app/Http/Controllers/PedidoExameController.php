@@ -21,8 +21,8 @@ class PedidoExameController extends Controller
    }
 
    function salveVarios(Request $request)
-   {
-      $pedidosExames = $request->input('pedidosExames');
+   {    
+      $pedidosExames = $request->input('exames');
       foreach ($pedidosExames as $item) {
          $entidade = Pedidoexame::create([
             'consulta_id' => $request->consulta_id,

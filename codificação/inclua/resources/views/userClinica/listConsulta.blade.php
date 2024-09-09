@@ -10,7 +10,7 @@
             <div class="card-header">
 
                <div class="col-lg-12 col-md-12">
-                  <form action="{{route('consulta.listConsultaPorEspecialistaPesquisar')}}" method="get" id="pesquisar">
+                  <form action="{{route('consulta.listConsultaporClinicaPesquisar')}}" method="get" id="pesquisar">
                      @csrf
                      <label style="font-size: 20px"></label>
                      <fieldset>
@@ -71,12 +71,13 @@
 
                               <div class="col-md-2 px-8">
                                  <div class="form-group">
-                                    <label id="labelFormulario">Clínica(s) vinculada(s)</label>
-                                    <select name="clinica_id" id="clinica_id" class="form-control"
+                                    <label id="labelFormulario" style="color: white">Especialistas</label>
+                                    <select name="especialista_id" id="especialista_id" class="form-control"
                                      style="border-color: white">
-                                    @foreach($clinicas as $iten)
+                                     <option style="color: #2d3748" value="todos" @if($especialistaSelecionado_id == "Todos") selected @endif>Todos</option>
+                                    @foreach($especialistas as $iten)
                                     <option style="color: #2d3748" value="{{old('especialidade_id', $iten->id)}}"
-                                       @if($iten->id == $clinicaselecionada_id) <?php    echo 'selected'; ?> @endif> {{$iten->nome}}
+                                       @if($iten->id == $especialistaSelecionado_id) <?php    echo 'selected'; ?> @endif> {{$iten->nome}}
                                     </option>
                                     @endforeach
                                     </select>
@@ -103,8 +104,7 @@
                         <th> Status </th>                       
                         <th> Horário agendado </th>
                         <th> Paciente </th>
-                        <th> Clínica </th>
-                        <th> Ação </th>
+                        <th> Especialista </th>
                      </thead>
                      <tbody>
                         @if(sizeof($lista) > 0)
@@ -115,33 +115,8 @@
                      <td>{{date( 'd/m/Y H:i' , strtotime($ent->horario_agendado))}}
                   </td>
                   <td>{{$ent->nome_paciente}}</td>
-                     <td>{{$ent->nome_clinica}}</td>
-                     <td >
-                        <a rel="tooltip" title="Iniciar atendimento" class="btn btn-primary" data-original-title="Edit"
-                           href="{{route('especialista.iniciarAtendimento', [$ent->id,"prontuarioatual"])}}">
-                           Iniciar atendimento
-                        </a>                    
-                        <a style="max-width:120px; text-align: left;padding:10px " rel="tooltip" title="Cancelar" class="btn btn-secondary" data-original-title="Edit"
-                           href="{{route('consulta.edit', $ent->id)}}">
-                          Prontuário
-                        </a>  
-                        <a style="max-width:80px; text-align: left;padding:10px " rel="tooltip" title="Cancelar" class="btn btn-warning" data-original-title="Edit"
-                           href="{{route('consulta.edit', $ent->id)}}">
-                           Cancelar
-                        </a>   
-                                            
-                    <!--
-                        <a rel="tooltip" title="Editar" class="btn btn-link" data-original-title="Edit"
-                           href="{{route('consulta.edit', $ent->id)}}">
-                           <i class="tim-icons icon-pencil"></i>
-                        </a>
--->
-                        <a href="{{route('consulta.delete', $ent->id)}}"
-                           onclick="return confirm('Deseja relamente excluir?')" rel="tooltip" title="Excluir"
-                           class="btn btn-link" data-original-title="Remove">
-                           <i class="tim-icons icon-simple-remove"></i>
-                        </a>
-                     </td>
+                     <td>{{$ent->nome_especialista}}</td>
+                    
                      </tr>
                   @endforeach 
                         @endif                       </tbody>

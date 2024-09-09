@@ -1,5 +1,73 @@
 @extends('layouts.app', ['page' => __('Consultas'), 'exibirPesquisa' => false, 'pageSlug' => 'listconsultaporespecialista', 'class' => 'agenda'])
 @section('content')
+
+<!-- script para add funcao select2 do medicamento-->
+<script>
+    // Concept: Render select2 fields after all javascript has finished loading
+    var initSelect2 = function() {
+        // function that will initialize the select2 plugin, to be triggered later
+        var renderSelect = function() {
+            $('#medicamento_id').each(function() {
+                $(this).select2({
+                    dropdownParent: $('#modalPedirMedicamento')                   
+                });               
+            })
+
+            $('#exame_id').each(function() {
+                $(this).select2({
+                    dropdownParent: $('#modalPedirExame')                   
+                });               
+            })
+        };
+
+        // create select2 HTML elements
+        var style = document.createElement('link');
+        var script = document.createElement('script');
+        style.rel = 'stylesheet';
+        style.href = 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/css/select2.min.css';
+        script.type = 'text/javascript';
+        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/js/select2.full.min.js';
+        // trigger the select2 initialization once the script tag has finished loading
+        script.onload = renderSelect;
+        // render the style and script tags into the DOM
+        document.getElementsByTagName('head')[0].appendChild(style);
+        document.getElementsByTagName('head')[0].appendChild(script);
+
+    };
+</script>
+
+<!-- inicializando o select2-->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    var select2Inicializado = false;
+    $(document).ready(function() {
+        if (!select2Inicializado) {
+            // Inicializar o select2
+            initSelect2();
+            select2Inicializado = true;
+        }  
+        
+        //mostrar o modal
+        var mostrarModal = @json($mostrarModal);
+       if(mostrarModal){
+           $('#'+mostrarModal).modal('show');         
+       }
+       
+    });
+</script>
+<!-- formatacao css do select2-->
+<style>  
+   /* Estiliza o texto das opções no dropdown */
+   .select2-container .select2-results__option {
+      color: #111; 
+   }    
+   .select2-container .select2-selection--multiple .select2-selection__choice {
+      color: black !important; /* Substitua "blue" pela cor desejada */
+   }
+</style>
+
+
+<!--formatacao do cronometro-->
 <style>
    #chronometer {
       font-size: 1.5rem;
@@ -19,7 +87,6 @@
       height: 70px;
    }
 </style>
-
 
 
 <!-- menu em forma de abas-->
@@ -123,11 +190,56 @@
       height: auto;
       /* Ajusta a altura conforme o conteúdo */
    }
+
+   .modal-dialog-cad-exame {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;  
+       /* Alinha o modal ao topo da tela */
+       height: 10vh;
+      /* Garante que o modal usa toda a altura da viewport */
+      margin-left: 20%;
+      margin-top: 5%;
+      margin-right: 20%;
+      /* Remove qualquer margem padrão */  
+   }  
+   .modal-dialog-cad-medicamento{
+     
+      justify-content: center;
+      align-items: flex-start;  
+       /* Alinha o modal ao topo da tela */
+       height: 10vh;
+      /* Garante que o modal usa toda a altura da viewport */
+      margin-left: 20%;
+      margin-top: 5%;
+      margin-right: 20%;
+   }
+      
 </style>
 
+<!-- scrips para abrir e fechar os modais corretamete -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.0/js/bootstrap.min.js"></script>
+<script>
+   function closeModal(modalId) {
+    $('#' + modalId).hide(); 
+    //resolve o problema na qual ocorria quando todos os modais eram fechadas, que era a 
+    //de nao deixar clicar nos links.
+    var backdrop = document.querySelector('.modal-backdrop');
+    if (backdrop) {
+       backdrop.remove();
+    }
+    $('#' + modalId).modal('dispose')
+  } 
+  function openModal(modalId) { 
+       $('#' + modalId).modal('show');
+  }   
+</script>
 
-<!-- Modal add exames-->
-<div class="modal fade" id="modalPedirExame" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+
+
+<!-- Modal add EXAME-->
+<div class="modal fade" id="modalPedirExame" tabindex="-1" role="dialog" aria-labelledby="modalPedirExame"
    aria-hidden="true">
    <div class="modal-dialog  modal-dialog-top modal-lg" role="document">
       <div class="modal-content">
@@ -135,7 +247,8 @@
             <h4 class="modal-title">
                <label>Favor selecionar o exame desejado</label>
             </h4>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+            <button type="button" class="close" id="close-modal1"  onclick="closeModal('modalPedirExame')"
+             data-dismiss="modal" aria-label="Fechar">
                <span aria-hidden="true">&times;</span>
             </button>
          </div>
@@ -143,78 +256,170 @@
             <div class="container">
                <form method="post" action="{{route('pedido_exame.salveVarios')}}">
                   @csrf
-                  <div class="row">
-                     <div class="col-md-6">
-                        <div class="form-group">
-                           <label>&nbsp; &nbsp; Exame:</label>
-                           <input style="color: #111" type="text" placeholder="Digite o nome do exame"
-                              name="pesquisaexame" id="pesquisaexame" class="form-control" value="">
-                        </div>
-                     </div>
-                     <div class="col-md-4">
-                        <div class="form-group">
-                           <label id="labelFormulario">Tipo</label>
-                           <select style="color: #111;" name="tipoexame_id" id="tipoexame_id" class="form-control"
-                              title="Por favor selecionar um tipo de exame ..." >
-                              <option style="color: #2d3748" value="">Todos </option>
-                              @foreach($tipoexames as $entLista)
-                          <option style="color: #2d3748" value="{{old('tipoexame_id', $entLista->id)}}">
-                            {{$entLista->descricao}}
-                          </option>
-                       @endforeach
-                           </select>
-                        </div>
-                     </div>
-
-                     <div class="col-md-1">
-                        <div class="form-group">
-                           <label id="labelFormulario"></label>
-                           <a href="#" rel="tooltip" title="Adicionar " data-original-title="Adicionar " href="#"
-                              data-target="#addProdutoBDModal" data-toggle="modal" data-whatever="@mdo">
-                              <button style="width: 10px;" type="button" rel="tooltip" title="" class="btn btn-success"
-                                 data-original-title="Edit Task">
-                                 <i class="tim-icons icon-simple-add"></i>
-                              </button>
-                           </a>
-                        </div>
-                     </div>
-
-                  <div class="row" style="width: 100%;">
-                  <div class="col-6">
-                     <fieldset >
-                        <legend  style="font-size: 14px;">Selecionar exames</legend>
-                        <div id="checkboxContainer" style="margin-left:30px">
-                           <div class="row">
-                              @foreach($exames as $entExame)                        
-                          <div class="col-4">
-                            <label>
-                              <input type="checkbox" style="color: #2d3748"
-                                 value="{{old('exame_id', $entExame->id)}}">
-                              {{$entExame->nome}}
-                            </label>
+               
+                     <div class="col-md-12">
+                          <div class="form-group">
+                              <label id="labelFormulario">Selecionar exame:</label>                       
+                                <select class="select2"  name="exames[]" multiple="multiple" 
+                                    style="color:#2d3748; width: 100%; height: 39px; " 
+                                    id="exame_id" class="form-control"
+                                     title="Por favor selecionar o exame..." required>                                       
+                                        @foreach($exames as $ent)
+                                        <option data-color="red" value="{{old('exame+id', $ent->id)}}"                                       
+                                        >
+                                           {{$ent->nome}}
+                                            </option>
+                                        @endforeach
+                                 </select>                         
                           </div>
-                       @endforeach                     
+                     </div>
+                                    
+                     <div class="row" style="padding-top:10%; width: 100%;">               
+                           <div class="col-12">
+                             <p> Não encontrou o exame? 
+                                 <a href="#"  rel="tooltip" title="Adicionar novo exame"                         
+                                 onclick="openModal('addNovoExameBDModal')">                       
+                                 Click aqui para cadastrar.</a>   
+                                 </p>
                            </div>
-                        </div>
-                     </fieldset>
+                     </div>                 
+                  
+                     <div class="modal-footer">
+                        <button type="button"  onclick="closeModal('modalPedirExame')" class="btn btn-secondary" data-dismiss="modal">
+                           <i class="fa fa-reply"></i> Voltar
+                        </button>
+                        <input type="hidden" name="consulta_id" value="{{$consulta->id}}">
+                        <input type="submit" name="mover" class="btn btn-success" value="Adicionar pedido"></input>
                      </div>
-                     <div class="col-6">
-                     <fieldset>
-                        <legend  style="font-size: 14px;">Exames selecionados</legend>
-                        <div class="selected-items">                        
-                           <ul style="color: #2d3748" id="selectedList"></ul>
-                        </div>
-                     </fieldset>
-                     </div>
-                     </div>
+                  
+               </form>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
 
+<!-- Modal para add novo EXAME no bd caso nao seja encontrado -->
+<div class="modal fade" id="addNovoExameBDModal" tabindex="-2" role="dialog"
+ aria-labelledby="addNovoExameBDModal" aria-hidden="true">
+    <div class="modal-dialog-cad-exame modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <label>Adicionar novo exame:</label>
+                </h5>
+                <button type="button" class="close" id="close-modal2" onclick="closeModal('addNovoExameBDModal')"
+                 data-dismiss="modal" aria-label="Fechar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <!--aqui a rota de salvar o novo exame -->
+                    <form method="post" action="{{route('especialista.salvaNovoExame')}}">
+                        @csrf
+                        <div class="row">
+                           
+                           <div class="col-md-12 px-8">
+                              <div class="form-group">
+                                 <label id="labelFormulario">Nome</label>
+                                 <input style="border-color: #111; color: #111;" type="text" class="form-control" name="nome" required
+                                 value="" maxlength="150">
+                              </div>
+                           </div>
+                           <div class="col-md-12 px-8">
+                              <div class="form-group">
+                                 <label id="labelFormulario">Descrição</label>
+                                 <input style="border-color: #111;color: #111;" type="text" class="form-control" name="descricao" required
+                                 value="" maxlength="150">
+                              </div>
+                           </div>
+                           <div class="col-md-12 px-8">
+                              <div class="form-group">
+                                 <label id="labelFormulario">Tipo</label>
+                                 <select  style="border-color: #111;color: #111;" name="tipoexame_id" id="tipoexame_id" class="form-control"
+                                 title="Por favor selecionar um tipo de exame ..." required>
+                                    @foreach($tipoexames as $entLista)
+                                    <option style="border-color: #111;color: #2d3748"
+                                    value="{{old('tipoexame_id', $entLista->id)}}" 
+                                                   > {{$entLista->descricao}}</option>
+                                    @endforeach
+                                 </select>
+                              </div>
+                           </div>                        
+                        </div>
+                        <input type="hidden" name="consulta_id" value="{{$consulta->id}}">
+                        
+                        
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" onclick="closeModal('addNovoExameBDModal')"
+                             data-dismiss="modal">
+                              <i class="fa fa-reply"></i> Voltar
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                              <i class="fa fa-save"></i> Salvar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal add medicamento-->
+<div class="modal fade" id="modalPedirMedicamento" tabindex="-1" role="dialog" aria-labelledby="modalPedirMedicamento"
+   aria-hidden="true">
+   <div class="modal-dialog  modal-dialog-top modal-lg" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h4 class="modal-title">
+               <label>Favor selecionar o medicamento desejado</label>
+            </h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Fechar"
+            onclick="closeModal('modalPedirMedicamento')">
+               <span aria-hidden="true">&times;</span>
+            </button>
+         </div>
+         <div class="modal-body">
+            <div class="container">
+               <form method="post" action="{{route('pedido_medicamento.salveVarios')}}">
+                  @csrf
+                  <div class="row">
+                     <div class="col-md-12">
+                        <div class="form-group"  style="color:#2d3748">
+                              <label id="labelFormulario">Selecionar medicamento:</label>
+                                    <select class="select2"  name="medicamentos[]" multiple="multiple" 
+                                    style="color:#2d3748; width: 100%; height: 39px; " 
+                                    id="medicamento_id" class="form-control"
+                                     title="Por favor selecionar medicamento...">                                       
+                                        @foreach($medicamentos as $ent)
+                                        <option data-color="red" value="{{old('medicamento_id', $ent->id)}}"                                       
+                                        >
+                                           {{$ent->nome_comercial}}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                        </div>
+                     </div>     
+                     <div class="row" style="padding-top:10%; width: 100%;">               
+                           <div class="col-12">
+                             <p> Não encontrou o medicamento? 
+                                 <a href="#"  rel="tooltip" title="Adicionar novo exame"                         
+                                 onclick="openModal('addNovoMedicamentoBDModal')">                       
+                                 Click aqui para cadastrar.</a>   
+                                 </p>
+                           </div>
+                     </div>     
+                 
                   </div>
                   <div class="modal-footer">
-                     <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                     <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                     onclick="closeModal('modalPedirMedicamento')">
                         <i class="fa fa-reply"></i> Voltar
                      </button>
                      <input type="hidden" name="consulta_id" value="{{$consulta->id}}">
-                     <input type="submit" name="mover" class="btn btn-success" value="Adicionar pedido"></input>
+                     <input type="submit" name="mover" class="btn btn-success" value="Adicionar medicamentos"></input>
                   </div>
                </form>
             </div>
@@ -223,109 +428,143 @@
    </div>
 </div>
 
-<!-- scpritp para filtrar os exames a medida que eh digitado algo-->
-<script>
-   // Lista de itens simulada que poderia vir do controlador
-   const itemsExames = JSON.parse('{!! $exames !!}');
+<!-- Modal para add novo MEDICAMENTO no bd caso nao seja encontrado -->
+<div class="modal fade" id="addNovoMedicamentoBDModal" tabindex="-3" role="dialog"
+ aria-labelledby="addNovoMedicamentoBDModal" aria-hidden="true">
+    <div class="modal-dialog-cad-medicamento modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <label>Adicionar novo medicamento:</label>
+                </h5>
+                <button type="button" class="close" id="close-modal2"
+                 data-dismiss="modal" aria-label="Fechar"  onclick="closeModal('addNovoMedicamentoBDModal')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <!--aqui a rota de salvar o novo medicamento -->
+                    <form method="post" action="{{route('especialista.salvaNovoMedicamento')}}">
+                        @csrf
+                        <div class="row">                           
+                        
+                           <div class="col-md-12 px-8">
+                              <div class="form-group">
+                              <label id="labelFormulario">Nome Comercial</label>
+                              <input style="border-color: #111; color: #111;" type="text" class="form-control" name="nome_comercial" required
+                                 value="" maxlength="150">
+                              </div>
+                           </div>
+                           <div class="col-md-12 px-8">
+                              <div class="form-group">
+                              <label id="labelFormulario">Nome Genérico</label>
+                              <input style="border-color: #111; color: #111;" type="text" class="form-control" name="nome_generico" 
+                                 value="" maxlength="150">
+                              </div>
+                           </div>
+                           <div class="col-md-12 px-8">
+                              <div class="form-group">
+                              <label id="labelFormulario">Forma</label>
+                              <input style="border-color: #111; color: #111;" type="text" class="form-control" name="forma" 
+                                 value="" maxlength="150">
+                              </div>
+                           </div>
+                           <div class="col-md-12 px-8">
+                              <div class="form-group">
+                              <label id="labelFormulario">Concentração</label>
+                              <input style="border-color: #111; color: #111;" type="text" class="form-control" name="concentracao" 
+                                 value="" maxlength="150">
+                              </div>
+                           </div>
+                           <div class="col-md-12 px-8">
+                              <div class="form-group">
+                              <label id="labelFormulario">Via</label>
+                              <input style="border-color: #111; color: #111;" type="text" class="form-control" name="via" 
+                                 value="" maxlength="150">
+                              </div>
+                           </div>
+                           <div class="col-md-12 px-8">
+                              <div class="form-group">
+                              <label id="labelFormulario">Indicação</label>
+                              <input style="border-color: #111; color: #111;" type="text" class="form-control" name="indicacao" 
+                                 value="" maxlength="150">
+                              </div>
+                           </div>
+                           <div class="col-md-12 px-8">
+                              <div class="form-group">
+                              <label id="labelFormulario">Posologia</label>
+                              <input style="border-color: #111; color: #111;" type="text" class="form-control" name="posologia" 
+                                 value="" maxlength="150">
+                              </div>
+                           </div>
+                           <div class="col-md-12 px-8">
+                              <div class="form-group">
+                              <label id="labelFormulario">Precaução</label>
+                              <input style="border-color: #111; color: #111;" type="text" class="form-control" name="precaucao" 
+                                 value="" maxlength="150">
+                              </div>
+                           </div>
+                           <div class="col-md-12 px-8">
+                              <div class="form-group">
+                              <label id="labelFormulario">Advertência</label>
+                              <input style="border-color: #111; color: #111;" type="text" class="form-control" name="advertencia" 
+                                 value="" maxlength="150">
+                              </div>
+                           </div>
+                           <div class="col-md-12 px-8">
+                              <div class="form-group">
+                              <label id="labelFormulario">Contraindicação</label>
+                              <input style="border-color: #111; color: #111;" type="text" class="form-control" name="contraindicacao" 
+                                 value="" maxlength="150">
+                              </div>
+                           </div>
+                           <div class="col-md-12 px-8">
+                              <div class="form-group">
+                              <label id="labelFormulario">Composição</label>
+                              <input style="border-color: #111; color: #111;" type="text" class="form-control" name="composicao" 
+                                 value="" maxlength="150">
+                              </div>
+                           </div>
+                           <div class="col-md-12 px-8">
+                              <div class="form-group">
+                              <label id="labelFormulario">Latoratório Fabricante</label>
+                              <input style="border-color: #111; color: #111;" type="text" class="form-control" name="latoratorio_fabricante"
+                                 value="" maxlength="150">
+                              </div>
+                           </div>
 
-   const itemsExamesSelecionados = [];
-
-
-   function renderCheckboxes(filteredItems) {
-      const container = document.getElementById('checkboxContainer');
-      container.innerHTML = ''; // Limpa o conteúdo anterior
-      for (var i = 0; i < filteredItems.length; i++) {
-         exame = filteredItems[i];
-         const checkbox = document.createElement('div');
-         checkbox.innerHTML = `          
-         <label class="form-check-label"  style="color:#111">       
-                    <input class="form-check-input" type="checkbox" id="${exame.id}" value="${exame.id}">                  
-                          ${exame.nome}
-                    </label>              
-                    `;
-      checkbox.querySelector('input').addEventListener('change', updateSelectedList);
-      container.appendChild(checkbox);
-      }
-     // container.innerHTML =  container.innerHTML+'</div></div>';      
-   }
-
-   function filterItems(query) {
-      var tipoSelecionado = document.getElementById('tipoexame_id');
-      if (tipoSelecionado.value != "") {
-         var filtraPeloTipo = itemsExames.filter(item => item.tipoexame_id == tipoSelecionado.value);
-      } else {
-         var filtraPeloTipo = itemsExames;
-      }
-      const filteredItems = filtraPeloTipo.filter(item => item.nome.toLowerCase().includes(query.toLowerCase()));
-      renderCheckboxes(filteredItems);
-   }
-
-   document.getElementById('pesquisaexame').addEventListener('input', function () {
-      const query = this.value.trim();
-      filterItems(query);
-   });
-
-   // Renderizar todos os itens no início
-   renderCheckboxes(itemsExames);
-
-   function tipoAlterado(event) {
-      var textoPesquisa = document.getElementById('pesquisaexame').value.trim();
-      filterItems(textoPesquisa);
-   }
-
-   // Adiciona um ouvinte de eventos ao select do tipo 
-   const selectElement = document.getElementById('tipoexame_id');
-   selectElement.addEventListener('change', tipoAlterado);
-
-  
-
-   function updateSelectedList() {
-      const selectedList = document.getElementById('selectedList');
-      const selectedCheckboxes = document.querySelectorAll('#checkboxContainer input:checked');    
-
-      selectedCheckboxes.forEach(checkbox => {  
-         const label = checkbox.parentNode; 
-         const descricao = label.textContent.trim();             
-         const novoExame = {
-                nome: descricao,
-                id: checkbox.value
-            };        
-            const existe = itemsExamesSelecionados.some(objeto => objeto.id === novoExame.id);
-            if (!existe) {
-               itemsExamesSelecionados.push(novoExame);
-            } 
-      });
-    
-      let listaHTML = '<ul style="list-style-type: none; padding: 0; margin: 0;">';
-      itemsExamesSelecionados.forEach(objeto => { 
-            listaHTML += `<li  style="color:#111" id="${objeto.id}">     
-            
-            <input type="hidden" name="pedidosExames[]" value="${objeto.id}">
-
-             ${objeto.nome}  <a onclick="removerItem(this)">
-              <i class="tim-icons icon-simple-remove"></i>
-              </a></li>`;    
-      });
-      listaHTML += '</ul>'; 
-      const resultado = document.getElementById('selectedList');
-      resultado.innerHTML = listaHTML || '<p>Nenhum checkbox selecionado.</p>';
-       
-
-   }
-
-   function removerItem(botao) {
-            const li = botao.parentNode; // Obtém o <li> pai do botão
-            li.remove(); // Remove o <li> da lista
-            const index = itemsExamesSelecionados.findIndex(objeto => objeto.id === li.id);
-            if (index !== -1) {
-                itemsExamesSelecionados.splice(index, 1);              
-            }
-        }
-</script>
-
-
-
-
+                           <div class="col-md-12 px-8">
+                              <div class="form-group">
+                                 <label id="labelFormulario">Tipo de Medicamento</label>
+                                 <select  style="border-color: #111; color: #111;" name="tipo_medicamento_id" id="tipo_medicamento_id" class="form-control"
+                                    title="Por favor selecionar ..." required> style="border-color: white"
+                                    @foreach($tipo_medicamentos as $iten)
+                                       <option style="border-color: #111;color: #2d3748" value="{{$iten->id}}"
+                                         > {{$iten->descricao}}
+                                       </option>
+                                    @endforeach
+                                 </select>
+                               </div>
+                           </div>
+         
+                        </div>
+                        <input type="hidden" name="consulta_id" value="{{$consulta->id}}">
+                        
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" onclick="closeModal('addNovoMedicamentoBDModal')" 
+                             data-dismiss="modal" >
+                              <i class="fa fa-reply"></i> Voltar
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                              <i class="fa fa-save"></i> Salvar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="card">
    <div class="row">
@@ -345,7 +584,6 @@
                      <h6 id="idadePaciente" class="title d-inline">
                         {{date('d/m/Y', strtotime($usuarioPaciente->data_nascimento))}}
                      </h6>
-
                   </div>
                   <div class="col-6 col-lg-4">
                      @if(isset($primeiraConsulta))
@@ -365,17 +603,15 @@
 
             </div>
             <div class="card-body">
-
-
                <div class="row">
                   <div class="tab-container">
                      <div class="tabs">
                         <button class="tab-button 
-                         @if($aba == "anamnese")
+                         @if($aba == "prontuarioatual")
                               <?php echo 'active'; ?>
                          @endif                        
                          btn-primary"
-                           onclick="openTab(event, 'anamnese')">Anamnese</button>
+                           onclick="openTab(event, 'prontuarioatual')">Pronturário Atual</button>
                         <button class="tab-button 
                         @if($aba == "prescricoes")
                               <?php echo 'active'; ?>
@@ -403,25 +639,69 @@
 
                      </div>
                      <div class="tab-content">
-                        <div id="anamnese" class="tab-pane
-                         @if($aba == "anamnese")
+                        <div id="prontuarioatual" class="tab-pane
+                         @if($aba == "prontuarioatual")
                               <?php echo 'active'; ?>
                          @endif 
                          ">
-                           <p>Conteúdo da aba Anamnese.</p>
-                           <!-- Tela com lista de anamnese precadastradas
-                           no cad de anamnese vai ter id e descricao
-                           na tela de atendimento o especialista vai poder inserir um texto    cada anamnese    
-                           * quando abrir o modal mostrar dados já preenchidos de consultas anteriores-->
-                           <!-- Tela com Queixa principal-->
-                           <!-- História do problema = História-->
+                        <div class="row">
+                           <div class="col-md-12">
+                              <div class="form-group">
+                                 <label style="color: #111">&nbsp; &nbsp; Dados da consulta:</label>
+                                 <input style="color: #111" type="area" placeholder="Digite os dados da consulta aqui"
+                                    name="dadosconsulta" id="dadosconsulta" class="form-control" value="">
+                              </div>
+                           </div>
+                        </div>
                         </div>
                         <div id="prescricoes" class="tab-pane
                          @if($aba == "prescricoes")
                               <?php echo 'active'; ?>
                          @endif 
                          ">
-                           <p>Conteúdo da aba prescriçoes.</p>
+                         <div class="row">
+                              <div class="col-2">
+                                 <a id="adicionarMedicamento" rel="tooltip" title="Pedir medicamento" class="btn btn-success"
+                                    data-original-title="Edit" href="#">
+                                    <i class="tim-icons  icon-components"></i> Prescrever medicamento
+                                 </a>
+                              </div>    
+                              <div class="col-4">
+                                 
+                              </div>
+                              <div class="col-6 btn-primary">
+                                 <div class="table-responsive">
+                                    <table class="table">
+                                       <thead>
+                                          <tr>
+                                             <th> Medicamentos </th>
+                                             <th> </th>
+                                          </tr>
+                                       </thead>
+                                       <tbody>
+                                       @if(sizeof($listaPedidosMedicamentos) > 0)
+                                       @foreach($listaPedidosMedicamentos as $pedidoMedicamento)
+                                          <tr>
+                                             <td> {{$pedidoMedicamento->nome_comercial}} </td>
+                                             <td>                                                                                           
+                                                <a href="{{route('pedido_medicamento.delete',[$pedidoMedicamento->id,$consulta->id] )}}"
+                                                   rel="tooltip"
+                                                   title="Excluir" class="btn btn-link" data-original-title="Remove">
+                                                   <i class="tim-icons icon-simple-remove"></i>
+                                                </a>
+                                             </td>
+                                          </tr>
+                                          @endforeach 
+                                          @endif   
+                                       </tbody>
+                                    </table>
+                                    <div>
+
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                           
                         </div>
                         <div id="exames" class="tab-pane
                           @if($aba == "exames")
@@ -443,7 +723,7 @@
                                     <table class="table">
                                        <thead>
                                           <tr>
-                                             <th> Exame </th>
+                                             <th> Exames </th>
                                              <th> </th>
                                           </tr>
                                        </thead>
@@ -452,12 +732,9 @@
                                        @foreach($listaPedidosExames as $pedidoexame)
                                           <tr>
                                              <td> {{$pedidoexame->nome}} </td>
-                                             <td> <a rel="tooltip" class="btn btn-link" href="#">
-                                                  Inserir Laudo
-                                                </a>
-                                                                                          
+                                             <td>                                                                                           
                                                 <a href="{{route('pedido_exame.delete',[$pedidoexame->id,$consulta->id] )}}"
-                                                   onclick="return confirm('Deseja relamente excluir?')" rel="tooltip"
+                                                  rel="tooltip"
                                                    title="Excluir" class="btn btn-link" data-original-title="Remove">
                                                    <i class="tim-icons icon-simple-remove"></i>
                                                 </a>
@@ -473,6 +750,7 @@
                                  </div>
                               </div>
                            </div>
+                           </div>
                            <div id="atestados" class="tab-pane
                             @if($aba == "atestados")
                               <?php echo 'active'; ?>
@@ -485,7 +763,17 @@
                               <?php echo 'active'; ?>
                             @endif
                             ">
-                              <p>Conteúdo da aba prontuário.</p>
+                            <div class="row">
+                              <div class="col-2">
+                                 <a id="adicionarExame" rel="tooltip" title="Pedir Exame" class="btn btn-success"
+                                    data-original-title="Edit" href="#">
+                                    <i class="tim-icons  icon-components"></i> Anamnese
+                                 </a>
+                              </div>    
+                              <div class="col-4">
+                                 
+                              </div>                              
+                           </div>
                            </div>
                         </div>
                      </div>
@@ -515,7 +803,7 @@
                   <a href="{{route('consulta.listconsultaporespecialista')}}" class="btn btn-primary"><i
                         class="fa fa-reply"></i>
                      Voltar</a>
-                  <a rel="tooltip" title="Finalizar" class="btn btn-success" data-original-title="Edit"
+                  <a rel="tooltip" title="Finalizar" class="btn btn-success" data-original-title="Edit"                  
                      href="{{route('especialista.finalizarAtendimento', $consulta->id)}}">
                      <i class="fa fa-save"></i> Finalizar
                   </a>
@@ -572,13 +860,19 @@
       document.getElementById('idadePaciente').textContent = "IDADE: " + idade + " anos";
    </script>
 
-   <!-- abrindo o modal de add exames -->
+  
    <script>
+       <!-- abrindo o modal de add exames -->
       document.getElementById('adicionarExame').addEventListener('click', function () {
-         //  mandaDadosFormPrincipalParaModal();
-         //  preencheModalCustos();
          // Abra o modal
          $('#modalPedirExame').modal('show');
       });
+
+      <!-- abrindo o modal de add medicamento -->
+      document.getElementById('adicionarMedicamento').addEventListener('click', function () {
+         // Abra o modal
+         $('#modalPedirMedicamento').modal('show');
+      });
    </script>
+   
    @endsection

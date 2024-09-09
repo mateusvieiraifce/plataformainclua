@@ -4,6 +4,8 @@ namespace Database\Seeders;
 
 use App\Models\Clinica;
 use App\Models\Permission;
+use App\Models\Tipoexame;
+use App\Models\TipoMedicamento;
 use App\Models\User;
 use App\Models\Especialidade;
 use App\Models\Especialista;
@@ -120,6 +122,36 @@ class populacaoTesteSeeder extends Seeder
             'usuario_id'=>$entidade->id, 
             'ativo'=>"1",
         ]);
+
+        //cad medicamentos
+         $tipoMedicamento = TipoMedicamento::create([ 
+            'descricao'=>"Amtibiótico",
+            'qtdFolha'=>2,
+        ]);
+
+        DB::table('medicamentos')->insert([
+            'nome_comercial'=>"Cefalosporinas",
+            'tipo_medicamento_id'=>$tipoMedicamento->id, 
+        ]);
+        DB::table('medicamentos')->insert([
+            'nome_comercial'=>"Fluoroquinolonas",
+            'tipo_medicamento_id'=>$tipoMedicamento->id, 
+        ]);
+
+         //cad exames
+           $tipoExame = Tipoexame::create([ 
+            'descricao'=>"Imagem",
+        ]);
+
+        DB::table('exames')->insert([
+            'nome'=>"Raio X",
+            'tipoexame_id'=>$tipoExame->id, 
+        ]);
+        DB::table('exames')->insert([
+            'nome'=>"Radiografia",
+            'tipoexame_id'=>$tipoExame->id, 
+        ]);
+
 
 
         //fazer clinica vinculada a especialista

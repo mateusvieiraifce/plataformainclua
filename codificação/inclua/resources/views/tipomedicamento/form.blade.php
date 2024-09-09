@@ -29,10 +29,10 @@
         </div>
 
         <input type="hidden" name="id" value="{{$entidade->id}}">
-        <a href="{{route('tipomedicamento.list')}}" class="btn btn-primary"><i class="fa fa-reply"></i><span>
-            Voltar</span></a>
-        <button class="btn btn-success" onclick="$('#send').click(); "><i class="fa fa-save"></i><span>
-            Salvar</span></button>
+        <a href="{{route('tipomedicamento.list')}}" class="btn btn-primary"><i class="fa fa-reply"></i>
+            Voltar</a>
+        <button class="btn btn-success" onclick="$('#send').click(); "><i class="fa fa-save"></i>
+            Salvar</button>
       </div>
       </form>
     </div>

@@ -3,7 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Helper;
 use App\Models\Especialista;
-use App\Models\Especialistaclinica;
+use App\Models\PedidoMedicamento;
 use App\Models\Consulta;
 use App\Models\Paciente;
 use App\Models\Especialidade;
@@ -15,6 +15,9 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Tipoexame;
 use App\Models\Exame;
 use App\Models\Pedidoexame;
+use App\Models\Medicamento;
+use App\Models\TipoMedicamento;
+
 
 class EspecialistaController extends Controller
 {
@@ -222,39 +225,45 @@ class EspecialistaController extends Controller
       return view('especialista/form', ['entidade' => $entidade, 'especialidades' => Especialidade::all(), 'usuario' => $usuario]);
    }
 
-   function inicarAtendimento($consulta_id,$aba)
+   function inicarAtendimento($consulta_id,$aba,$mostrarModal=null)
    {
+     // dd($consulta_id);
       if (!($this->consultaPertenceEspecialistaLogado($consulta_id))) {
          return redirect()->route('consulta.listconsultaporespecialista');
       }
       $consulta = Consulta::find($consulta_id);
-
       $paciente = Paciente::find($consulta->paciente_id);
-
       $usuarioPaciente = User::find($paciente->usuario_id);
-
       $primeiraConsulta = Consulta::where('status', '=', 'Finalizada')->
          where('paciente_id', '=', $consulta->paciente_id)->
          where('especialista_id', '=', $consulta->especialista_id)->
          orderBy('horario_iniciado', 'asc')->first();
-
       $qtdConsultasRealizadas = Consulta::where('status', '=', 'Finalizada')->
          where('paciente_id', '=', $consulta->paciente_id)->
          where('especialista_id', '=', $consulta->especialista_id)->
          orderBy('horario_iniciado', 'asc')->count();
+     
+      $tipoexames = Tipoexame::orderBy('descricao', 'asc')->get();
+      $exames = Exame::orderBy('nome', 'asc')->get();
 
-         $tipoexames = Tipoexame::orderBy('descricao', 'asc')->get();
+      $medicamentos = Medicamento::orderBy('nome_comercial', 'asc')->get();
 
-         $exames = Exame::orderBy('nome', 'asc')->get();
-
+      //lista de pedidos de exames
       $listaPedidosExames = Pedidoexame::
       join('exames', 'exames.id', '=', 'pedido_exames.exame_id')->
       where('consulta_id',$consulta->id)->
       orderBy('pedido_exames.created_at', 'desc')->
       select('pedido_exames.id as id', 'nome','laudo')->get(); 
+
+      //lista de pedidos de medicamentos
+      $listaPedidosMedicamentos = PedidoMedicamento::
+      join('medicamentos', 'medicamentos.id', '=', 'pedido_medicamentos.medicamento_id')->
+      where('consulta_id',$consulta->id)->
+      orderBy('pedido_medicamentos.created_at', 'desc')->
+      select('pedido_medicamentos.id as id', 'nome_comercial','prescricao_indicada')->get(); 
     
       //dd($listaPedidosExames);
-
+    //  dd($mostrarModal);
       return view('userEspecialista/iniciaratendimento', [
          'consulta' => $consulta,
          'paciente' => $paciente,
@@ -264,7 +273,11 @@ class EspecialistaController extends Controller
          'tipoexames' => $tipoexames,
          'exames' => $exames,
          'listaPedidosExames' => $listaPedidosExames,
-         'aba'=>$aba
+         'medicamentos' => $medicamentos ,
+         'listaPedidosMedicamentos' =>  $listaPedidosMedicamentos,
+         'tipo_medicamentos' => TipoMedicamento::all(),
+         'aba'=>$aba,
+         'mostrarModal' =>$mostrarModal
       ]);
 
    }
@@ -325,6 +338,41 @@ class EspecialistaController extends Controller
       ]);
 
    }
+
+   function salvaNovoExame(Request $request){    
+      $entidade = Exame::create([
+         'nome' => $request->nome,
+         'descricao' => $request->descricao,
+         'tipoexame_id' => $request->tipoexame_id
+      ]);
+      //tentar passar o valor de mostrar modal de exames apos cadastrodo.
+     return $this->inicarAtendimento($request->consulta_id,"exames",'modalPedirExame');
+    //  return redirect()->route('especialista.iniciarAtendimento', [$request->consulta_id,"exames"]);
+   }
+
+   function salvaNovoMedicamento(Request $request){    
+      $entidade = Medicamento::create([
+         'nome_comercial' => $request->nome_comercial,
+         'nome_generico' => $request->nome_generico,
+         'forma' => $request->forma,
+         'concentracao' => $request->concentracao,
+         'via' => $request->via,
+         'indicacao' => $request->indicacao,
+         'posologia' => $request->posologia,
+         'precaucao' => $request->precaucao,
+         'advertencia' => $request->advertencia,
+         'contraindicacao' => $request->contraindicacao,
+         'composicao' => $request->composicao,
+         'latoratorio_fabricante' => $request->latoratorio_fabricante,
+         'tipo_medicamento_id' => $request->tipo_medicamento_id
+      ]);
+      //modal que vai ser exibido
+      $mostrarModalMedicamento = 'modalPedirMedicamento';
+      //tentar passar o valor de mostrar modal de medicamentos apos cadastrodo.
+     return $this->inicarAtendimento($request->consulta_id,"prescricoes",$mostrarModalMedicamento);
+   }
+
+   
 
 
 }
