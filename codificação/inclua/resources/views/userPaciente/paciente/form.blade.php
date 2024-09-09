@@ -11,7 +11,7 @@
                 <form method="post" action="{{ route('paciente.store') }}">
                     @csrf
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="nome">
                                     Nome <span class="required">*</span>
@@ -23,7 +23,20 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="documento">
+                                    CPF <span class="required">*</span>
+                                </label>
+                                <div class="input-group {{ $errors->has('documento') ? 'has-danger' : '' }}">
+                                    <input type="text" id="documento" class="form-control {{ $errors->has('documento') ? 'is-invalid' : '' }}"
+                                        name="documento" maxlength="14" placeholder="000.000.000-00" oninput="mascaraCpf(this)" onblur="validarCPF(this)"
+                                        value="{{ old('documento') }}" required>
+                                    @include('alerts.feedback', ['field' => 'documento'])
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="data_nascimento">
                                     Data de nascimento <span class="required">*</span>
@@ -35,7 +48,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="sexo">
                                     Gênero <span class="required">*</span>
