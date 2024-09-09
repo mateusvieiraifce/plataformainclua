@@ -278,6 +278,9 @@ Route::middleware('auth')->group(function () {
     Route::get("/paciente/marcarconsulta/viaespecialidade/etapa3/{especialidade_id}", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaEspecialidadePasso2'])->name('paciente.marcarConsultaViaEspecialidadePasso2')->middleware('auth');
     Route::get("/paciente/marcarconsulta/viaespecialidade/etapa3/{especialidade_id}/{clinica_id}", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaEspecialidadePasso3'])->name('paciente.marcarConsultaViaEspecialidadePasso3')->middleware('auth');
     Route::get("/paciente/marcarconsulta/viaespecialidade/etapa4/{clinica_id}/{especialista_id}", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaEspecialidadePasso4'])->name('paciente.marcarConsultaViaEspecialidadePasso4')->middleware('auth');
+    
+    #ANAMNESE
+    Route::get("/paciente/anamnese", [\App\Http\Controllers\AnamneseController::class, 'create'])->name('anamnese.create');
 
     #CAD_TIPO_EXAMES_USER_ROOT
     Route::get("/tipoexame/list", [\App\Http\Controllers\TipoexameController::class, 'list'])->name('tipoexame.list')->middleware('auth');
@@ -350,6 +353,12 @@ Route::middleware('auth')->group(function () {
 
     #FINANCEIRO PACIENTE
     Route::get("/paciente/financeiro/", [\App\Http\Controllers\PagamentoController::class, 'historicoPagamentoPaciente'])->name('paciente.financeiro');
+
+    #LISTA PACIENTES E CADASTRO
+    Route::get("/pacientes", [\App\Http\Controllers\PacienteController::class, 'index'])->name('paciente.index');
+    Route::get("/pacientes/create", [\App\Http\Controllers\PacienteController::class, 'create'])->name('paciente.create');
+    Route::post("/pacientes/store", [\App\Http\Controllers\PacienteController::class, 'store'])->name('paciente.store');
+
 });
 
 /* ROTAS PARA SEREM ANALISADAS */

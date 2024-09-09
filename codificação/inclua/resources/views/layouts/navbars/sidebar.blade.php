@@ -357,6 +357,13 @@
                     </a>
                 </li>
 
+                <li @if ($pageSlug == 'pacientes' ) class="active " @endif>
+                    <a href="{{ route('paciente.index') }}">
+                        <i class="tim-icons icon-single-02"></i>
+                        <p>{{ __('Pacientes') }}</p>
+                    </a>
+                </li>
+
                 <li @if ($pageSlug=='favoritos' ) class="active " @endif>
                     <a href="{{route('user.favoritos')}}">
                         <i class="tim-icons icon-chat-33"></i>

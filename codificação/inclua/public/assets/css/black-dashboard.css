@@ -12376,7 +12376,7 @@ fieldset[disabled] .btn-link.active {
 .has-danger.input-group-focus .input-group-prepend .input-group-text,
 .has-danger.input-group-focus .input-group-append .input-group-text {
     border-color: #f33620;
-    color: #ec250d;
+    /* color: #ec250d; */
     background-color: rgba(222, 222, 222, 0.1);
 }
 
@@ -16369,17 +16369,17 @@ code {
     border-left: 0 none;
 }
 
+/* 
 .input-group .form-control:first-child,
 .input-group-btn:first-child>.dropdown-toggle,
 .input-group-btn:last-child>.btn:not(:last-child):not(.dropdown-toggle) {
     border-right: 0 none;
 }
-
 .input-group .form-control:last-child,
 .input-group-btn:last-child>.dropdown-toggle,
 .input-group-btn:first-child>.btn:not(:first-child) {
     border-left: 0 none;
-}
+} */
 
 .form-control[disabled],
 .form-control[readonly],
