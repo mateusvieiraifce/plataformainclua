@@ -238,6 +238,47 @@ class ConsultaController extends Controller
       ]);
    }
 
+   
+   function listConsultaAgendada($msg = null)
+   {
+      $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
+      $filter = "";
+      if (isset($_GET['filtro'])) {
+         $filter = $_GET['filtro'];
+      }
+
+      //todoas os especialistas que a clinica eh vinculado
+      $especialistas = Especialistaclinica::join('especialistas', 'especialistas.id', '=', 'especialistaclinicas.especialista_id')->where('clinica_id', $clinica->id)->orderBy('especialistas.nome', 'asc')->select('especialistas.id', 'especialistas.nome')->get();
+
+      // Obtém a data atual
+      $dataAtual = Carbon::now();
+      // Calcula a data de um mês atrás
+      $dataUmMesAtras = $dataAtual->subMonth();
+      $inicioDoDia = $dataUmMesAtras->startOfDay();
+      $fimDoDia = Carbon::today()->endOfDay();
+
+
+      $lista = Consulta::join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')->
+      join('pacientes', 'pacientes.id', '=', 'consultas.paciente_id')->
+      join('especialistas', 'especialistas.id', '=', 'consultas.especialista_id')->
+      where('clinica_id', '=', $clinica->id)->
+      whereBetween('horario_agendado', [$inicioDoDia, $fimDoDia])->
+      select('consultas.id', 'status', 'horario_agendado', 'especialistas.nome as nome_especialista', 
+      'pacientes.nome as nome_paciente')->orderBy('horario_agendado', 'asc')->get();
+
+      return view('userClinica/listConsultaAgenda', [
+         'lista' => $lista,
+         'especialistas' => $especialistas,
+         'filtro' => $filter,
+         'clinica' => $clinica,
+         'status' => "Todos",
+         'especialistaSelecionado_id' => "Todos",
+         'msg' => $msg,
+         'inicio_data' => $inicioDoDia->format('Y-m-d'),
+         'final_data' => $fimDoDia->format('Y-m-d')
+      ]);
+   }
+
    function listConsultaporClinica($msg = null)
    {
       $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
@@ -338,4 +379,6 @@ class ConsultaController extends Controller
          'nomepaciente' => $request->nomepaciente,
       ]);
    }
+
+
 }
