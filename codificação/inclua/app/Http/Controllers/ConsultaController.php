@@ -257,11 +257,14 @@ class ConsultaController extends Controller
       $inicioDoDia = $dataUmMesAtras->startOfDay();
       $fimDoDia = Carbon::today()->endOfDay();
 
-
+      // selecionar as consultas na qual o status diferente de 
+      // FINALIZADA, CANCELADA
       $lista = Consulta::join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')->
       join('pacientes', 'pacientes.id', '=', 'consultas.paciente_id')->
       join('especialistas', 'especialistas.id', '=', 'consultas.especialista_id')->
       where('clinica_id', '=', $clinica->id)->
+      where('status', '!=', 'Finalizada')->
+      where('status', '!=', 'Cancelada')->
       whereBetween('horario_agendado', [$inicioDoDia, $fimDoDia])->
       select('consultas.id', 'status', 'horario_agendado', 'especialistas.nome as nome_especialista', 
       'pacientes.nome as nome_paciente')->orderBy('horario_agendado', 'asc')->get();

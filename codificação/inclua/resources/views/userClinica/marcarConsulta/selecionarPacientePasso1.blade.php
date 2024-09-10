@@ -22,7 +22,7 @@
                         <div class="form-group">
                            <h6 class="title d-inline"> </h6>                           
                            <input type="text" name="cpf" style="margin-left:10px;margin-top:5px;" id="cpf"
-                            placeholder="Pesquise pelo cpf..." class="form-control" @if(isset($filtro)) value="{{$filtro}}" @endif>
+                            placeholder="Pesquise pelo cpf..." class="form-control" @if(isset($cpf)) value="{{$cpf}}" @endif>
                         </div>
                      </div>
                      <div class="col-sm-1">
@@ -64,11 +64,11 @@
                   @if ($lista->lastPage() > 1)
                   @php
                   $paginator = $lista;
-                  $paginator->url = route('clinica.marcarConsultaSelecionarPaciente');
+                  $paginator->url = route('clinica.pesquisarPacienteMarcarconsulta');
                   @endphp
                   <ul class="pagination">
                      <li class="{{ ($paginator->currentPage() == 1) ? ' disabled' : '' }}">
-                        <a href="{{$paginator->url . "?page=1&filtro=" . $filtro }}">&nbsp;<< &nbsp;&nbsp; </a>
+                        <a href="{{$paginator->url . "?page=1&filtro=" . $filtro . "&cpf=". $cpf }}">&nbsp;<< &nbsp;&nbsp; </a>
                      </li>
                      @for ($i = 1; $i <= $paginator->lastPage(); $i++)
                         <?php
@@ -84,15 +84,15 @@
                         }    ?>
                         @if ($from < $i && $i < $to) <li class="{{ ($paginator->currentPage() == $i) ? ' active' : '' }}">
                            @if($paginator->currentPage() == $i)
-                           <a href="{{ $paginator->url . "?page=" . $i . "&filtro=" . $filtro }} "> <b>{{ $i }}</b> &nbsp; </a>
+                           <a href="{{ $paginator->url . "?page=" . $i . "&filtro=" . $filtro . "&cpf=". $cpf }} "> <b>{{ $i }}</b> &nbsp; </a>
                            @else
-                           <a href="{{ $paginator->url . "?page=" . $i . "&filtro=" . $filtro }} ">{{ $i }} &nbsp; </a>
+                           <a href="{{ $paginator->url . "?page=" . $i . "&filtro=" . $filtro . "&cpf=". $cpf}} ">{{ $i }} &nbsp; </a>
                            @endif
                            </li>
                            @endif
                            @endfor
                            <li class="{{ ($paginator->currentPage() == $paginator->lastPage()) ? ' disabled' : '' }}">
-                              <a href="{{ $paginator->url . "?page=" . $paginator->lastPage() . "&filtro=" . $filtro }}"> >></a>
+                              <a href="{{ $paginator->url . "?page=" . $paginator->lastPage() . "&filtro=" . $filtro . "&cpf=". $cpf}}"> >></a>
                            </li>
                   </ul>
                   @endif
