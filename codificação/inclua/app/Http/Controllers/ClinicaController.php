@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Rules\CnpjValidationRule;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 class ClinicaController extends Controller
 {
@@ -322,7 +323,10 @@ class ClinicaController extends Controller
         if (isset($_GET['filtro'])) {
             $filter = $_GET['filtro'];
         }
-        $lista = Paciente::select('id', 'nome','data_nascimento')->paginate(8);
+        $lista = Paciente::
+        join('users', 'users.id', '=', 'pacientes.usuario_id')->
+        select('pacientes.id', 'nome','users.data_nascimento','users.documento as cpf')      
+        ->paginate(8);
         return view('userClinica/marcarConsulta/selecionarPacientePasso1', ['lista' => $lista, 'msg' => $msg,'filtro' => $filter]);
     }
 
@@ -400,6 +404,37 @@ class ClinicaController extends Controller
         $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
         return  $this->marcarConsultaSelecionarPaciente($msg);
     }
+
+
+     //lista dos pacientes que fez alguma consulta com o especialista logado
+   function listaPacientes($msg = null)
+   {
+      $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
+      $filter = "";
+      if (isset($_GET['filtro'])) {
+         $filter = $_GET['filtro'];
+      }
+
+      $statusConsulta = "Finalizada";
+
+      // Obter pacientes e o número de consultas que cada um teve
+      $lista = Paciente::select('pacientes.id', 'pacientes.nome as nome_paciente', DB::raw('COUNT(consultas.id) as total_consultas'))
+         ->leftJoin('consultas', 'pacientes.id', '=', 'consultas.paciente_id')
+         ->where('status', '=', $statusConsulta)
+         ->where('clinica_id', '=', $clinica->id)
+         ->groupBy('pacientes.id', 'pacientes.nome')
+         ->paginate(8);
+
+
+
+      return view('userClinica/listPacientes', [
+         'lista' => $lista,
+         'filtro' => $filter,
+         'clinica' => $clinica,
+         'msg' => $msg
+      ]);
+
+   }
 
    
 }

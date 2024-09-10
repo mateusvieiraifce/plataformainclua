@@ -15,7 +15,14 @@
                         <div class="form-group">
                            <h6 class="title d-inline">Escolha o paciente </h6>                           
                            <input type="text" name="filtro" style="margin-left:10px;margin-top:5px;" id="filtro"
-                            placeholder="Pesquise por um paciente digitando o nome aqui..." class="form-control" @if(isset($filtro)) value="{{$filtro}}" @endif>
+                            placeholder="Pesquise pelo nome..." class="form-control" @if(isset($filtro)) value="{{$filtro}}" @endif>
+                        </div>
+                     </div>
+                     <div class="col-sm-3 ">
+                        <div class="form-group">
+                           <h6 class="title d-inline"> </h6>                           
+                           <input type="text" name="cpf" style="margin-left:10px;margin-top:5px;" id="cpf"
+                            placeholder="Pesquise pelo cpf..." class="form-control" @if(isset($filtro)) value="{{$filtro}}" @endif>
                         </div>
                      </div>
                      <div class="col-sm-1">
@@ -35,6 +42,7 @@
                <table class="table">
                   <thead>
                      <th> Nome </th>
+                     <th> CPF </th>
                      <th> Data de Nascimento </th>
                      <th> </th>
                   </thead>
@@ -43,6 +51,7 @@
                      @foreach($lista as $ent)
                      <tr>
                         <td>{{$ent->nome}}</td>
+                        <td>{{$ent->cpf}}</td>
                         <td>{{date( 'd/m/Y' , strtotime($ent->data_nascimento))}}
                         <td>
                            <a style="max-height: 35px;" href="{{route('clinica.marcarConsultaSelecionarEspecialidade',$ent->id)}}" class="btn btn-success">Próximo <i class="tim-icons icon-double-right"> </i> </a>
