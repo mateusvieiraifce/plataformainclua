@@ -281,6 +281,7 @@ Route::middleware('auth')->group(function () {
     
     #ANAMNESE
     Route::get("/paciente/anamnese", [\App\Http\Controllers\AnamneseController::class, 'create'])->name('anamnese.create');
+    Route::post("/paciente/anamnese/store", [\App\Http\Controllers\AnamneseController::class, 'store'])->name('anamnese.store');
 
     #CAD_TIPO_EXAMES_USER_ROOT
     Route::get("/tipoexame/list", [\App\Http\Controllers\TipoexameController::class, 'list'])->name('tipoexame.list')->middleware('auth');
