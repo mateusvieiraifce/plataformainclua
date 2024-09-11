@@ -152,7 +152,7 @@
 
             </div>
             <div class="col-2">
-                <a href="{{route('clinica.marcarConsultaSelecionarEspecialista',[$paciente->id,$especialista->id])}}" class="btn btn-primary"><i class="fa fa-reply"></i>
+                <a href="{{route('clinica.marcarConsultaSelecionarEspecialista',[$paciente->id,$especialista->especialidade_id])}}" class="btn btn-primary"><i class="fa fa-reply"></i>
                     Voltar</a>
             </div>
         </div>

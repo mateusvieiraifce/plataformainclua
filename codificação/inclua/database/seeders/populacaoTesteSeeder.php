@@ -47,6 +47,7 @@ class populacaoTesteSeeder extends Seeder
         ]);
         DB::table('pacientes')->insert([
             'nome'=>"Paciente 01",
+            'cpf'=>"001",
             'usuario_id'=>$entidade->id,          
         ]);
 

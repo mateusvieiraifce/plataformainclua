@@ -356,7 +356,6 @@ class ClinicaController extends Controller
         select('especialidades.id', 'especialidades.descricao')->paginate(8);       
         return view('userClinica/marcarConsulta/selecionarEspecialidadePasso2', ['lista' => $lista, 'paciente_id' => $paciente_id]);
    }
-
    
    function marcarConsultaSelecionarEspecialista($paciente_id, $especialidade_id)
    {
@@ -427,49 +426,50 @@ class ClinicaController extends Controller
       ]);
    }
 
-      //lista dos pacientes que fez alguma consulta com a clinica logada
-      function listaPacientesPesquisar($msg = null)
-      {
-         $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
-        
+   //lista dos pacientes que fez alguma consulta com a clinica logada
+   function listaPacientesPesquisar($msg = null)
+   {
+      $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
+      
 
-         //retonando a lista de pacientes
-         $filtro = "";
-         if (isset($_GET['filtro'])) {
-            $filtro = $_GET['filtro'];
-         }
-         //retonando a lista de pacientes
-         $cpf = "";
-         if (isset($_GET['cpf'])) {
-               $cpf = $_GET['cpf'];
-         }
-
-         $statusConsulta = "Finalizada";
-         // Obter pacientes e o número de consultas que cada um teve
-         $lista = Paciente::select('pacientes.id', 'pacientes.nome as nome_paciente',
-         'pacientes.cpf', 'pacientes.data_nascimento', 
-         DB::raw('COUNT(consultas.id) as total_consultas'))
-            ->leftJoin('consultas', 'pacientes.id', '=', 'consultas.paciente_id')
-            ->where('status', '=', $statusConsulta)
-            ->where('clinica_id', '=', $clinica->id)
-            ->where('nome', 'like', "%" . $filtro . "%")
-            -> where('cpf', 'like', "%" . $cpf . "%")
-            ->groupBy('pacientes.id', 'pacientes.nome','pacientes.cpf','pacientes.data_nascimento')
-            ->paginate(8);
-   
-            $msg = null;
-            if ($lista->isEmpty()) {
-                  $msg = ['valor' => trans("Não foi encontrado nenhum paciente!"), 'tipo' => 'primary'];
-            }
-         return view('userClinica/listPacientes', [
-            'lista' => $lista,
-            'filtro' => null, 
-            'filtro' => $filtro, 
-            'cpf' => $cpf,       
-            'msg' => $msg
-         ]);
+      //retonando a lista de pacientes
+      $filtro = "";
+      if (isset($_GET['filtro'])) {
+         $filtro = $_GET['filtro'];
+      }
+      //retonando a lista de pacientes
+      $cpf = "";
+      if (isset($_GET['cpf'])) {
+            $cpf = $_GET['cpf'];
       }
 
+      $statusConsulta = "Finalizada";
+      // Obter pacientes e o número de consultas que cada um teve
+      $lista = Paciente::select('pacientes.id', 'pacientes.nome as nome_paciente',
+      'pacientes.cpf', 'pacientes.data_nascimento', 
+      DB::raw('COUNT(consultas.id) as total_consultas'))
+         ->leftJoin('consultas', 'pacientes.id', '=', 'consultas.paciente_id')
+         ->where('status', '=', $statusConsulta)
+         ->where('clinica_id', '=', $clinica->id)
+         ->where('nome', 'like', "%" . $filtro . "%")
+         -> where('cpf', 'like', "%" . $cpf . "%")
+         ->groupBy('pacientes.id', 'pacientes.nome','pacientes.cpf','pacientes.data_nascimento')
+         ->paginate(8);
+
+         $msg = null;
+         if ($lista->isEmpty()) {
+               $msg = ['valor' => trans("Não foi encontrado nenhum paciente!"), 'tipo' => 'primary'];
+         }
+      return view('userClinica/listPacientes', [
+         'lista' => $lista,
+         'filtro' => null, 
+         'filtro' => $filtro, 
+         'cpf' => $cpf,       
+         'msg' => $msg
+      ]);
+   }
+
+   
    
 }
    
