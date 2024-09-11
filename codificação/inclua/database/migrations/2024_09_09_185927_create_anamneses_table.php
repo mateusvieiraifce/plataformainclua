@@ -15,7 +15,7 @@ class CreateAnamnesesTable extends Migration
     {
         Schema::create('anamneses', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('paciente_id');
+            $table->unsignedBigInteger('paciente_id')->unique();
             $table->string('gravidez_programada', 3)->nullable();
             $table->integer('idade_mae_geracao')->nullable();
             $table->integer('idade_pai_geracao')->nullable();
@@ -70,13 +70,13 @@ class CreateAnamnesesTable extends Migration
             $table->string('atitude_pais_enurese')->nullable();
             $table->string('onde_dorme')->nullable();
             $table->string('com_quem_dorme')->nullable();
-            $table->string('tipo_sono', 3)->nullable();
+            $table->string('tipo_sono')->nullable();
             $table->string('conversa_dormindo', 3)->nullable();
             $table->string('range_dentes_dormindo', 3)->nullable();
             $table->string('quando_dorme')->nullable();
             $table->string('habitos_dormir')->nullable();
             $table->string('atitude_pais_habitos_dormir')->nullable();
-            $table->string('adotado_legitimo', 3)->nullable();
+            $table->string('adotado_legitimo')->nullable();
             $table->string('sabe_adocao', 3)->nullable();
             $table->string('aceita_adocao', 3)->nullable();
             $table->string('diz_deseja_ser_crescer', 3)->nullable();

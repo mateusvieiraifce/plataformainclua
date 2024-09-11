@@ -81,8 +81,8 @@
         @endif
         <script src="/assets/js/core/jquery.min.js"></script>
         <script src="/assets/js/core/popper.min.js"></script>
-        <script src="/assets/js/core/bootstrap.min.js"></script>
-        <script src="/assets/js/plugins/perfect-scrollbar.jquery.min.js"></script>
+        <script src="/assets/js/core/bootstrap.min.js"></script>{{-- 
+        <script src="/assets/js/plugins/perfect-scrollbar.jquery.min.js"></script> --}}
         <!--  Google Maps Plugin    -->
         <!-- Place this tag in your head or just before your close body tag. -->
 

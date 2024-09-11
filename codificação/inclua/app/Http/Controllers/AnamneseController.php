@@ -14,7 +14,18 @@ class AnamneseController extends Controller
 
     public function store(Request $request)
     {
-        dd($request);
+        $atividade_fisicas = $request->atividade_fisicas;
+        /* CONVERTER CHECKBOX EM UMA UNICA STRING */
+        if (is_array($request->atividade_fisicas)) {
+            $atividade_fisicas = implode(', ', $request->atividade_fisicas);
+        }
+        
+        $participa_atividades = $request->participa_atividades;
+        /* CONVERTER CHECKBOX EM UMA UNICA STRING */
+        if (is_array($request->participa_atividades)) {
+            $participa_atividades = implode(', ', $request->participa_atividades);
+        }
+        
         $anamnese = new Anamnese();
         $anamnese->paciente_id = 2;
         $anamnese->gravidez_programada = $request->gravidez_programada;
@@ -36,14 +47,14 @@ class AnamneseController extends Controller
         $anamnese->tomou_todas_vacinas = $request->tomou_todas_vacinas;
         $anamnese->permanencia_tres_anos = $request->permanencia_tres_anos;
         $anamnese->iniciou_sustentacao_cabeca = $request->iniciou_sustentacao_cabeca;
-        $anamnese->idade_sentou_sozinho = $request->idade_sentou_sozinho;
+        $anamnese->idade_sentou_so = $request->idade_sentou_so;
         $anamnese->idade_engatinhou = $request->idade_engatinhou;
         $anamnese->idade_andou = $request->idade_andou;
         $anamnese->corre_naturalidade = $request->corre_naturalidade;
         $anamnese->cai_facilidade = $request->cai_facilidade;
         $anamnese->anda_naturalidade = $request->anda_naturalidade;
         $anamnese->dominancia_lateral = $request->dominancia_lateral;
-        $anamnese->atividade_fisicas = $request->atividade_fisicas;
+        $anamnese->atividade_fisicas = $atividade_fisicas;
         $anamnese->comecou_falar = $request->comecou_falar;
         $anamnese->teve_gagueira = $request->teve_gagueira;
         $anamnese->dificuldade_fala = $request->dificuldade_fala;
@@ -93,7 +104,7 @@ class AnamneseController extends Controller
         $anamnese->presencia_violencia = $request->presencia_violencia;
         $anamnese->habitos_alimentares = $request->habitos_alimentares;
         $anamnese->hobby = $request->hobby;
-        $anamnese->participa_atividades = $request->participa_atividades;
+        $anamnese->participa_atividades = $participa_atividades;
         $anamnese->possui_amigos = $request->possui_amigos;
         $anamnese->prefere_ficar_so = $request->prefere_ficar_so;
         $anamnese->com_quem_brinca = $request->com_quem_brinca;

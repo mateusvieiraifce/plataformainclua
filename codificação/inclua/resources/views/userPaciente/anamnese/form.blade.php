@@ -413,31 +413,31 @@
                                             <div class="form-check text-left">
                                                 <label class="form-check-label {{ $errors->has('atividade_fisicas') ? 'is-invalid' : '' }}">
                                                     <input class="form-check-input" type="checkbox" name="atividade_fisicas[]" 
-                                                        @if (is_array("atividade_fisicas") && in_array("Jogar Bola", old('atividade_fisicas'))) checked @endif value="Jogar Bola">
+                                                        @if(is_array(old('atividade_fisicas')) && in_array("Jogar Bola", old('atividade_fisicas'))) checked @endif value="Jogar Bola">
                                                     <span class="form-check-sign"></span>
                                                     Jogar Bola
                                                 </label>
                                                 <label class="form-check-label {{ $errors->has('atividade_fisicas') ? 'is-invalid' : '' }}">
                                                     <input class="form-check-input" type="checkbox" name="atividade_fisicas[]"
-                                                        @if (is_array("atividade_fisicas") && in_array("Subir em árvores", old('atividade_fisicas'))) checked @endif value="Subir em árvores">
+                                                        @if(is_array(old('atividade_fisicas')) && in_array("Subir em árvores", old('atividade_fisicas'))) checked @endif value="Subir em árvores">
                                                     <span class="form-check-sign"></span>
                                                     Subir em árvores
                                                 </label>
                                                 <label class="form-check-label {{ $errors->has('atividade_fisicas') ? 'is-invalid' : '' }}">
                                                     <input class="form-check-input" type="checkbox" name="atividade_fisicas[]"
-                                                        @if (is_array("atividade_fisicas") && in_array("Andar de bicicleta", old('atividade_fisicas'))) checked @endif value="Andar de bicicleta">
+                                                        @if(is_array(old('atividade_fisicas')) && in_array("Andar de bicicleta", old('atividade_fisicas'))) checked @endif value="Andar de bicicleta">
                                                     <span class="form-check-sign"></span>
                                                     Andar de bicicleta
                                                 </label>
                                                 <label class="form-check-label {{ $errors->has('atividade_fisicas') ? 'is-invalid' : '' }}">
                                                     <input class="form-check-input" type="checkbox" name="atividade_fisicas[]"
-                                                        @if (is_array("atividade_fisicas") && in_array("Nadar", old('atividade_fisicas'))) checked @endif value="Nadar">
+                                                        @if(is_array(old('atividade_fisicas')) && in_array("Nadar", old('atividade_fisicas'))) checked @endif value="Nadar">
                                                     <span class="form-check-sign"></span>
                                                     Nadar
                                                 </label>
                                                 <label class="form-check-label {{ $errors->has('atividade_fisicas') ? 'is-invalid' : '' }}">
                                                     <input class="form-check-input" type="checkbox" name="atividade_fisicas[]"
-                                                        @if (is_array("atividade_fisicas") && in_array("Outros", old('atividade_fisicas'))) checked @endif value="Outros">
+                                                        @if(is_array(old('atividade_fisicas')) && in_array("Outros", old('atividade_fisicas'))) checked @endif value="Outros">
                                                     <span class="form-check-sign"></span>
                                                     Outros
                                                 </label>
@@ -1173,22 +1173,26 @@
                                         <div class="input-group{{ $errors->has('participa_atividades') ? ' has-danger' : '' }}">
                                             <div class="form-check without-margin text-left">
                                                 <label class="form-check-label {{ $errors->has('participa_atividades') ? 'is-invalid' : '' }}">
-                                                    <input class="form-check-input" type="checkbox" name="participa_atividades" @if (old('participa_atividades') == "Desportistas") checked @endif value="Desportistas">
+                                                    <input class="form-check-input" type="checkbox" name="participa_atividades[]"
+                                                        @if(is_array(old('participa_atividades')) && in_array("Desportistas", old('participa_atividades'))) checked @endif value="Desportistas">
                                                     <span class="form-check-sign"></span>
                                                     Desportistas
                                                 </label>
                                                 <label class="form-check-label {{ $errors->has('participa_atividades') ? 'is-invalid' : '' }}">
-                                                    <input class="form-check-input" type="checkbox" name="participa_atividades" @if (old('participa_atividades') == "Artísticas") checked @endif value="Artísticas">
+                                                    <input class="form-check-input" type="checkbox" name="participa_atividades[]"
+                                                        @if(is_array(old('participa_atividades')) && in_array("Artísticas", old('participa_atividades'))) checked @endif value="Artísticas">
                                                     <span class="form-check-sign"></span>
                                                     Artísticas
                                                 </label>
                                                 <label class="form-check-label {{ $errors->has('participa_atividades') ? 'is-invalid' : '' }}">
-                                                    <input class="form-check-input" type="checkbox" name="participa_atividades" @if (old('participa_atividades') == "Literárias") checked @endif value="Literárias">
+                                                    <input class="form-check-input" type="checkbox" name="participa_atividades[]"
+                                                        @if(is_array(old('participa_atividades')) && in_array("Literárias", old('participa_atividades'))) checked @endif value="Literárias">
                                                     <span class="form-check-sign"></span>
                                                     Literárias
                                                 </label>
                                                 <label class="form-check-label {{ $errors->has('participa_atividades') ? 'is-invalid' : '' }}">
-                                                    <input class="form-check-input" type="checkbox" name="participa_atividades" @if (old('participa_atividades') == "Religiosas") checked @endif value="Religiosas">
+                                                    <input class="form-check-input" type="checkbox" name="participa_atividades[]"
+                                                        @if(is_array(old('participa_atividades')) && in_array("Religiosas", old('participa_atividades'))) checked @endif value="Religiosas">
                                                     <span class="form-check-sign"></span>
                                                     Religiosas
                                                 </label>

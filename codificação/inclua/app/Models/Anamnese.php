@@ -29,7 +29,7 @@ class Anamnese extends Model
         'tomou_todas_vacinas',
         'permanencia_tres_anos',
         'iniciou_sustentacao_cabeca',
-        'idade_sentou_sozinho',
+        'idade_sentou_so',
         'idade_engatinhou',
         'idade_andou',
         'corre_naturalidade',
