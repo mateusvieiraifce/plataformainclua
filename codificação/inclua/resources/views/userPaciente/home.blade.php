@@ -5,10 +5,21 @@
         <div class="col-lg-12 col-md-12">
             <div class="card">
                 <div class="card-header">
-                    <a href="{{ route('paciente.marcarconsulta') }}" class="btn btn-secundary btn-round btn-lg header-links">
-                        <i class="tim-icons icon-calendar-60 "></i>
-                        <br>
-                        Marcar consulta
+
+                     <!-- caso o paciente nao possua dependete abrir loga a tela de selecionar clinica/especialista-->
+                     <?php
+                        $pacientes = App\Models\Paciente::where('usuario_id', '=', Auth::user()->id)->get();                    
+                     ?>  
+                        @if(sizeof($pacientes) > 1)
+                           <a href="{{ route('paciente.marcarconsultaSelecionarPaciente') }}"
+                           class="btn btn-secundary btn-round btn-lg header-links">
+                        @else                       
+                           <a href="{{ route('paciente.marcarconsulta') }}"
+                           class="btn btn-secundary btn-round btn-lg header-links">
+                        @endif                 
+                           <i class="tim-icons icon-calendar-60 "></i>
+                           <br>
+                           Marcar consulta
                     </a>
                     <a href="{{ route('paciente.minhasconsultas') }}" class="btn btn-secundary btn-round btn-lg header-links">
                         <i class="tim-icons icon-notes"></i>
@@ -32,6 +43,7 @@
                         @if(sizeof($consultas) > 0)
                             <table class="table">
                                 <thead>
+                                    <th> Paciente</th>
                                     <th> Horário</th>
                                     <th> Dia </th>
                                     <th> Médico </th>
@@ -41,6 +53,10 @@
                                 <tbody>
                                     @foreach($consultas as $consulta)
                                     <tr>
+                                          <td>
+                                            {{ $consulta->nome_paciente }}
+                                        </td>
+                                    
                                         <td>
                                             {{ date( 'H:i' , strtotime($consulta->horario_agendado)) }}
                                         </td>

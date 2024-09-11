@@ -43,6 +43,16 @@
                     </div>                 
                 </div>
 
+                  <!-- retorna para a tela dos pacientes, caso exista mais que 1-->
+                  <?php
+                      $pacientes = App\Models\Paciente::where('usuario_id', '=', Auth::user()->id)->get();                    
+                   ?>  
+                     @if(sizeof($pacientes) > 1)
+                     <div class="col-2"> 
+                        <a href="{{route('paciente.marcarconsultaSelecionarPaciente')}}" class="btn btn-primary"><i class="fa fa-reply"></i> Voltar</a>
+                        </div>                   
+                    @endif
+
             </div>
         </div>
     </div>

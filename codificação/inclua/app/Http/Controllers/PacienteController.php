@@ -197,9 +197,24 @@ class PacienteController extends Controller
         return view('userPaciente/historicoconsultas', ['lista' => $lista, 'msg' => $msg, 'filtro' => $filtro]);
     }
 
-   function marcarconsulta()
+   function marcarconsulta($paciente_id = null)
    {
+      if(isset($paciente_id)){
+        //estou armazenando em uma sessao o id do paciente selecionado para ser usado no finalizar consulta
+        // Armazena a variável na sessão
+         session()->put('paciente_id', $paciente_id);
+      }
       return view('userPaciente/marcarconsulta');
+   }
+
+   function marcarconsultaSelecionarPaciente()
+   {
+    $user = Auth::user();
+    if ($user->tipo_user == "P") {
+        $pacientes = Paciente::where('usuario_id', $user->id)->get();
+
+        return view('userPaciente/marcarconsulta/marcarConsultaEscolherPaciente', ['pacientes' => $pacientes]);
+    }
    }
 
     function marcarConsultaViaEspecialidadePasso1()
@@ -252,7 +267,14 @@ class PacienteController extends Controller
         $especialista = Especialista::find($especialista_id);
         $clinica = Clinica::find($clinica_id);
         $especialidade = Especialidade::find($especialista->especialidade_id);
-        $paciente = Paciente::where('usuario_id', '=', Auth::user()->id)->first();
+
+        $paciente_id = session()->get('paciente_id');
+        // Verifica se a variável existe
+        if ($paciente_id) {
+            $paciente = Paciente::find($paciente_id);
+        }else{
+            $paciente = Paciente::where('usuario_id', '=', Auth::user()->id)->first();
+        }
 
         //retornar todos a agenda(consutlas) do especialista vinculados a clinica
         $statusConsulta = "Disponível";
@@ -313,8 +335,14 @@ class PacienteController extends Controller
         $especialista = Especialista::find($especialista_id);
         $clinica = Clinica::find($clinica_id);
         $especialidade = Especialidade::find($especialista->especialidade_id);
-        $paciente = Paciente::where('usuario_id', '=', Auth::user()->id)->first();
 
+        $paciente_id = session()->get('paciente_id');
+        // Verifica se a variável existe
+        if ($paciente_id) {
+            $paciente = Paciente::find($paciente_id);
+        }else{
+            $paciente = Paciente::where('usuario_id', '=', Auth::user()->id)->first();
+        }
         //retornar todos a agenda(consutlas) do especialista vinculados a clinica
         $statusConsulta = "Disponível";
 
@@ -326,7 +354,14 @@ class PacienteController extends Controller
 
     function marcarConsultaViaClinicaFinalizar(Request $request)
     {
-        $paciente =  Paciente::where('usuario_id', '=', Auth::user()->id)->first();
+        $paciente_id = session()->get('paciente_id');
+        session()->forget('paciente_id');
+        // Verifica se a variável existe
+        if ($paciente_id) {
+            $paciente = Paciente::find($paciente_id);
+        }else{
+            $paciente = Paciente::where('usuario_id', '=', Auth::user()->id)->first();
+        }
 
         $ent = Consulta::find($request->consulta_id);
         $ent->status = "Aguardando atendimento";
@@ -344,20 +379,23 @@ class PacienteController extends Controller
       }
 
       $paciente = Paciente::where('usuario_id', Auth::user()->id)->first();
+
       $statusConsulta = "Aguardando atendimento";
       $consultas = Consulta::join('especialistas', 'especialistas.id', 'consultas.especialista_id')
         ->join('clinicas', 'clinicas.id', 'consultas.clinica_id')
         ->join('especialidades', 'especialidades.id', 'especialistas.especialidade_id')
-        ->where('paciente_id', $paciente->id)->where('status', $statusConsulta)
+        ->join('pacientes', 'pacientes.id', 'consultas.paciente_id')
+        ->where('pacientes.usuario_id', $paciente->usuario_id)->where('status', $statusConsulta)
         ->select(
             'consultas.id',
             'horario_agendado',
             'especialistas.nome as nome_especialista',
             'clinicas.nome as nome_clinica',
-            'especialidades.descricao as descricao_especialidade'
+            'especialidades.descricao as descricao_especialidade',
+            'pacientes.nome as nome_paciente',
         )
         ->orderBy('horario_agendado', 'asc')
-        ->take(3)
+        ->take(8)
         ->get();
 
       return view('userPaciente.home', ['consultas' => $consultas, 'filtro' => $filtro]);

@@ -1,19 +1,22 @@
-@extends('layouts.app', ['page' => __('Marcar Consulta'), 'exibirPesquisa' => false,'pageSlug' => 'marcarconsulta', 'class' => 'especialidade'])
-@section('title', 'Marcar Consulta')
+@extends('layouts.app', ['page' => __('Pacientes'), 'exibirPesquisa' => false, 'pageSlug' => 'pacientes', 'class' => 'agenda'])
 @section('content')
+
+
 
 <div class="card">
    <div class="row">
       <div class="col-lg-12 col-md-12">
          <div class="card card-tasks" style="height: auto; min-height: 500px;">
             <div class="card-header">
-            <form action="{{route('clinica.pesquisarPacienteMarcarconsulta')}}" method="get" id="pesquisar">
+
+               <div class="col-lg-12 col-md-12">
+               <form action="{{route('clinica.listaPacientesPesquisar')}}" method="get" id="pesquisar">
                @csrf
                <fieldset>
                   <div class="row">
                      <div class="col-sm-6 ">
                         <div class="form-group">
-                           <h6 class="title d-inline">Escolha o paciente </h6>                           
+                           <h6 class="title d-inline">Pesquise pelo nome ou cpf do paciente </h6>                           
                            <input type="text" name="filtro" style="margin-left:10px;margin-top:5px;" id="filtro"
                             placeholder="Pesquise pelo nome..." class="form-control" @if(isset($filtro)) value="{{$filtro}}" @endif>
                         </div>
@@ -35,36 +38,39 @@
 
                </fieldset>
             </form>
-            </div>       
+               </div>
 
-         <div class="card-body">
-            <div class="table-responsive">
-               <table class="table">
-                  <thead>
-                     <th> Nome </th>
-                     <th> CPF </th>
-                     <th> Data de Nascimento </th>
-                     <th> </th>
-                  </thead>
-                  <tbody>
-                     @if(sizeof($lista) > 0)
-                     @foreach($lista as $ent)
+               <h6 class="title d-inline">Lista de pacientes </h6>              
+            </div>
+            <div class="card-body">
+
+               <div class="table-responsive">                  
+                  <table class="table">
+                     <thead>                     
+                        <th> Paciente </th>
+                        <th> cpf </th>
+                        <th> Data Nascimento </th>
+                        <th> Total de consultas </th>
+                        <th>  </th>
+                     </thead>
+                     <tbody>
+                        @if(sizeof($lista) > 0)
+                        @foreach($lista as $ent)
                      <tr>
-                        <td>{{$ent->nome}}</td>
+                        <td>{{$ent->nome_paciente}}</td>
                         <td>{{$ent->cpf}}</td>
                         <td>{{date( 'd/m/Y' , strtotime($ent->data_nascimento))}}
-                        <td>
-                           <a style="max-height: 35px;" href="{{route('clinica.marcarConsultaSelecionarEspecialidade',$ent->id)}}" class="btn btn-success">Próximo <i class="tim-icons icon-double-right"> </i> </a>
-                        </td>
-                        @endforeach
-                        @endif
-                  </tbody>
-               </table>
-               <div>
+                        <td>{{$ent->total_consultas}}</td>                   
+                     </tr>
+                  @endforeach 
+                        @endif                       </tbody>
+                  </table>
+                  <div>
+
                   @if ($lista->lastPage() > 1)
                   @php
                   $paginator = $lista;
-                  $paginator->url = route('clinica.pesquisarPacienteMarcarconsulta');
+                  $paginator->url = route('clinica.listaPacientesPesquisar');
                   @endphp
                   <ul class="pagination">
                      <li class="{{ ($paginator->currentPage() == 1) ? ' disabled' : '' }}">
@@ -96,13 +102,11 @@
                            </li>
                   </ul>
                   @endif
+                  </div>
                </div>
             </div>
-           
          </div>
-       
       </div>
    </div>
 </div>
-
 @endsection

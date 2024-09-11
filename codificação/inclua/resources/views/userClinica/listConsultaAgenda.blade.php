@@ -58,16 +58,17 @@
 
                               <div class="col-md-2 px-8">
                                  <div class="form-group">
-                                    <label style="color: white">&nbsp;  Status da consulta:</label>                                    
-                                    <select style="border-color: #C0C0C0"  class="form-control" id="status" name="status" required>
-                                       <option style="color: #111111" value="todos" @if($status == "Todos") selected @endif>Todos</option>
-                                        <option style="color: #111111" value="Aguardando atendimento" @if($status == "Aguardando atendimento") selected @endif>Aguardando atendimento</option>
-                                        <option  style="color: #111111"value="Cancelada" @if($status == "Cancelada") selected @endif>Cancelada</option>
-                                        <option  style="color: #111111"value="Em atendimento" @if($status == "Em atendimento") selected @endif>Em atendimento</option>
-                                        <option style="color: #111111" value="Finalizada" @if($status == "Finalizada") selected @endif>Finalizada</option>
-                                    </select>
+                                    <label style="color: white">&nbsp; &nbsp; CPF Paciente:</label>
+                                    <input style="border-color: #C0C0C0" type="text"
+                                             placeholder="CPF do paciente" name="nomepaciente" id="nomepaciente"
+                                             class="form-control"
+                                             @if(isset($nomepaciente))
+                                                value="{{$nomepaciente}}"
+                                             @else
+                                                value=""
+                                             @endif >
                                  </div>
-                              </div>
+                              </div>                             
 
                               <div class="col-md-2 px-8">
                                  <div class="form-group">
@@ -116,8 +117,23 @@
                      <td>{{date( 'd/m/Y H:i' , strtotime($ent->horario_agendado))}}
                   </td>
                   <td>{{$ent->nome_paciente}}</td>
-                     <td>{{$ent->nome_especialista}}</td>
-                     <td>  </td>
+                  <td>{{$ent->nome_especialista}}</td>
+                  <td> 
+                  <a rel="tooltip" title="Iniciar atendimento" class="btn btn-primary" data-original-title="Edit"
+                           href="{{route('especialista.iniciarAtendimento', [$ent->id,"prontuarioatual"])}}">
+                         Fazer Encaminhamento
+                        </a>                    
+                        <a style="max-width:120px; text-align: left;padding:10px " rel="tooltip" title="Cancelar" class="btn btn-secondary" data-original-title="Edit"
+                           href="{{route('consulta.edit', $ent->id)}}">
+                          Efetuar Pagamento
+                        </a>  
+                        <a style="max-width:80px; text-align: left;padding:10px " rel="tooltip" title="Cancelar" class="btn btn-warning" data-original-title="Edit"
+                           href="{{route('consulta.edit', $ent->id)}}">
+                           Cancelar
+                        </a>                                              
+                   
+                          
+                   </td>
                      </tr>
                   @endforeach 
                         @endif                       </tbody>
