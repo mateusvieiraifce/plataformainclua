@@ -25,8 +25,9 @@ Route::get('/contato', function () {
 Route::get("/teste", function () {
     return view('teste');
 });
+
 Route::get("/", [\App\Http\Controllers\UsuarioController::class, 'index'])->name('index');
-Route::get("/sendmailback", [\App\Http\Controllers\MailController::class, 'sendEmailBack'])->name('sendMailBack');
+Route::post("/sendmailback", [\App\Http\Controllers\MailController::class, 'sendEmailBack'])->name('sendMailBack');
 
 
 Route::get('/checkout', [\App\Http\Controllers\CheckoutControler::class, "checkout"])->name('finalizar');

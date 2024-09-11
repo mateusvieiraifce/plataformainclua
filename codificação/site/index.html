@@ -382,14 +382,16 @@ c0-7.4,3.4-18.8,18.8-18.8h13.8v15.4H75.5z"></path></svg></span>
                   <p class="u-text u-text-10"> Você pode nos contatar <a href="#" class="u-active-none u-border-1 u-border-active-palette-3-base u-border-hover-palette-3-base u-border-no-left u-border-no-right u-border-no-top u-border-palette-1-base u-btn u-button-link u-button-style u-hover-none u-none u-text-active-palette-3-base u-text-hover-palette-3-base u-text-palette-1-base u-btn-4" data-animation-name="" data-animation-duration="0" data-animation-delay="0" data-animation-direction="">atendimento@plataformainclua.com</a>
                   </p>
                   <div class="u-align-left u-expanded-width u-form u-form-1">
-                    <form action="forms.nicepagesrv.com/v2/form/process" class="u-clearfix u-form-spacing-28 u-form-vertical u-inner-form" style="padding: 0px;" source="email" name="form">
+                    <form action="#" class="u-clearfix u-form-spacing-28 u-form-vertical u-inner-form" style="padding: 0px;" source="email" name="form">
+                    </form>
+                    <form action="#">
                       <div class="u-form-group u-form-name u-label-top">
                         <label for="name-5a14" class="u-label">Nome</label>
                         <input type="text" placeholder="Insira seu nome" id="name-5a14" name="name" class="u-border-2 u-border-grey-10 u-grey-5 u-input u-input-rectangle u-radius-5" required="" wfd-id="id838">
                       </div>
                       <div class="u-form-email u-form-group u-label-top">
                         <label for="email-5a14" class="u-label">Email</label>
-                        <input type="email" placeholder="Inisra um endereço de e-mail válido" id="email-5a14" name="email" class="u-border-2 u-border-grey-10 u-grey-5 u-input u-input-rectangle u-radius-5" required="" wfd-id="id839">
+                        <input type="email" placeholder="Insira um endereço de e-mail válido" id="email-5a14" name="email" class="u-border-2 u-border-grey-10 u-grey-5 u-input u-input-rectangle u-radius-5" required="" wfd-id="id839">
                       </div>
                       <div class="u-form-group u-form-phone u-label-top u-form-group-3">
                         <label for="phone-5e95" class="u-label">Telefone</label>
@@ -401,6 +403,7 @@ c0-7.4,3.4-18.8,18.8-18.8h13.8v15.4H75.5z"></path></svg></span>
                       </div>
                       <div class="u-align-right u-form-group u-form-submit u-label-top">
                         <a href="#" class="u-active-palette-2-light-1 u-border-none u-btn u-btn-round u-btn-submit u-button-style u-hover-palette-2-light-1 u-palette-1-base u-radius-5 u-text-active-white u-text-body-alt-color u-text-hover-white u-btn-5">Enviar</a>
+                      <a onclick="enviarDados()">testge</a>
                       <input type="hidden" name="_subject" value="Requisição!">
                       <input type="text" name="_honey" style="display:none">
                       <input type="hidden" name="_captcha" value="false">
@@ -433,4 +436,47 @@ c0-7.4,3.4-18.8,18.8-18.8h13.8v15.4H75.5z"></path></svg></span>
     <script>
         $('#phone-5e95').mask('(00) 00000-0000');
     </script>
+
+  <script>
+    function enviarDados() {
+      console.log("aqui");
+      var email = "mentrixmax@gmail.com";
+      var nome = "mateus alves";
+      var telefone = "88997141874";
+      const url = 'https://localhost:8000/sendmailback';
+      const dados = {
+        email: email,
+        nome: nome,
+        telefone: telefone,
+        texto: "nada com nada",
+      };
+
+      console.log("aqui pra enviar");
+      fetch(url, {
+        mode: 'no-cors',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(dados)
+      })
+              .then(response => {
+                 console.log(response);
+                if (response.ok) {
+                  alert('Dados enviados com sucesso!');
+                } else {
+                  return response.text().then(text => { throw new Error(text); });
+                }
+              })
+              .catch(error => {
+                console.log(error)
+              //  alert('Erro ao enviar dados: ' + error.message);
+              });
+    }
+
+
+    // Exemplo de uso da função
+   // enviarDados('exemplo@dominio.com', 'Nome Exemplo', '123456789');
+
+  </script>
 </body></html>
