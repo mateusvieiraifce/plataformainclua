@@ -119,6 +119,7 @@
                   <td>{{$ent->nome_paciente}} (CPF:{{$ent->cpf}})</td>
                   <td>{{$ent->nome_especialista}}</td>
                   <td> 
+                      @if($ent->status != 'Sala de espera')
                          <a style="width:160px; height:30px; text-align: center;padding:7px;
                           margin: 2px; font-size: 12px; "
                          rel="tooltip" title=" Fazer Encaminhamento" 
@@ -128,17 +129,34 @@
                          data-whatever="@mdo">                        
                          Fazer Encaminhamento
                         </a>    
-                        <br>                
+                        <br>
+                        @else
+                         <label>Encaminhamento realizado</label>
+                         <br>
+                        @endif
+                        
+                        @if(!$ent->isPago) 
                         <a style="width:160px; height:30px; text-align: center;padding:7px;
                           margin: 2px; font-size: 12px; "
-                         rel="tooltip" title="Cancelar" class="btn btn-secondary" data-original-title="Edit"
-                           href="{{route('consulta.edit', $ent->id)}}">
+                         rel="tooltip" title=" Fazer Encaminhamento" 
+                         href="#" target="_blank"
+                         class="btn btn-secudary" data-original-title="Fazer Encaminhamento"
+                         data-target="#modalPagamento{{$ent->id}}" data-toggle="modal"
+                         data-whatever="@mdo">  
                           Efetuar Pagamento
-                        </a>    <br> 
+                        </a> 
+                        <br> 
+                        @else
+                         <label>Consulta Paga</label>
+                         <br>
+                        @endif
+                       
                         <a style="width:160px; height:30px; text-align: center;padding:7px;
                           margin: 2px;margin-bottom:10px; font-size: 12px; "
                           rel="tooltip" title="Cancelar" class="btn btn-warning" data-original-title="Edit"
-                           href="{{route('consulta.edit', $ent->id)}}">
+                           href="#"
+                           data-target="#modalCancelar{{$ent->id}}" data-toggle="modal"
+                           data-whatever="@mdo">
                            Cancelar
                         </a>                                              
                    
@@ -186,6 +204,118 @@
                                                 <button type="submit"
                                                       class="btn btn-primary">Encaminhar</button>
                                              </div>
+                                    </form>
+                                 </div>
+                              </div>
+                        </div>
+                     </div>
+                  </div>
+
+                  <!-- Modal efetuar pagamento -->
+                  <div class="modal" id="modalPagamento{{$ent->id}}" tabindex="-1" role="dialog"
+                     aria-labelledby="exampleModalLabel" aria-hidden="true">
+                     <div class="modal-dialog"
+                        style=" max-width: 80%;                                                                                                                                          width: 50%; height: 50%;top: -15%;"
+                        role="document">
+                        <div class="modal-content">
+                              <div class="modal-header">
+                                 <h5 class="modal-title">
+                                    <label style="color:black">Efetuar pagamento</label>
+                                 </h5>
+                                 <button type="button" class="close" data-dismiss="modal"
+                                    aria-label="Fechar">
+                                    <span aria-hidden="true">&times;</span>
+                                 </button>
+                              </div>
+                              <div class="modal-body">
+                                 <div class="container">
+                                    <!--aqui salva a forma de pagamento-->
+                                    <form method="post" action="{{route('consulta.efetuarPagamentoUserClinica')}}">
+                                          @csrf                                         
+                                          <div class="row">
+                                          @php                                           
+                                             // Formate o número como valor monetário
+                                             $precoConsulta = number_format($ent->preco, 2, ',', '.');
+                                          @endphp
+                                             <div class="col-md-12 px-8">
+                                                <div class="form-group">
+                                                   <label style="color: #111111;">Valor da consulta:</label>
+                                                      <input style="color: #111111; background-color: #ffffff; text-align: right;" type="text"
+                                                         class="form-control" maxlength="150" name="preco"
+                                                         value="R$ {{ $precoConsulta}}" readonly>
+                                                </div>
+                                             </div>
+
+                                             <div class="col-md-12 px-8">
+                                                <div class="form-group">
+                                                   <label style="color: #111111;">Forma de pagamento:</label>
+                                                   <select class="form-control" style="color: #111111" required name="forma_pagamento">
+                                                      <option value="">Selecionar a forma de pagamento</option>
+                                                      <option value="Dinheiro">Dinheiro</option>
+                                                      <option value="PIX">PIX</option>
+                                                      <option value="Cartão de Crédito">Cartão de Crédito</option>
+                                                      <option value="Cartão de Débito">Cartão de Débito</option>
+                                                     
+                                                </select>
+                                                </div>
+                                             </div>
+
+                                             <input type="hidden" value="{{$ent->id}}" 
+                                                name="consulta_id">
+
+                                          </div>
+                                             <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                      data-dismiss="modal"><i class="fa fa-reply"></i>
+                                                      Voltar
+                                                </button>
+                                                <button type="submit"
+                                                      class="btn btn-primary">Confirmar pagamento</button>
+                                             </div>
+                                    </form>
+                                 </div>
+                              </div>
+                        </div>
+                     </div>
+                  </div>
+
+                   <!-- Modal cancelar consulta -->
+                   <div class="modal" id="modalCancelar{{$ent->id}}" tabindex="-1" role="dialog"
+                     aria-labelledby="exampleModalLabel" aria-hidden="true">
+                     <div class="modal-dialog"
+                        style=" max-width: 80%;                                                                                                                                          width: 50%; height: 50%;top: -15%;"
+                        role="document">
+                        <div class="modal-content">
+                              <div class="modal-header">
+                                 <h2 class="modal-title">
+                                    <label style="color:black; font-size:15px">Favor inserir o motivo do cancelamento!</label>
+                                 </h2>
+                                 <button type="button" class="close" data-dismiss="modal"
+                                    aria-label="Fechar">
+                                    <span aria-hidden="true">&times;</span>
+                                 </button>
+                              </div>
+                              <div class="modal-body">
+                                 <div class="container">
+                                    <!--aqui salva o cancelamento da consulta-->
+                                    <form method="post" action="{{route('clinica.canelarconsultaViaClinica')}}">
+                                          @csrf                                      
+                                          <div class="row">
+                                             <div class="col-md-12 px-8">
+                                                   <div class="form-group">                                      
+                                                      <textarea id="motivocancelamento" name="motivocancelamento" 
+                                                      rows="8" cols="80" style="width: 100%;" maxlength="200" 
+                                                      placeholder="Digite o motivo do cancelamento aqui..." required></textarea>
+                                                   </div>
+                                             </div>
+                                             <input type="hidden" value="{{$ent->id}}"  name="consulta_id">
+                                          </div>
+                                          <div class="modal-footer">
+                                             <button type="button" class="btn btn-secondary" data-dismiss="modal"><i
+                                                      class="fa fa-reply"></i> Voltar
+                                             </button>
+                                             <button type="submit" class="btn btn-primary">Cancelar consulta</button>
+                                          </div>
                                     </form>
                                  </div>
                               </div>

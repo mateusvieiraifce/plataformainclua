@@ -266,7 +266,7 @@ class ConsultaController extends Controller
       where('status', '!=', 'Cancelada')->
       whereBetween('horario_agendado', [$inicioDoDia, $fimDoDia])->
       select('consultas.id', 'status', 'horario_agendado', 'especialistas.nome as nome_especialista', 
-       'pacientes.cpf as cpf','local_consulta',
+       'pacientes.cpf as cpf','local_consulta','preco','isPago',
       'pacientes.nome as nome_paciente')->orderBy('horario_agendado', 'asc')->get();
 
       return view('userClinica/listConsultaAgenda', [
@@ -312,7 +312,7 @@ class ConsultaController extends Controller
          where('pacientes.cpf', 'like', '%' . $request->cpf . "%")->
          whereBetween('horario_agendado', [$inicioDoDiaFiltro, $fimDoDiaFiltro])->
          select('consultas.id', 'status', 'horario_agendado', 'especialistas.nome as nome_especialista',
-         'pacientes.cpf as cpf', 'local_consulta',
+         'pacientes.cpf as cpf', 'local_consulta','preco','isPago',
          'pacientes.nome as nome_paciente')->orderBy('horario_agendado', 'asc')->get();
       } else {
          $lista = Consulta::join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')->
@@ -327,7 +327,7 @@ class ConsultaController extends Controller
          where('especialista_id', $request->especialista_id)->
          whereBetween('horario_agendado', [$inicioDoDiaFiltro, $fimDoDiaFiltro])->
          select('consultas.id', 'status', 'horario_agendado', 'especialistas.nome as nome_especialista',
-          'pacientes.cpf as cpf','local_consulta',
+          'pacientes.cpf as cpf','local_consulta','preco','isPago',
          'pacientes.nome as nome_paciente')->orderBy('horario_agendado', 'asc')->get();
       }
 
@@ -463,6 +463,20 @@ class ConsultaController extends Controller
 
       return $this->listConsultaAgendadaUserClinica();
     }
+
+     //o usuario clinica efetua o pagamento da consulta
+   function efetuarPagamentoUserClinica(Request $request)
+   {  
+     
+     $consulta = Consulta::find($request->consulta_id);
+    
+     //salva a forma de pagamento 
+     $consulta->forma_pagamento = $request->forma_pagamento;
+     $consulta->isPago = true;
+     $consulta->save();
+
+     return $this->listConsultaAgendadaUserClinica();
+   }
    
 
 

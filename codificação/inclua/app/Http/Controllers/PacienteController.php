@@ -406,13 +406,19 @@ class PacienteController extends Controller
     //ver a questao financeira
     $consultaCancelada = Consulta::find($request->consulta_idM);
 
-    $consultaNova = $consultaCancelada->replicate();
-    $consultaNova->status="Disponível";
-    $consultaNova->paciente_id = null;
-    $consultaNova->save();
+    $dataConsultaCancelada = Carbon::parse($consultaCancelada->horario_agendado);
+    $dataAtual = Carbon::now();   
+    // Verifica se a data da consulta é maior que a data atual para poder duplicar
+    if ($dataConsultaCancelada->gt($dataAtual)) {      
+      $consultaNova = $consultaCancelada->replicate();
+      $consultaNova->status="Disponível";
+      $consultaNova->paciente_id = null;
+      $consultaNova->save();  
+    }
 
     $consultaCancelada->status="Cancelada";
     $consultaCancelada->motivocancelamento= $request->motivocancelamento;
+    $consultaCancelada->id_usuario_cancelou =  Auth::user()->id;
     $consultaCancelada->save();
     $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
     return  $this->minhasconsultas($msg);

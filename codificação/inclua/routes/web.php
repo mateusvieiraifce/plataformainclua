@@ -344,7 +344,8 @@ Route::middleware('auth')->group(function () {
     Route::get("/clinica/pacientes/", [\App\Http\Controllers\ClinicaController::class, 'listaPacientes'])->name('clinica.listaPacientes');
     Route::get("/clinica/pacientes/search/", [\App\Http\Controllers\ClinicaController::class, 'listaPacientesPesquisar'])->name('clinica.listaPacientesPesquisar');
     Route::post("/clinica/agenda/encaminhar", [\App\Http\Controllers\ConsultaController::class, 'encaminharPaciente'])->name('consulta.encaminharPaciente');
-  
+    Route::post("/clinica/agenda/efetuarpagamento", [\App\Http\Controllers\ConsultaController::class, 'efetuarPagamentoUserClinica'])->name('consulta.efetuarPagamentoUserClinica');
+    Route::post("/clinica/agenda/consulta/cancelar/", [\App\Http\Controllers\ClinicaController::class, 'canelarconsultaViaClinica'])->name('clinica.canelarconsultaViaClinica');
  
     #CONSULTAS_POR_CLINICA
     Route::get("/clinica/consultas/search", [\App\Http\Controllers\ConsultaController::class, 'listConsultaporClinicaPesquisar'])->name('consulta.listConsultaporClinicaPesquisar');

@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Rules\CnpjValidationRule;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class ClinicaController extends Controller
 {
@@ -470,6 +471,32 @@ class ClinicaController extends Controller
    }
 
    
+   function canelarconsultaViaClinica(Request $request)
+   {      
+    //ver a questao financeira
+    $consultaCancelada = Consulta::find($request->consulta_id);
+
+    $dataConsultaCancelada = Carbon::parse($consultaCancelada->horario_agendado);
+    $dataAtual = Carbon::now();   
+    // Verifica se a data da consulta é maior que a data atual para poder duplicar
+    if ($dataConsultaCancelada->gt($dataAtual)) {      
+      $consultaNova = $consultaCancelada->replicate();
+      $consultaNova->status="Disponível";
+      $consultaNova->isPago= false;
+      $consultaNova->forma_pagamento=null;
+      $consultaNova->paciente_id = null;
+      $consultaNova->save();  
+    }
+    
+    $consultaCancelada->status="Cancelada";
+    $consultaCancelada->motivocancelamento= $request->motivocancelamento;
+    $consultaCancelada->id_usuario_cancelou =  Auth::user()->id;
+    $consultaCancelada->save();
+    $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
+
+    $consultaController = new ConsultaController();
+    return  $consultaController->listConsultaAgendadaUserClinica($msg);
+   }
    
 }
    

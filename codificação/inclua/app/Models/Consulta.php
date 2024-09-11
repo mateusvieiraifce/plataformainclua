@@ -9,5 +9,7 @@ class Consulta extends Model
   use HasFactory;
   protected $fillable = ['status', 'horario_agendado', 'horario_iniciado',
    'horario_finalizado', 'preco', 'porcetagem_repasse_clinica', 'porcetagem_repasse_plataforma',
-    'paciente_id', 'especialista_id', 'clinica_id','motivocancelamento'];
+    'paciente_id', 'especialista_id', 'clinica_id','motivocancelamento',
+    'isPago','forma_pagamento','id_usuario_cancelou'
+  ];
 } ?>
