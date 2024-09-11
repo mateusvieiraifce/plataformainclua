@@ -39,19 +39,22 @@ class MailController extends Controller
     {
 
         $host = $req->getHost();
-
-        if ($host=="localhost" || $host=="plataformainclua.com") {
+       // if ($host=="localhost" || $host=="plataformainclua.com") {
         $email = $req->email;
         $nome =$req->nome;
         $tel = $req->telefone;
         $texto = " O Cliente: ".$req->nome . " Tel:". $tel . " Email".$email. " Sugeriu: ".    $req->texto;
-        return  Helper::sendEmail("Contato pelo site", $texto,"incluaplataforma@gmail.com", $nome );
-        } else{
+        Helper::sendEmail("Contato pelo site", $texto,"incluaplataforma@gmail.com", $nome );
+            return response()->json([
+                'message' => 'Dados enviados com sucesso!'
+            ], 200);
+
+      /*  } else{
             $response = array(
                 'status' => 'error',
                 'message' => 'Acesso Negado'
             );
             echo json_encode($response);
-        }
+        }*/
     }
 }

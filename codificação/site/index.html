@@ -403,7 +403,7 @@ c0-7.4,3.4-18.8,18.8-18.8h13.8v15.4H75.5z"></path></svg></span>
                       </div>
                       <div class="u-align-right u-form-group u-form-submit u-label-top">
                         <a href="#" class="u-active-palette-2-light-1 u-border-none u-btn u-btn-round u-btn-submit u-button-style u-hover-palette-2-light-1 u-palette-1-base u-radius-5 u-text-active-white u-text-body-alt-color u-text-hover-white u-btn-5">Enviar</a>
-                      <a onclick="enviarDados()">testge</a>
+                      <a href="#" onclick="enviarDados()">testge</a>
                       <input type="hidden" name="_subject" value="Requisição!">
                       <input type="text" name="_honey" style="display:none">
                       <input type="hidden" name="_captcha" value="false">
@@ -443,17 +443,17 @@ c0-7.4,3.4-18.8,18.8-18.8h13.8v15.4H75.5z"></path></svg></span>
       var email = "mentrixmax@gmail.com";
       var nome = "mateus alves";
       var telefone = "88997141874";
-      const url = 'https://localhost:8000/sendmailback';
+      const url = 'http://localhost:8000/sendmailback';
       const dados = {
-        email: email,
-        nome: nome,
-        telefone: telefone,
-        texto: "nada com nada",
+        'email': email,
+        'nome': nome,
+        'telefone': telefone,
+        'texto': "nada com nada",
       };
 
       console.log("aqui pra enviar");
       fetch(url, {
-        mode: 'no-cors',
+
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
