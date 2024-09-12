@@ -126,7 +126,8 @@
                          href="#" target="_blank"
                          class="btn btn-primary" data-original-title="Fazer Encaminhamento"
                          data-target="#modalLocal{{$ent->id}}" data-toggle="modal"
-                         data-whatever="@mdo">                        
+                         data-whatever="@mdo"
+                         onclick="mandaDadosFormPrincipalParaModal({{$ent->id}},'l')" >                        
                          Fazer Encaminhamento
                         </a>    
                         <br>
@@ -142,7 +143,8 @@
                          href="#" target="_blank"
                          class="btn btn-secudary" data-original-title="Fazer Encaminhamento"
                          data-target="#modalPagamento{{$ent->id}}" data-toggle="modal"
-                         data-whatever="@mdo">  
+                         data-whatever="@mdo"
+                         onclick="mandaDadosFormPrincipalParaModal({{$ent->id}},'p')">  
                           Efetuar Pagamento
                         </a> 
                         <br> 
@@ -157,7 +159,8 @@
                            href="#"
                            data-target="#modalCancelar{{$ent->id}}" data-toggle="modal"
                            data-whatever="@mdo"
-                           onclick="mandaDadosFormPrincipalParaModal()">
+                           onclick="mandaDadosFormPrincipalParaModal({{$ent->id}},'c')"
+                           id="btnCanelarConsulta">
                            Cancelar
                         </a>                                              
                    
@@ -195,6 +198,13 @@
                                              </div>
                                              <input type="hidden" value="{{$ent->id}}" 
                                                 name="consulta_id">
+                                                   <!--dados para pesquisa modal tipo L-->
+                                             <input type="hidden" id="inicio_dataM{{$ent->id}}l" name="inicio_dataM">
+                                             <input type="hidden" id="final_dataM{{$ent->id}}l" name="final_dataM">
+                                             <input type="hidden" id="nomepacienteM{{$ent->id}}l" name="nomepacienteM">
+                                             <input type="hidden" id="cpfM{{$ent->id}}l" name="cpfM">
+                                             <input type="hidden" id="especialista_idM{{$ent->id}}l" name="especialista_idM">
+
 
                                           </div>
                                              <div class="modal-footer">
@@ -263,6 +273,12 @@
 
                                              <input type="hidden" value="{{$ent->id}}" 
                                                 name="consulta_id">
+                                                 <!--dados para pesquisa modal tipo P-->
+                                             <input type="hidden" id="inicio_dataM{{$ent->id}}p" name="inicio_dataM">
+                                             <input type="hidden" id="final_dataM{{$ent->id}}p" name="final_dataM">
+                                             <input type="hidden" id="nomepacienteM{{$ent->id}}p" name="nomepacienteM">
+                                             <input type="hidden" id="cpfM{{$ent->id}}p" name="cpfM">
+                                             <input type="hidden" id="especialista_idM{{$ent->id}}p" name="especialista_idM">
 
                                           </div>
                                              <div class="modal-footer">
@@ -310,12 +326,12 @@
                                                    </div>
                                              </div>
                                              <input type="hidden" value="{{$ent->id}}"  name="consulta_id">
-                                             <!--dados para pesquisa-->
-                                             <input type="hidden" id="inicio_dataM" name="inicio_dataM">
-                                             <input type="hidden" id="final_dataM" name="final_dataM">
-                                             <input type="hidden" id="nomepacienteM" name="nomepacienteM">
-                                             <input type="hidden" id="cpfM" name="cpfM">
-                                             <input type="hidden" id="especialista_idM" name="especialista_idM">
+                                             <!--dados para pesquisa modal tipo C-->
+                                             <input type="hidden" id="inicio_dataM{{$ent->id}}c" name="inicio_dataM">
+                                             <input type="hidden" id="final_dataM{{$ent->id}}c" name="final_dataM">
+                                             <input type="hidden" id="nomepacienteM{{$ent->id}}c" name="nomepacienteM">
+                                             <input type="hidden" id="cpfM{{$ent->id}}c" name="cpfM">
+                                             <input type="hidden" id="especialista_idM{{$ent->id}}c" name="especialista_idM">
                                           </div>
                                           <div class="modal-footer">
                                              <button type="button" class="btn btn-secondary" data-dismiss="modal"><i
@@ -347,20 +363,19 @@
 
 <script>
   
-    function mandaDadosFormPrincipalParaModal() {
-    
-        //pega valores para inviar para os modais e assim apos retorno do modal realizar a pesquisa
+    function mandaDadosFormPrincipalParaModal(consulta_id, tipoModal) {    
+            //pega valores para inviar para os modais e assim apos retorno do modal realizar a pesquisa
         var inicio_data = document.getElementById("inicio_data").value;
         var final_data = document.getElementById("final_data").value;
         var nomepaciente = document.getElementById("nomepaciente").value;
         var cpf = document.getElementById("cpf").value;
         var especialista_id = document.querySelector("#especialista_id").value;
              
-        document.getElementById('inicio_dataM').value = inicio_data;
-        document.getElementById('final_dataM').value = final_data;
-        document.getElementById('nomepacienteM').value = nomepaciente;
-        document.getElementById('cpfM').value = cpf;
-        document.getElementById('especialista_idM').value = especialista_id;
+        document.getElementById('inicio_dataM'+consulta_id+tipoModal).value = inicio_data;
+        document.getElementById('final_dataM'+consulta_id+tipoModal).value = final_data;
+        document.getElementById('nomepacienteM'+consulta_id+tipoModal).value = nomepaciente;
+        document.getElementById('cpfM'+consulta_id+tipoModal).value = cpf;
+        document.getElementById('especialista_idM'+consulta_id+tipoModal).value = especialista_id;
     }
 </script>
 

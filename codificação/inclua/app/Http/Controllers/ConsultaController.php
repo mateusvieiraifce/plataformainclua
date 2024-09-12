@@ -284,7 +284,7 @@ class ConsultaController extends Controller
 
    function listConsultaAgendadaUserClinicaPesquisar(Request $request, $msg = null)
    {    
-       dd($request);
+      // dd($request);
 
       $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
       $filter = "";
@@ -342,6 +342,7 @@ class ConsultaController extends Controller
          'final_data' => $request->final_data,
          'nomepaciente' => $request->nomepaciente,
          'cpf' => $request->cpf,
+         'msg' => $msg
       ]);
    }
 
@@ -462,21 +463,38 @@ class ConsultaController extends Controller
       $consulta->status = "Sala de espera";
       $consulta->save();
 
-      return $this->listConsultaAgendadaUserClinica();
+      $msg = ['valor' => trans("Encaminhamento realizado com sucesso!"), 'tipo' => 'success'];
+      $request->merge([
+         'nomepaciente' => $request->nomepacienteM,
+         'cpf' => $request->cpfM,
+         'inicio_data' => $request->inicio_dataM,
+         'final_data' => $request->final_dataM,
+         'especialista_id' =>  $request->especialista_idM
+       ]);   
+        return $this->listConsultaAgendadaUserClinicaPesquisar($request,$msg);
     }
 
      //o usuario clinica efetua o pagamento da consulta
    function efetuarPagamentoUserClinica(Request $request)
    {  
      
-     $consulta = Consulta::find($request->consulta_id);
-    
+     $consulta = Consulta::find($request->consulta_id);    
      //salva a forma de pagamento 
      $consulta->forma_pagamento = $request->forma_pagamento;
      $consulta->isPago = true;
      $consulta->save();
+     $msg = ['valor' => trans("Pagamento realizado com sucesso!"), 'tipo' => 'success'];
 
-     return $this->listConsultaAgendadaUserClinica();
+     $request->merge([
+      'nomepaciente' => $request->nomepacienteM,
+      'cpf' => $request->cpfM,
+      'inicio_data' => $request->inicio_dataM,
+      'final_data' => $request->final_dataM,
+      'especialista_id' =>  $request->especialista_idM
+    ]);   
+
+     
+     return $this->listConsultaAgendadaUserClinicaPesquisar($request,$msg);
    }
    
 
