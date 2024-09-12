@@ -156,7 +156,8 @@
                           rel="tooltip" title="Cancelar" class="btn btn-warning" data-original-title="Edit"
                            href="#"
                            data-target="#modalCancelar{{$ent->id}}" data-toggle="modal"
-                           data-whatever="@mdo">
+                           data-whatever="@mdo"
+                           onclick="mandaDadosFormPrincipalParaModal()">
                            Cancelar
                         </a>                                              
                    
@@ -309,6 +310,12 @@
                                                    </div>
                                              </div>
                                              <input type="hidden" value="{{$ent->id}}"  name="consulta_id">
+                                             <!--dados para pesquisa-->
+                                             <input type="hidden" id="inicio_dataM" name="inicio_dataM">
+                                             <input type="hidden" id="final_dataM" name="final_dataM">
+                                             <input type="hidden" id="nomepacienteM" name="nomepacienteM">
+                                             <input type="hidden" id="cpfM" name="cpfM">
+                                             <input type="hidden" id="especialista_idM" name="especialista_idM">
                                           </div>
                                           <div class="modal-footer">
                                              <button type="button" class="btn btn-secondary" data-dismiss="modal"><i
@@ -336,4 +343,25 @@
       </div>
    </div>
 </div>
+
+
+<script>
+  
+    function mandaDadosFormPrincipalParaModal() {
+    
+        //pega valores para inviar para os modais e assim apos retorno do modal realizar a pesquisa
+        var inicio_data = document.getElementById("inicio_data").value;
+        var final_data = document.getElementById("final_data").value;
+        var nomepaciente = document.getElementById("nomepaciente").value;
+        var cpf = document.getElementById("cpf").value;
+        var especialista_id = document.querySelector("#especialista_id").value;
+             
+        document.getElementById('inicio_dataM').value = inicio_data;
+        document.getElementById('final_dataM').value = final_data;
+        document.getElementById('nomepacienteM').value = nomepaciente;
+        document.getElementById('cpfM').value = cpf;
+        document.getElementById('especialista_idM').value = especialista_id;
+    }
+</script>
+
 @endsection

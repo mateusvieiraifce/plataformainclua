@@ -463,7 +463,6 @@ class ClinicaController extends Controller
          }
       return view('userClinica/listPacientes', [
          'lista' => $lista,
-         'filtro' => null, 
          'filtro' => $filtro, 
          'cpf' => $cpf,       
          'msg' => $msg
@@ -472,7 +471,8 @@ class ClinicaController extends Controller
 
    
    function canelarconsultaViaClinica(Request $request)
-   {      
+   {    
+     
     //ver a questao financeira
     $consultaCancelada = Consulta::find($request->consulta_id);
 
@@ -494,8 +494,17 @@ class ClinicaController extends Controller
     $consultaCancelada->save();
     $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
 
+    $request->merge([
+      'nomepaciente' => $request->nomepacienteM,
+      'cpf' => $request->cpfM,
+      'inicio_data' => $request->inicio_dataM,
+      'final_data' => $request->final_dataM,
+      'especialista_id' => $request->especialista_idM
+    ]);   
+
+    
     $consultaController = new ConsultaController();
-    return  $consultaController->listConsultaAgendadaUserClinica($msg);
+    return  $consultaController->listConsultaAgendadaUserClinicaPesquisar($request);
    }
    
 }

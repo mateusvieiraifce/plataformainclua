@@ -284,7 +284,8 @@ class ConsultaController extends Controller
 
    function listConsultaAgendadaUserClinicaPesquisar(Request $request, $msg = null)
    {    
-    
+       dd($request);
+
       $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
       $filter = "";
       if (isset($_GET['filtro'])) {
@@ -324,7 +325,7 @@ class ConsultaController extends Controller
          where('status', '!=', 'Cancelada')->
          where('pacientes.nome', 'like', '%' . $request->nomepaciente . "%")->
          where('pacientes.cpf', 'like', '%' . $request->cpf . "%")->
-         where('especialista_id', $request->especialista_id)->
+         where('consultas.especialista_id', $request->especialista_id)->
          whereBetween('horario_agendado', [$inicioDoDiaFiltro, $fimDoDiaFiltro])->
          select('consultas.id', 'status', 'horario_agendado', 'especialistas.nome as nome_especialista',
           'pacientes.cpf as cpf','local_consulta','preco','isPago',
