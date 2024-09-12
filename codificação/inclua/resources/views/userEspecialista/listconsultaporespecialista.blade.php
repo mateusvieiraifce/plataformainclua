@@ -61,6 +61,7 @@
                                     <label style="color: white">&nbsp;  Status da consulta:</label>                                    
                                     <select style="border-color: #C0C0C0"  class="form-control" id="status" name="status" required>
                                        <option style="color: #111111" value="todos" @if($status == "Todos") selected @endif>Todos</option>
+                                       <option style="color: #111111" value="Sala de espera" @if($status == "Sala de espera") selected @endif>Sala de espera</option>
                                         <option style="color: #111111" value="Aguardando atendimento" @if($status == "Aguardando atendimento") selected @endif>Aguardando atendimento</option>
                                         <option  style="color: #111111"value="Cancelada" @if($status == "Cancelada") selected @endif>Cancelada</option>
                                         <option  style="color: #111111"value="Em atendimento" @if($status == "Em atendimento") selected @endif>Em atendimento</option>

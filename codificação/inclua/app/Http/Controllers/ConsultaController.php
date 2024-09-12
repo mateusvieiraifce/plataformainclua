@@ -172,13 +172,18 @@ class ConsultaController extends Controller
          $clinicaselecionada_id = $clinicas[0]->id;
       }
 
-      //retornar na pagina de consulta do especialista as consultas do dia e que estao aguardando atendimento
+      //retornar na pagina de consulta do especialista as consultas do dia e que estao 'Sala de espera'
       $inicioDoDia = Carbon::today()->startOfDay();
       $fimDoDia = Carbon::today()->endOfDay();
 
 
-      $statusConsulta = "Aguardando atendimento";
-      $lista = Consulta::join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')->join('pacientes', 'pacientes.id', '=', 'consultas.paciente_id')->where('especialista_id', '=', $especialista->id)->where('status', '=', 'Aguardando atendimento')->whereBetween('horario_agendado', [$inicioDoDia, $fimDoDia])->select('consultas.id', 'status', 'horario_agendado', 'clinicas.nome as nome_clinica', 'pacientes.nome as nome_paciente')->orderBy('horario_agendado', 'asc')->get();
+      $statusConsulta = "Sala de espera";
+      $lista = Consulta::join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')->
+      join('pacientes', 'pacientes.id', '=', 'consultas.paciente_id')->
+      where('especialista_id', '=', $especialista->id)->where('status', '=', $statusConsulta)->
+      whereBetween('horario_agendado', [$inicioDoDia, $fimDoDia])->
+      select('consultas.id', 'status', 'horario_agendado', 'clinicas.nome as nome_clinica', 'pacientes.nome as nome_paciente')->
+      orderBy('horario_agendado', 'asc')->get();
 
       return view('userEspecialista/listconsultaporespecialista', [
          'lista' => $lista,

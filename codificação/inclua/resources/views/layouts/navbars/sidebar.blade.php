@@ -106,18 +106,7 @@
                         </ul>
                     </div>
 
-                    <div class="collapse" id="configclinica">
-                        <ul class="nav pl-4">
-                        <li @if ($pageSlug=='users' ) class="active " @endif>
-                             <a href="#">
-                        <i class="tim-icons icon-key-25"></i>
-                        <p>{{ __('Usuários') }}</p>
-                    </a>
-                </li>
-                        </ul>
-                    </div>
-
-
+                   
 
                    
 
