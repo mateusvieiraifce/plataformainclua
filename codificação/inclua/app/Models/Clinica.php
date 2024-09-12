@@ -15,6 +15,7 @@ class Clinica extends Model
     'logotipo',
     'ativo',
     'numero_atendimento_social_mensal',
+    'anamnese_obrigatoria',
     'usuario_id'
   ];
 

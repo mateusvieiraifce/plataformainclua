@@ -102,7 +102,12 @@ class CreateAnamnesesTable extends Migration
 
             $table->foreign('paciente_id')->references('id')->on('pacientes');
         });
+
+        Schema::table('clinicas', function (Blueprint $table) {
+            $table->string('anamnese_obrigatoria')->nullable()->default('N')->after('numero_atendimento_social_mensal');
+        });
     }
+
 
     /**
      * Reverse the migrations.
@@ -111,6 +116,11 @@ class CreateAnamnesesTable extends Migration
      */
     public function down()
     {
+        
+        Schema::table('clinicas', function (Blueprint $table) {
+            $table->dropColumn('anamnese_obrigatoria');
+        });
+
         Schema::table('anamneses', function (Blueprint $table) {
             $table->dropForeign('anamneses_paciente_id_foreign');
         });

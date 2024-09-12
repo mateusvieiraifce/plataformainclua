@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helper;
+use App\Models\Anamnese;
 use App\Models\Clinica;
 use App\Models\Especialidadeclinica;
 use App\Models\Especialistaclinica;
@@ -157,18 +158,21 @@ class PacienteController extends Controller
         }
         $paciente = Paciente::where('usuario_id', '=', Auth::user()->id)->first();
         $statusConsulta = "Aguardando atendimento";
-        $lista = Consulta::join('especialistas', 'especialistas.id', '=', 'consultas.especialista_id')->
-        join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')->
-        join('especialidades', 'especialidades.id', '=', 'especialistas.especialidade_id')->
-        where('paciente_id', '=', $paciente->id)->
-        where('status', '=', $statusConsulta)->
-        select(
-            'consultas.id',
-            'horario_agendado',
-            'especialistas.nome as nome_especialista',
-            'clinicas.nome as nome_clinica',
-            'especialidades.descricao as descricao_especialidade'
-         )->orderBy('horario_agendado', 'asc')->paginate(8);
+        $lista = Consulta::join('especialistas', 'especialistas.id', '=', 'consultas.especialista_id')
+            ->join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')
+            ->join('especialidades', 'especialidades.id', '=', 'especialistas.especialidade_id')
+            ->join('pacientes', 'pacientes.id', '=', 'consultas.paciente_id')
+            ->where('pacientes.usuario_id', '=', $paciente->usuario_id)
+            ->where('status', '=', $statusConsulta)
+            ->select(
+        'consultas.id',
+                'horario_agendado',
+                'especialistas.nome as nome_especialista',
+                'clinicas.nome as nome_clinica',
+                'especialidades.descricao as descricao_especialidade'
+            )
+            ->orderBy('horario_agendado', 'asc')
+            ->paginate(8);
       return view('userPaciente/minhasconsultas', ['lista' => $lista,  'msg' => $msg,'filtro' => $filtro]);
    }
 
@@ -363,13 +367,27 @@ class PacienteController extends Controller
             $paciente = Paciente::where('usuario_id', '=', Auth::user()->id)->first();
         }
 
-        $ent = Consulta::find($request->consulta_id);
-        $ent->status = "Aguardando atendimento";
-        $ent->paciente_id = $paciente->id;
-        $ent->save();
-        $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
+        $consulta = Consulta::find($request->consulta_id);
+        $consulta->status = "Aguardando atendimento";
+        $consulta->paciente_id = $paciente->id;
+        $consulta->save();
+        
 
-        return redirect()->route('anamnese.create');
+        $anamnese = Anamnese::where('paciente_id', $paciente->id)->first();
+        $clinica = Clinica::find($consulta->clinica_id);
+
+        //VERIFICAR SE A CLINICA REQUER A ANAMNESE, SE SIM, VERIFIQUE SE AINDA NÃO FOI REALIZADA PELO PACIENTE
+        if ($clinica->anamnese_obrigatoria == "S" && !isset($anamnese)) {
+            $msg = ['valor' => trans("Consulta marcada com sucesso! Realizer agora a anamnese com calma."), 'tipo' => 'success'];
+            session()->flash('msg', $msg);
+
+            return redirect()->route('anamnese.create', ['paciente_id' => $paciente->id]);
+        } else {
+            $msg = ['valor' => trans("Consulta marcada com sucesso!"), 'tipo' => 'success'];
+            session()->flash('msg', $msg);
+
+            return redirect()->route('paciente.minhasconsultas');
+        }
     }
     function home($msg = null)
    {

@@ -187,6 +187,7 @@ class ClinicaController extends Controller
          "telefone" => "unique:users,telefone,{$request->usuario_id}",
          "celular" => "required|unique:users,celular,{$request->usuario_id}",
          "numero_atendimento_social_mensal" => "required",
+         "anamnese_obrigatoria" => "required",
          'consentimento'=>'required'
       ];
       $feedbacks = [
@@ -199,6 +200,7 @@ class ClinicaController extends Controller
          'celular.required' => 'O campo Celular é obrigatório.',
          'celular.unique' => 'Este número de celular já foi utilizado.',
          'numero_atendimento_social_mensal.required' => "O campo N° de atendimentos sociais mensais é obrigatório.",
+         'anamnese_obrigatoria.required' => "O campo Anamnese é obrigatório.",
          "consentimento.required" => "O campo Termos e Condições de Uso é obrigatório."
       ];
       $request->validate($rules, $feedbacks);
@@ -236,6 +238,7 @@ class ClinicaController extends Controller
          $clinica->cnpj = Helper::removerCaractereEspecial($request->documento);
          $clinica->logotipo = "storage/$pathAvatar" ;
          $clinica->numero_atendimento_social_mensal = $request->numero_atendimento_social_mensal;
+         $clinica->anamnese_obrigatoria = $request->anamnese_obrigatoria;
          $clinica->save();
 
          $userController = new UsuarioController();
@@ -244,6 +247,7 @@ class ClinicaController extends Controller
          $msg = ['valor' => trans("Cadastro de dados realizado com sucesso!"), 'tipo' => 'success'];
          session()->flash('msg', $msg);
      } catch (QueryException $e) {
+      dd($e);
          session()->flash('msg', ['valor' => trans("Erro ao realizar o cadastro da clínica!"), 'tipo' => 'danger']);
 
          return back();

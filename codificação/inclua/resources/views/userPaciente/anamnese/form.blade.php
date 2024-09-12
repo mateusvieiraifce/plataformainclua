@@ -1,11 +1,24 @@
-@extends('layouts.app', ['page' => __('Marcar Consulta'),'exibirPesquisa' => false, 'pageSlug' => 'marcarconsulta', 'class' => 'especialidade'])
+@extends('layouts.app', ['page' => __('Anamnese'),'exibirPesquisa' => false, 'pageSlug' => 'marcarconsulta', 'class' => 'anamnese'])
 @section('title', 'Anamnese')
 @section('content')
 <div class="row">
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
-                <h2 class="title" id="title"></h2>
+                <div class="justify-content-between">
+                    <h3 class="title" id="title"></h3>
+                    <div class="step-circles justify-content-end">
+                        <span class="step"></span>
+                        <span class="step"></span>
+                        <span class="step"></span>
+                        <span class="step"></span>
+                        <span class="step"></span>
+                        <span class="step"></span>
+                        <span class="step"></span>
+                        <span class="step"></span>
+                        <span class="step"></span>
+                    </div>
+                </div>
                 <h4 class="title" id="subTitle"></h4>
             </div>
             <div class="card-body">
@@ -1284,8 +1297,7 @@
                             </button>
                         </div>
                     </div>
-                    <input type="hidden" name="id" value=" ">
-                    <input type="hidden" name="especialista_id" value="">
+                    <input type="hidden" name="paciente_id" value="{{ $paciente_id }}">
                 </form>
             </div>
         </div>
@@ -1312,8 +1324,10 @@
                 } else if (n == 7) {
                     title.innerHTML = "Relacionamento familiar"
                     subTitle.style.display = "none"
+                    buttonNext.innerHTML = 'Próximo <i class="fa fa-arrow-right"></i>'
                 } else if (n == 8) {
                     title.innerHTML = "Relacionamento social"
+                    buttonNext.innerHTML = 'Salvar <i class="fa fa-save"></i>'
                 }
 
                 if (n == 0) {
@@ -1333,7 +1347,7 @@
                 } else if (n == 6) {
                     subTitle.innerHTML = "Enurese, encoprese e sono (estimativa)"
                 }
-                //fixStepIndicator(n);
+                fixStepIndicator(n);
             }
         }
 
@@ -1352,12 +1366,27 @@
             window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
         }
 
+        var stepPrevious = currentTab;
         function fixStepIndicator(n) {
             var i, x = document.getElementsByClassName("step");
+            
+            //x[n].className = x[n].className.replace("step", "step active");
             for (i = 0; i < x.length; i++) {
-                x[i].className = x[i].className.replace(" active", "");
+                if (stepPrevious >= n && n <= i) {
+                    x[i].className = x[i].className.replace(" completed", "");
+                    x[i].className = x[i].className.replace(" active", " ");
+                }
+                x[i].className = x[i].className.replace(" active", " completed");
             }
-            x[n].className += " active";
+            x[n].className = x[n].className.replace("step", "step active");
+
+            if (n == 0) {
+                stepPrevious = stepPrevious + 1
+            } else if (stepPrevious >= n) {
+                stepPrevious = n - 1
+            } else {
+                stepPrevious = stepPrevious + 1
+            }
         }
     </script>
 @endsection

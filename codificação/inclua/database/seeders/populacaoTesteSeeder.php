@@ -34,94 +34,142 @@ class populacaoTesteSeeder extends Seeder
             'etapa_cadastro' => 'F',
         ]);
 
-        //usuario paciente
-        $entidade = User::create([ 
-            'nome_completo'=>"Paciente 01",
-            'password'=>bcrypt("1"),
-            'email'=>"p@p",
-            'created_at'=>now(),
-            'updated_at'=>now(),
-            'telefone'=>"88888888",
+        //usuario paciente 01
+        $userPaciente01 = User::create([ 
+            'nome_completo' => "Paciente 01",
+            'password' => bcrypt("1"),
+            'email' => "p@p",
+            'created_at' => now(),
+            'updated_at' => now(),
+            'telefone' => "889811224454",
             'tipo_user' => 'P',
             'etapa_cadastro' => 'F',
         ]);
         DB::table('pacientes')->insert([
-            'nome'=>"Paciente 01",
-            'usuario_id'=>$entidade->id,          
-            'cpf' => "12312312332"
+            'nome' => "Paciente 01",
+            'usuario_id' => $userPaciente01->id,          
+            'cpf' => "12345678978"
+        ]);
+        
+        //usuario paciente 02
+        $userPaciente02 = User::create([ 
+            'nome_completo' => "Paciente 02",
+            'password' => bcrypt("1"),
+            'email' => "p2@p",
+            'created_at' => now(),
+            'updated_at' => now(),
+            'telefone' => "889811224454",
+            'tipo_user' => 'P',
+            'etapa_cadastro' => 'F',
+        ]);
+        DB::table('pacientes')->insert([
+            'nome' => "Paciente 02",
+            'usuario_id' => $userPaciente02->id,          
+            'cpf' => "98765432112"
         ]);
 
-
-        //usuario especialista
-        $entidade = User::create([ 
-            'nome_completo'=>"Especialista 01",
-            'password'=>bcrypt("1"),
-            'email'=>"e@e",
-            'created_at'=>now(),
-            'updated_at'=>now(),
-            'telefone'=>"88888888",
+        //usuario especialista 01
+        $userEspecialista01 = User::create([ 
+            'nome_completo' => "Especialista 01",
+            'password' => bcrypt("1"),
+            'email' => "e@e",
+            'created_at' => now(),
+            'updated_at' => now(),
+            'telefone' => "88981548765",
             'tipo_user' => 'E',
             'etapa_cadastro' => 'F',
         ]);
-        $especialidade = Especialidade::create([ 
-            'descricao'=>"Neuro 01",
-            'valorpadrao'=>"100",
-            'created_at'=>now(),
-            'updated_at'=>now(),
+        $especialidade01 = Especialidade::create([ 
+            'descricao' => "Neurologia",
+            'valorpadrao' => "100",
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);        
-       $especialista = Especialista::create([
-            'nome'=>"Especialista 01",
-            'usuario_id'=>$entidade->id, 
-            'especialidade_id'=>$especialidade->id,          
+        $especialista01 = Especialista::create([
+            'nome' => "Especialista 01",
+            'usuario_id' => $userEspecialista01->id, 
+            'especialidade_id' => $especialidade01->id,          
+        ]);
+
+        //usuario especialista 02
+        $userEspecialista02 = User::create([ 
+            'nome_completo' => "Especialista 02",
+            'password' => bcrypt("1"),
+            'email' => "e2@e",
+            'created_at' => now(),
+            'updated_at' => now(),
+            'telefone' => "88981544865",
+            'tipo_user' => 'E',
+            'etapa_cadastro' => 'F',
+        ]);
+        $especialidade02 = Especialidade::create([ 
+            'descricao' => "Psicologia",
+            'valorpadrao' => "120",
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);        
+        $especialista02 = Especialista::create([
+            'nome' => "Especialista 02",
+            'usuario_id' => $userEspecialista02->id, 
+            'especialidade_id' => $especialidade02->id,          
         ]);
 
         //usuario clinica 01
-        $entidade = User::create([ 
-            'nome_completo'=>"Usuario da Clinica 01",
-            'password'=>bcrypt("1"),
-            'email'=>"c@c",
-            'created_at'=>now(),
-            'updated_at'=>now(),
-            'telefone'=>"88888888",
+        $userClinica01 = User::create([ 
+            'nome_completo' => "Usuario da Clinica 01",
+            'password' => bcrypt("1"),
+            'email' => "c@c",
+            'created_at'=> now(),
+            'updated_at' => now(),
+            'telefone' => "88981548659",
             'tipo_user' => 'C',
             'etapa_cadastro' => 'F',
         ]);
         $clinica01 =  Clinica::create([
-            'nome'=>"Clinica 01",
-            'usuario_id'=>$entidade->id, 
-            'ativo'=>"1",
-        ]);
-        DB::table('especialidadeclinicas')->insert([
-            'valor'=>200,
-            'clinica_id'=>$clinica01->id, 
-            'especialidade_id'=>$especialidade->id,          
+            'nome' => "Clinica 01",
+            'usuario_id' => $userClinica01->id, 
+            'ativo' => "1",
+            'anamnese_obrigatoria' => "S",
         ]);
 
+        DB::table('especialidadeclinicas')->insert([
+            'valor' => 200,
+            'clinica_id' => $clinica01->id, 
+            'especialidade_id' => $especialidade01->id,          
+        ]);
 
         DB::table('especialistaclinicas')->insert([           
-            'clinica_id'=>$clinica01->id, 
-            'especialista_id'=>$especialista->id,          
+            'clinica_id' => $clinica01->id, 
+            'especialista_id' => $especialista01->id,          
         ]);
 
-
-
-        
-
-         //usuario clinica 02
-         $entidade = User::create([ 
-            'nome_completo'=>"Usuario da Clinica 02",
-            'password'=>bcrypt("1"),
-            'email'=>"c@c2",
-            'created_at'=>now(),
-            'updated_at'=>now(),
-            'telefone'=>"88888888",
+        //usuario clinica 02
+        $userClinica02 = User::create([ 
+            'nome_completo' => "Usuario da Clinica 02",
+            'password' => bcrypt("1"),
+            'email' => "c2@c",
+            'created_at'=> now(),
+            'updated_at' => now(),
+            'telefone' => "88981231659",
             'tipo_user' => 'C',
             'etapa_cadastro' => 'F',
         ]);
-        DB::table('clinicas')->insert([
-            'nome'=>"Clinica 02",
-            'usuario_id'=>$entidade->id, 
-            'ativo'=>"1",
+        $clinica02 =  Clinica::create([
+            'nome' => "Clinica 02",
+            'usuario_id' => $userClinica02->id, 
+            'ativo' => "1",
+            'anamnese_obrigatoria' => "N",
+        ]);
+
+        DB::table('especialidadeclinicas')->insert([
+            'valor' => 200,
+            'clinica_id' => $clinica02->id, 
+            'especialidade_id' => $especialidade02->id,          
+        ]);
+
+        DB::table('especialistaclinicas')->insert([           
+            'clinica_id' => $clinica02->id, 
+            'especialista_id' => $especialista02->id,          
         ]);
 
         //cad medicamentos

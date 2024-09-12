@@ -15,7 +15,7 @@ class CreateClinicasTable extends Migration
          
       $table->string('logotipo')->nullable();
       $table->boolean('ativo')->nullable();
-      $table->double('numero_atendimento_social_mensal')->nullable();
+      $table->integer('numero_atendimento_social_mensal')->nullable();
       $table->unsignedBigInteger('usuario_id')->nullable();
       $table->timestamps();
     });

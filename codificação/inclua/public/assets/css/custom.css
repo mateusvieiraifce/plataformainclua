@@ -186,9 +186,38 @@ option {
 .input-group.without-margin {
     margin: 0;
 }
+
 .form-check.without-margin {
     margin: 0;
 }
+
+.justify-content-between {
+    display: flex;
+    justify-content: space-between !important;
+}
+
+.step-circles {
+    display: flex;
+}
+
+.step {
+    height: 8px;
+    width: 8px;
+    margin: 0 2px;
+    background-color: #C0C0C0;
+    border-radius: 50%;
+    opacity: 0.5;
+}
+
+.step.active {
+    opacity: 1;
+}
+
+.step.completed {
+    background-color: #ba54f5;
+    opacity: 1;
+}
+
 @media (max-width: 576px) {
     .card-header > a.header-links {
         width: 100%;

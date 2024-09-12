@@ -27,7 +27,6 @@ class AlterTablePacientes extends Migration
     public function down()
     {
         Schema::table('pacientes', function (Blueprint $table) {
-            $table->dropColumn('data_nascimento');
             $table->dropColumn('sexo');
         });
     }
