@@ -39,7 +39,7 @@
                 </li>
                 
                     <li @if ($pageSlug == 'especialistaclinica') class="active " @endif>
-                        <a href="{{route('especialistaclinica.list',$clinica->id)}}">
+                        <a href="{{route('especialistaclinica.list')}}">
                 <i class="tim-icons icon-badge"></i>
                 <p>{{ __('Especialistas') }}</p>
                 </a>

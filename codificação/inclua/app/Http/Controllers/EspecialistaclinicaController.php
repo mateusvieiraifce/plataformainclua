@@ -12,8 +12,10 @@ use Carbon\Carbon;
 
 class EspecialistaclinicaController extends Controller
 {
-   function list($clinica_id, $msg = null)
+   function list($msg = null)
    {
+      $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
+      $clinica_id = $clinica->id;
       $filter = "";
       if (isset($_GET['filtro'])) {
          $filter = $_GET['filtro'];
@@ -55,7 +57,7 @@ class EspecialistaclinicaController extends Controller
          ]);
       }
       $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
-      return $this->list($clinica_id, $msg);
+      return $this->list($msg);
    }
    function delete($id)
    {
@@ -72,7 +74,7 @@ class EspecialistaclinicaController extends Controller
       } catch (QueryException $exp) {
          $msg = ['valor' => $exp->getMessage(), 'tipo' => 'primary'];
       }
-      return $this->list($clinica_id, $msg);
+      return $this->list($msg);
    }
    function edit($id)
    {
