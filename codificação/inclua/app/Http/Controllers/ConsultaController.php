@@ -172,13 +172,18 @@ class ConsultaController extends Controller
          $clinicaselecionada_id = $clinicas[0]->id;
       }
 
-      //retornar na pagina de consulta do especialista as consultas do dia e que estao aguardando atendimento
+      //retornar na pagina de consulta do especialista as consultas do dia e que estao 'Sala de espera'
       $inicioDoDia = Carbon::today()->startOfDay();
       $fimDoDia = Carbon::today()->endOfDay();
 
 
-      $statusConsulta = "Aguardando atendimento";
-      $lista = Consulta::join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')->join('pacientes', 'pacientes.id', '=', 'consultas.paciente_id')->where('especialista_id', '=', $especialista->id)->where('status', '=', 'Aguardando atendimento')->whereBetween('horario_agendado', [$inicioDoDia, $fimDoDia])->select('consultas.id', 'status', 'horario_agendado', 'clinicas.nome as nome_clinica', 'pacientes.nome as nome_paciente')->orderBy('horario_agendado', 'asc')->get();
+      $statusConsulta = "Sala de espera";
+      $lista = Consulta::join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')->
+      join('pacientes', 'pacientes.id', '=', 'consultas.paciente_id')->
+      where('especialista_id', '=', $especialista->id)->where('status', '=', $statusConsulta)->
+      whereBetween('horario_agendado', [$inicioDoDia, $fimDoDia])->
+      select('consultas.id', 'status', 'horario_agendado', 'clinicas.nome as nome_clinica', 'pacientes.nome as nome_paciente')->
+      orderBy('horario_agendado', 'asc')->get();
 
       return view('userEspecialista/listconsultaporespecialista', [
          'lista' => $lista,
@@ -239,7 +244,7 @@ class ConsultaController extends Controller
    }
 
    
-   function listConsultaAgendada($msg = null)
+   function listConsultaAgendadaUserClinica($msg = null)
    {
       $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
       $filter = "";
@@ -252,18 +257,21 @@ class ConsultaController extends Controller
 
       // Obtém a data atual
       $dataAtual = Carbon::now();
-      // Calcula a data de um mês atrás
-      $dataUmMesAtras = $dataAtual->subMonth();
-      $inicioDoDia = $dataUmMesAtras->startOfDay();
+      $inicioDoDia = $dataAtual->startOfDay();
       $fimDoDia = Carbon::today()->endOfDay();
 
-
+      // selecionar as consultas na qual o status diferente de 
+      // FINALIZADA, CANCELADA
       $lista = Consulta::join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')->
       join('pacientes', 'pacientes.id', '=', 'consultas.paciente_id')->
       join('especialistas', 'especialistas.id', '=', 'consultas.especialista_id')->
-      where('clinica_id', '=', $clinica->id)->
+      join('especialistaclinicas', 'especialistaclinicas.especialista_id', '=', 'consultas.especialista_id')->
+      where('consultas.clinica_id', '=', $clinica->id)->
+      where('status', '!=', 'Finalizada')->
+      where('status', '!=', 'Cancelada')->
       whereBetween('horario_agendado', [$inicioDoDia, $fimDoDia])->
       select('consultas.id', 'status', 'horario_agendado', 'especialistas.nome as nome_especialista', 
+       'pacientes.cpf as cpf','local_consulta','preco','isPago',
       'pacientes.nome as nome_paciente')->orderBy('horario_agendado', 'asc')->get();
 
       return view('userClinica/listConsultaAgenda', [
@@ -278,6 +286,71 @@ class ConsultaController extends Controller
          'final_data' => $fimDoDia->format('Y-m-d')
       ]);
    }
+
+   function listConsultaAgendadaUserClinicaPesquisar(Request $request, $msg = null)
+   {    
+      // dd($request);
+
+      $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
+      $filter = "";
+      if (isset($_GET['filtro'])) {
+         $filter = $_GET['filtro'];
+      }
+      //todoas os especialistas que a clinica eh vinculado
+      $especialistas = Especialistaclinica::join('especialistas', 'especialistas.id', '=', 'especialistaclinicas.especialista_id')->
+      where('clinica_id', $clinica->id)->orderBy('especialistas.nome', 'asc')->
+      select('especialistas.id', 'especialistas.nome')->get();
+
+
+      $inicioDoDiaFiltro = Carbon::parse($request->inicio_data)->startOfDay();
+      $fimDoDiaFiltro = Carbon::parse($request->final_data)->endOfDay();
+    
+
+      if ($request->especialista_id == "todos") {
+         $lista = Consulta::join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')->
+         join('pacientes', 'pacientes.id', '=', 'consultas.paciente_id')->
+         join('especialistas', 'especialistas.id', '=', 'consultas.especialista_id')->
+         join('especialistaclinicas', 'especialistaclinicas.especialista_id', '=', 'consultas.especialista_id')->
+         where('consultas.clinica_id', '=', $clinica->id)->
+         where('status', '!=', 'Finalizada')->
+         where('status', '!=', 'Cancelada')->
+         where('pacientes.nome', 'like', '%' . $request->nomepaciente . "%")->
+         where('pacientes.cpf', 'like', '%' . $request->cpf . "%")->
+         whereBetween('horario_agendado', [$inicioDoDiaFiltro, $fimDoDiaFiltro])->
+         select('consultas.id', 'status', 'horario_agendado', 'especialistas.nome as nome_especialista',
+         'pacientes.cpf as cpf', 'local_consulta','preco','isPago',
+         'pacientes.nome as nome_paciente')->orderBy('horario_agendado', 'asc')->get();
+      } else {
+         $lista = Consulta::join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')->
+         join('pacientes', 'pacientes.id', '=', 'consultas.paciente_id')->
+         join('especialistas', 'especialistas.id', '=', 'consultas.especialista_id')->
+         join('especialistaclinicas', 'especialistaclinicas.especialista_id', '=', 'consultas.especialista_id')->
+         where('consultas.clinica_id', '=', $clinica->id)->
+         where('status', '!=', 'Finalizada')->
+         where('status', '!=', 'Cancelada')->
+         where('pacientes.nome', 'like', '%' . $request->nomepaciente . "%")->
+         where('pacientes.cpf', 'like', '%' . $request->cpf . "%")->
+         where('consultas.especialista_id', $request->especialista_id)->
+         whereBetween('horario_agendado', [$inicioDoDiaFiltro, $fimDoDiaFiltro])->
+         select('consultas.id', 'status', 'horario_agendado', 'especialistas.nome as nome_especialista',
+          'pacientes.cpf as cpf','local_consulta','preco','isPago',
+         'pacientes.nome as nome_paciente')->orderBy('horario_agendado', 'asc')->get();
+      }
+
+    // dd($request, $lista);
+      return view('userClinica/listConsultaAgenda', [
+         'lista' => $lista,
+         'especialistas' => $especialistas,
+         'especialistaSelecionado_id' => $request->especialista_id,
+         'filtro' => $filter,
+         'inicio_data' => $request->inicio_data,
+         'final_data' => $request->final_data,
+         'nomepaciente' => $request->nomepaciente,
+         'cpf' => $request->cpf,
+         'msg' => $msg
+      ]);
+   }
+
 
    function listConsultaporClinica($msg = null)
    {
@@ -320,7 +393,7 @@ class ConsultaController extends Controller
    }
 
    function listConsultaporClinicaPesquisar(Request $request, $msg = null)
-   {
+   {     
      
       $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
       $filter = "";
@@ -379,6 +452,56 @@ class ConsultaController extends Controller
          'nomepaciente' => $request->nomepaciente,
       ]);
    }
+
+   //encaminhar paciente para sala do especialista
+   function encaminharPaciente(Request $request)
+    {  
+      //salvo o local indicado
+      $consulta = Consulta::find($request->consulta_id);
+      $especialistaClinica =  Especialistaclinica::
+      where('especialista_id',$consulta->especialista_id)->
+      where('clinica_id',$consulta->clinica_id)->first();
+      $especialistaClinica->local_consulta = $request->local_consulta;
+      $especialistaClinica->save();
+
+      //salvo o novo status da consulta
+      $consulta->status = "Sala de espera";
+      $consulta->save();
+
+      $msg = ['valor' => trans("Encaminhamento realizado com sucesso!"), 'tipo' => 'success'];
+      $request->merge([
+         'nomepaciente' => $request->nomepacienteM,
+         'cpf' => $request->cpfM,
+         'inicio_data' => $request->inicio_dataM,
+         'final_data' => $request->final_dataM,
+         'especialista_id' =>  $request->especialista_idM
+       ]);   
+        return $this->listConsultaAgendadaUserClinicaPesquisar($request,$msg);
+    }
+
+     //o usuario clinica efetua o pagamento da consulta
+   function efetuarPagamentoUserClinica(Request $request)
+   {  
+     
+     $consulta = Consulta::find($request->consulta_id);    
+     //salva a forma de pagamento 
+     $consulta->forma_pagamento = $request->forma_pagamento;
+     $consulta->isPago = true;
+     $consulta->save();
+     $msg = ['valor' => trans("Pagamento realizado com sucesso!"), 'tipo' => 'success'];
+
+     $request->merge([
+      'nomepaciente' => $request->nomepacienteM,
+      'cpf' => $request->cpfM,
+      'inicio_data' => $request->inicio_dataM,
+      'final_data' => $request->final_dataM,
+      'especialista_id' =>  $request->especialista_idM
+    ]);   
+
+     
+     return $this->listConsultaAgendadaUserClinicaPesquisar($request,$msg);
+   }
+   
 
 
 }

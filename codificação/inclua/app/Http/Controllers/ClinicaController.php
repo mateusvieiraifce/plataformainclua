@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Rules\CnpjValidationRule;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class ClinicaController extends Controller
 {
@@ -187,6 +188,7 @@ class ClinicaController extends Controller
          "telefone" => "unique:users,telefone,{$request->usuario_id}",
          "celular" => "required|unique:users,celular,{$request->usuario_id}",
          "numero_atendimento_social_mensal" => "required",
+         "anamnese_obrigatoria" => "required",
          'consentimento'=>'required'
       ];
       $feedbacks = [
@@ -199,6 +201,7 @@ class ClinicaController extends Controller
          'celular.required' => 'O campo Celular é obrigatório.',
          'celular.unique' => 'Este número de celular já foi utilizado.',
          'numero_atendimento_social_mensal.required' => "O campo N° de atendimentos sociais mensais é obrigatório.",
+         'anamnese_obrigatoria.required' => "O campo Anamnese é obrigatório.",
          "consentimento.required" => "O campo Termos e Condições de Uso é obrigatório."
       ];
       $request->validate($rules, $feedbacks);
@@ -236,6 +239,7 @@ class ClinicaController extends Controller
          $clinica->cnpj = Helper::removerCaractereEspecial($request->documento);
          $clinica->logotipo = "storage/$pathAvatar" ;
          $clinica->numero_atendimento_social_mensal = $request->numero_atendimento_social_mensal;
+         $clinica->anamnese_obrigatoria = $request->anamnese_obrigatoria;
          $clinica->save();
 
          $userController = new UsuarioController();
@@ -244,6 +248,7 @@ class ClinicaController extends Controller
          $msg = ['valor' => trans("Cadastro de dados realizado com sucesso!"), 'tipo' => 'success'];
          session()->flash('msg', $msg);
      } catch (QueryException $e) {
+      dd($e);
          session()->flash('msg', ['valor' => trans("Erro ao realizar o cadastro da clínica!"), 'tipo' => 'danger']);
 
          return back();
@@ -317,17 +322,9 @@ class ClinicaController extends Controller
    }
 
    function marcarConsultaSelecionarPaciente($msg=null)
-    {
-        //retonando todos os pacientes
-        $filter = "";
-        if (isset($_GET['filtro'])) {
-            $filter = $_GET['filtro'];
-        }
-        $lista = Paciente::
-        join('users', 'users.id', '=', 'pacientes.usuario_id')->
-        select('pacientes.id', 'nome','users.data_nascimento','users.documento as cpf')      
-        ->paginate(8);
-        return view('userClinica/marcarConsulta/selecionarPacientePasso1', ['lista' => $lista, 'msg' => $msg,'filtro' => $filter]);
+    {      
+        $lista = Paciente::orderBy('nome', 'asc')->paginate(8);  
+        return view('userClinica/marcarConsulta/selecionarPacientePasso1', ['lista' => $lista, 'msg' => $msg,'filtro' => null,'cpf' => null]);
     }
 
     function pesquisarPacienteMarcarconsulta()
@@ -337,14 +334,20 @@ class ClinicaController extends Controller
         if (isset($_GET['filtro'])) {
             $filtro = $_GET['filtro'];
         }
-        $lista = Paciente::where('nome', 'like', "%" . $filtro . "%")
-            ->orderBy('nome', 'asc')
-            ->select('id', 'nome','data_nascimento')->paginate(8);
+         //retonando a lista de pacientes
+         $cpf = "";
+         if (isset($_GET['cpf'])) {
+             $cpf = $_GET['cpf'];
+         }
+
+        $lista = Paciente::where('nome', 'like', "%" . $filtro . "%")->
+        where('cpf', 'like', "%" . $cpf . "%")
+            ->orderBy('nome', 'asc')->paginate(8);         
         $msg = null;
         if ($lista->isEmpty()) {
-            $msg = ['valor' => trans("Não foi encontrado nenhum paciente com o nome digitado!"), 'tipo' => 'primary'];
+            $msg = ['valor' => trans("Não foi encontrado nenhum paciente!"), 'tipo' => 'primary'];
         }
-        return view('userClinica/marcarConsulta/selecionarPacientePasso1', ['lista' => $lista, 'filtro' => $filtro, 'msg' => $msg]);
+        return view('userClinica/marcarConsulta/selecionarPacientePasso1', ['lista' => $lista, 'filtro' => $filtro, 'cpf' => $cpf,'msg' => $msg]);
    }
 
    function marcarConsultaSelecionarEspecialidade($paciente_id)
@@ -358,7 +361,6 @@ class ClinicaController extends Controller
         select('especialidades.id', 'especialidades.descricao')->paginate(8);       
         return view('userClinica/marcarConsulta/selecionarEspecialidadePasso2', ['lista' => $lista, 'paciente_id' => $paciente_id]);
    }
-
    
    function marcarConsultaSelecionarEspecialista($paciente_id, $especialidade_id)
    {
@@ -406,36 +408,108 @@ class ClinicaController extends Controller
     }
 
 
-     //lista dos pacientes que fez alguma consulta com o especialista logado
+     //lista dos pacientes que fez alguma consulta com a clinica logada
    function listaPacientes($msg = null)
    {
       $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
-      $filter = "";
-      if (isset($_GET['filtro'])) {
-         $filter = $_GET['filtro'];
-      }
-
+     
       $statusConsulta = "Finalizada";
-
       // Obter pacientes e o número de consultas que cada um teve
-      $lista = Paciente::select('pacientes.id', 'pacientes.nome as nome_paciente', DB::raw('COUNT(consultas.id) as total_consultas'))
+      $lista = Paciente::select('pacientes.id', 'pacientes.nome as nome_paciente',
+      'pacientes.cpf', 'pacientes.data_nascimento', 
+      DB::raw('COUNT(consultas.id) as total_consultas'))
          ->leftJoin('consultas', 'pacientes.id', '=', 'consultas.paciente_id')
          ->where('status', '=', $statusConsulta)
          ->where('clinica_id', '=', $clinica->id)
-         ->groupBy('pacientes.id', 'pacientes.nome')
+         ->groupBy('pacientes.id', 'pacientes.nome','pacientes.cpf','pacientes.data_nascimento')
          ->paginate(8);
-
-
 
       return view('userClinica/listPacientes', [
          'lista' => $lista,
-         'filtro' => $filter,
-         'clinica' => $clinica,
+         'filtro' => null,        
          'msg' => $msg
       ]);
-
    }
 
+   //lista dos pacientes que fez alguma consulta com a clinica logada
+   function listaPacientesPesquisar($msg = null)
+   {
+      $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
+      
+
+      //retonando a lista de pacientes
+      $filtro = "";
+      if (isset($_GET['filtro'])) {
+         $filtro = $_GET['filtro'];
+      }
+      //retonando a lista de pacientes
+      $cpf = "";
+      if (isset($_GET['cpf'])) {
+            $cpf = $_GET['cpf'];
+      }
+
+      $statusConsulta = "Finalizada";
+      // Obter pacientes e o número de consultas que cada um teve
+      $lista = Paciente::select('pacientes.id', 'pacientes.nome as nome_paciente',
+      'pacientes.cpf', 'pacientes.data_nascimento', 
+      DB::raw('COUNT(consultas.id) as total_consultas'))
+         ->leftJoin('consultas', 'pacientes.id', '=', 'consultas.paciente_id')
+         ->where('status', '=', $statusConsulta)
+         ->where('clinica_id', '=', $clinica->id)
+         ->where('nome', 'like', "%" . $filtro . "%")
+         -> where('cpf', 'like', "%" . $cpf . "%")
+         ->groupBy('pacientes.id', 'pacientes.nome','pacientes.cpf','pacientes.data_nascimento')
+         ->paginate(8);
+
+         $msg = null;
+         if ($lista->isEmpty()) {
+               $msg = ['valor' => trans("Não foi encontrado nenhum paciente!"), 'tipo' => 'primary'];
+         }
+      return view('userClinica/listPacientes', [
+         'lista' => $lista,
+         'filtro' => $filtro, 
+         'cpf' => $cpf,       
+         'msg' => $msg
+      ]);
+   }
+
+   
+   function canelarconsultaViaClinica(Request $request)
+   {  
+   // dd($request);
+    //ver a questao financeira
+    $consultaCancelada = Consulta::find($request->consulta_id);
+
+    $dataConsultaCancelada = Carbon::parse($consultaCancelada->horario_agendado);
+    $dataAtual = Carbon::now();   
+    // Verifica se a data da consulta é maior que a data atual para poder duplicar
+    if ($dataConsultaCancelada->gt($dataAtual)) {      
+      $consultaNova = $consultaCancelada->replicate();
+      $consultaNova->status="Disponível";
+      $consultaNova->isPago= false;
+      $consultaNova->forma_pagamento=null;
+      $consultaNova->paciente_id = null;
+      $consultaNova->save();  
+    }
+    
+    $consultaCancelada->status="Cancelada";
+    $consultaCancelada->motivocancelamento= $request->motivocancelamento;
+    $consultaCancelada->id_usuario_cancelou =  Auth::user()->id;
+    $consultaCancelada->save();
+    $msg = ['valor' => trans("Consulta cancelada com sucesso!"), 'tipo' => 'success'];
+
+    $request->merge([
+      'nomepaciente' => $request->nomepacienteM,
+      'cpf' => $request->cpfM,
+      'inicio_data' => $request->inicio_dataM,
+      'final_data' => $request->final_dataM,
+      'especialista_id' =>  $request->especialista_idM
+    ]);   
+
+   
+    $consultaController = new ConsultaController();
+    return  $consultaController->listConsultaAgendadaUserClinicaPesquisar($request,$msg);
+   }
    
 }
    

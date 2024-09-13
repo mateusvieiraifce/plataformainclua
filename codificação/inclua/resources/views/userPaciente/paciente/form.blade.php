@@ -43,7 +43,7 @@
                                 </label>
                                 <div class="input-group {{ $errors->has('data_nascimento') ? 'has-danger' : '' }}">
                                     <input type="date" id="data_nascimento" class="form-control {{ $errors->has('data_nascimento') ? 'is-invalid' : '' }}"
-                                        name="data_nascimento" value="{{ old('data_nascimento') }}" >
+                                        name="data_nascimento" value="{{ old('data_nascimento') }}" required>
                                     @include('alerts.feedback', ['field' => 'data_nascimento'])
                                 </div>
                             </div>
@@ -54,7 +54,7 @@
                                     Gênero <span class="required">*</span>
                                 </label>
                                 <div class="input-group {{ $errors->has('sexo') ? 'has-danger' : '' }}">
-                                    <select name="sexo" class="form-control {{ $errors->has('sexo') ? 'is-invalid' : '' }}">
+                                    <select name="sexo" class="form-control {{ $errors->has('sexo') ? 'is-invalid' : '' }}" required>
                                         <option value=""></option>
                                         <option value="F" @if (old('sexo') == 'F') selected @endif>Feminino</option>
                                         <option value="M" @if (old('sexo') == 'M') selected @endif>Masculino</option>

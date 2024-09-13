@@ -1,4 +1,4 @@
-@extends('layouts.app', ['page' => __('Marcar Consulta'),'exibirPesquisa' => false, 'pageSlug' => 'marcarconsulta', 'class' => 'especialidade'])
+@extends('layouts.app', ['page' => __('Agenda do Especialista'),'exibirPesquisa' => false, 'pageSlug' => 'especialistaclinica', 'class' => 'especialista'])
 @section('title', 'Marcar Consulta')
 @section('content')
 
@@ -54,72 +54,6 @@
     }
 </style>
 
- <!-- Modal confirmar consulta-->
- <div class="modal" id="modalFinalizarConsulta" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-            <h3 class="modal-title">
-                <label style="color:black; font-size: 20px;">Revise sua consulta</label>
-            </h3>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            </div>
-            <div class="modal-body">
-            <div class="container">
-                <!--aqui a rota de salvar de confirmar consulta -->
-                <form method="post" action="{{route('clinica.marcarConsultaFinalizar')}}">
-                    @csrf
-                    <div class="row">
-                        <div class="col-md-12">
-                        <div class="form-group" style=" border-bottom: 1px solid black; ">
-                            <label style="color:black; font-size: 15px;"><strong>Paciente:</strong> {{$paciente->nome}}</label>
-                        </div>
-                        </div>
-                        <div class="col-md-12 px-8">
-                        <div class="form-group" style="border-bottom: 1px solid black; ">
-                            <label style="color:black; font-size: 15px; "><strong>Data:</strong></label>
-                            <label id="diaModal" style="color:black; font-size: 15px;"></label>
-                        </div>
-                        </div>
-                        <div class="col-md-12 px-8">
-                        <div class="form-group" style=" border-bottom: 1px solid black; ">
-                        <label style="color:black; font-size: 15px; "><strong>Hora:</strong></label>
-                            <label id="horarioModal" style="color:black; font-size: 15px;"> </label>
-                        </div>
-                        </div>
-                        <div class="col-md-12 px-8">
-                        <div class="form-group" style="border-bottom: 1px solid black;">
-                            <label style="color:black; font-size: 15px;"><strong>Área de atuação:</strong> {{$especialidade->descricao}}</label>
-                        </div>
-                        </div>
-                        <div class="col-md-12 px-8">
-                        <div class="form-group"  style=" border-bottom: 1px solid black;">
-                            <label style="color:black; font-size: 15px;"><strong>Especialista:</strong> {{$especialista->nome}}</label>
-                        </div>
-                        </div>
-                        <div class="col-md-12 px-8">
-                        <div class="form-group"  style=" border-bottom: 1px solid black; ">
-                            <label style="color:black; font-size: 15px;"><strong>Clínica:</strong> {{$clinica->nome}}</label>
-                        </div>
-                        </div>
-                    </div>
-                    <input type="hidden" id="consulta_id" name="consulta_id">
-                    <input type="hidden" id="paciente_id" value=" {{$paciente->id}}" name="paciente_id">
-            </div>
-
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-reply"></i>
-                    Voltar
-                </button>
-                <button type="submit" class="btn btn-success">Confirmar consulta</button>
-            </div>
-            </form>
-            </div>
-        </div>
-    </div>
-</div>
 
 <div class="row">
     <div class="col-lg-12 col-md-12">
@@ -152,7 +86,7 @@
 
             </div>
             <div class="col-2">
-                <a href="{{route('clinica.marcarConsultaSelecionarEspecialista',[$paciente->id,$especialista->especialidade_id])}}" class="btn btn-primary"><i class="fa fa-reply"></i>
+                <a href="{{route('clinica.marcarConsultaSelecionarEspecialista',[1,$especialista->especialidade_id])}}" class="btn btn-primary"><i class="fa fa-reply"></i>
                     Voltar</a>
             </div>
         </div>

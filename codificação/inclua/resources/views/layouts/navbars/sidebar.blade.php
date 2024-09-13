@@ -106,18 +106,7 @@
                         </ul>
                     </div>
 
-                    <div class="collapse" id="configclinica">
-                        <ul class="nav pl-4">
-                        <li @if ($pageSlug=='users' ) class="active " @endif>
-                             <a href="#">
-                        <i class="tim-icons icon-key-25"></i>
-                        <p>{{ __('Usuários') }}</p>
-                    </a>
-                </li>
-                        </ul>
-                    </div>
-
-
+                   
 
                    
 
@@ -344,7 +333,15 @@
                 </li>
 
                 <li @if ($pageSlug=='marcarconsulta' ) class="active " @endif>
-                    <a href="{{route('paciente.marcarconsulta')}}">
+                    <!-- caso o paciente nao possua dependete abrir loga a tela de selecionar clinica/especialista-->
+                    <?php
+                      $pacientes = App\Models\Paciente::where('usuario_id', '=', Auth::user()->id)->get();                    
+                   ?>  
+                     @if(sizeof($pacientes) > 1)
+                       <a href="{{route('paciente.marcarconsultaSelecionarPaciente')}}">
+                    @else                       
+                        <a href="{{route('paciente.marcarconsulta')}}">
+                    @endif
                         <i class="tim-icons icon-calendar-60"></i>
                         <p>{{ __('Marcação de consultas') }}</p>
                     </a>

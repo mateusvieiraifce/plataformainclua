@@ -15,7 +15,7 @@ class AlterTablePacientesAddCpf extends Migration
     {
         Schema::table('pacientes', function (Blueprint $table) {
             $table->string('cpf')->after('nome')->unique();
-            $table->boolean('responsavel')->after('cpf')->default(false);
+            $table->boolean('responsavel')->after('data_nascimento')->default(false);
         });
     }
 
@@ -27,7 +27,7 @@ class AlterTablePacientesAddCpf extends Migration
     public function down()
     {
         Schema::table('pacientes', function (Blueprint $table) {
-            $table->dropColumn('cpf');
+            $table->dropColumn('data_nascimento');
             $table->dropColumn('responsavel');
         });
     }

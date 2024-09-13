@@ -16369,17 +16369,17 @@ code {
     border-left: 0 none;
 }
 
-/* 
-.input-group .form-control:first-child,
+
+.login-page .input-group .form-control:first-child,
 .input-group-btn:first-child>.dropdown-toggle,
 .input-group-btn:last-child>.btn:not(:last-child):not(.dropdown-toggle) {
     border-right: 0 none;
 }
-.input-group .form-control:last-child,
+.login-page .input-group .form-control:last-child,
 .input-group-btn:last-child>.dropdown-toggle,
 .input-group-btn:first-child>.btn:not(:first-child) {
     border-left: 0 none;
-} */
+}
 
 .form-control[disabled],
 .form-control[readonly],

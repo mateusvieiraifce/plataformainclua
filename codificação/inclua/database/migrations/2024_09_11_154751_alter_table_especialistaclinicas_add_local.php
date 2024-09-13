@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AlterTablePacientes extends Migration
+class AlterTableEspecialistaClinicasAddLocal extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,8 @@ class AlterTablePacientes extends Migration
      */
     public function up()
     {
-        Schema::table('pacientes', function (Blueprint $table) {
-            $table->datetime('data_nascimento')->nullable($value = true)->after('usuario_id');
-            $table->string('sexo', 1)->nullable()->after('usuario_id');
+        Schema::table('especialistaclinicas', function (Blueprint $table) {
+            $table->string('local_consulta')->after('especialista_id')->nullable();
         });
     }
 
@@ -26,8 +25,8 @@ class AlterTablePacientes extends Migration
      */
     public function down()
     {
-        Schema::table('pacientes', function (Blueprint $table) {
-            $table->dropColumn('sexo');
+        Schema::table('especialistaclinicas', function (Blueprint $table) {
+            $table->dropColumn('local_consulta');
         });
     }
 }

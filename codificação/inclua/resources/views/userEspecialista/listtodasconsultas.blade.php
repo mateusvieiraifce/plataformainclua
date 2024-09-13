@@ -44,7 +44,7 @@
                                  <div class="form-group">
                                     <label style="color: white">&nbsp;  Status da consulta:</label>                                    
                                     <select style="border-color: #C0C0C0"  class="form-control" id="status" name="status" required>
-                                       <option style="color: #111111" value="" @if($status == "Todos") selected @endif>Todos</option>
+                                       <option style="color: #111111" value="Todos" @if($status == "Todos") selected @endif>Todos</option>
                                        <option style="color: #111111" value="Realizada" @if($status == "Realizada") selected @endif>Realizada</option>
                                           <option style="color: #111111" value="Disponível" @if($status == "Disponível") selected @endif>Disponível</option>
                                         <option  style="color: #111111"value="Cancelada" @if($status == "Cancelada") selected @endif>Cancelada</option>

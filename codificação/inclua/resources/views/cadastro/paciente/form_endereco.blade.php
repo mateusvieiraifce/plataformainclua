@@ -73,7 +73,7 @@
                                 Bairro <span class="required">*</span>
                             </label>
                             <div class="input-group {{ $errors->has('bairro') ? ' has-danger' : '' }} input-medium">
-                                <input type="text" id="bairro" class="form-control border-full only-numbers {{ $errors->has('bairro') ? ' is-invalid' : '' }}"
+                                <input type="text" id="bairro" class="form-control border-full {{ $errors->has('bairro') ? ' is-invalid' : '' }}"
                                     name="bairro" placeholder="Bairro" value="{{ (isset($user) ? $user->bairro : null) ?? old('bairro') }}">
                                 @include('alerts.feedback', ['field' => 'bairro'])
                             </div>
@@ -84,7 +84,7 @@
                                 Complemento
                             </label>
                             <div class="input-group {{ $errors->has('complemento') ? ' has-danger' : '' }} input-medium">
-                                <input type="text" id="complemento" class="form-control border-full only-numbers {{ $errors->has('complemento') ? ' is-invalid' : '' }}"
+                                <input type="text" id="complemento" class="form-control border-full {{ $errors->has('complemento') ? ' is-invalid' : '' }}"
                                     name="complemento" placeholder="Complemento" value="{{ (isset($user) ? $user->complemento : null) ?? old('complemento') }}">
                                 @include('alerts.feedback', ['field' => 'complemento'])
                             </div>

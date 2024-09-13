@@ -94,6 +94,23 @@
                                 @include('alerts.feedback', ['field' => 'numero_atendimento_social_mensal'])
                             </div>
                         </div>
+                        
+                        <div class="form-group">
+                            <label for="anamnese_obrigatoria">
+                                A Anamnese será obrigatória? <span class="required">*</span>
+                            </label>
+                            <div class="input-group input-medium{{ $errors->has('anamnese_obrigatoria') ? ' has-danger' : '' }}">
+                                <select name="anamnese_obrigatoria" class="form-control border-full {{ $errors->has('anamnese_obrigatoria') ? 'is-invalid' : '' }}" required>
+                                    <option value="N" @if (isset($clinica) && $clinica->anamnese_obrigatoria ==  "N" || old('anamnese_obrigatoria') == "N") selected @endif selected>
+                                        Não
+                                    </option>
+                                    <option value="S" @if (isset($clinica) && $clinica->anamnese_obrigatoria ==  "S" || old('anamnese_obrigatoria') == "S") selected @endif>
+                                        Sim
+                                    </option>
+                                </select>
+                                @include('alerts.feedback', ['field' => 'anamnese_obrigatoria'])
+                            </div>
+                        </div>
 
                         <div class="input-group{{ $errors->has('consentimento') ? ' has-danger' : '' }}">
                             <div class="form-check text-left">
