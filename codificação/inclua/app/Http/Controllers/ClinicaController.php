@@ -510,6 +510,12 @@ class ClinicaController extends Controller
     $consultaController = new ConsultaController();
     return  $consultaController->listConsultaAgendadaUserClinicaPesquisar($request,$msg);
    }
+
+
+   function formRelatorioEspecialista()
+   {
+      
+   }
    
 }
    
