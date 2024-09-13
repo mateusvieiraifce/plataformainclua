@@ -161,8 +161,7 @@ class PacienteController extends Controller
         $lista = Consulta::join('especialistas', 'especialistas.id', '=', 'consultas.especialista_id')
             ->join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')
             ->join('especialidades', 'especialidades.id', '=', 'especialistas.especialidade_id')
-            ->join('pacientes', 'pacientes.id', '=', 'consultas.paciente_id')
-            ->where('pacientes.usuario_id', '=', $paciente->usuario_id)
+            ->where('paciente_id', '=', $paciente->id)
             ->where('status', '=', $statusConsulta)
             ->select(
         'consultas.id',
@@ -378,7 +377,7 @@ class PacienteController extends Controller
 
         //VERIFICAR SE A CLINICA REQUER A ANAMNESE, SE SIM, VERIFIQUE SE AINDA NÃO FOI REALIZADA PELO PACIENTE
         if ($clinica->anamnese_obrigatoria == "S" && !isset($anamnese)) {
-            $msg = ['valor' => trans("Consulta marcada com sucesso! Realizer agora a anamnese com calma."), 'tipo' => 'success'];
+            $msg = ['valor' => trans("Consulta marcada com sucesso! Agora  realize com calma a anamnese."), 'tipo' => 'success'];
             session()->flash('msg', $msg);
 
             return redirect()->route('anamnese.create', ['paciente_id' => $paciente->id]);
