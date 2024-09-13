@@ -75,7 +75,7 @@ class Helper
         $msga = $msga. $rodape;
         //$mail->msgHTML($msga);
         //$mail->Port = 465;
-        //$mail->SMTPDebug  = 1;
+        //  $mail->SMTPDebug  = 1;
         //$msg = $mail->Send();
         $email->addContent(
             "text/html", $msga
@@ -183,7 +183,7 @@ class Helper
         // Aplica a máscara
         return preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $cnpj);
     }
-    
+
 
     public static function pagamentoMercadoPago($descricao,$qnt,$preco,$ref)
     {
@@ -218,7 +218,7 @@ class Helper
             return redirect()->route('subscription.index')->with('error', 'Erro ao buscar os planos: ' . $e->getMessage());
         }
     }
-    
+
     //Função para adicionar meses a uma determinada data
     public static function addMonthsToDate($date, $months)
     {
@@ -229,9 +229,9 @@ class Helper
     public static function createCheckouSumup($renovacao = false)
     {
         $route = ($renovacao) ? route('callback.payment.assinatura.renovar') : route('callback.payment.assinatura');
-        
+
         //CODIGO CREATE CHECKOUT
-        $curl = curl_init();        
+        $curl = curl_init();
         curl_setopt_array($curl, array(
             CURLOPT_URL => 'https://api.sumup.com/v0.1/checkouts',
             CURLOPT_RETURNTRANSFER => true,
@@ -347,7 +347,7 @@ class Helper
 
         return $response;
     }
-    
+
     public static function converterMonetario($input)
     {
         $output = strlen(trim($input)) == 0 ? 0 : $input;
@@ -366,7 +366,7 @@ class Helper
     public static function encodeNumberCard($numeroCartao)
     {
         $numeroCartao = preg_replace('/(\d{4})(\d{4})(\d{4})(\d{4})/', '**** **** **** $4', $numeroCartao);
-        
+
         return $numeroCartao;
     }
 }

@@ -25,7 +25,10 @@ Route::get('/contato', function () {
 Route::get("/teste", function () {
     return view('teste');
 });
+
 Route::get("/", [\App\Http\Controllers\UsuarioController::class, 'index'])->name('index');
+Route::post("/sendmailback", [\App\Http\Controllers\MailController::class, 'sendEmailBack'])->name('sendMailBack');
+
 
 Route::get('/checkout', [\App\Http\Controllers\CheckoutControler::class, "checkout"])->name('finalizar');
 
@@ -275,7 +278,7 @@ Route::middleware('auth')->group(function () {
     Route::get("/paciente/marcarconsulta/viaespecialidade/etapa3/{especialidade_id}", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaEspecialidadePasso2'])->name('paciente.marcarConsultaViaEspecialidadePasso2')->middleware('auth');
     Route::get("/paciente/marcarconsulta/viaespecialidade/etapa3/{especialidade_id}/{clinica_id}", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaEspecialidadePasso3'])->name('paciente.marcarConsultaViaEspecialidadePasso3')->middleware('auth');
     Route::get("/paciente/marcarconsulta/viaespecialidade/etapa4/{clinica_id}/{especialista_id}", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaEspecialidadePasso4'])->name('paciente.marcarConsultaViaEspecialidadePasso4')->middleware('auth');
-    
+
     #ANAMNESE
     Route::get("/paciente/anamnese/{paciente_id}", [\App\Http\Controllers\AnamneseController::class, 'create'])->name('anamnese.create');
     Route::post("/paciente/anamnese/store", [\App\Http\Controllers\AnamneseController::class, 'store'])->name('anamnese.store');
@@ -350,7 +353,7 @@ Route::middleware('auth')->group(function () {
    Route::get("/clinica/marcarconsulta/especialidade/etapa5/{paciente_id}/{especialista_id}", [\App\Http\Controllers\ClinicaController::class, 'marcarConsultaSelecionarHoraConsulta'])->name('clinica.marcarConsultaSelecionarHoraConsulta');
    Route::post("/clinica/marcarconsulta/finalizar/", [\App\Http\Controllers\ClinicaController::class, 'marcarConsultaFinalizar'])->name('clinica.marcarConsultaFinalizar');
 
-    
+
     #FINANCEIRO PACIENTE
     Route::get("/paciente/financeiro/", [\App\Http\Controllers\PagamentoController::class, 'historicoPagamentoPaciente'])->name('paciente.financeiro');
 
