@@ -377,15 +377,15 @@ class ConsultaController extends Controller
       where('clinica_id', '=', $clinica->id)->
       whereBetween('horario_agendado', [$inicioDoDia, $fimDoDia])->
       select('consultas.id', 'status', 'horario_agendado', 'especialistas.nome as nome_especialista', 
-      'pacientes.nome as nome_paciente')->orderBy('horario_agendado', 'asc')->get();
-
+      'pacientes.nome as nome_paciente')->orderBy('horario_agendado', 'asc')
+      ->paginate(10);
       return view('userClinica/listConsulta', [
          'lista' => $lista,
          'especialistas' => $especialistas,
-         'filtro' => $filter,
+         'nomepaciente' => $filter,
          'clinica' => $clinica,
-         'status' => "Todos",
-         'especialistaSelecionado_id' => "Todos",
+         'status' => "todos",
+         'especialistaSelecionado_id' => "todos",
          'msg' => $msg,
          'inicio_data' => $inicioDoDia->format('Y-m-d'),
          'final_data' => $fimDoDia->format('Y-m-d')
@@ -394,7 +394,7 @@ class ConsultaController extends Controller
 
    function listConsultaporClinicaPesquisar(Request $request, $msg = null)
    {     
-     
+    //  dd($request);
       $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
       $filter = "";
       if (isset($_GET['filtro'])) {
@@ -426,7 +426,7 @@ class ConsultaController extends Controller
          where('pacientes.nome', 'like', '%' . $request->nomepaciente . "%")->
          whereBetween('horario_agendado', [$inicioDoDiaFiltro, $fimDoDiaFiltro])->
          select('consultas.id', 'status', 'horario_agendado', 'especialistas.nome as nome_especialista', 
-         'pacientes.nome as nome_paciente')->orderBy('horario_agendado', 'asc')->get();
+         'pacientes.nome as nome_paciente')->orderBy('horario_agendado', 'asc')->paginate(10);
       } else {
          $lista = Consulta::join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')->
          join('pacientes', 'pacientes.id', '=', 'consultas.paciente_id')->
@@ -437,7 +437,7 @@ class ConsultaController extends Controller
          where('especialista_id', $request->especialista_id)->
          whereBetween('horario_agendado', [$inicioDoDiaFiltro, $fimDoDiaFiltro])->
          select('consultas.id', 'status', 'horario_agendado', 'especialistas.nome as nome_especialista', 
-         'pacientes.nome as nome_paciente')->orderBy('horario_agendado', 'asc')->get();
+         'pacientes.nome as nome_paciente')->orderBy('horario_agendado', 'asc')->paginate(10);
       }
 
     // dd($request, $lista);
