@@ -7,6 +7,8 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Clinica;
+use App\Models\Consulta;
+use Carbon\Carbon;     
 
 class EspecialistaclinicaController extends Controller
 {
@@ -24,19 +26,19 @@ class EspecialistaclinicaController extends Controller
       select('especialistaclinicas.id','especialistas.nome', 'especialidades.descricao as especialidade')->
       paginate(8);
       $clinica = clinica::find($clinica_id);
-      return view('especialistaclinica/list', ['lista' => $lista, 'filtro' => $filter, 'clinica' => $clinica, 'msg' => $msg]);
+      return view('userClinica/cadVinculoEspecialista/list', ['lista' => $lista, 'filtro' => $filter, 'clinica' => $clinica, 'msg' => $msg]);
    }
    function new($clinica_id)
    {
       $clinica = Clinica::find($clinica_id);
-      return view('especialistaclinica/form', ['entidade' => new Especialistaclinica(), 'clinica' => $clinica, 'especialistas'=>Especialista::all()]);
+      return view('userClinica/cadVinculoEspecialista/form', ['entidade' => new Especialistaclinica(), 'clinica' => $clinica, 'especialistas'=>Especialista::all()]);
    }
    function search(Request $request, $clinica_id)
    {
       $clinica = Clinica::find($clinica_id);
       $filter = $request->query('filtro');
       $lista = Especialistaclinica::where('nome', 'like', "%" . $request->filtro . "%")->orderBy('id', 'desc')->paginate(8);
-      return view('especialistaclinica/list', ['lista' => $lista, 'filtro' => $request->filtro, 'clinica' => $clinica])->with('filter', $filter);
+      return view('userClinica/cadVinculoEspecialista/list', ['lista' => $lista, 'filtro' => $request->filtro, 'clinica' => $clinica])->with('filter', $filter);
    }
    function save(Request $request)
    {
@@ -77,7 +79,7 @@ class EspecialistaclinicaController extends Controller
       $entidade = Especialistaclinica::find($id);
       $clinica_id = $entidade->clinica_id;
       $clinica = Clinica::find($clinica_id);
-      return view('especialistaclinica/form', ['entidade' => $entidade, 'clinica' => $clinica]);
+      return view('userClinica/cadVinculoEspecialista/form', ['entidade' => $entidade, 'clinica' => $clinica]);
    }
 
    function clinicasdoespecilista($clinica_id, $msg = null)
@@ -96,7 +98,28 @@ class EspecialistaclinicaController extends Controller
       orderBy('clinicas.nome', 'asc')->
       select('clinicas.id','clinicas.nome')->
       paginate(8);
-      return view('especialistaclinica/listclinicaporespecialista', ['lista' => $lista, 'filtro' => $filter, 'especialista' => $especialista, 'msg' => $msg]);
+      return view('userClinica/cadVinculoEspecialista/listclinicaporespecialista', ['lista' => $lista, 'filtro' => $filter, 'especialista' => $especialista, 'msg' => $msg]);
+   }
+
+   function agendaEspecialista($especialista_id)
+   {
+       //retornar todos a agenda(consultas) do especialista vinculados a clinica a partir da data de hoje
+       //retorna todas as consultas, exceto as finalizadas e canceladas
+       $especialista = Especialista::find($especialista_id);
+       $clinica =  Clinica::where('usuario_id', '=', Auth::user()->id)->first();   
+       
+       $inicioDoDia = Carbon::today()->startOfDay();
+       $statusConsulta = "Disponível";
+
+       $lista = Consulta::where('especialista_id', '=', $especialista_id)->
+       where('clinica_id', '=', $clinica->id)->
+       where('status', '=', $statusConsulta)->
+       select('consultas.id', 'horario_agendado')->
+       orderBy('horario_agendado', 'asc')->get();
+      
+       // dd($especialista,$lista);
+       return view('userClinica/cadVinculoEspecialista/agendaEspecialista',
+        ['lista' => $lista, 'especialista' => $especialista, 'clinica' => $clinica]);
    }
    
 
