@@ -25,7 +25,7 @@
                 </li>
 
                 <li @if ($pageSlug=='listconsultaporclinica' ) class="active " @endif>
-                    <a href="{{route('clinica.consultas')}}"> 
+                    <a href="{{route('consulta.listConsultaporClinica')}}"> 
                         <i class="tim-icons icon-bullet-list-67"></i>
                         <p>{{ __('Histórico de Consultas') }}</p>
                     </a>

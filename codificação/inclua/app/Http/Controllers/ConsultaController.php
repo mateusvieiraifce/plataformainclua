@@ -109,13 +109,13 @@ class ConsultaController extends Controller
    {
       $especialista_id = $request->especialista_id;
 
-
       $startDate = Carbon::parse($request->data_inicio);
       $endDate = Carbon::parse($request->data_fim);
 
       //  dd($request);
       // Loop através do intervalo de datas
       $qtdConsutasCriadas = 1;
+      $tempoDuracaoConsulta = $request->duracao_media;
       for ($date = $startDate; $date->lte($endDate); $date->addDay()) {
          // dayOfWeek retorna 0 a 6 para para o dia da semana            
          if (in_array($date->dayOfWeek, $request->dia)) {
@@ -131,7 +131,7 @@ class ConsultaController extends Controller
             $termino = Carbon::createFromTimeString($date->format('Y-m-d') . ' ' . $hora_fim);
             //  $inicio->modify("+$request->duracao_media minutes");
             //add tempo de intervalo entre consulta
-            $request->duracao_media = $request->duracao_media + $request->intervalo_consulta;
+            $request->duracao_media = $tempoDuracaoConsulta + $request->intervalo_consulta;
             //  dd( $request->duracao_media);
             $termino->modify("-$request->duracao_media minutes");
             while ($termino >= $inicio) {
@@ -377,15 +377,15 @@ class ConsultaController extends Controller
       where('clinica_id', '=', $clinica->id)->
       whereBetween('horario_agendado', [$inicioDoDia, $fimDoDia])->
       select('consultas.id', 'status', 'horario_agendado', 'especialistas.nome as nome_especialista', 
-      'pacientes.nome as nome_paciente')->orderBy('horario_agendado', 'asc')->get();
-
+      'pacientes.nome as nome_paciente')->orderBy('horario_agendado', 'asc')
+      ->paginate(10);
       return view('userClinica/listConsulta', [
          'lista' => $lista,
          'especialistas' => $especialistas,
-         'filtro' => $filter,
+         'nomepaciente' => $filter,
          'clinica' => $clinica,
-         'status' => "Todos",
-         'especialistaSelecionado_id' => "Todos",
+         'status' => "todos",
+         'especialistaSelecionado_id' => "todos",
          'msg' => $msg,
          'inicio_data' => $inicioDoDia->format('Y-m-d'),
          'final_data' => $fimDoDia->format('Y-m-d')
@@ -394,7 +394,7 @@ class ConsultaController extends Controller
 
    function listConsultaporClinicaPesquisar(Request $request, $msg = null)
    {     
-     
+    //  dd($request);
       $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
       $filter = "";
       if (isset($_GET['filtro'])) {
@@ -426,7 +426,7 @@ class ConsultaController extends Controller
          where('pacientes.nome', 'like', '%' . $request->nomepaciente . "%")->
          whereBetween('horario_agendado', [$inicioDoDiaFiltro, $fimDoDiaFiltro])->
          select('consultas.id', 'status', 'horario_agendado', 'especialistas.nome as nome_especialista', 
-         'pacientes.nome as nome_paciente')->orderBy('horario_agendado', 'asc')->get();
+         'pacientes.nome as nome_paciente')->orderBy('horario_agendado', 'asc')->paginate(10);
       } else {
          $lista = Consulta::join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')->
          join('pacientes', 'pacientes.id', '=', 'consultas.paciente_id')->
@@ -437,7 +437,7 @@ class ConsultaController extends Controller
          where('especialista_id', $request->especialista_id)->
          whereBetween('horario_agendado', [$inicioDoDiaFiltro, $fimDoDiaFiltro])->
          select('consultas.id', 'status', 'horario_agendado', 'especialistas.nome as nome_especialista', 
-         'pacientes.nome as nome_paciente')->orderBy('horario_agendado', 'asc')->get();
+         'pacientes.nome as nome_paciente')->orderBy('horario_agendado', 'asc')->paginate(10);
       }
 
     // dd($request, $lista);
