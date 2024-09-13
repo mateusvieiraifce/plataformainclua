@@ -109,13 +109,13 @@ class ConsultaController extends Controller
    {
       $especialista_id = $request->especialista_id;
 
-
       $startDate = Carbon::parse($request->data_inicio);
       $endDate = Carbon::parse($request->data_fim);
 
       //  dd($request);
       // Loop através do intervalo de datas
       $qtdConsutasCriadas = 1;
+      $tempoDuracaoConsulta = $request->duracao_media;
       for ($date = $startDate; $date->lte($endDate); $date->addDay()) {
          // dayOfWeek retorna 0 a 6 para para o dia da semana            
          if (in_array($date->dayOfWeek, $request->dia)) {
@@ -131,7 +131,7 @@ class ConsultaController extends Controller
             $termino = Carbon::createFromTimeString($date->format('Y-m-d') . ' ' . $hora_fim);
             //  $inicio->modify("+$request->duracao_media minutes");
             //add tempo de intervalo entre consulta
-            $request->duracao_media = $request->duracao_media + $request->intervalo_consulta;
+            $request->duracao_media = $tempoDuracaoConsulta + $request->intervalo_consulta;
             //  dd( $request->duracao_media);
             $termino->modify("-$request->duracao_media minutes");
             while ($termino >= $inicio) {
