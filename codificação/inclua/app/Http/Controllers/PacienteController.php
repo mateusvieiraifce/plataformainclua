@@ -215,7 +215,7 @@ class PacienteController extends Controller
    {
     $user = Auth::user();
     if ($user->tipo_user == "P") {
-        $pacientes = Paciente::where('usuario_id', $user->id)->get();
+        $pacientes = Paciente::where('usuario_id', $user->id)->paginate(8);
 
         return view('userPaciente/marcarconsulta/marcarConsultaEscolherPaciente', ['pacientes' => $pacientes]);
     }
@@ -297,9 +297,12 @@ class PacienteController extends Controller
         if (isset($_GET['filtro'])) {
             $filter = $_GET['filtro'];
         }
-        $lista = Clinica::where('ativo', '1')->
-        orderBy('nome', 'asc')
-            ->select('clinicas.id', 'nome')->paginate(8);
+
+        $lista = Clinica::where('ativo', '1')
+            ->orderBy('nome', 'asc')
+            ->select('clinicas.id', 'nome')
+            ->paginate(8);
+
         return view('userPaciente/marcarConsultaViaClinicaPasso1', ['lista' => $lista, 'filtro' => $filter]);
     }
 
@@ -323,14 +326,25 @@ class PacienteController extends Controller
     function marcarConsultaViaClinicaPasso2($clinica_id)
     {
         //todas as especialidades que eh vinculado a clinica
-        $lista = Especialidadeclinica::join('especialidades', 'especialidades.id', '=', 'especialidadeclinicas.especialidade_id')->where('clinica_id', $clinica_id)->orderBy('especialidades.descricao', 'asc')->select('especialidades.id', 'especialidades.descricao')->paginate(8);
+        $lista = Especialidadeclinica::join('especialidades', 'especialidades.id', '=', 'especialidadeclinicas.especialidade_id')
+            ->where('clinica_id', $clinica_id)
+            ->orderBy('especialidades.descricao', 'asc')
+            ->select('especialidades.id', 'especialidades.descricao')
+            ->paginate(8);
+
         return view('userPaciente/marcarConsultaViaClinicaPasso2', ['lista' => $lista, 'clinica_id' => $clinica_id]);
     }
 
     function marcarConsultaViaClinicaPasso3($clinica_id, $especialidade_id)
     {
         //retornar todos os especialista vinculados a clinica e com a especiladade selecionada
-        $lista = Especialistaclinica::join('especialistas', 'especialistas.id', '=', 'especialistaclinicas.especialista_id')->where('clinica_id', $clinica_id)->where('especialidade_id', $especialidade_id)->orderBy('especialistas.nome', 'asc')->select('especialistas.id', 'especialistas.nome')->paginate(8);
+        $lista = Especialistaclinica::join('especialistas', 'especialistas.id', '=', 'especialistaclinicas.especialista_id')
+            ->where('clinica_id', $clinica_id)
+            ->where('especialidade_id', $especialidade_id)
+            ->orderBy('especialistas.nome', 'asc')
+            ->select('especialistas.id', 'especialistas.nome')
+            ->paginate(8);
+
         return view('userPaciente/marcarConsultaViaClinicaPasso3', ['lista' => $lista, 'clinica_id' => $clinica_id]);
     }
 
@@ -350,11 +364,13 @@ class PacienteController extends Controller
         //retornar todos a agenda(consutlas) do especialista vinculados a clinica
         $statusConsulta = "Disponível";
 
-        $lista = Consulta::where('especialista_id', '=', $especialista_id)->
-        where('clinica_id', '=', $clinica_id)->where('status', '=', $statusConsulta)->
-        select('consultas.id', 'horario_agendado')->orderBy('horario_agendado', 'asc')
-        ->get();
-      // dd($especialista,$lista);
+        $lista = Consulta::where('especialista_id', '=', $especialista_id)
+            ->where('clinica_id', '=', $clinica_id)
+            ->where('status', '=', $statusConsulta)
+            ->select('consultas.id', 'horario_agendado')
+            ->orderBy('horario_agendado', 'asc')
+            ->paginate(8);
+
         return view('userPaciente/marcarConsultaViaClinicaPasso4', ['lista' => $lista, 'especialista' => $especialista, 'clinica' => $clinica, 'especialidade' => $especialidade, 'paciente' => $paciente]);
     }
 
