@@ -6,7 +6,7 @@
     <meta name="description" content="">
     <title>Plataforma Inclua</title>
     <link rel="stylesheet" href="nicepage.css" media="screen">
-    <link rel="stylesheet" href="index.css" media="screen">
+<link rel="stylesheet" href="index.css" media="screen">
     <script class="u-script" type="text/javascript" src="jquery-1.9.1.min.js" defer=""></script>
     <script class="u-script" type="text/javascript" src="nicepage.js" defer=""></script>
     <meta name="generator" content="Nicepage 6.16.8, nicepage.com">
@@ -36,7 +36,43 @@
     <meta property="og:type" content="website">
   <meta data-intl-tel-input-cdn-path="intlTelInput/">
   <style>
-      
+      #div-centralizada{
+        background-color: #ffca6e; 
+        margin-top: 20px; 
+        width: 250px; 
+        height: 48px; 
+        border-radius: 20px; 
+        display: flex; 
+        justify-content: center;
+        align-items: center;
+      }
+
+      .images-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 300px; 
+        height: 300px; 
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden; 
+      }
+
+      .images-container img {
+          position: absolute;
+          max-width: 100%;
+          max-height: 100%;
+      }
+
+      .img1 {
+          z-index: 1; 
+      }
+
+      .img2 {
+          z-index: 2;
+      }
   </style>
 
 </head>
@@ -81,14 +117,16 @@
                 <div class="u-expanded-width-xs u-list u-list-1">
                   <div class="u-repeater u-repeater-1">
                     <!-- Antigo painéis de fotos -->
-                    <p class="informativo" style="font-size: 155%; width: 425px;">Junte-a à Rede de Profissionais Dedicados ao Apoio de Crianças com Autismo</p><br>
+                    <p class="informativo" style="font-size: 25px; width: 425px;">Junte-a à Rede de Profissionais Dedicados ao Apoio de Crianças com Autismo</p><br>
                     <img src="images/Imagens-sitePrancheta-2.png" alt="Icones-Autismo">
                   </div>
                 </div>
               </div>
             </div>
-            <div class="u-container-style u-image u-layout-cell u-size-31-lg u-size-32-xl u-size-60-md u-size-60-sm u-size-60-xs u-image-1">
-              <div class="u-container-layout u-container-layout-6"></div>
+            <div class="u-container-style u-image u-layout-cell u-size-31-lg u-size-32-xl u-size-60-md u-size-60-sm u-size-60-xs">
+              <div class="u-container-layout u-container-layout-6">
+                <img style="width: 670px; height: 600px;" src="images/Imagens-sitePrancheta-1.png">
+              </div>
             </div>
           </div>
         </div>
@@ -97,20 +135,17 @@
     <section class="u-clearfix u-image u-valign-middle u-section-2" id="sec-f0a5" data-image-width="1980" data-image-height="1321">
       
       <div class="u-clearfix u-layout-wrap u-layout-wrap-1">
+
         <div class="u-layout">
           <div class="u-layout-row">
-            <div class="u-container-style u-image u-layout-cell u-size-30-lg u-size-30-xl u-size-60-md u-size-60-sm u-size-60-xs u-image-1" data-image-width="1357" data-image-height="1080">
-              <div class="u-container-layout u-valign-middle u-container-layout-1"></div>
+            <div class="u-container-style u-image u-layout-cell u-size-30-lg u-size-30-xl u-size-60-md u-size-60-sm u-size-60-xs " data-image-width="1357" data-image-height="1080">
+              <div class="u-container-layout u-valign-middle u-container-layout-1"><img src="images/Imagens-sitePrancheta-3.png" style="margin-left: 200px; width: 80%; height: 80%;"></div>
             </div>
             <div class="u-align-left u-container-align-left u-container-style u-layout-cell u-shape-rectangle u-size-30-lg u-size-30-xl u-size-60-md u-size-60-sm u-size-60-xs u-layout-cell-2">
-              <div class="u-container-layout u-valign-middle u-container-layout-2">
-                <div class="u-container-align-center u-container-style u-group u-opacity u-opacity-80 u-palette-1-light-2 u-radius-50 u-shape-round u-group-1">
-                  <div class="u-container-layout">
-                    <h6 class="u-text u-text-default u-text-palette-1-base u-text-1">Como começou</h6>
-                  </div>
-                </div>
-                <h2 class="u-align-left u-text u-text-2"> Conheça como surgiu a nossa empresa</h2>
-                <p class="u-align-left u-text u-text-4"> A Inclua surgiu a 2 anos atrás a partir de uma conversa sobre como melhorar a vida das famílias de pessoas autistas. Reconhecemos que, apesar dos avanços na área, ainda existem muitas barreiras que dificultam o acesso a um tratamento adequado para nossos filhos. Nossa missão é superar esses obstáculos e oferecer soluções para as famílias.Hoje, esse sonho é realizado graças aos profissionais que sustentam o projeto.</p>
+              <div class="u-container-layout u-valign-middle u-container-layout-2" style="padding-top: 0px;">
+                <h2 class="u-align-left u-text u-text-2" style="margin-top: 0px;">O que é a plataforma Inclua?</h2>
+
+                <p class="u-align-left u-text u-text-4" style="margin-top: 10px; font-size: 25px;">A plataforma Inclua nasceu da dor e da dificuldade que muitas famílias de pessoas com autismo  enfrentam ao buscar acompanhamento terapêutico.Reconhecemos que, apesar dos avanços na área, ainda existem muitas barreiras que dificultam o acesso a um tratamento adequado para nossos filhos. Nossa missão é superar esses obstáculos e oferecer soluções para as famílias.</p>
               </div>
             </div>
           </div>
@@ -124,12 +159,14 @@
           <div class="u-layout-row">
             <div class="u-align-left u-container-align-left u-container-style u-layout-cell u-left-cell u-shape-rectangle u-size-25-lg u-size-25-xl u-size-60-md u-size-60-sm u-size-60-xs u-layout-cell-1">
               <div class="u-container-layout u-valign-middle u-container-layout-1">
-                <h2 class="u-align-left u-text u-text-body-alt-color u-text-1">O que fazemos?</h2>
-                <p class="u-align-left u-text u-text-palette-1-light-1 u-text-2">A plataforma Inclua nasceu da dor e da dificuldade que muitas famílias de pessoas com autismo enfrentam ao buscar acompanhamento terapêutico. Frequentemente, essas famílias precisam encontrar alternativas que sejam financeiramente viáveis e acessíveis em termos de disponibilidade de atendimento. Ao percebermos essas dificuldades comuns a tantas famílias, decidimos criar a Inclua, uma plataforma pensada para oferecer um atendimento humano, acessível e inclusivo para todos.</p>
+                <p class="u-align-left u-text u-text-palette-1-light-1 u-text-2" style="font-size: 25px;">Nossa plataforma conecta famílias a profissionais qualificados, como você. Oferecemos recursos de gestão e acompanhamento, e simplificamos a busca por suporte personalizado. Com uma interface intuitiva e funcionalidades completas, estamos aqui para tornar essa jornada mais fácil e eficiente para todos.</p>
+                <div id="div-centralizada" style="font-size: 18px;"><a href="" style="color: #260556;">Quero explorar o Inclua</a></div>
               </div>
             </div>
-            <div class="u-align-left u-container-align-left u-container-style u-image u-layout-cell u-right-cell u-size-35-lg u-size-35-xl u-size-60-md u-size-60-sm u-size-60-xs u-image-1" data-image-width="1296" data-image-height="1080">
-              <div class="u-container-layout u-valign-bottom u-container-layout-2"></div>
+            <div class="u-align-left u-container-align-left u-container-style u-image u-layout-cell u-right-cell u-size-35-lg u-size-35-xl u-size-60-md u-size-60-sm u-size-60-xs" data-image-width="1296" data-image-height="1080">
+              <div class="u-container-layout u-valign-bottom u-container-layout-2">
+                <img src="images/computadorPrancheta-1.png" style="width: 675px; height: 600px;">
+              </div>
             </div>
           </div>
         </div>
@@ -137,41 +174,40 @@
     </section>
     <section class="u-align-center u-clearfix u-container-align-center u-grey-5 u-section-4" id="carousel_e658">
       <div class="u-clearfix u-sheet u-valign-middle-lg u-valign-middle-md u-valign-middle-sm u-valign-middle-xs u-sheet-1">
-        <h2 class="u-text u-text-default u-text-1">Quem foi atendido elogia</h2>
-        <p class="u-text u-text-2">Veja os comentários de quem já foi recebido por nossa equipe!!!</p>
+        <h2 class="u-text u-text-default u-text-1">Confira o passo a passo para começar a usar nossa plataforma</h2>
         <div class="u-expanded-width u-layout-grid u-list u-list-1">
           <div class="u-repeater u-repeater-1">
-            <div class="u-container-style u-list-item u-radius-10 u-repeater-item u-shape-round u-white u-list-item-1">
+            <div class="u-container-style u-list-item u-radius-10 u-repeater-item u-shape-round u-white u-list-item-1" style="background-color: transparent;">
               <div class="u-container-layout u-similar-container u-container-layout-1">
-                <div class="u-container-style u-group u-shape-rectangle u-group-1">
-                  <div class="u-container-layout u-container-layout-2"><span class="u-file-icon u-icon u-text-palette-1-light-2 u-icon-1"><img src="images/59149-207ff6b7.png" alt=""></span>
-                    <h5 class="u-align-left u-text u-text-3">Celia Almeda</h5>
-                  </div>
+                <div class="images-container">
+                  <img class="img1" src="images/Ellipse.png">
+                  <img class="img2" src="images/icon _ interface _ profile.png">
                 </div>
-                <div alt="" class="u-border-7 u-border-palette-1-base u-image u-image-circle u-image-1" data-image-width="1000" data-image-height="876"></div>
-                <p class="u-align-right u-text u-text-4">Satisfeita com o atendimento excelente da clínica. Ambiente acolhedor e equipe atenciosa. Recomendo muito!&nbsp;</p>
+                <div  style="margin-bottom: 250px;">
+                  <p style="text-align: center; font-size: 25px;">Crie uma conta</p>
+                </div>
               </div>
             </div>
-            <div class="u-container-style u-list-item u-radius-10 u-repeater-item u-shape-round u-white u-list-item-2">
+            <div class="u-container-style u-list-item u-radius-10 u-repeater-item u-shape-round u-white u-list-item-2" style="background-color: transparent;">
               <div class="u-container-layout u-similar-container u-container-layout-3">
-                <div class="u-container-style u-group u-shape-rectangle u-group-2">
-                  <div class="u-container-layout u-container-layout-4"><span class="u-file-icon u-icon u-text-palette-1-light-2 u-icon-2"><img src="images/59149-207ff6b7.png" alt=""></span>
-                    <h5 class="u-align-left u-text u-text-5">Frank Kinney</h5>
-                  </div>
+                <div class="images-container">
+                  <img class="img1" src="images/Ellipse2.png">
+                  <img class="img2" src="images/icon _ content _ pin.png">
                 </div>
-                <div alt="" class="u-border-7 u-border-palette-1-base u-image u-image-circle u-image-2" data-image-width="126" data-image-height="126"></div>
-                <p class="u-align-right u-text u-text-6">Fiquei impressionado com a qualidade do atendimento e a estrutura da clínica. Tudo foi realizado com muita atenção e cuidado.&nbsp;</p>
+                <div style="margin-bottom: 250px;">
+                  <p style="text-align: center; font-size: 25px;">Defina suas preferências e locais de atendimento&nbsp;</p>
+                </div>
               </div>
             </div>
-            <div class="u-container-style u-list-item u-radius-10 u-repeater-item u-shape-round u-white u-list-item-3">
+            <div class="u-container-style u-list-item u-radius-10 u-repeater-item u-shape-round u-white u-list-item-3" style="background-color: transparent;">
               <div class="u-container-layout u-similar-container u-container-layout-5">
-                <div class="u-container-style u-group u-shape-rectangle u-group-3">
-                  <div class="u-container-layout u-container-layout-6"><span class="u-file-icon u-icon u-text-palette-1-light-2 u-icon-3"><img src="images/59149-207ff6b7.png" alt=""></span>
-                    <h5 class="u-align-left u-text u-text-7"> Nick Jhonson</h5>
-                  </div>
+                <div class="images-container">
+                  <img class="img1" src="images/Ellipse3.png">
+                  <img class="img2" src="images/icon _ interface _ profile.png">
                 </div>
-                <div alt="" class="u-border-7 u-border-palette-1-base u-image u-image-circle u-image-3" data-image-width="720" data-image-height="1080"></div>
-                <p class="u-align-right u-text u-text-8">A clínica superou minhas expectativas! O ambiente é agradável e o atendimento, excepcional. Uma experiência realmente positiva.&nbsp;</p>
+                <div style="margin-bottom: 250px;">
+                  <p style="text-align: center; font-size: 25px;">Atualize sua Agenda de Disponibilidade&nbsp;</p>
+                </div>
               </div>
             </div>
           </div>
@@ -180,15 +216,14 @@
       </div>
     </section>
     <section class="u-align-center u-clearfix u-container-align-center u-palette-5-base u-valign-middle-lg u-valign-middle-md u-valign-middle-sm u-valign-middle-xl u-section-5" id="carousel_d2df">
-      <h2 class="u-text u-text-default u-text-1">O que o Inclua tem a oferecer?</h2>
       <div class="u-expanded-width u-palette-1-base u-shape u-shape-rectangle u-shape-1"></div>
       <div class="u-list u-list-1">
         <div class="u-repeater u-repeater-1">
           <div class="u-align-center u-container-align-center u-container-style u-list-item u-radius-10 u-repeater-item u-shape-round u-white u-list-item-1">
             <div class="u-container-layout u-similar-container u-container-layout-1">
-              <img style="border-radius:50px ;" alt="" class="u-expanded-width u-image u-image-contain u-image-default u-image-1" data-image-width="700" data-image-height="500" src="images/ilustraçõesPrancheta-1.png">
+              <img style="border-radius:50px;" alt="" class="u-expanded-width u-image u-image-contain u-image-default u-image-1" data-image-width="700" data-image-height="500" src="images/ilustraçõesPrancheta-1.png">
               <h4 class="u-text u-text-default u-text-palette-1-base u-text-3">Aumente seu impacto</h4>
-              <p style="margin-bottom:30px ;" class="u-text u-text-4">Torne-se uma referência na sua área ao trabalhar diretamente com quem precisa do seu apoio especializado.</p>
+              <p style="margin-bottom:30px; font-size: 18px;" class="u-text u-text-4">Torne-se uma referência na sua área ao trabalhar diretamente com quem precisa do seu apoio especializado.</p>
               <a href="http://www.freepik.com">Designed by Freepik</a>
             </div>
           </div>
@@ -196,7 +231,7 @@
             <div class="u-container-layout u-similar-container u-container-layout-2">
               <img style="border-radius: 50px;" alt="" class="u-expanded-width u-image u-image-contain u-image-default u-image-2" data-image-width="700" data-image-height="500" src="images/ilustraçõesPrancheta-2.png">
               <h4 class="u-text u-text-default u-text-palette-1-base u-text-5">Agenda cheia e organizada</h4>
-              <p style="margin-bottom: 50px;" class="u-text u-text-6">Aumente sua base de clientes com a nossa plataforma simplificada, onde o agendamento e o acompanhamento são descomplicados.</p>
+              <p style="margin-bottom: 50px; font-size: 18px;" class="u-text u-text-6">Aumente sua base de clientes com a nossa plataforma simplificada, onde o agendamento e o acompanhamento são descomplicados.</p>
               <a href="http://www.freepik.com">Designed by Freepik</a>
             </div>
           </div>
@@ -204,7 +239,7 @@
             <div class="u-container-layout u-similar-container u-container-layout-2">
               <img style="border-radius: 50px;" alt="" class="u-expanded-width u-image u-image-contain u-image-default u-image-2" data-image-width="700" data-image-height="500" src="images/ilustraçõesPrancheta-3.png">
               <h4 class="u-text u-text-default u-text-palette-1-base u-text-5">Beneficios exclusivos</h4>
-              <p style="margin-bottom:30px ;" class="u-text u-text-6">Parcerias com os profissionais que concederem pelo menos um atendimento social por mês.</p>
+              <p style="margin-bottom:30px; font-size: 18px;" class="u-text u-text-6">Parcerias com os profissionais que concederem pelo menos um atendimento social por mês.</p>
               <a href="http://www.freepik.com">Designed by Freepik</a>
             </div>
           </div>
@@ -214,91 +249,32 @@
    
     <section class="u-clearfix u-palette-5-base u-section-7" id="carousel_efe0">
       <div class="u-clearfix u-sheet u-valign-middle-xs u-sheet-1">
-        <div class="u-palette-1-base u-shape u-shape-rectangle u-shape-1"></div>
-        <div class="u-gallery u-layout-grid u-lightbox u-no-transition u-show-text-on-hover u-gallery-1">
-          <div class="u-gallery-inner u-gallery-inner-1">
-            <div class="u-effect-fade u-gallery-item">
-              <div class="u-back-slide" data-image-width="626" data-image-height="417">
-                <img class="u-back-image u-expanded" src="images/nutricionista.jpg">
-              </div>
-              <div class="u-over-slide u-shading u-over-slide-1"></div>
-            </div>
-            <div class="u-effect-fade u-gallery-item">
-              <div class="u-back-slide" data-image-width="626" data-image-height="626">
-                <img class="u-back-image u-expanded" src="images/psicologo.jpg">
-              </div>
-              <div class="u-over-slide u-shading u-over-slide-2"></div>
-            </div>
-            <div class="u-effect-fade u-gallery-item">
-              <div class="u-back-slide" data-image-width="462" data-image-height="417">
-                <img class="u-back-image u-expanded" src="images/fisioterapeuta.jpg">
-              </div>
-              <div class="u-over-slide u-shading u-over-slide-3"></div>
-            </div>
-            <div class="u-effect-fade u-gallery-item">
-              <div class="u-back-slide" data-image-width="462" data-image-height="417">
-                <img class="u-back-image u-expanded" src="images/terapeuta.jpg">
-              </div>
-              <div class="u-over-slide u-shading u-over-slide-4"></div>
-            </div>
-            <div class="u-effect-fade u-gallery-item">
-              <div class="u-back-slide" data-image-width="462" data-image-height="417">
-                <img class="u-back-image u-expanded" src="images/fono.jpg">
-              </div>
-              <div class="u-over-slide u-shading u-over-slide-5"></div>
-            </div>
-            <div class="u-effect-fade u-gallery-item">
-              <div class="u-back-slide" data-image-width="462" data-image-height="417">
-                <img class="u-back-image u-expanded" src="images/psicopedagogo.jpg">
-              </div>
-              <div class="u-over-slide u-shading u-over-slide-6"></div>
-            </div>
-          </div>
-        </div>
-        <div class="u-container-align-left u-container-style u-expanded-width-xs u-group u-radius-10 u-shape-round u-white u-group-1">
-          <div class="u-container-layout u-valign-middle u-container-layout-1">
-            <h2 class="u-align-left u-text u-text-1">Nossos Profissionais</h2>
-            <p style="margin-bottom: 30px;" class="u-align-left u-text u-text-2" style="font-size: 20px;">Disponibilizamos uma equipe de : psicólogos, terapeuta ocupacional, fonoaudiólogo, psicopedagogo, nutricionista e fisioterapeutas.&nbsp;</p>
-            <a href="http://www.freepik.com">Designed by Freepik</a>
-          </div>
-        </div>
-      </div>
-    </section>
-    <section class="u-clearfix u-grey-5 u-section-8" id="carousel_581b">
-      <div class="u-expanded-width u-palette-5-base u-shape u-shape-rectangle u-shape-1"></div>
-      <img src="images/rr3.jpg" alt="" class="u-image u-image-round u-radius-10 u-image-1" data-image-width="934" data-image-height="934">
-      <img src="images/io.jpg" alt="" class="u-image u-image-round u-radius-10 u-image-2" data-image-width="902" data-image-height="902">
-      <div class="u-container-align-left u-container-style u-group u-palette-1-base u-radius-10 u-shape-round u-group-1">
-        <div class="u-container-layout u-valign-middle u-container-layout-1">
-          <h1 class="u-align-left u-text u-text-1">O que está esperando?</h1>
-          <p class="u-align-left u-text u-text-body-alt-color u-text-2" style="font-size: 20px;">Transforme vidas, avance na carreira: juntos, fazemos a diferença no cuidado infantil.</p>
-        </div>
       </div>
     </section>
     <section class="u-align-center u-clearfix u-container-align-center u-grey-5 u-section-9" id="carousel_e2a2">
       <div class="u-clearfix u-sheet u-valign-middle u-sheet-1">
         <h2 class="u-align-center u-text u-text-default u-text-1"> Motivos para se juntar a nossa equipe </h2>
-        <p class="u-align-center u-text u-text-2"> Nossa empresa oferece oportunidades para quem decide entrar no time da Inclua</p>
+        <p class="u-align-center u-text u-text-2" style="font-size: 20px;"> Nossa empresa oferece oportunidades para quem decide entrar no time da Inclua</p>
         <div class="u-expanded-width u-list u-list-1">
           <div class="u-repeater u-repeater-1">
             <div class="u-container-align-center-sm u-container-align-center-xs u-container-style u-list-item u-repeater-item">
               <div class="u-container-layout u-similar-container u-valign-top u-container-layout-1">
-                <p class="u-align-center-sm u-align-center-xs u-align-left-lg u-align-left-md u-align-left-xl u-text u-text-4"><strong>Crescimento Profissional:</strong>  Faça parte de uma equipe multidisciplinar dedicada a transformar vidas. Oferecemos oportunidades contínuas de desenvolvimento e colaboração com especialistas de diversas áreas. Potencialize sua carreira em um ambiente que valoriza inovação e aprendizado.</p>
+                <p class="u-align-center-sm u-align-center-xs u-align-left-lg u-align-left-md u-align-left-xl u-text u-text-4" style="font-size: 21px;"><strong>Crescimento Profissional:</strong>  Faça parte de uma equipe multidisciplinar dedicada a transformar vidas. Oferecemos oportunidades contínuas de desenvolvimento e colaboração com especialistas de diversas áreas. Potencialize sua carreira em um ambiente que valoriza inovação e aprendizado.</p>
               </div>
             </div>
             <div class="u-container-align-center-sm u-container-align-center-xs u-container-style u-list-item u-repeater-item">
               <div class="u-container-layout u-similar-container u-valign-top u-container-layout-2">
-                <p class="u-align-center-sm u-align-center-xs u-align-left-lg u-align-left-md u-align-left-xl u-text u-text-6"> <strong>Ambiente Colaborativo:</strong> Trabalhe em um ambiente de apoio, onde o foco é a qualidade do atendimento e o sucesso de nossos pacientes, permitindo que você desempenhe seu melhor papel. Juntos, promovemos uma cultura de respeito e troca de conhecimento entre colegas. </p>
+                <p class="u-align-center-sm u-align-center-xs u-align-left-lg u-align-left-md u-align-left-xl u-text u-text-6" style="font-size: 21px;"> <strong>Ambiente Colaborativo:</strong> Trabalhe em um ambiente de apoio, onde o foco é a qualidade do atendimento e o sucesso de nossos pacientes, permitindo que você desempenhe seu melhor papel. Juntos, promovemos uma cultura de respeito e troca de conhecimento entre colegas. </p>
               </div>
             </div>
             <div class="u-container-align-center-sm u-container-align-center-xs u-container-style u-list-item u-repeater-item">
               <div class="u-container-layout u-similar-container u-valign-top u-container-layout-3">
-                <p class="u-align-center-sm u-align-center-xs u-align-left-lg u-align-left-md u-align-left-xl u-text u-text-8"><strong>Renumeração Competitiva:</strong> Valorize seu trabalho com uma remuneração justa e benefícios exclusivos. Nossa clínica prioriza o bem-estar financeiro de nossos profissionais. Além disso, proporcionamos bônus por desempenho e incentivos que reconhecem seu esforço.</p>
+                <p class="u-align-center-sm u-align-center-xs u-align-left-lg u-align-left-md u-align-left-xl u-text u-text-8" style="font-size: 21px;"><strong>Renumeração Competitiva:</strong> Valorize seu trabalho com uma remuneração justa e benefícios exclusivos. Nossa clínica prioriza o bem-estar financeiro de nossos profissionais. Além disso, proporcionamos bônus por desempenho e incentivos que reconhecem seu esforço.</p>
               </div>
             </div>
             <div class="u-container-align-center-sm u-container-align-center-xs u-container-style u-list-item u-repeater-item">
               <div class="u-container-layout u-similar-container u-valign-top u-container-layout-4">
-                <p class="u-align-center-sm u-align-center-xs u-align-left-lg u-align-left-md u-align-left-xl u-text u-text-10"> <strong>Impacto Real:</strong> Contribua diretamente para a melhoria da vida de crianças com autismo. Sua expertise faz a diferença, e juntos, criamos um futuro mais promissor para nossos pacientes. Aqui, seu trabalho ganha um significado ainda maior, transformando vidas a cada dia.</p>
+                <p class="u-align-center-sm u-align-center-xs u-align-left-lg u-align-left-md u-align-left-xl u-text u-text-10" style="font-size: 21px;"> <strong>Impacto Real:</strong> Contribua diretamente para a melhoria da vida de crianças com autismo. Sua expertise faz a diferença, e juntos, criamos um futuro mais promissor para nossos pacientes. Aqui, seu trabalho ganha um significado ainda maior, transformando vidas a cada dia.</p>
               </div>
             </div>
           </div>
@@ -382,20 +358,18 @@ c0-7.4,3.4-18.8,18.8-18.8h13.8v15.4H75.5z"></path></svg></span>
                   <p class="u-text u-text-10"> Você pode nos contatar <a href="#" class="u-active-none u-border-1 u-border-active-palette-3-base u-border-hover-palette-3-base u-border-no-left u-border-no-right u-border-no-top u-border-palette-1-base u-btn u-button-link u-button-style u-hover-none u-none u-text-active-palette-3-base u-text-hover-palette-3-base u-text-palette-1-base u-btn-4" data-animation-name="" data-animation-duration="0" data-animation-delay="0" data-animation-direction="">atendimento@plataformainclua.com</a>
                   </p>
                   <div class="u-align-left u-expanded-width u-form u-form-1">
-                    <form action="https://app.plataformainclua.com/sendmailback" class="u-clearfix u-form-spacing-28 u-form-vertical u-inner-form" style="padding: 0px;" source="email" name="form">
-                    </form>
-                    <form action="https://app.plataformainclua.com/sendmailback" method="post">
+                    <form action="forms.nicepagesrv.com/v2/form/process" class="u-clearfix u-form-spacing-28 u-form-vertical u-inner-form" style="padding: 0px;" source="email" name="form">
                       <div class="u-form-group u-form-name u-label-top">
                         <label for="name-5a14" class="u-label">Nome</label>
-                        <input type="text" placeholder="Insira seu nome" id="name-5a14" name="name" class="u-border-2 u-border-grey-10 u-grey-5 u-input u-input-rectangle u-radius-5" required="" wfd-id="id838"><br>
+                        <input type="text" placeholder="Insira seu nome" id="name-5a14" name="name" class="u-border-2 u-border-grey-10 u-grey-5 u-input u-input-rectangle u-radius-5" required="" wfd-id="id838">
                       </div>
                       <div class="u-form-email u-form-group u-label-top">
                         <label for="email-5a14" class="u-label">Email</label>
-                        <input type="email" placeholder="Inisra um endereço de e-mail válido" id="email-5a14" name="email" class="u-border-2 u-border-grey-10 u-grey-5 u-input u-input-rectangle u-radius-5" required="" wfd-id="id839"><br>
+                        <input type="email" placeholder="Inisra um endereço de e-mail válido" id="email-5a14" name="email" class="u-border-2 u-border-grey-10 u-grey-5 u-input u-input-rectangle u-radius-5" required="" wfd-id="id839">
                       </div>
                       <div class="u-form-group u-form-phone u-label-top u-form-group-3">
                         <label for="phone-5e95" class="u-label">Telefone</label>
-                        <input type="tel" placeholder="Insira seu telefone (ex. (00) 00000-0000)" id="phone-5e95" name="phone" class="u-border-2 u-border-grey-10 u-grey-5 u-input u-input-rectangle u-radius-5" required=""><br>
+                        <input type="tel" placeholder="Insira seu telefone (ex. (00) 00000-0000)" id="phone-5e95" name="phone" class="u-border-2 u-border-grey-10 u-grey-5 u-input u-input-rectangle u-radius-5" required="" >
                       </div>
                       <div class="u-form-group u-form-message u-label-top">
                         <label for="message-5a14" class="u-label">Como podemos ajudar?</label>
@@ -427,7 +401,7 @@ c0-7.4,3.4-18.8,18.8-18.8h13.8v15.4H75.5z"></path></svg></span>
     
     
     <footer class="u-align-center u-clearfix u-container-align-center u-footer u-grey-80 u-footer" id="sec-6d3f"><div class="u-clearfix u-sheet u-sheet-1">
-        <p class="u-small-text u-text u-text-variant u-text-1">Inclua, uma plataforma que busca abrir caminhos para você e sua família ter uma vida melhor.</p>
+        <p class="u-small-text u-text u-text-variant u-text-1" style="font-size: 17px;">Inclua, uma plataforma que busca abrir caminhos para você e sua família ter uma vida melhor.</p>
       </div></footer>
     
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
