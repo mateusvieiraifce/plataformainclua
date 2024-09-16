@@ -102,7 +102,9 @@ class ConsultaController extends Controller
       $especialista = Especialista::where('usuario_id', '=', Auth::user()->id)->first();
       //todoas as clinicas que o especialista eh vinculado
       $clinicas = Especialistaclinica::join('clinicas', 'clinicas.id', '=', 'especialistaclinicas.clinica_id')->
-      where('especialista_id', $especialista->id)->orderBy('clinicas.nome', 'asc')->
+      where('especialista_id', $especialista->id)->
+      where('is_vinculado', true)->
+      orderBy('clinicas.nome', 'asc')->
       select('clinicas.id', 'clinicas.nome')->get();
 
       //retorna todas as relacoes que o especialista possui com a clinica
@@ -116,8 +118,19 @@ class ConsultaController extends Controller
    }
 
    function novaConsultasUserClinica($especialista_id)
-   {      
+   {  
       $especialista = Especialista::find($especialista_id); 
+     
+      //esse treco de codigo serve apenas para verificar se nao foi alterado a url
+      $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();      
+      $relacaoEspecialistaClinica = Especialistaclinica::
+      where('clinica_id', $clinica->id)->
+      where('especialista_id', $especialista->id)->
+      where('is_vinculado', true)->
+      first();
+      if(!isset($relacaoEspecialistaClinica)){
+         return redirect()->route('especialistaclinica.list');
+      }     
       
       // pegando o preco da consulta que esta associado a clinica
       $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();      
@@ -125,8 +138,10 @@ class ConsultaController extends Controller
       where('clinica_id', $clinica->id)->
       where('especialidade_id', $especialista->especialidade_id)->
       first();
+    
       $precoConsulta = $relacaoEspecialidadeClinica->valor;
-      return view('userClinica/cadVinculoEspecialista/cadAgenda', ['entidade' => new Consulta(), 
+      return view('userClinica/cadVinculoEspecialista/cadAgenda', [
+         'entidade' => new Consulta(), 
       'especialista' => $especialista, 'precoConsulta'=>$precoConsulta]); 
    }
 

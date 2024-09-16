@@ -140,7 +140,8 @@ class populacaoTesteSeeder extends Seeder
 
         DB::table('especialistaclinicas')->insert([           
             'clinica_id' => $clinica01->id, 
-            'especialista_id' => $especialista01->id,          
+            'especialista_id' => $especialista01->id, 
+            'is_vinculado'  => true         
         ]);
 
         //usuario clinica 02
@@ -169,7 +170,8 @@ class populacaoTesteSeeder extends Seeder
 
         DB::table('especialistaclinicas')->insert([           
             'clinica_id' => $clinica02->id, 
-            'especialista_id' => $especialista02->id,          
+            'especialista_id' => $especialista02->id,      
+            'is_vinculado' => true,        
         ]);
 
         //cad medicamentos
