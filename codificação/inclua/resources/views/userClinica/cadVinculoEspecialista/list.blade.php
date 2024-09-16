@@ -52,8 +52,6 @@
                                  <i class="tim-icons icon-notes">
                                  Criar novas consultas</i>
                               </a>
-                           @else
-                                
                            @endif                            
                            </td>                         
                            <td>

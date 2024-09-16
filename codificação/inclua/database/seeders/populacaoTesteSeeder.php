@@ -165,7 +165,8 @@ class populacaoTesteSeeder extends Seeder
         DB::table('especialidadeclinicas')->insert([
             'valor' => 200,
             'clinica_id' => $clinica02->id, 
-            'especialidade_id' => $especialidade02->id,          
+            'especialidade_id' => $especialidade02->id,   
+            'is_vinculado'  => true           
         ]);
 
         DB::table('especialistaclinicas')->insert([           

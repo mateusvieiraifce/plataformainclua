@@ -357,6 +357,7 @@ class ClinicaController extends Controller
         $lista = Especialidadeclinica::join('especialidades', 'especialidades.id', 
         '=', 'especialidadeclinicas.especialidade_id')->
         where('clinica_id', $clinica->id)->
+        where('is_vinculado', 1)->
         orderBy('especialidades.descricao', 'asc')->
         select('especialidades.id', 'especialidades.descricao')->paginate(8);       
         return view('userClinica/marcarConsulta/selecionarEspecialidadePasso2', ['lista' => $lista, 'paciente_id' => $paciente_id]);

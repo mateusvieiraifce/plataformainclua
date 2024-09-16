@@ -38,15 +38,12 @@
                     </a>
                 </li>
                 
-                    <li @if ($pageSlug == 'especialistaclinica') class="active " @endif>
+                <li @if ($pageSlug == 'especialistaclinica') class="active " @endif>
                         <a href="{{route('especialistaclinica.list')}}">
-                <i class="tim-icons icon-badge"></i>
-                <p>{{ __('Especialistas') }}</p>
-                </a>
+                    <i class="tim-icons icon-badge"></i>
+                    <p>{{ __('Especialistas') }}</p>
+                    </a>
                 </li>
-
-
-              
 
                 <li>
                     <a data-toggle="collapse" href="#relatorioclinica" aria-expanded="true">
@@ -104,10 +101,6 @@
                             </li>
                         </ul>
                     </div>
-
-                   
-
-                   
 
 
                 </li>
