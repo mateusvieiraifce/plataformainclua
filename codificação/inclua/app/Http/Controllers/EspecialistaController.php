@@ -14,8 +14,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Tipoexame;
 use App\Models\Exame;
-use App\Models\Pedidoexame;
 use App\Models\Medicamento;
+use App\Models\PedidoExame;
 use App\Models\TipoMedicamento;
 
 
@@ -249,11 +249,11 @@ class EspecialistaController extends Controller
       $medicamentos = Medicamento::orderBy('nome_comercial', 'asc')->get();
 
       //lista de pedidos de exames
-      $listaPedidosExames = Pedidoexame::
-      join('exames', 'exames.id', '=', 'pedido_exames.exame_id')->
-      where('consulta_id',$consulta->id)->
-      orderBy('pedido_exames.created_at', 'desc')->
-      select('pedido_exames.id as id', 'nome','laudo')->get(); 
+      $listaPedidosExames = PedidoExame::join('exames', 'exames.id', '=', 'pedido_exames.exame_id')
+         ->where('consulta_id',$consulta->id)
+         ->orderBy('pedido_exames.created_at', 'desc')
+         ->select('pedido_exames.id as id', 'nome','laudo')
+         ->get(); 
 
       //lista de pedidos de medicamentos
       $listaPedidosMedicamentos = PedidoMedicamento::
