@@ -27,7 +27,7 @@
                     </div>
                   </div>
                 </div>
-                <img src="images/logo-01.png" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); width: 37%; height: auto;">
+                <img src="../assets/img/logo-01.png" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); width: 37%; height: auto;">
               </div>
             </div>
             <div class="u-container-style u-image u-layout-cell u-size-31-lg u-size-32-xl u-size-60-md u-size-60-sm u-size-60-xs u-image-1">
