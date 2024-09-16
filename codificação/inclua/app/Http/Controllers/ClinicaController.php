@@ -409,7 +409,8 @@ class ClinicaController extends Controller
 
 
      //lista dos pacientes que fez alguma consulta com a clinica logada
-   function listaPacientes($msg = null)
+ 
+     function listaPacientes($msg = null)
    {
       $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
      

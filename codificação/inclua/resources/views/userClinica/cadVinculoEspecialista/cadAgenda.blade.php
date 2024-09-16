@@ -32,51 +32,19 @@ function validarCheckBoxes() {
 }
 </script>
 
-<!--muda preco consulta toda vez que o campo clinica for alterado-->
-<script>
-   
-    document.addEventListener('DOMContentLoaded', function() {      
-           var precosConsultas =  JSON.parse('{!! $relacaoEspecialidadeClinica !!}');
-            const clinicaSelecionada = document.getElementById('clinica_id');
-            preco = document.getElementById("preco");
-            clinicaSelecionada.addEventListener('change', function() {
-              precosConsultas.some(function(item) {              
-                 if(item.clinica_id == clinicaSelecionada.value){                 
-                    preco.value = item.valor;
-                 }
-              });             
-            });
-            clinicaSelecionada.dispatchEvent(new Event('change'));
-        });
-
-</script>
-
     <div class="row">
 
       <div class="col-md-12">
         <div class="card">
           <div class="card-header">
-            <h5 class="title">Disponibilizar consultas</h5>
+            <h5 class="title">Disponibilizar consultas para o especialista {{$especialista->nome}}</h5>
           </div>
           <div class="card-body">
-            <form method="post" action="{{route('consulta.saveagenda', $especialista->id)}}" onsubmit="return validarCheckBoxes()">
+            <form method="post" action="{{route('consulta.saveVariasConsultasUserClinica', $especialista->id)}}" onsubmit="return validarCheckBoxes()">
               @csrf
               <div class="row">
 
-              <div class="col-md-4 px-8">
-                <div class="form-group">
-                  <label id="labelFormulario">Clínica(s) vinculada(s)</label>
-                  <select name="clinica_id" id="clinica_id" class="form-control"
-                    title="Por favor selecionar ..." required style="border-color: white">
-                    @foreach($clinicas as $iten)
-                    <option style="color: #2d3748" value="{{old('especialidade_id', $iten->id)}}"
-                      @if($iten->id == $entidade->clinica_id) <?php    echo 'selected'; ?> @endif> {{$iten->nome}}
-                    </option>
-                    @endforeach
-                  </select>
-                </div>
-              </div>
-
+             
               @php
                 use Carbon\Carbon;
                 $data = Carbon::now()->addMonths(1);
@@ -101,16 +69,18 @@ function validarCheckBoxes() {
                   </div>
                 </div>
 
-              </div>
-              <div class="row">
-                <div class="col-md-3 px-8">
+                <div class="col-md-4 px-8">
                   <div class="form-group">
                     <label id="labelFormulario">Duração média (min)</label>
                     <input style="border-color: #C0C0C0" type="number" min="1" step="1" class="form-control" name="duracao_media" required
-                      value="{{$entidade->preco}}" maxlength="150">
+                      value="" maxlength="150">
                   </div>
                 </div>
-                <div class="col-md-3 px-8">
+
+              </div>
+              <div class="row">
+               
+                <div class="col-md-4 px-8">
                   <div class="form-group">
                     <label id="labelFormulario">Intervalo entre as consultas (min)</label>
                     <input style="border-color: #C0C0C0" type="number" min="0" step="1" class="form-control" name="intervalo_consulta" required
@@ -118,14 +88,14 @@ function validarCheckBoxes() {
                   </div>
                 </div>
 
-                <div class="col-md-3 px-8">
+                <div class="col-md-4 px-8">
                   <div class="form-group">
                     <label id="labelFormulario">Horário de início dos atendimentos</label>
                     <input style="border-color: #C0C0C0" type="time" class="form-control" name="hora_inicio" required
                       value="" maxlength="150">
                   </div>
                 </div>
-                <div class="col-md-3 px-8">
+                <div class="col-md-4 px-8">
                   <div class="form-group">
                     <label id="labelFormulario">Horário de fim dos atendimentos</label>
                     <input style="border-color: #C0C0C0" type="time" class="form-control" name="hora_fim" required
@@ -135,13 +105,12 @@ function validarCheckBoxes() {
 
               </div>
 
-              <div class="row">
+              <div class="row">           
                 <div class="col-md-4 px-8">
                   <div class="form-group">
                     <label id="labelFormulario">Preço</label>
-                    <input style="border-color: #C0C0C0" type="number" step="0.01"
-                     class="form-control" name="preco" id="preco" required
-                      value="" maxlength="150">
+                    <input style="border-color: #C0C0C0" type="number" step="0.01" class="form-control" name="preco" required
+                      value="{{$precoConsulta}}" maxlength="150">
                   </div>
                 </div>
                 <div class="col-md-4 px-8">
@@ -195,7 +164,7 @@ function validarCheckBoxes() {
               <input type="hidden" name="especialista_id" value="{{$especialista->id}}">
 
 
-              <a href="{{route('consulta.list', $especialista->id)}}" class="btn btn-primary"><i
+              <a href="{{route('especialistaclinica.list')}}" class="btn btn-primary"><i
                   class="fa fa-reply"></i>
                 Voltar</a>
               <button class="btn btn-success" onclick="$('#send').click(); "><i class="fa fa-save"></i> Disponibilizar</button>
@@ -206,8 +175,5 @@ function validarCheckBoxes() {
         </div>
       </div>
     </div>
-
-
-
 
 @endsection

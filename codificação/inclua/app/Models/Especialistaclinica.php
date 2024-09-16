@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 class Especialistaclinica extends Model
 {
   use HasFactory;
-  protected $fillable = ['especialista_id','local_consulta', 'clinica_id'];
+  protected $fillable = ['especialista_id','local_consulta','is_vinculado', 'clinica_id'];
 } ?>
