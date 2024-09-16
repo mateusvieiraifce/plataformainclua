@@ -45,10 +45,14 @@
     <div class="col-md-10 text-center ml-auto mr-auto">
         <h3 class="mb-5"></h3>
     </div>
-    <div class="col-lg-4 col-md-6 ml-auto mr-auto">
+    <div class="col-lg-4 col-md-6 ml-auto mr-auto" style="
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    ">
         <form class="form" method="post" action="{{ route('login.do') }}">
             @csrf
-
             <div class="card card-login card-white">
                 <div class="card-img justify-content-center">
                     <img src="{{ asset('assets/img/logo-01.png') }}" alt="Logo Plataforma Inclua" width="250px">
