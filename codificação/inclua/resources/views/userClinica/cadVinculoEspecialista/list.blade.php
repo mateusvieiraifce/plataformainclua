@@ -23,7 +23,9 @@
                      <thead>
                         <th> Nome </th>                      
                         <th> Especialidade </th>
-                        <th> </th>
+                        <th>Agenda </th>
+                        <th> Novas Consultas</th>
+                        <th>Vínculo </th>
                      </thead>
                      <tbody>
                         @if(sizeof($lista)>0)
@@ -41,12 +43,43 @@
                               </a>
                            </td>
 
-                         
                            <td>
-                              <a href="{{route('especialistaclinica.delete',$ent->id)}}" onclick="return confirm('Deseja relamente excluir?')" rel="tooltip"
+                           @if($ent->isVinculado)
+                             <a href="{{route('consulta.novaConsultasUserClinica',$ent->id)}}" rel="tooltip"
+                                 title="Novas consultas"
+                                 class="btn btn-link"
+                                 data-original-title="Remove">
+                                 <i class="tim-icons icon-notes">
+                                 Criar novas consultas</i>
+                              </a>
+                           @else
+                                
+                           @endif                            
+                           </td>                         
+                           <td>
+                           @if($ent->isVinculado)
+                                 <label class="title" style="font-color:write">Ativo
+                                 </label>                             
+                           @else
+                                 <p class="title">Inativo                                
+                                 </p>                              
+                           @endif                              
+                           </td>
+                           <td> 
+                              
+                           @if($ent->isVinculado)
+                           <a href="{{route('especialistaclinica.delete',$ent->id)}}" 
+                           onclick="return confirm('Deseja relamente excluir o vínculo?')" rel="tooltip"
                                  title="Excluir vínculo" class="btn btn-link" data-original-title="Remove">
                                  <i class="tim-icons icon-simple-remove"></i>
                               </a>
+                           @else
+                           <a href="{{route('especialistaclinica.delete',$ent->id)}}" 
+                           onclick="return confirm('Deseja retomar vínculo?')" rel="tooltip"
+                                 title="Vincular novamente" class="btn btn-link" data-original-title="Remove">
+                                 <i class="tim-icons icon-check-2"></i>
+                                 </a>
+                           @endif  
                            </td>
                            @endforeach
                            @endif

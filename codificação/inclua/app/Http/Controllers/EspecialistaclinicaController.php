@@ -12,8 +12,10 @@ use Carbon\Carbon;
 
 class EspecialistaclinicaController extends Controller
 {
-   function list($clinica_id, $msg = null)
+   function list($msg = null)
    {
+      $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
+      $clinica_id = $clinica->id;
       $filter = "";
       if (isset($_GET['filtro'])) {
          $filter = $_GET['filtro'];
@@ -23,7 +25,7 @@ class EspecialistaclinicaController extends Controller
       join('especialidades', 'especialidades.id', '=', 'especialistas.especialidade_id')->  
       where('clinica_id', '=', $clinica_id)->
       orderBy('especialistas.nome', 'asc')->
-      select('especialistaclinicas.id','especialistas.nome', 'especialidades.descricao as especialidade')->
+      select('especialistaclinicas.especialista_id as id','especialistas.nome', 'especialidades.descricao as especialidade','is_vinculado as isVinculado')->
       paginate(8);
       $clinica = clinica::find($clinica_id);
       return view('userClinica/cadVinculoEspecialista/list', ['lista' => $lista, 'filtro' => $filter, 'clinica' => $clinica, 'msg' => $msg]);
@@ -51,28 +53,32 @@ class EspecialistaclinicaController extends Controller
       } else {
          $entidade = Especialistaclinica::create([
             'especialista_id' => $request->especialista_id,
-            'clinica_id' => $clinica_id
+            'clinica_id' => $clinica_id,
+            'is_vinculado' => true       
+
          ]);
       }
       $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
-      return $this->list($clinica_id, $msg);
+      return $this->list($msg);
    }
    function delete($id)
    {
-      $clinica_id = 0;
+      $especialista = Especialista::find($id);      
+      $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();      
+      $relacaoEspecialistaClinica = Especialistaclinica::
+      where('clinica_id', $clinica->id)->
+      where('especialista_id', $especialista->id)->first();
+     
       try {
-         $entidade = Especialistaclinica::find($id);
-         if ($entidade) {
-            $clinica_id = $entidade->clinica_id;
-            $entidade->delete();
-            $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
-         } else {
-            $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
-         }
+         if ($relacaoEspecialistaClinica) {
+            $relacaoEspecialistaClinica->is_vinculado = !$relacaoEspecialistaClinica->is_vinculado; 
+            $relacaoEspecialistaClinica->save();
+            $msg = ['valor' => trans("Vínculo alterado com sucesso!"), 'tipo' => 'success'];
+     }
       } catch (QueryException $exp) {
          $msg = ['valor' => $exp->getMessage(), 'tipo' => 'primary'];
       }
-      return $this->list($clinica_id, $msg);
+      return $this->list($msg);
    }
    function edit($id)
    {

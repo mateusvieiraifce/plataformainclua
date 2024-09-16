@@ -39,7 +39,7 @@
                 </li>
                 
                     <li @if ($pageSlug == 'especialistaclinica') class="active " @endif>
-                        <a href="{{route('especialistaclinica.list',$clinica->id)}}">
+                        <a href="{{route('especialistaclinica.list')}}">
                 <i class="tim-icons icon-badge"></i>
                 <p>{{ __('Especialistas') }}</p>
                 </a>
@@ -58,7 +58,7 @@
                     <div class="collapse" id="relatorioclinica">
                         <ul class="nav pl-4">
                             <li @if ($pageSlug=='dashboard2' ) class="active " @endif>
-                                <a href="{{route('especialidadeclinica.listclinica')}}">
+                                <a href="#">
                                     <i class="tim-icons icon-components"></i>
                                     <p>{{ __('Especialista') }}</p>
                                 </a>
@@ -68,7 +68,7 @@
                     <div class="collapse" id="relatorioclinica">
                         <ul class="nav pl-4">
                             <li @if ($pageSlug=='dashboard2' ) class="active " @endif>
-                                <a href="{{route('especialidadeclinica.listclinica')}}">
+                                <a href="#">
                                     <i class="tim-icons icon-components"></i>
                                     <p>{{ __('Paciente') }}</p>
                                 </a>
@@ -78,7 +78,7 @@
                     <div class="collapse" id="relatorioclinica">
                         <ul class="nav pl-4">
                             <li @if ($pageSlug=='dashboard2' ) class="active " @endif>
-                                <a href="{{route('especialidadeclinica.listclinica')}}">
+                                <a href="#">
                                     <i class="tim-icons icon-components"></i>
                                     <p>{{ __('Financeiro') }}</p>
                                 </a>
@@ -97,8 +97,7 @@
                     <div class="collapse" id="configclinica">
                         <ul class="nav pl-4">
                             <li @if ($pageSlug=='dashboard2' ) class="active " @endif>
-
-                                <a href="{{route('especialidadeclinica.listclinica')}}">
+                                <a href="{{route('especialidadeclinica.listclinicas')}}">
                                     <i class="tim-icons icon-components"></i>
                                     <p>{{ __('Especialidades') }}</p>
                                 </a>

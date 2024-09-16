@@ -10,7 +10,7 @@ use App\Models\Especialidade;
 
 class EspecialidadeclinicaController extends Controller
 {
-   function listclinica($msg = null)
+   function listUserClinica($msg = null)
    {
       $filter = "";
       if (isset($_GET['filtro'])) {
@@ -24,7 +24,10 @@ class EspecialidadeclinicaController extends Controller
       orderBy('id', 'desc')->
       select('especialidadeclinicas.id','especialidades.descricao', 'valor')->
       paginate(8);
-      return view('especialidadeclinica/list', ['lista' => $lista, 'filtro' => $filter, 'clinica' => $clinica, 'msg' => $msg]);
+    
+      //dd('asdf');
+      return view('userClinica/cadEspecialidade/list', ['lista' => $lista, 
+      'filtro' => $filter,'msg' => $msg]);
    }
 
    function list($clinica_id,$msg = null)
@@ -50,6 +53,14 @@ class EspecialidadeclinicaController extends Controller
       $clinica = Clinica::find($clinica_id);
       return view('especialidadeclinica/form', ['entidade' => new Especialidadeclinica(), 'clinica' => $clinica,'especialidades' =>Especialidade::all()]);
    }
+
+   function newUserClinica()
+   {
+      $clinica  = Clinica::where('usuario_id',Auth::user()->id)->first();
+      return view('userClinica/cadEspecialidade/form', ['entidade' => new Especialidadeclinica(), 'clinica' => $clinica,'especialidades' =>Especialidade::all()]);
+   }
+
+
    function search(Request $request, $clinica_id)
    {
       $clinica = Clinica::find($clinica_id);
