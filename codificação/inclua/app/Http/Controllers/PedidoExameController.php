@@ -1,8 +1,8 @@
 <?php
 namespace App\Http\Controllers;
-use App\Models\Pedidoexame;
 use App\Models\Consulta;
 use App\Models\Exame;
+use App\Models\PedidoExame;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,7 +16,7 @@ class PedidoExameController extends Controller
       if (isset($_GET['filtro'])) {
          $filter = $_GET['filtro'];
       }
-      $lista = Pedidoexame::where('nome', 'like', "%" . "%")->orderBy('id', 'desc')->paginate(10);
+      $lista = PedidoExame::where('nome', 'like', "%" . "%")->orderBy('id', 'desc')->paginate(10);
       return view('pedidoexame/list', ['lista' => $lista, 'filtro' => $filter, 'msg' => $msg]);
    }
 
