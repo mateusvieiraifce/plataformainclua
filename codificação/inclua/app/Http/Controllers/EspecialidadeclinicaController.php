@@ -90,7 +90,6 @@ class EspecialidadeclinicaController extends Controller
          $ent->especialidade_id = $request->especialidade_id;
          $ent->valor = $request->valor;
          $ent->clinica_id = $clinica_id;
-
          $ent->save();
       } else {
          $entidade = Especialidadeclinica::create([
@@ -103,6 +102,28 @@ class EspecialidadeclinicaController extends Controller
       $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
       return $this->list($clinica_id, $msg);
    }
+
+   function saveUserClinica(Request $request)
+   {
+     
+      $clinica_id = $request->clinica_id;
+      if ($request->id) {
+         $ent = Especialidadeclinica::find($request->id);
+         $ent->valor = $request->valor;
+         $ent->save();
+      } else {
+         $entidade = Especialidadeclinica::create([
+            'especialidade_id' => $request->especialidade_id,
+            'valor' => $request->valor,
+            'clinica_id' => $clinica_id,
+            'is_vinculado' => true
+         ]);
+      }
+      $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
+      return $this->listUserClinica( $msg);
+   }
+
+
    function delete($id)
    {
       $clinica_id = 0;

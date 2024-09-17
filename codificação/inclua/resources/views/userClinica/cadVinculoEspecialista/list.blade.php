@@ -13,7 +13,7 @@
                      <i class="tim-icons icon-settings-gear-63"></i>
                   </button>
                   <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-                     <a class="dropdown-item" href="{{route('especialistaclinica.new',$clinica->id)}}">Adicionar novo especialista</a>
+                     <a class="dropdown-item" href="{{route('especialistaclinica.new')}}">Adicionar novo especialista</a>
                   </div>
                </div>
             </div>

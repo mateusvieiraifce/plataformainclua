@@ -30,9 +30,9 @@ class EspecialistaclinicaController extends Controller
       $clinica = clinica::find($clinica_id);
       return view('userClinica/cadVinculoEspecialista/list', ['lista' => $lista, 'filtro' => $filter, 'clinica' => $clinica, 'msg' => $msg]);
    }
-   function new($clinica_id)
+   function new()
    {
-      $clinica = Clinica::find($clinica_id);
+      $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
       return view('userClinica/cadVinculoEspecialista/form', ['entidade' => new Especialistaclinica(), 'clinica' => $clinica, 'especialistas'=>Especialista::all()]);
    }
    function search(Request $request, $clinica_id)

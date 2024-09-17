@@ -9,7 +9,7 @@
           <h5 class="title">Editar</h5>
         </div>
         <div class="card-body">
-          <form method="post" action="{{route('especialidadeclinica.save', $clinica->id)}}">
+          <form method="post" action="{{route('especialidadeclinica.saveUserClinica', $clinica->id)}}">
             @csrf
             <div class="row">
               <div class="col-md-12 px-8">

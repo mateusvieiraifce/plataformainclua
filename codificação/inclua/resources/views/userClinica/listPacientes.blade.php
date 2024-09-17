@@ -67,6 +67,7 @@
                   </table>
                   <div>
 
+                
                   @if ($lista->lastPage() > 1)
                   @php
                   $paginator = $lista;
