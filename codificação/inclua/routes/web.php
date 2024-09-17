@@ -26,6 +26,10 @@ Route::get("/teste", function () {
     return view('teste');
 });
 
+
+
+
+
 Route::get("/", [\App\Http\Controllers\UsuarioController::class, 'index'])->name('index');
 Route::any("/sendmailback", [\App\Http\Controllers\MailController::class, 'sendEmailBack'])->name('sendMailBack');
 
@@ -346,9 +350,12 @@ Route::middleware('auth')->group(function () {
     Route::post("/clinica/agenda/consulta/cancelar/", [\App\Http\Controllers\ClinicaController::class, 'canelarconsultaViaClinica'])->name('clinica.canelarconsultaViaClinica');
     Route::get("/clinica/relatorio/especialista", [\App\Http\Controllers\ClinicaController::class, 'formRelatorioEspecialista'])->name('clinica.formRelatorioEspecialista');
 
-
+   #CLINICA_VINCULO_COM_ESPECIALISTA
     Route::get("/clinica/especialista/novasconsultas/{especialista_id}", [\App\Http\Controllers\ConsultaController::class, 'novaConsultasUserClinica'])->name('consulta.novaConsultasUserClinica');
     Route::post("/clinica/especialista/novasconsultas/saveagenda/", [\App\Http\Controllers\ConsultaController::class, 'saveVariasConsultasUserClinica'])->name('consulta.saveVariasConsultasUserClinica');
+    Route::any('/clinica/especialista/convidar', [\App\Http\Controllers\MailController::class, 'enviarConviteEspecialista'])->name('clinica.enviarConviteEspecialista');
+
+
 
     #CAD_ESPECIALIDADE_USER_CLINICA
     Route::get("/clinica/especialidade/list", [\App\Http\Controllers\EspecialidadeclinicaController::class, 'listUserClinica'])->name('especialidadeclinica.listclinicas');

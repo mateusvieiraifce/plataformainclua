@@ -59,4 +59,34 @@ class MailController extends Controller
         }
 
     }
+
+    function enviarConviteEspecialista(Request $req)
+    {
+
+        $host = $req->getHost();
+      
+        if ($host == "localhost" || $host == "plataformainclua.com"|| $host == "app.plataformainclua.com") {
+           
+            // $msg = $req->msg;
+            $assunto = "Convite";
+            $texto = " aqui o texto convidando o especialista";//pegar usuario logado e o nome da clinica e montar texto.            
+            $emissor = "ajotaccb@gmail.com";//email do destino
+            $name="Ajota";
+           
+            Helper::sendEmail($assunto, $texto,  $emissor, $name);
+           
+          //  return view('msg.msg', ['msg_compra' => 'Menssagem enviada com sucesso!']);
+           
+            $msg = ['valor' => trans("E-mail enviado com sucesso!"), 'tipo' => 'success'];
+            $especialistaclinicaController = new EspecialistaclinicaController();
+            return $especialistaclinicaController->list($msg);
+        } else {
+            $response = array(
+                'status' => 'error',
+                'message' => 'Acesso Negado'
+            );
+            echo json_encode($response);
+        }
+
+    }
 }

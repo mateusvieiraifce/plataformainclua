@@ -67,21 +67,24 @@
             </button>
         </div>
         <div class="modal-body">
-          <form>
-            <div class="mb-3">
-              <label for="recipientEmail" class="form-label">Destinatário</label>
-              <input style="color:black" type="email" class="form-control" id="recipientEmail" placeholder="Digite o e-mail do especialista aqui">
+        <form action="{{ route('clinica.enviarConviteEspecialista') }}" method="POST">
+             @csrf
+                <div class="mb-3">
+                  <label for="recipientEmail" class="form-label">Destinatário</label>
+                  <input style="color:black" type="email" class="form-control" id="email_destino" name="email_destino" 
+                  placeholder="Digite o e-mail do especialista aqui" required>
+                </div>
+              
+            
             </div>
-           
-          </form>
-        </div>
-        <div class="modal-footer">
-        <button type="button"  class="btn btn-secondary" data-dismiss="modal">
-                           <i class="fa fa-reply"></i> Voltar
-                        </button>
-          <button type="button" class="btn btn-primary">Enviar Convite</button>
-        </div>
-        </div>
+            <div class="modal-footer">
+            <button type="button"  class="btn btn-secondary" data-dismiss="modal">
+                              <i class="fa fa-reply"></i> Voltar
+                            </button>
+              <button type="submit" class="btn btn-primary">Enviar Convite</button>
+            </div>
+            </div>
+        </form>
     </div>
 </div>
 

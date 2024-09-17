@@ -18,9 +18,23 @@ use App\Rules\CnpjValidationRule;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Mail\ConvidarEspecialistaMailable;
+use Illuminate\Support\Facades\Mail;
 
 class ClinicaController extends Controller
 {
+
+   public function enviarConviteEspecialista(Request $request)
+   {  
+
+      Mail::to($request->email_destino)->send(new ConvidarEspecialistaMailable());
+       
+      $msg = ['valor' => trans("E-mail enviado com sucesso!"), 'tipo' => 'success'];
+      $especialistaclinicaController = new EspecialistaclinicaController();
+      return $especialistaclinicaController->list($msg);
+   }
+
+
    function list($msg = null)
    {
       $filter = "";
