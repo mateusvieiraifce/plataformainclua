@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Helper;
 use Illuminate\Http\Request;
 use PHPMailer\PHPMailer\PHPMailer;
+use App\Models\Clinica;
+use Illuminate\Support\Facades\Auth;
 
 class MailController extends Controller
 {
@@ -60,33 +62,33 @@ class MailController extends Controller
 
     }
 
-    function enviarConviteEspecialista(Request $req)
+    function enviarConviteEspecialista(Request $request)
     {
-
-        $host = $req->getHost();
-      
-        if ($host == "localhost" || $host == "plataformainclua.com"|| $host == "app.plataformainclua.com") {
-           
-            // $msg = $req->msg;
-            $assunto = "Convite";
-            $texto = " aqui o texto convidando o especialista";//pegar usuario logado e o nome da clinica e montar texto.            
-            $emissor = "ajotaccb@gmail.com";//email do destino
-            $name="Ajota";
-           
-            Helper::sendEmail($assunto, $texto,  $emissor, $name);
-           
-          //  return view('msg.msg', ['msg_compra' => 'Menssagem enviada com sucesso!']);
-           
-            $msg = ['valor' => trans("E-mail enviado com sucesso!"), 'tipo' => 'success'];
-            $especialistaclinicaController = new EspecialistaclinicaController();
-            return $especialistaclinicaController->list($msg);
-        } else {
-            $response = array(
-                'status' => 'error',
-                'message' => 'Acesso Negado'
-            );
-            echo json_encode($response);
-        }
+        $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
+        
+        $assunto = "Convite para participar da Plataforma Inclua";
+        $texto = " Prezado(a) ".$request->nome.", <br>          
+          É com grande entusiasmo que a clínica ".$clinica->nome." o(a) convida a se unir à Plataforma Inclua, 
+          uma rede inovadora e inclusiva de clínicas dedicadas a promover a acessibilidade 
+          e a qualidade nos serviços de saúde.  <br>
+          Para fazer parte da plataforma basta você realizar o seu cadastro clicando no seguinte link: <br>
+          ".env('APP_URL')."
+           <br>
+           Nossa equipe estará à disposição para fornecer mais informações 
+           e ajudá-lo(a) a integrar-se à nossa rede de forma eficiente.
+          
+          ";
+       
+        $emissor = $request->email_destino;//email do destino
+        $name="";
+        
+       // dd($texto);
+        Helper::sendEmail($assunto, $texto,  $emissor, $name);
+        
+        $msg = ['valor' => trans("Convite enviado com sucesso!"), 'tipo' => 'success'];
+        $especialistaclinicaController = new EspecialistaclinicaController();
+        return $especialistaclinicaController->list($msg);
+    
 
     }
 }

@@ -70,7 +70,13 @@
         <form action="{{ route('clinica.enviarConviteEspecialista') }}" method="POST">
              @csrf
                 <div class="mb-3">
-                  <label for="recipientEmail" class="form-label">Destinatário</label>
+                  <label for="recipientEmail" class="form-label">Nome do especialista</label>
+                  <input style="color:black" type="text" class="form-control" id="nome" name="nome" 
+                  placeholder="Digite o nome do especialista aqui" required>
+                </div>
+
+                <div class="mb-3">
+                  <label for="recipientEmail" class="form-label">E-mail</label>
                   <input style="color:black" type="email" class="form-control" id="email_destino" name="email_destino" 
                   placeholder="Digite o e-mail do especialista aqui" required>
                 </div>
