@@ -51,4 +51,59 @@ class PedidoExameController extends Controller
       return redirect()->route('especialista.iniciarAtendimento', [$consulta_id, "exames"]);
    }
 
+
+   public function pedidoExamesPaciente()
+   {
+      $pedidoExames = PedidoExame::join('consultas', 'consultas.id', 'pedido_exames.consulta_id')
+         ->join('exames', 'exames.id', 'pedido_exames.exame_id')
+         ->join('pacientes', 'pacientes.id', 'consultas.paciente_id')
+         ->join('especialistas', 'especialistas.id', 'consultas.especialista_id')
+         ->where('pacientes.usuario_id', Auth::user()->id)
+         ->select(
+            'pedido_exames.*', 'pacientes.nome as nome_paciente', 'exames.nome as nome_exame', 'especialistas.nome as nome_especialista',
+            'pedido_exames.created_at as data_solicitacao', 'pedido_exames.id as pedido_exame_id'
+         )
+         ->paginate(8);
+
+      return view('userPaciente.exames.lista', ['pedidoExames' => $pedidoExames]);
+   }
+
+   public function storeArquivoExame(Request $request)
+   {
+      try {
+         // Define um aleatório para o arquivo baseado no timestamps atual
+         $name = uniqid(date('HisYmd'));   
+         // Recupera a extensão do arquivo
+         $extension = $request->arquivo->extension();   
+         // Define finalmente o nome
+         $nameFile = "{$name}.{$extension}";
+         // Faz o upload:
+         $local_arquivo_exame = "storage/".$request->arquivo->storeAs('exames', $nameFile);
+
+         $pedido_exame = PedidoExame::find($request->pedido_exame_id);
+         $pedido_exame->local_arquivo_exame = $local_arquivo_exame;
+         $pedido_exame->save();
+
+         session()->flash('msg', ['valor' => trans("O arquivo do exame foi salvo com sucesso!"), 'tipo' => 'success']);
+      } catch (QueryException $e) {
+         session()->flash('msg', ['valor' => trans("Houve um erro ao salvar o arquivo do exame, tente novamente."), 'tipo' => 'danger']);
+      }
+      
+      return back();
+   }
+
+   public function checkExame(Request $request)
+   {
+      $pedido_exame = PedidoExame::find(id: $request->pedido_exame_id);
+      $pedido_exame->exame_efetuado = $request->efetuado;
+      $pedido_exame->save();
+
+      if ($request->efetuado == "Sim") {
+         $response = "A confirmação do exame efetuado foi realizado com sucesso!";
+      } else {
+         $response = "A remoção do exame efetuado foi realizada com sucesso!";
+      }
+
+      return response()->json($response);
+   }
 } ?>

@@ -21,7 +21,7 @@
     color: #344675;
 }
 
-.card-register .custom-file-label::after {
+.card-register .custom-file-label::after, .modal .custom-file-label::after {
     position: unset;
     display: inline;
     line-height: 1.428571;

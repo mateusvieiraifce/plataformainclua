@@ -374,8 +374,8 @@
                     </a>
                 </li>
 
-                <li @if ($pageSlug=='favoritos' ) class="active " @endif>
-                    <a href="{{route('user.favoritos')}}">
+                <li @if ($pageSlug=='exames' ) class="active " @endif>
+                    <a href="{{route('paciente.pedido_exames.lista')}}">
                         <i class="tim-icons  icon-components"></i>
                         <p>{{ __('Exames') }}</p>
                     </a>

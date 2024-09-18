@@ -290,7 +290,6 @@ Route::middleware('auth')->group(function () {
     Route::get("/tipoexame/delete/{id}", [\App\Http\Controllers\TipoexameController::class, 'delete'])->name('tipoexame.delete')->middleware('auth');
     Route::get("/tipoexame/edit/{id}", [\App\Http\Controllers\TipoexameController::class, 'edit'])->name('tipoexame.edit')->middleware('auth');
 
-
     #CAD_EXAMES_USER_ROOT
     Route::get("/exame/list", [\App\Http\Controllers\ExameController::class, 'list'])->name('exame.list')->middleware('auth');
     Route::get("/exame/new", [\App\Http\Controllers\ExameController::class, 'new'])->name('exame.new')->middleware('auth');
@@ -315,12 +314,10 @@ Route::middleware('auth')->group(function () {
     Route::get("/medicamento/delete/{id}", [\App\Http\Controllers\MedicamentoController::class, 'delete'])->name('medicamento.delete')->middleware('auth');
     Route::get("/medicamento/edit/{id}", [\App\Http\Controllers\MedicamentoController::class, 'edit'])->name('medicamento.edit')->middleware('auth');
 
-
     #CONSULTAS_USER_PACIENTE
     Route::get("/paciente/minhasconsultas/", [\App\Http\Controllers\PacienteController::class, 'minhasconsultas'])->name('paciente.minhasconsultas');
     Route::get("/paciente/historicoconsultas/", [\App\Http\Controllers\PacienteController::class, 'historicoconsultas'])->name('paciente.historicoconsultas');
     Route::post("/paciente/cancelar/", [\App\Http\Controllers\PacienteController::class, 'canelarconsulta'])->name('consulta.cancelarviapaciente');
-
 
     #ESPECIALISTA
     Route::get("/especialista/atendimento/{consulta_id}/{aba}", [\App\Http\Controllers\EspecialistaController::class, 'inicarAtendimento'])->name('especialista.iniciarAtendimento')->middleware('auth');
@@ -334,7 +331,6 @@ Route::middleware('auth')->group(function () {
     Route::post("/especialista/novoexame/", [\App\Http\Controllers\EspecialistaController::class, 'salvaNovoExame'])->name('especialista.salvaNovoExame');
     Route::post("/especialista/novomedicamento/", [\App\Http\Controllers\EspecialistaController::class, 'salvaNovoMedicamento'])->name('especialista.salvaNovoMedicamento');
 
-
     #CLINICA ++++++++++++++
     Route::get("/clinica/consultas/", [\App\Http\Controllers\ConsultaController::class, 'listConsultaporClinica'])->name('consulta.listConsultaporClinica');
     Route::get("/clinica/agenda/", [\App\Http\Controllers\ConsultaController::class, 'listConsultaAgendadaUserClinica'])->name('clinica.agendaConsultas');
@@ -346,17 +342,12 @@ Route::middleware('auth')->group(function () {
     Route::post("/clinica/agenda/consulta/cancelar/", [\App\Http\Controllers\ClinicaController::class, 'canelarconsultaViaClinica'])->name('clinica.canelarconsultaViaClinica');
     Route::get("/clinica/relatorio/especialista", [\App\Http\Controllers\ClinicaController::class, 'formRelatorioEspecialista'])->name('clinica.formRelatorioEspecialista');
 
-
     Route::get("/clinica/especialista/novasconsultas/{especialista_id}", [\App\Http\Controllers\ConsultaController::class, 'novaConsultasUserClinica'])->name('consulta.novaConsultasUserClinica');
     Route::post("/clinica/especialista/novasconsultas/saveagenda/", [\App\Http\Controllers\ConsultaController::class, 'saveVariasConsultasUserClinica'])->name('consulta.saveVariasConsultasUserClinica');
 
     #CAD_ESPECIALIDADE_USER_CLINICA
     Route::get("/clinica/especialidade/list", [\App\Http\Controllers\EspecialidadeclinicaController::class, 'listUserClinica'])->name('especialidadeclinica.listclinicas');
     Route::get("/clinica/especialidade/new", [\App\Http\Controllers\EspecialidadeclinicaController::class, 'newUserClinica'])->name('especialidadeclinica.newUserClinica');
-
-    
-
-
 
     #CONSULTAS_POR_CLINICA
     Route::get("/clinica/consultas/search", [\App\Http\Controllers\ConsultaController::class, 'listConsultaporClinicaPesquisar'])->name('consulta.listConsultaporClinicaPesquisar');
@@ -377,7 +368,10 @@ Route::middleware('auth')->group(function () {
     Route::get("/pacientes/lista", [\App\Http\Controllers\PacienteController::class, 'index'])->name('paciente.index');
     Route::get("/pacientes/create", [\App\Http\Controllers\PacienteController::class, 'create'])->name('paciente.create');
     Route::post("/pacientes/store", [\App\Http\Controllers\PacienteController::class, 'store'])->name('paciente.store');
-
+    
+    Route::get("/paciente/exames", [\App\Http\Controllers\PedidoExameController::class, 'pedidoExamesPaciente'])->name('paciente.pedido_exames.lista');
+    Route::post("/paciente/exames/arquivo/store", [\App\Http\Controllers\PedidoExameController::class, 'storeArquivoExame'])->name('paciente.pedido_exames.file_store');
+    Route::get("/paciente/exames/check", [\App\Http\Controllers\PedidoExameController::class, 'checkExame'])->name('paciente.pedido_exames.check');
 });
 
 /* ROTAS PARA SEREM ANALISADAS */

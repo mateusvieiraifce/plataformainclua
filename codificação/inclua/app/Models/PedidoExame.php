@@ -9,5 +9,11 @@ class PedidoExame extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['consulta_id', 'exame_id', 'laudo'];
+    protected $fillable = [
+        'consulta_id',
+        'exame_id',
+        'laudo',
+        'exame_efetuado',
+        'local_arquivo_exame'
+    ];
 }
