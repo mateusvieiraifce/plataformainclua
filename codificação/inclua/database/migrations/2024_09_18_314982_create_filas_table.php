@@ -11,7 +11,9 @@ class CreateFilasTable extends Migration
       $table->string('tipo')->nullable();
       $table->integer('ordem')->nullable();
       $table->dateTime('hora_entrou')->nullable();
-      $table->integer('consulta_id')->nullable();
+      $table->integer('clinica_id')->nullable();
+      $table->integer('especialista_id')->nullable();
+      $table->integer('paciente_id')->nullable();
       $table->timestamps();
     });
   }

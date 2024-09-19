@@ -189,13 +189,25 @@
                                     <form method="post" action="{{route('consulta.encaminharPaciente')}}">
                                           @csrf                                         
                                           <div class="row">
-                                             <div class="col-md-12 px-8">
+                                             <div class="col-md-8 px-8">
                                                 <div class="form-group">
+                                                <label style="color: #111111;">Local:</label>
                                                       <input style="color: #111111" type="text"
                                                          class="form-control" maxlength="150" name="local_consulta"
                                                          value="{{$ent->local_consulta}}" required>
                                                 </div>
                                              </div>
+                                             <div class="col-md-4 px-8">
+                                                <div class="form-group">
+                                                <label style="color: #111111;">Tipo de atendimento:</label>
+                                                      
+                                                <select  class="form-control" id="tipo_fila" name="tipo_fila" style="color: #111111">
+                                                   <option value="Normal">Normal</option>
+                                                   <option value="Prioritário">Prioritário</option>                                                 
+                                                </select>                                                
+                                             </div> 
+                                          </div>
+
                                              <input type="hidden" value="{{$ent->id}}" 
                                                 name="consulta_id">
                                                    <!--dados para pesquisa modal tipo L-->
