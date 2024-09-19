@@ -63,27 +63,31 @@
          <div class="card-header">
             <h6 class="title d-inline">Escolha o profissional</h6>
          </div>
-         <form method="post" action="{{route('fila.list')}}">
-            @csrf
-            <div class="col-md-10 px-8">
-               <div class="form-group">
-                  <label id="labelFormulario"></label>
-                  <select name="especialista_id" id="especialista_id" class="select2 form-control"
-                     title="Por favor selecionar ..." required style="border-color: white;">
-                     @foreach($lista as $iten)
-                   <option value="{{old('especialista_id', $iten->id)}}"> {{$iten->nome}}</option>
-                @endforeach
-                  </select>
+         <div class="card-body">
+            <form method="post" action="{{route('fila.list')}}">
+               @csrf
+               <div class="col-md-10 px-8">
+                  <div class="form-group">
+                     <label id="labelFormulario"></label>
+                     <select name="especialista_id" id="especialista_id" class="select2 form-control"
+                        title="Por favor selecionar ..." required style="border-color: white;">
+                        @foreach($lista as $iten)
+                     <option value="{{old('especialista_id', $iten->id)}}"> {{$iten->nome}}</option>
+                  @endforeach
+                     </select>
 
+                  </div>
                </div>
-            </div>
-         
-            <div class="row" style="padding-top: 30%;padding-left: 2%;">
-            <button class="btn btn-success" onclick="$('#send').click(); " style="margin-right: 5px;margin-left: 5px;">
+            
              
-               Visualizar Fila</button>
-               </div>
-         </form>
+          
+         </div>
+         <div class="col-2">
+               <button class="btn btn-success" onclick="$('#send').click(); " style="margin-right: 5px;margin-left: 5px;">
+               
+                  Visualizar Fila</button>
+                  </div>
+                  </form>
       </div>
    </div>
 </div>

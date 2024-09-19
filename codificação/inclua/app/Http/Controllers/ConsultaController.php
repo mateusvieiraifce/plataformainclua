@@ -573,11 +573,13 @@ class ConsultaController extends Controller
          $ordemFila = $ordemFila+1;
       }
 
+      $dataAtual = Carbon::now('America/Fortaleza');
+
       //aqui está salvando na Fila
       $entidade = Fila::create([
          'tipo' => $request->tipo_fila,
          'ordem' => $ordemFila,
-         'hora_entrou' => Carbon::today(),
+         'hora_entrou' => $dataAtual->format('Y-m-d H:i:s'),
          'clinica_id' => $consulta->clinica_id,
          'especialista_id' => $consulta->especialista_id,
          'paciente_id' => $consulta->paciente_id,

@@ -2,31 +2,189 @@
 @section('title', 'Fila')
 @section('content')
 
+<style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            padding: 20px;
+            max-width: 1000px;
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border: 1px solid #ddd;
+            table-layout: fixed;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        tr {
+            cursor: move;
+        }
+        tr.dragging {
+            opacity: 0.5;
+        }
+        tr:nth-child(odd) {
+            background-color: #BDA0E3; /* Cor para linhas ímpares */
+        }
+        tr:nth-child(even) {
+            background-color: #ffffff; /* Cor para linhas pares */
+        }
+    </style>
+
+
 
 <div class="row">
    <div class="col-lg-12 col-md-12">
-      <div class="card card-tasks">
+      <div class="card card-tasks" style="height: auto; min-height: 500px;">
          <div class="card-header">
-            <h6 class="title d-inline">Fila</h6>
+            <h6 class="title d-inline">Filas</h6>
          </div>
-         <form method="post" action="#">
-            @csrf
-          
-         
-            <div class="row" style="padding-top: 30%;padding-left: 2%;">
-            
-            <a href="{{route('fila.listEspecialistaDaClinica')}}" class="btn btn-primary"><i
-            class="fa fa-reply"></i> Voltar</a>
+         <div class="card-body">
+            <form method="post" action="#">
+               @csrf
+               <div class="container">  
+                  <div class="row">
+                        <div class="col-6">
+                           <table id="table1" >
+                                 <thead>
+                                    <tr>
+                                    <th colspan="2">Fila Normal</th>
+                                    </tr>
+                                    <tr>
+                                       <th>Nome</th>
+                                       <th>Entrou na fila</th>
+                                    </tr>
+                                 </thead>
+                                 <tbody>
+                                 @if(sizeof($listaTipoNormal) > 0)
+                                    @foreach($listaTipoNormal as $ent)
+                                    <tr draggable="true">
+                                          <td>{{$ent->nome}}</td>
+                                          <td> {{date( 'H:i' , strtotime($ent->hora_entrou))}}</td>
+                                    </tr>
+                                    @endforeach 
+                                 @endif   
 
-            <button class="btn btn-success" onclick="$('#send').click(); " style="margin-right: 5px;margin-left: 5px;">
-             
-              Salvar</button>
+                                 </tbody>
+                           </table>
+                        </div>
+                        <div class="col-6">
+                           <table id="table2">
+                                 <thead>
+                                 <tr>
+                                    <th colspan="2">Fila Prioritário</th>
+                                    </tr>
+                                    <tr>
+                                       <th>Nome</th>
+                                       <th>Entrou na fila</th>
+                                    </tr>
+                                 </thead>
+                                 <tbody>
+                                 @if(sizeof($listaTipoPrioritario) > 0)
+                                    @foreach($listaTipoPrioritario as $ent)
+                                    <tr draggable="true">
+                                          <td>{{$ent->nome}}</td>
+                                          <td> {{date( 'H:i' , strtotime($ent->hora_entrou))}}</td>
+                                    </tr>
+                                    @endforeach 
+                                 @endif  
+                                 </tbody>
+                           </table>
+                        </div>
+                  </div>        
                </div>
-
+            
              
+
+               
+            
+         </div>
+               <div class="row">  
+                  <div class="col-4">         
+                     <a href="{{route('fila.listEspecialistaDaClinica')}}" class="btn btn-primary"><i
+                     class="fa fa-reply"></i> Voltar</a>
+                     <button class="btn btn-success" onclick="$('#send').click(); " style="margin-right: 5px;margin-left: 5px;">             
+                     Salvar ordem</button>
+                  </div> 
+               </div>
          </form>
       </div>
    </div>
 </div>
 
+<script>
+        let draggingRow = null;
+
+        // Função para iniciar o arrasto
+        function handleDragStart(event) {
+            draggingRow = event.target.closest('tr');
+            draggingRow.classList.add('dragging');
+        }
+
+        // Função para finalizar o arrasto
+        function handleDragEnd(event) {
+            draggingRow.classList.remove('dragging');
+            draggingRow = null;
+        }
+
+        // Função para arrastar linhas dentro da mesma tabela
+        function handleDragOver(event) {
+            event.preventDefault();
+            const target = event.target.closest('tr');
+            if (target && target !== draggingRow && target.parentNode === draggingRow.parentNode) {
+                const rect = target.getBoundingClientRect();
+                const offsetY = event.clientY - rect.top;
+                const middle = rect.height / 2;
+                
+                if (offsetY < middle) {
+                    target.parentNode.insertBefore(draggingRow, target);
+                } else {
+                    target.parentNode.insertBefore(draggingRow, target.nextSibling);
+                }
+            }
+        }
+
+        // Função para mover linhas entre tabelas
+        function handleDrop(event) {
+            event.preventDefault();
+            if (draggingRow) {
+                const targetTable = event.target.closest('table');
+                if (targetTable && targetTable !== draggingRow.parentNode.parentNode) {
+                    const targetBody = targetTable.querySelector('tbody');
+                    targetBody.appendChild(draggingRow);
+                    draggingRow.classList.remove('dragging');
+                    draggingRow = null;
+                }
+            }
+        }
+
+        // Adiciona os eventos às tabelas
+        const tables = document.querySelectorAll('table');
+
+        tables.forEach(table => {
+            table.addEventListener('dragstart', handleDragStart);
+            table.addEventListener('dragend', handleDragEnd);
+            table.addEventListener('dragover', handleDragOver);
+            table.addEventListener('drop', handleDrop);
+        });
+    </script>
+
 @endsection
+
+   
+
+   

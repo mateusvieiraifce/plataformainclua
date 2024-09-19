@@ -12,15 +12,24 @@ class FilaController extends Controller
 {
    function list(Request $request)
    {     
-       dd($request->especialista_id);
+    
+      $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
 
-       //parei aqui
-       //fazer a insercao no hora que é definido o local da consulta
-      $listaTipoNormal = Fila::where('tipo','normal')->
-      orderBy('id', 'desc')->get();
-
-      $listaTipoPrioritario = Fila::where('tipo','prioritario')->
-      orderBy('id', 'desc')->get();
+      $listaTipoNormal = Fila::    
+      join('pacientes', 'pacientes.id', '=', 'filas.paciente_id')->   
+      where('especialista_id',$request->especialista_id)-> 
+      where('clinica_id',$clinica->id)->
+      where('tipo','Normal')->
+      select('filas.id', 'hora_entrou', 'ordem', 'nome')->
+      orderBy('ordem', 'asc')->get();
+     
+      $listaTipoPrioritario =  Fila:: 
+      join('pacientes', 'pacientes.id', '=', 'filas.paciente_id')->   
+      where('especialista_id',$request->especialista_id)-> 
+      where('clinica_id',$clinica->id)->
+      where('tipo','Prioritario')->
+      select('filas.id', 'hora_entrou', 'ordem', 'nome')->
+      orderBy('ordem', 'asc')->get();
 
       return view('userClinica/fila/listaFila', ['listaTipoNormal' => $listaTipoNormal,'listaTipoPrioritario' => $listaTipoPrioritario]);
    }

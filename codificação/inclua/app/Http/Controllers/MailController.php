@@ -59,7 +59,6 @@ class MailController extends Controller
             );
             echo json_encode($response);
         }
-
     }
 
     function enviarConviteEspecialista(Request $request)
@@ -71,7 +70,7 @@ class MailController extends Controller
           É com grande entusiasmo que a clínica ".$clinica->nome." o(a) convida a se unir à Plataforma Inclua, 
           uma rede inovadora e inclusiva de clínicas dedicadas a promover a acessibilidade 
           e a qualidade nos serviços de saúde.  <br>
-          Para fazer parte da plataforma basta você realizar o seu cadastro clicando no seguinte link: <br>
+          <br>
           ".env('APP_URL')."
            <br>
            Nossa equipe estará à disposição para fornecer mais informações 
