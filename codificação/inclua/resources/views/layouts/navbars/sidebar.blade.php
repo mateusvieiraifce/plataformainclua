@@ -11,7 +11,7 @@
                 ?>              
 
                 <li @if ($pageSlug=='listaAgenda' ) class="active " @endif>
-                    <a href="{{route('clinica.agendaConsultas')}}">
+                    <a href="{{route('consulta.agendaConsultas')}}">
                         <i class="tim-icons icon-calendar-60"></i>
                         <p>{{ __('Agenda') }}</p>
                     </a>

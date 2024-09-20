@@ -17,6 +17,8 @@ use App\Models\Exame;
 use App\Models\Medicamento;
 use App\Models\PedidoExame;
 use App\Models\TipoMedicamento;
+use Carbon\Carbon;
+use App\Models\Fila;
 
 
 class EspecialistaController extends Controller
@@ -262,8 +264,25 @@ class EspecialistaController extends Controller
       orderBy('pedido_medicamentos.created_at', 'desc')->
       select('pedido_medicamentos.id as id', 'nome_comercial','prescricao_indicada')->get(); 
     
-      //dd($listaPedidosExames);
-    //  dd($mostrarModal);
+      //modificando o statu da consulta para Consulta Em Atendimento
+      // e removendo da fila de espera
+      $ent = Consulta::find($consulta->id);
+      $ent->status = "Em Atendimento";
+      $dataAtual = Carbon::now('America/Fortaleza');
+      $ent->horario_iniciado = $dataAtual->format('Y-m-d H:i:s');     
+      $ent->save();
+      
+      $entidadeFila = Fila::
+         where('especialista_id', $consulta->especialista_id)->
+         where('clinica_id', $consulta->clinica_id)->
+         where('paciente_id', $consulta->paciente_id)->first();
+      if ($entidadeFila) {
+         $entidadeFila->delete();
+      }
+       
+   
+
+
       return view('userEspecialista/iniciaratendimento', [
          'consulta' => $consulta,
          'paciente' => $paciente,

@@ -341,8 +341,8 @@ Route::middleware('auth')->group(function () {
 
     #CLINICA ++++++++++++++
     Route::get("/clinica/consultas/", [\App\Http\Controllers\ConsultaController::class, 'listConsultaporClinica'])->name('consulta.listConsultaporClinica');
-    Route::get("/clinica/agenda/", [\App\Http\Controllers\ConsultaController::class, 'listConsultaAgendadaUserClinica'])->name('clinica.agendaConsultas');
-    Route::get("/clinica/agenda/search/", [\App\Http\Controllers\ConsultaController::class, 'listConsultaAgendadaUserClinicaPesquisar'])->name('clinica.agendaConsultasPesquisar');
+    Route::get("/clinica/agenda/", [\App\Http\Controllers\ConsultaController::class, 'listConsultaAgendadaUserClinica'])->name('consulta.agendaConsultas');
+    Route::get("/clinica/agenda/search/", [\App\Http\Controllers\ConsultaController::class, 'listConsultaAgendadaUserClinicaPesquisar'])->name('consulta.agendaConsultasPesquisar');
     Route::get("/clinica/pacientes/", [\App\Http\Controllers\ClinicaController::class, 'listaPacientes'])->name('clinica.listaPacientes');
     Route::get("/clinica/pacientes/search/", [\App\Http\Controllers\ClinicaController::class, 'listaPacientesPesquisar'])->name('clinica.listaPacientesPesquisar');
     Route::post("/clinica/agenda/encaminhar", [\App\Http\Controllers\ConsultaController::class, 'encaminharPaciente'])->name('consulta.encaminharPaciente');
@@ -366,7 +366,9 @@ Route::middleware('auth')->group(function () {
     
    #CAD_FILA_USER_CLINICA
     Route::any("/clinica/fila/especialista", [\App\Http\Controllers\FilaController::class, 'listEspecialistaDaClinica'])->name('fila.listEspecialistaDaClinica');
-    Route::post("/clinica/fila/list", [\App\Http\Controllers\FilaController::class, 'list'])->name('fila.list');
+    Route::any("/clinica/fila/list", [\App\Http\Controllers\FilaController::class, 'list'])->name('fila.list');
+    Route::post("/clinica/fila/novaordem", [\App\Http\Controllers\FilaController::class, 'salvarOrdemFilas'])->name('fila.salvarOrdemFilas');
+
 
     #CONSULTAS_POR_CLINICA
     Route::get("/clinica/consultas/search", [\App\Http\Controllers\ConsultaController::class, 'listConsultaporClinicaPesquisar'])->name('consulta.listConsultaporClinicaPesquisar');

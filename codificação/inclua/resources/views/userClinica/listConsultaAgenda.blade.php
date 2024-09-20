@@ -10,7 +10,7 @@
             <div class="card-header">
 
                <div class="col-lg-12 col-md-12">
-                  <form action="{{route('clinica.agendaConsultasPesquisar')}}" method="get" id="pesquisar">
+                  <form action="{{route('consulta.agendaConsultasPesquisar')}}" method="get" id="pesquisar">
                      @csrf
                      <label style="font-size: 20px"></label>
                      <fieldset>
@@ -119,7 +119,7 @@
                   <td>{{$ent->nome_paciente}} (CPF:{{$ent->cpf}})</td>
                   <td>{{$ent->nome_especialista}}</td>
                   <td> 
-                      @if($ent->status != 'Sala de espera')
+                      @if($ent->status != 'Sala de espera' && $ent->status != 'Em Atendimento')
                          <a style="width:160px; height:30px; text-align: center;padding:7px;
                           margin: 2px; font-size: 12px; "
                          rel="tooltip" title=" Fazer Encaminhamento" 
