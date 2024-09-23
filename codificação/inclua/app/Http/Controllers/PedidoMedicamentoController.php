@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 class PedidoMedicamentoController extends Controller
 {
    function salveVarios(Request $request)
-   {     
+   {  
       $pedidos = $request->input('medicamentos');
       foreach ($pedidos as $item) {
          $entidade = PedidoMedicamento::create([
@@ -16,6 +16,7 @@ class PedidoMedicamentoController extends Controller
             'medicamento_id' => $item
          ]);
       }
+
       return redirect()->route('especialista.iniciarAtendimento', [$request->consulta_id, "prescricoes"]);
    }
 
