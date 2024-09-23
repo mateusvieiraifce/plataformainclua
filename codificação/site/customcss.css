@@ -246,6 +246,27 @@
   }
 }
 
+@media (max-width: 1572px) {
+  #turnon-flex-div {
+    display: flex;
+    gap: 20px; 
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 873px) {
+  #turnon-margin-top-paragraph {
+    margin-top: 0px;
+  }
+}
+
+
+@media (min-width: 1573px) {
+  #turnon-margin-top {
+  margin-top: 50px; 
+  }
+}
+
 .dosis-font {
   font-family: 'Dosis';
 }
