@@ -1,11 +1,9 @@
 <?php
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
-class Especialidadeclinica extends Model
+class Fila extends Model
 {
   use HasFactory;
-  protected $fillable = ['valor', 'clinica_id','is_vinculado', 'especialidade_id'];
+  protected $fillable = ['tipo', 'ordem', 'hora_entrou', 'clinica_id', 'especialista_id','paciente_id'];
 } ?>

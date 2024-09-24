@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Consulta;
 use App\Models\Clinica;
+use App\Models\Fila;
 use App\Models\Especialidadeclinica;
 use App\Models\Especialistaclinica;
 use Illuminate\Database\QueryException;
@@ -559,6 +560,32 @@ class ConsultaController extends Controller
       //salvo o novo status da consulta
       $consulta->status = "Sala de espera";
       $consulta->save();
+    
+      $ordemFila = Fila::    
+      where('especialista_id',$consulta->especialista_id)-> 
+      where('clinica_id',$consulta->clinica_id)->
+      where('tipo',$request->tipo_fila)->max('ordem');
+
+      //pegando o ultimo na fila
+      if(!isset($ordemFila)){
+         $ordemFila = 1;
+      }else{
+         $ordemFila = $ordemFila+1;
+      }
+
+      $dataAtual = Carbon::now('America/Fortaleza');
+
+      //aqui está salvando na Fila
+      $entidade = Fila::create([
+         'tipo' => $request->tipo_fila,
+         'ordem' => $ordemFila,
+         'hora_entrou' => $dataAtual->format('Y-m-d H:i:s'),
+         'clinica_id' => $consulta->clinica_id,
+         'especialista_id' => $consulta->especialista_id,
+         'paciente_id' => $consulta->paciente_id,
+      ]);
+
+
 
       $msg = ['valor' => trans("Encaminhamento realizado com sucesso!"), 'tipo' => 'success'];
       $request->merge([

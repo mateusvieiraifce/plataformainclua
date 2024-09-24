@@ -66,7 +66,7 @@ class Helper
                     Esta mensagem foi enviada de um endereço de e-mail que apenas envia mensagens.<br>
                     Para obter mais informações sobre sua conta, envie e-mail para: '.env("EMAIL_ADMIN").'
                     <br /><br />
-                    &copy; ' . date('Y') . ' Todos os direitos reservados Ecomoda
+                    &copy; ' . date('Y') . ' Todos os direitos reservados Plataforma Inclua
                 </font><br />
                 ';
 

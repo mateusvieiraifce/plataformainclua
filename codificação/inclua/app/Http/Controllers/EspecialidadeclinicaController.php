@@ -17,47 +17,62 @@ class EspecialidadeclinicaController extends Controller
          $filter = $_GET['filtro'];
       }
 
-      $clinica  = Clinica::where('usuario_id',Auth::user()->id)->first();
+      $clinica = Clinica::where('usuario_id', Auth::user()->id)->first();
 
-      $lista = Especialidadeclinica::join('especialidades', 'especialidades.id', '=', 'especialidade_id')->      
-      where('clinica_id', '=', $clinica->id)->
-      orderBy('id', 'desc')->
-      select('especialidadeclinicas.id','especialidades.descricao', 'valor')->
-      paginate(8);
-    
-      //dd('asdf');
-      return view('userClinica/cadEspecialidade/list', ['lista' => $lista, 
-      'filtro' => $filter,'msg' => $msg]);
+      $lista = Especialidadeclinica::join('especialidades', 'especialidades.id', '=', 'especialidade_id')->
+         where('clinica_id', '=', $clinica->id)->
+         orderBy('especialidades.descricao', 'asc')->
+         select('especialidadeclinicas.id', 'especialidades.descricao', 'valor', 'especialidadeclinicas.is_vinculado as isVinculado')->
+         paginate(8);
+      return view('userClinica/cadEspecialidade/list', [
+         'lista' => $lista,
+         'filtro' => $filter,
+         'msg' => $msg
+      ]);
    }
 
-   function list($clinica_id,$msg = null)
+   function list($clinica_id, $msg = null)
    {
       $filter = "";
       if (isset($_GET['filtro'])) {
          $filter = $_GET['filtro'];
       }
 
-      $clinica  = Clinica::find($clinica_id);
+      $clinica = Clinica::find($clinica_id);
 
 
-      $lista = Especialidadeclinica::join('especialidades', 'especialidades.id', '=', 'especialidade_id')->      
-      where('clinica_id', '=', $clinica_id)->
-      orderBy('id', 'desc')->
-      select('especialidadeclinicas.id','especialidades.descricao', 'valor')->
-      paginate(8);
+      $lista = Especialidadeclinica::join('especialidades', 'especialidades.id', '=', 'especialidade_id')->
+         where('clinica_id', '=', $clinica_id)->
+         orderBy('id', 'desc')->
+         select('especialidadeclinicas.id', 'especialidades.descricao', 'valor')->
+         paginate(8);
       return view('especialidadeclinica/list', ['lista' => $lista, 'filtro' => $filter, 'clinica' => $clinica, 'msg' => $msg]);
    }
 
    function new($clinica_id)
    {
       $clinica = Clinica::find($clinica_id);
-      return view('especialidadeclinica/form', ['entidade' => new Especialidadeclinica(), 'clinica' => $clinica,'especialidades' =>Especialidade::all()]);
+      return view('especialidadeclinica/form', ['entidade' => new Especialidadeclinica(), 'clinica' => $clinica, 'especialidades' => Especialidade::all()]);
    }
 
    function newUserClinica()
    {
-      $clinica  = Clinica::where('usuario_id',Auth::user()->id)->first();
-      return view('userClinica/cadEspecialidade/form', ['entidade' => new Especialidadeclinica(), 'clinica' => $clinica,'especialidades' =>Especialidade::all()]);
+      $clinica = Clinica::where('usuario_id', Auth::user()->id)->first();
+      return view('userClinica/cadEspecialidade/form', ['entidade' => new Especialidadeclinica(), 'clinica' => $clinica, 'especialidades' => Especialidade::all()]);
+   }
+
+   function editUserClinica($id)
+   {
+      $entidade = Especialidadeclinica::find($id);
+      $clinica = Clinica::where('usuario_id', Auth::user()->id)->first();
+      return view(
+         'userClinica/cadEspecialidade/form',
+         [
+            'entidade' => $entidade,
+            'clinica' => $clinica,
+            'especialidades' => Especialidade::all()
+         ]
+      );
    }
 
 
@@ -80,12 +95,35 @@ class EspecialidadeclinicaController extends Controller
          $entidade = Especialidadeclinica::create([
             'especialidade_id' => $request->especialidade_id,
             'valor' => $request->valor,
-            'clinica_id' => $clinica_id
+            'clinica_id' => $clinica_id,
+            'is_vinculado' => true
          ]);
       }
       $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
       return $this->list($clinica_id, $msg);
    }
+
+   function saveUserClinica(Request $request)
+   {
+     
+      $clinica_id = $request->clinica_id;
+      if ($request->id) {
+         $ent = Especialidadeclinica::find($request->id);
+         $ent->valor = $request->valor;
+         $ent->save();
+      } else {
+         $entidade = Especialidadeclinica::create([
+            'especialidade_id' => $request->especialidade_id,
+            'valor' => $request->valor,
+            'clinica_id' => $clinica_id,
+            'is_vinculado' => true
+         ]);
+      }
+      $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
+      return $this->listUserClinica( $msg);
+   }
+
+
    function delete($id)
    {
       $clinica_id = 0;
@@ -103,12 +141,31 @@ class EspecialidadeclinicaController extends Controller
       }
       return $this->list($clinica_id, $msg);
    }
+
+   function alterarvinculo($id)
+   {
+      try {
+         $entidade = Especialidadeclinica::find($id);
+         if ($entidade) {
+            $entidade->is_vinculado = !$entidade->is_vinculado;
+            $msg = ['valor' => trans("Vínculo alterado com sucesso!"), 'tipo' => 'success'];
+            $entidade->save();
+         }
+      } catch (QueryException $exp) {
+         $msg = ['valor' => $exp->getMessage(), 'tipo' => 'primary'];
+      }
+      return $this->listUserClinica($msg);
+   }
+
+
+
+
    function edit($id)
    {
       $entidade = Especialidadeclinica::find($id);
       $clinica_id = $entidade->clinica_id;
       $clinica = Clinica::find($clinica_id);
-      return view('especialidadeclinica/form', ['entidade' => $entidade, 'clinica' => $clinica,'especialidades' =>Especialidade::all()]);
+      return view('especialidadeclinica/form', ['entidade' => $entidade, 'clinica' => $clinica, 'especialidades' => Especialidade::all()]);
    }
 
 } ?>

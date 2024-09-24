@@ -18,9 +18,23 @@ use App\Rules\CnpjValidationRule;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Mail\ConvidarEspecialistaMailable;
+use Illuminate\Support\Facades\Mail;
 
 class ClinicaController extends Controller
 {
+
+   public function enviarConviteEspecialista(Request $request)
+   {  
+
+      Mail::to($request->email_destino)->send(new ConvidarEspecialistaMailable());
+       
+      $msg = ['valor' => trans("E-mail enviado com sucesso!"), 'tipo' => 'success'];
+      $especialistaclinicaController = new EspecialistaclinicaController();
+      return $especialistaclinicaController->list($msg);
+   }
+
+
    function list($msg = null)
    {
       $filter = "";
@@ -357,6 +371,7 @@ class ClinicaController extends Controller
         $lista = Especialidadeclinica::join('especialidades', 'especialidades.id', 
         '=', 'especialidadeclinicas.especialidade_id')->
         where('clinica_id', $clinica->id)->
+        where('is_vinculado', 1)->
         orderBy('especialidades.descricao', 'asc')->
         select('especialidades.id', 'especialidades.descricao')->paginate(8);       
         return view('userClinica/marcarConsulta/selecionarEspecialidadePasso2', ['lista' => $lista, 'paciente_id' => $paciente_id]);

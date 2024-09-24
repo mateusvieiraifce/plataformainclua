@@ -123,7 +123,7 @@
 
 <div class="row">
     <div class="col-lg-12 col-md-12">
-        <div class="card card-tasks">
+        <div class="card card-tasks"  style="height: auto; min-height: 500px;">
             <div class="card-header">
                 <div class="navigation">
                     <button onclick="previousWeek()">

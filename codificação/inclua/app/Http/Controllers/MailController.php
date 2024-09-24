@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Helper;
 use Illuminate\Http\Request;
 use PHPMailer\PHPMailer\PHPMailer;
+use App\Models\Clinica;
+use Illuminate\Support\Facades\Auth;
 
 class MailController extends Controller
 {
@@ -57,6 +59,35 @@ class MailController extends Controller
             );
             echo json_encode($response);
         }
+    }
+
+    function enviarConviteEspecialista(Request $request)
+    {
+        $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
+        
+        $assunto = "Convite para participar da Plataforma Inclua";
+        $texto = " Prezado(a) ".$request->nome.", <br>          
+          É com grande entusiasmo que a clínica ".$clinica->nome." o(a) convida a se unir à Plataforma Inclua, 
+          uma rede inovadora e inclusiva de clínicas dedicadas a promover a acessibilidade 
+          e a qualidade nos serviços de saúde.  <br>
+          <br>
+          ".env('APP_URL')."
+           <br>
+           Nossa equipe estará à disposição para fornecer mais informações 
+           e ajudá-lo(a) a integrar-se à nossa rede de forma eficiente.
+          
+          ";
+       
+        $emissor = $request->email_destino;//email do destino
+        $name="";
+        
+       // dd($texto);
+        Helper::sendEmail($assunto, $texto,  $emissor, $name);
+        
+        $msg = ['valor' => trans("Convite enviado com sucesso!"), 'tipo' => 'success'];
+        $especialistaclinicaController = new EspecialistaclinicaController();
+        return $especialistaclinicaController->list($msg);
+    
 
     }
 }

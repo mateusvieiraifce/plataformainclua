@@ -10,7 +10,7 @@
             <div class="card-header">
 
                <div class="col-lg-12 col-md-12">
-                  <form action="{{route('clinica.agendaConsultasPesquisar')}}" method="get" id="pesquisar">
+                  <form action="{{route('consulta.agendaConsultasPesquisar')}}" method="get" id="pesquisar">
                      @csrf
                      <label style="font-size: 20px"></label>
                      <fieldset>
