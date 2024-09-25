@@ -429,13 +429,13 @@ class ClinicaController extends Controller
    {
       $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
      
-      $statusConsulta = "Finalizada";
+    //  $statusConsulta = "Finalizada";
       // Obter pacientes e o número de consultas que cada um teve
       $lista = Paciente::select('pacientes.id', 'pacientes.nome as nome_paciente',
       'pacientes.cpf', 'pacientes.data_nascimento', 
       DB::raw('COUNT(consultas.id) as total_consultas'))
          ->leftJoin('consultas', 'pacientes.id', '=', 'consultas.paciente_id')
-         ->where('status', '=', $statusConsulta)
+      //   ->where('status', '=', $statusConsulta)
          ->where('clinica_id', '=', $clinica->id)
          ->groupBy('pacientes.id', 'pacientes.nome','pacientes.cpf','pacientes.data_nascimento')
          ->paginate(8);
@@ -464,13 +464,13 @@ class ClinicaController extends Controller
             $cpf = $_GET['cpf'];
       }
 
-      $statusConsulta = "Finalizada";
+    //  $statusConsulta = "Finalizada";
       // Obter pacientes e o número de consultas que cada um teve
       $lista = Paciente::select('pacientes.id', 'pacientes.nome as nome_paciente',
       'pacientes.cpf', 'pacientes.data_nascimento', 
       DB::raw('COUNT(consultas.id) as total_consultas'))
          ->leftJoin('consultas', 'pacientes.id', '=', 'consultas.paciente_id')
-         ->where('status', '=', $statusConsulta)
+       //  ->where('status', '=', $statusConsulta)
          ->where('clinica_id', '=', $clinica->id)
          ->where('nome', 'like', "%" . $filtro . "%")
          -> where('cpf', 'like', "%" . $cpf . "%")

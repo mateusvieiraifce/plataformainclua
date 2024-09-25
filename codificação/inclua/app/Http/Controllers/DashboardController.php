@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Cartao;
+use App\Models\Especialistaclinica;
 use App\Models\Vendas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -22,8 +22,37 @@ class DashboardController extends Controller
          }
          elseif ($user->tipo_user ==='C') {
             //home user Clinica
-            return redirect()->route('consulta.agendaConsultas');
+           //  return redirect()->route('consulta.agendaConsultas');
+           return $this->dashboardClinica();
          }
         return view('dashboard');
     }
+
+    function dashboardClinica()
+    {
+        $dataAtual = Carbon::now();
+        $umAnoAntes = $dataAtual->subYear();
+        $dataAtual = Carbon::now();
+
+        $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();    
+        //retornando todos os especialistas vinculados       
+        $especialistas = Especialistaclinica::join('especialistas', 'especialistas.id', '=',
+        'especialistaclinicas.especialista_id')->
+        where('clinica_id', $clinica->id)->     
+        orderBy('especialistas.nome', 'asc')->
+        select('especialistas.id', 'especialistas.nome')->get();
+      
+        //parei aqui
+        $TodasVendasPorMes = Vendas::whereBetween('data_venda', [$umAnoAntes, $dataAtual])
+            ->selectRaw('MONTH(data_venda) as mes, sum(total) as total_vendas, count(*) as quantidade, sum(lucro) as total_lucro')
+            ->where('vendas.tipo', '=', 'venda')
+            ->groupBy(Vendas::raw('MONTH(data_venda)'))
+            ->limit(12)
+            ->get();
+      
+
+        return view('userClinica/dashboard', ['lista' => $especialistas, 'TodasVendasPorMes' => $TodasVendasPorMes]);
+    }
+
+
 }
