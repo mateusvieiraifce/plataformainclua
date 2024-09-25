@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Especialistaclinica;
-use App\Models\Vendas;
+use App\Models\Clinica;
+use App\Models\Consulta;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
@@ -43,15 +45,29 @@ class DashboardController extends Controller
         select('especialistas.id', 'especialistas.nome')->get();
       
         //parei aqui
+      // selecionar as consultas na qual o status igual a finalizado
+      $TodasConsultasPorMes = Consulta::join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')->
+      where('consultas.clinica_id', '=', $clinica->id)->
+      where('status', 'Finalizada')->
+      whereBetween('horario_agendado', [$umAnoAntes, $dataAtual])->
+      selectRaw('MONTH(horario_agendado) as mes, sum(preco) as preco_total, 
+            count(*) as quantidade')->
+      groupBy(Consulta::raw('MONTH(horario_agendado)'))->
+      limit(12)->get();
+
+     // dd($TodasConsultasPorMes);
+
+
+/*
         $TodasVendasPorMes = Vendas::whereBetween('data_venda', [$umAnoAntes, $dataAtual])
-            ->selectRaw('MONTH(data_venda) as mes, sum(total) as total_vendas, count(*) as quantidade, sum(lucro) as total_lucro')
+            ->selectRaw('MONTH(data_venda) as mes, sum(total) as total_vendas, 
+            count(*) as quantidade, sum(lucro) as total_lucro')
             ->where('vendas.tipo', '=', 'venda')
             ->groupBy(Vendas::raw('MONTH(data_venda)'))
             ->limit(12)
-            ->get();
-      
+            ->get();*/      
 
-        return view('userClinica/dashboard', ['lista' => $especialistas, 'TodasVendasPorMes' => $TodasVendasPorMes]);
+        return view('userClinica/dashboard', ['lista' => $especialistas, 'TodasVendasPorMes' => $TodasConsultasPorMes]);
     }
 
 
