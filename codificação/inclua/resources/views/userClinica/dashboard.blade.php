@@ -1,4 +1,4 @@
-@extends('layouts.app', ['page' => __('DASHBOARD'),  'exibirPesquisa' => false, 'pageSlug' => 'DASHBOARD', 'class' => 'clinica'])
+@extends('layouts.app', ['page' => __('dashboard'),  'exibirPesquisa' => false, 'pageSlug' => 'dashboard', 'class' => 'clinica'])
 @section('content')
 @section('title', 'DASHBOARD')
 
@@ -23,7 +23,7 @@
                                 </label>
                                 <label class="btn btn-sm btn-primary btn-simple" id="1" onclick="geraGrafico(this)">
                                     <input type="radio" id="compra" class="d-none d-sm-none" name="options">
-                                    <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Quantidades</span>
+                                    <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Quantidades de consultas</span>
                                     <span class="d-block d-sm-none">
                                     <i class="tim-icons icon-delivery-fast"></i>
                                 </span>
@@ -52,8 +52,8 @@
                                 var data = google.visualization.arrayToDataTable([
                                     ['', 'Total no mês'
                                     ],
-                                        @foreach($TodasVendasPorMes as $vendasMes)
-                                    [meses[{{$vendasMes->mes}} - 1], {{$vendasMes->preco_total}}
+                                        @foreach($TodasConsultasPorMes as $entidadeMes)
+                                    [meses[{{$entidadeMes->mes}} - 1], {{$entidadeMes->preco_total}}
                                     ],
                                     @endforeach
                                 ]);
@@ -90,7 +90,47 @@
 
                             //aqui grafico com totais de consultas
                             //basta mudar a varialvel total para quantidade
-                            
+                            function drawChartQuantidade() {
+                                var data = google.visualization.arrayToDataTable([
+                                    ['', 'Total no mês'
+                                    ],
+                                        @foreach($TodasConsultasPorMes as $entidadeMes)
+                                    [meses[{{$entidadeMes->mes}} - 1], {{$entidadeMes->quantidade}}
+                                    ],
+                                    @endforeach
+                                ]);
+                                var options = {
+                                    title: '',
+                                    curveType: 'function',
+                                    legend: {position: 'bottom'},
+                                    colors: ['#80b6f4'],
+                                    backgroundColor: 'transparent',
+                                    hAxis: {
+                                        textStyle: {
+                                            color: '#ffffff' // Cor do texto do eixo horizontal
+                                        }
+                                    },
+                                    vAxis: {
+                                        titleTextStyle: {
+                                            color: '#ffffff'
+                                        },
+                                        textStyle: {
+                                            color: '#ffffff' // Cor do texto do eixo vertical
+                                        }
+                                    },
+                                    legend: {
+                                        textStyle: {
+                                            color: '#ffffff' // Cor do texto da legenda
+                                        }
+                                    },
+                                    pointSize: 5,
+                                    pointHoverBackgroundColor: '#d048b6',
+                                };
+                                var chart = new google.visualization.LineChart(document.getElementById('graficoVendasGeral'));
+                                chart.draw(data, options);
+                            }
+
+                         
                           
                         </script>
 
@@ -103,14 +143,9 @@
                                 }
                                 if (label.id == '1') {
                                     google.charts.load('current', {'packages': ['corechart']});
-                                    google.charts.setOnLoadCallback(drawChart);
+                                    google.charts.setOnLoadCallback(drawChartQuantidade);
 
-                                }
-                                if (label.id == '2') {
-                                    google.charts.load('current', {'packages': ['corechart']});
-                                    google.charts.setOnLoadCallback(drawChart);
-
-                                }
+                                }                              
 
                             }
                         </script>
@@ -133,6 +168,128 @@
         </div>
     </div>
 
+
+     <!-- graficos por vendedor -->
+     <div class="row">
+
+@if(sizeof($lista)>0)
+    @foreach($lista as $ent)
+            <?php
+            $total = 0;
+            ?>
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script type="text/javascript">
+            var meses = [
+                "Janeiro", "Fevereiro", "Março",
+                "Abril", "Maio", "Junho",
+                "Julho", "Agosto", "Setembro",
+                "Outubro", "Novembro", "Dezembro"
+            ];
+            google.charts.load('current', {'packages': ['corechart']});
+            google.charts.setOnLoadCallback(drawChartEspecialista);
+
+            function drawChartEspecialista() {
+                var data = google.visualization.arrayToDataTable([
+                    ['', 'Total no mês'
+                    ],
+                    //aqui faz a busca no controle de acordo com o usuario que estou passando
+                        @php
+                            $dataAtual = \Carbon\Carbon::now();
+                             $SeisMesesAntes =\Carbon\Carbon::now()->subMonths(6);
+                             $dataAtual = \Carbon\Carbon::now();
+
+                             $clinica = \App\Models\Clinica::where('usuario_id', '=', Auth::user()->id)->first();    
+                             $TodasConsultasPorMes = \App\Models\Consulta::join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')->
+                            where('consultas.clinica_id', '=', $clinica->id)->
+                            where('status', 'Finalizada')->
+                            //selecinar por especialista
+                            where('especialista_id', $ent->id)->
+                            whereBetween('horario_agendado', [$SeisMesesAntes, $dataAtual])->
+                            selectRaw('MONTH(horario_agendado) as mes, sum(preco) as preco_total, 
+                                    count(*) as quantidade')->
+                            groupBy(\App\Models\Consulta::raw('MONTH(horario_agendado)'))->
+                            limit(6)->get();                           
+                        @endphp
+
+                        @if(sizeof($TodasConsultasPorMes)>0)
+                        @foreach($TodasConsultasPorMes as $entidadeMes)
+                            @php
+                               $total =$total+ $entidadeMes->quantidade
+                            @endphp
+                         [meses[{{$entidadeMes->mes}} - 1], {{$entidadeMes->quantidade}}
+                        ],
+                       @endforeach
+                       @else
+                   [0, 0],
+                   @endif
+               ]);
+               var options = {
+                   title: '',
+                   curveType: 'function',
+                   colors: ['#80b6f4'],
+                   backgroundColor: 'transparent',
+                   hAxis: {
+                       textStyle: {
+                           color: '#ffffff' // Cor do texto do eixo horizontal
+                       }
+                   },
+                   vAxis: {
+                       titleTextStyle: {
+                           color: '#ffffff'
+                       },
+                       textStyle: {
+                           color: '#ffffff' // Cor do texto do eixo vertical
+                       }
+                   },
+                   legend: {
+                       textStyle: {
+                           color: '#ffffff' // Cor do texto da legenda
+                       },
+                       position: 'bottom'
+                   },
+                   pointSize: 5,
+                   pointHoverBackgroundColor: '#d048b6',
+               };
+               var chart = new google.visualization.LineChart(document.getElementById('graficoPorUsuario{{$ent->id}}'));
+               chart.draw(data, options);
+           }
+
+           google.charts.load('current', {'packages': ['corechart']});
+           google.charts.setOnLoadCallback(drawChart);
+       </script>
+
+       <div class="col-lg-4">
+           <div class="card card-chart">
+               <div class="card-header">
+                   <h4 class="card-title">
+                   @php
+                       $especialista = \App\Models\Especialista::find($ent->id);                        
+                   @endphp
+                   {{$especialista->nome}}
+
+                   </h4>
+                   <h7 id="label{{$ent->id}}" class="card-title"><i class="tim-icons icon-sound-wave text-primary"></i>Consultas finalizadas nos últimos 6 meses:
+                       {{  $total}}</h7>
+               </div>
+               <div class="card-body">
+                   <div class="chart-area">
+
+
+                       <div id="graficoPorUsuario{{$ent->id}}" style="width: 100%; height:100%"></div>
+                       <br>
+
+                       <!-- End counter -->
+
+
+                   </div>
+               </div>
+           </div>
+       </div>
+   @endforeach
+@endif
+
+
+</div>
    
 
 @endsection

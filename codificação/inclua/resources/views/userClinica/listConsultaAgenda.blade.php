@@ -1,6 +1,6 @@
 @extends('layouts.app', ['page' => __('Consultas'), 'exibirPesquisa' => false, 'pageSlug' => 'listaAgenda', 'class' => 'agenda'])
 @section('content')
-
+@section('title', 'Agenda')
 
 
 <div class="card">

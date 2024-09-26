@@ -10,6 +10,13 @@
                    $clinica = App\Models\Clinica::where('usuario_id', '=', Auth::user()->id)->first();
                 ?>              
 
+                <li @if ($pageSlug=='dashboard' ) class="active " @endif>
+                    <a href="{{route('dashboard.dashboardClinica')}}">
+                        <i class="tim-icons icon-chart-pie-36"></i>
+                        <p>{{ __('Dashboard') }}</p>
+                    </a>
+                </li> 
+
                 <li @if ($pageSlug=='listaAgenda' ) class="active " @endif>
                     <a href="{{route('consulta.agendaConsultas')}}">
                         <i class="tim-icons icon-calendar-60"></i>

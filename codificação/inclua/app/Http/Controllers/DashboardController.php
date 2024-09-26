@@ -23,9 +23,8 @@ class DashboardController extends Controller
             return redirect()->route('consulta.listconsultaporespecialista');
          }
          elseif ($user->tipo_user ==='C') {
-            //home user Clinica
-           //  return redirect()->route('consulta.agendaConsultas');
-           return $this->dashboardClinica();
+          //home user Clinica
+          return redirect()->route('dashboard.dashboardClinica');
          }
         return view('dashboard');
     }
@@ -44,30 +43,17 @@ class DashboardController extends Controller
         orderBy('especialistas.nome', 'asc')->
         select('especialistas.id', 'especialistas.nome')->get();
       
-        //parei aqui
-      // selecionar as consultas na qual o status igual a finalizado
-      $TodasConsultasPorMes = Consulta::join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')->
-      where('consultas.clinica_id', '=', $clinica->id)->
-      where('status', 'Finalizada')->
-      whereBetween('horario_agendado', [$umAnoAntes, $dataAtual])->
-      selectRaw('MONTH(horario_agendado) as mes, sum(preco) as preco_total, 
-            count(*) as quantidade')->
-      groupBy(Consulta::raw('MONTH(horario_agendado)'))->
-      limit(12)->get();
-
-     // dd($TodasConsultasPorMes);
-
-
-/*
-        $TodasVendasPorMes = Vendas::whereBetween('data_venda', [$umAnoAntes, $dataAtual])
-            ->selectRaw('MONTH(data_venda) as mes, sum(total) as total_vendas, 
-            count(*) as quantidade, sum(lucro) as total_lucro')
-            ->where('vendas.tipo', '=', 'venda')
-            ->groupBy(Vendas::raw('MONTH(data_venda)'))
-            ->limit(12)
-            ->get();*/      
-
-        return view('userClinica/dashboard', ['lista' => $especialistas, 'TodasVendasPorMes' => $TodasConsultasPorMes]);
+        // selecionar as consultas na qual o status igual a finalizado
+        $TodasConsultasPorMes = Consulta::join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')->
+        where('consultas.clinica_id', '=', $clinica->id)->
+        where('status', 'Finalizada')->
+        whereBetween('horario_agendado', [$umAnoAntes, $dataAtual])->
+        selectRaw('MONTH(horario_agendado) as mes, sum(preco) as preco_total, 
+                count(*) as quantidade')->
+        groupBy(Consulta::raw('MONTH(horario_agendado)'))->
+        limit(12)->get();
+   
+        return view('userClinica/dashboard', ['lista' => $especialistas, 'TodasConsultasPorMes' => $TodasConsultasPorMes]);
     }
 
 

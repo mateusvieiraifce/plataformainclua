@@ -100,6 +100,9 @@ Route::post("/updatepassword", [\App\Http\Controllers\UsuarioController::class, 
 Route::middleware('auth')->group(function () {
     #DASHBORD
     Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'home'])->name('home');
+    Route::get('/dashboard/clinica', [\App\Http\Controllers\DashboardController::class, 'dashboardClinica'])->name('dashboard.dashboardClinica');
+
+    
 
     Route::get("/turnvendedor", [\App\Http\Controllers\UsuarioController::class, 'turnVendedor'])->name('user.turnvendedor');
 
