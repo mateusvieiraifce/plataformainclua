@@ -9,7 +9,7 @@
                     <div class="row">
                         <div class="col-sm-6 text-left">
                             <h5 class="card-category">Controle de movimentações (1 ano)</h5>
-                            <h2 class="card-title">Totais por mês </h2>
+                            <h2 class="card-title">Consultas</h2>
                         </div>
                         <div class="col-sm-6">
                             <div class="btn-group btn-group-toggle float-right" data-toggle="buttons">

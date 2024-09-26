@@ -429,14 +429,14 @@
                 </li>
 
                 <li @if ($pageSlug=='favoritos' ) class="active " @endif>
-                    <a href="{{route('user.favoritos')}}">
+                    <a href="#">
                         <i class="tim-icons icon-coins"></i>
                         <p>{{ __('Histórico de Recebimentos') }}</p>
                     </a>
                 </li>
 
                 <li @if ($pageSlug=='favoritos' ) class="active " @endif>
-                    <a href="{{route('user.favoritos')}}">
+                    <a href="#">
                         <i class="tim-icons icon-chat-33"></i>
                         <p>{{ __('Reputação') }}</p>
                     </a>
