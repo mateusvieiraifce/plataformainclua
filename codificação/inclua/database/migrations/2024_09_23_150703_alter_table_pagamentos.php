@@ -16,6 +16,8 @@ class AlterTablePagamentos extends Migration
         Schema::table('pagamentos', function (Blueprint $table) {
             $table->string('transaction_code', 256);
             $table->string('status');
+            $table->string('servico');
+            $table->dateTime('data_pagamento')->change();
         });
     }
 

@@ -33,7 +33,9 @@
                             <h5>Não há nenhuma especialidade cadastrada.</h5>
                         @endif
                     </div>
-                    <a href="{{ route('paciente.marcarConsultaViaClinicaPasso1') }}" class="btn btn-primary"><i class="fa fa-reply"></i> Voltar</a>
+                    <a href="{{ route('paciente.marcarConsultaViaClinicaPasso1') }}" class="btn btn-primary">
+                        <i class="fa fa-reply"></i> Voltar
+                    </a>
                 </div>
             </div>
         </div>

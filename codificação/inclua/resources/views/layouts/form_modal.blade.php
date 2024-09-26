@@ -5,7 +5,7 @@
             <div class="modal-header">
                 <label class="title-medium">{{ $title }}</label>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
+                    <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">                
@@ -20,7 +20,7 @@
                     Fechar
                 </button>
                 <button class="btn btn-primary label-medium" type="button" onclick="$('#send').click();">
-                    Salvar <i class="fa fa-save"></i>
+                    {{ $textButton }}
                 </button>
             </div>
         </div>

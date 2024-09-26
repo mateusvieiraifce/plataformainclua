@@ -33,7 +33,9 @@
                             Não nenhum especialista cadastrado.
                         @endif
                     </div>
-                    <a href="{{ route('paciente.marcarConsultaViaClinicaPasso2', $clinica_id) }}" class="btn btn-primary"><i class="fa fa-reply"></i> Voltar</a>
+                    <a href="{{ route('paciente.marcarConsultaViaClinicaPasso2', $clinica_id) }}" class="btn btn-primary">
+                        <i class="fa fa-reply"></i> Voltar
+                    </a>
                 </div>
             </div>
         </div>

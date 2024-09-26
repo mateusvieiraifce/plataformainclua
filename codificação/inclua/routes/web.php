@@ -317,7 +317,8 @@ Route::middleware('auth')->group(function () {
     #CONSULTAS_USER_PACIENTE
     Route::get("/paciente/minhasconsultas/", [\App\Http\Controllers\PacienteController::class, 'minhasconsultas'])->name('paciente.minhasconsultas');
     Route::get("/paciente/historicoconsultas/", [\App\Http\Controllers\PacienteController::class, 'historicoconsultas'])->name('paciente.historicoconsultas');
-    Route::post("/paciente/cancelar/", [\App\Http\Controllers\PacienteController::class, 'canelarconsulta'])->name('consulta.cancelarviapaciente');
+    Route::post("/paciente/consulta/cancelar/", [\App\Http\Controllers\PacienteController::class, 'cancelarConsulta'])->name('paciente.consulta.cancelar');
+    Route::get("/paciente/consulta/cancelar/callback/", [\App\Http\Controllers\ConsultaController::class, 'callbackCancelarConsultaComTaxa'])->name('callback.cancelamento.consulta');
 
     #ESPECIALISTA
     Route::get("/especialista/atendimento/{consulta_id}/{aba}", [\App\Http\Controllers\EspecialistaController::class, 'inicarAtendimento'])->name('especialista.iniciarAtendimento')->middleware('auth');
@@ -362,7 +363,7 @@ Route::middleware('auth')->group(function () {
     Route::get("/clinica/especialista/vinculo/agenda/{especialista_id}", [\App\Http\Controllers\EspecialistaclinicaController::class, 'agendaEspecialista'])->name('especialistaclinica.agendaEspecialista');
 
     #FINANCEIRO PACIENTE
-    Route::get("/paciente/financeiro/", [\App\Http\Controllers\PagamentoController::class, 'historicoPagamentoPaciente'])->name('paciente.financeiro');
+    Route::get("/paciente/financeiro/", [\App\Http\Controllers\PagamentoController::class, 'historicoPagamentosPaciente'])->name('paciente.financeiro');
 
     #LISTA PACIENTES E CADASTRO
     Route::get("/pacientes/lista", [\App\Http\Controllers\PacienteController::class, 'index'])->name('paciente.index');

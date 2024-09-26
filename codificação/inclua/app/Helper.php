@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Http;
 use PHPMailer\PHPMailer\PHPMailer;
@@ -257,39 +258,7 @@ class Helper
         return $response;
     }
 
-    public static function createPagamento($dados, $checkout)
-    {
-        //PAGAMENTO PADRÃO
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://api.sumup.com/v0.1/checkouts/'.$checkout->id,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_CUSTOMREQUEST => 'PUT',
-            CURLOPT_POSTFIELDS => '{
-                "payment_type": "card",
-                "card": {
-                    "name": "'.$dados->nome_titular.'",
-                    "number": "'.Helper::removerCaractereEspecial($dados->numero_cartao).'",
-                    "expiry_month": "'.date("m", strtotime($dados->validade)).'",
-                    "expiry_year": "'.date("Y", strtotime($dados->validade)).'",
-                    "cvv": "'.$dados->codigo_seguranca.'"
-                }
-            }',
-            CURLOPT_HTTPHEADER => array(
-                'accept: application/json',
-                'content-type: application/json',
-                'Authorization: Bearer '.env("SAMUP_KEY")
-            ),
-        ));
-
-        $response = curl_exec($curl);
-        $response = json_decode($response);
-        curl_close($curl);
-
-        return $response;
-    }
-
-    public static function renovarPagamento($cartao, $checkout)
+    public static function createPagamento($cartao, $checkout)
     {
         //PAGAMENTO PADRÃO
         $curl = curl_init();
@@ -320,6 +289,38 @@ class Helper
 
         return $response;
     }
+/* 
+    public static function renovarPagamento($cartao, $checkout)
+    {
+        //PAGAMENTO PADRÃO
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://api.sumup.com/v0.1/checkouts/'.$checkout->id,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_CUSTOMREQUEST => 'PUT',
+            CURLOPT_POSTFIELDS => '{
+                "payment_type": "card",
+                "card": {
+                    "name": "'.$cartao->nome_titular.'",
+                    "number": "'.Crypt::decrypt($cartao->numero_cartao).'",
+                    "expiry_month": "'.$cartao->mes_validade.'",
+                    "expiry_year": "'.$cartao->ano_validade.'",
+                    "cvv": "'.Crypt::decrypt($cartao->codigo_seguranca).'"
+                }
+            }',
+            CURLOPT_HTTPHEADER => array(
+                'accept: application/json',
+                'content-type: application/json',
+                'Authorization: Bearer '.env("SAMUP_KEY")
+            ),
+        ));
+
+        $response = curl_exec($curl);
+        $response = json_decode($response);
+        curl_close($curl);
+
+        return $response;
+    } */
 
     public static function getCheckout($checkout_id)
     {
@@ -368,5 +369,50 @@ class Helper
         $numeroCartao = preg_replace('/(\d{4})(\d{4})(\d{4})(\d{4})/', '**** **** **** $4', $numeroCartao);
 
         return $numeroCartao;
+    }
+
+    public static function verificarPrazoCancelamentoGratuito($dataConsulta)
+    {
+        date_default_timezone_set('America/Sao_Paulo');
+        $dataConsulta = Carbon::parse($dataConsulta);
+        $now = Carbon::now();
+
+        $diferencaMinutos = $now->diffInMinutes($dataConsulta);
+        $diferencaHoras = $diferencaMinutos / 60;
+        
+        if ($now <= $dataConsulta && $diferencaHoras >= env('PRAZO_CANCELAMENTO_GRATUITO')) {
+            return true;
+        }
+        
+        return false;
+    }
+    
+    public static function createCheckouSumupTaxa($route)
+    {
+        //CODIGO CREATE CHECKOUT
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://api.sumup.com/v0.1/checkouts',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => '{
+                "checkout_reference": "Taxa '.Helper::generateRandomNumberString(5).'",
+                "amount": '.floatval(Helper::converterMonetario(env('TAXA_CANCELAMENTO_CONSULTA'))).',
+                "currency": "BRL",
+                "pay_to_email": "'.env('EMAIL_TO_PAY').'",
+                "description": "Plataforma Inclua - Taxa de cancelamento da consulta",
+                "redirect_url": "'. $route .'"
+            }',
+            CURLOPT_HTTPHEADER => array(
+                'accept: application/json',
+                'content-type: application/json',
+                'Authorization: Bearer '.env("SAMUP_KEY")
+            ),
+        ));
+        $response = curl_exec($curl);
+        $response = json_decode($response);
+        curl_close($curl);
+
+        return $response;
     }
 }

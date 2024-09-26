@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helper;
 use App\Models\Anamnese;
+use App\Models\Cartao;
 use App\Models\Clinica;
 use App\Models\Especialidadeclinica;
 use App\Models\Especialistaclinica;
@@ -159,13 +160,15 @@ class PacienteController extends Controller
         }
         $paciente = Paciente::where('usuario_id', '=', Auth::user()->id)->first();
         $statusConsulta = "Aguardando atendimento";
-        $lista = Consulta::join('especialistas', 'especialistas.id', '=', 'consultas.especialista_id')
+        $consultas = Consulta::join('especialistas', 'especialistas.id', '=', 'consultas.especialista_id')
             ->join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')
             ->join('especialidades', 'especialidades.id', '=', 'especialistas.especialidade_id')
-            ->where('paciente_id', '=', $paciente->id)
+            ->join('pacientes', 'pacientes.id', 'consultas.paciente_id')
+            ->join('users', 'users.id', 'pacientes.usuario_id')
             ->where('status', '=', $statusConsulta)
             ->select(
-        'consultas.id',
+                'pacientes.nome',
+                'consultas.id',
                 'horario_agendado',
                 'especialistas.nome as nome_especialista',
                 'clinicas.nome as nome_clinica',
@@ -173,7 +176,7 @@ class PacienteController extends Controller
             )
             ->orderBy('horario_agendado', 'asc')
             ->paginate(8);
-      return view('userPaciente/minhasconsultas', ['lista' => $lista,  'msg' => $msg,'filtro' => $filtro]);
+      return view('userPaciente/minhasconsultas', ['consultas' => $consultas,  'msg' => $msg,'filtro' => $filtro]);
    }
 
     function historicoconsultas($msg = null)
@@ -184,20 +187,23 @@ class PacienteController extends Controller
         }
         $paciente = Paciente::where('usuario_id', '=', Auth::user()->id)->first();
         $statusConsulta = "Finalizada";
-        $lista = Consulta::join('especialistas', 'especialistas.id', '=', 'consultas.especialista_id')->
-        join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')->
-        join('especialidades', 'especialidades.id', '=', 'especialistas.especialidade_id')->
-        where('paciente_id', '=', $paciente->id)->
-        where('status', '=', $statusConsulta)->
-        orWhere('status', '=', 'Cancelada')->
-        select(
-            'consultas.id',
-            'horario_agendado',
-            'especialistas.nome as nome_especialista',
-            'clinicas.nome as nome_clinica',
-            'especialidades.descricao as descricao_especialidade',
-            'status'
-        )->orderBy('horario_agendado', 'desc')->paginate(8);
+        $lista = Consulta::join('especialistas', 'especialistas.id', '=', 'consultas.especialista_id')
+            ->join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')
+            ->join('especialidades', 'especialidades.id', '=', 'especialistas.especialidade_id')
+            ->where('paciente_id', '=', $paciente->id)
+            ->where('status', '=', $statusConsulta)
+            ->orWhere('status', '=', 'Cancelada')
+            ->select(
+                'consultas.id',
+                'horario_agendado',
+                'especialistas.nome as nome_especialista',
+                'clinicas.nome as nome_clinica',
+                'especialidades.descricao as descricao_especialidade',
+                'status'
+            )
+            ->orderBy('horario_agendado', 'desc')
+            ->paginate(8);
+            
         return view('userPaciente/historicoconsultas', ['lista' => $lista, 'msg' => $msg, 'filtro' => $filtro]);
     }
 
@@ -369,11 +375,10 @@ class PacienteController extends Controller
             ->where('status', '=', $statusConsulta)
             ->select('consultas.id', 'horario_agendado')
             ->orderBy('horario_agendado', 'asc')
-            ->paginate(8);
+            ->get();
 
         return view('userPaciente/marcarConsultaViaClinicaPasso4', ['lista' => $lista, 'especialista' => $especialista, 'clinica' => $clinica, 'especialidade' => $especialidade, 'paciente' => $paciente]);
     }
-
 
     function marcarConsultaViaClinicaFinalizar(Request $request)
     {
@@ -432,17 +437,17 @@ class PacienteController extends Controller
             'pacientes.nome as nome_paciente',
         )
         ->orderBy('horario_agendado', 'asc')
-        ->take(8)
-        ->get();
+        ->paginate(8);
 
       return view('userPaciente.home', ['consultas' => $consultas, 'filtro' => $filtro]);
    }
 
-   function cancelarConsulta(Request $request)
+   function s(Request $request)
    {
     //ver a questao financeira
     $consultaCancelada = Consulta::find($request->consulta_idM);
 
+    date_default_timezone_set('America/Sao_Paulo');
     $dataConsultaCancelada = Carbon::parse($consultaCancelada->horario_agendado);
     $dataAtual = Carbon::now();   
     // Verifica se a data da consulta é maior que a data atual para poder duplicar
@@ -460,6 +465,49 @@ class PacienteController extends Controller
     $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
     return  $this->minhasconsultas($msg);
    }
+   
+   public function cancelarConsulta(Request $request)
+   {
+        $consulta = Consulta::find($request->consulta_id);
+        $consultaController = new ConsultaController();
+
+        if (Helper::verificarPrazoCancelamentoGratuito($consulta->horario_agendado)) {
+            $retornoConsultaCancelada = $consultaController->cancelarConsultaSemTaxa($request);
+        } else {
+            $cartao = Paciente::join('consultas', 'consultas.paciente_id', 'pacientes.id')
+                ->join('users', 'users.id', 'pacientes.usuario_id')
+                ->join('assinaturas', 'assinaturas.user_id', 'users.id')
+                ->join('cartoes', 'cartoes.id', 'assinaturas.cartao_id')
+                ->where('pacientes.id', $consulta->paciente_id)
+                ->select('cartoes.*', 'assinaturas.id as assinatura_id')
+                ->first();
+
+            //CRIAR O CHECKOUT
+            $checkout = Helper::createCheckouSumupTaxa(route('callback.cancelamento.consulta'));
+            //PASSAR O ID DA CUNSULTA E 
+            session()->put("consulta_id_$checkout->id", $consulta->id);
+            session()->put("motivo_cancelamento_$checkout->id", $request->motivo_cancelamento);
+            //CRIAR O PAGAMENTO
+            $pagamento = Helper::createPagamento($cartao, $checkout);
+            $pagamentoController = new PagamentoController();
+
+            if (isset($pagamento->status) && $pagamento->status == "FAILED") {
+                $pagamentoController->store($cartao->user_id, floatval(Helper::converterMonetario(env('TAXA_CANCELAMENTO_CONSULTA'))), $pagamento->transactions[0]->transaction_code, 'Negado', 'Taxa de cancelamento da consulta');
+
+                return redirect()->route('callback.cancelamento.consulta', ['checkout_id' => $pagamento->id]);
+            } elseif (isset($pagamento->status) && $pagamento->status == "PAID") {
+                $pagamentoController->store($cartao->user_id, floatval(Helper::converterMonetario(env('TAXA_CANCELAMENTO_CONSULTA'))), $pagamento->transactions[0]->transaction_code, 'Aprovado', 'Taxa de cancelamento da consulta');
+
+                return redirect()->route('callback.cancelamento.consulta', ['checkout_id' => $pagamento->id]);
+            } elseif (isset($pagamento->next_step)) {
+                $pagamentoController->store($cartao->user_id, floatval(Helper::converterMonetario(env('TAXA_CANCELAMENTO_CONSULTA'))), $pagamento->next_step->current_transaction->transaction_code, 'Pendente', 'Taxa de cancelamento da consulta');
+
+                return redirect($pagamento->next_step->url);
+            }
+        }
+        
+        return redirect()->route('paciente.minhasconsultas');
+    }
 }
 
 

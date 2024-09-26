@@ -1,12 +1,15 @@
 @extends('layouts.app', ['page' => __('Marcar Consulta'), 'exibirPesquisa' => false,'pageSlug' => 'marcarconsulta', 'class' => 'marcar-consulta'])
 @section('title', 'Marcar Consulta')
 @section('content')
+    @php
+        $lista = Session::get('lista') ?? $lista;
+    @endphp
     <div class="row">
         <div class="col-lg-12 col-md-12">
             <div class="card">
                 <div class="card-header">
                     <h4 class="title">Escolha onde consultar</h4>
-                    <form action="{{route('paciente.pesquisarclinicamarcarconsulta')}}" method="get" id="pesquisar">
+                    <form action="{{ route('paciente.pesquisarclinicamarcarconsulta') }}" method="get" id="pesquisar">
                         @csrf
                         <div class="row search">
                             <div class="col-sm-6">
@@ -38,7 +41,7 @@
                                         <tr>
                                             <td>{{ $ent->nome }}</td>
                                             <td>
-                                                <a href="{{route('paciente.marcarConsultaViaClinicaPasso2', $ent->id)}}" class="btn btn-primary">
+                                                <a href="{{ route('paciente.marcarConsultaViaClinicaPasso2', $ent->id) }}" class="btn btn-primary">
                                                     Próximo <i class="fa fa-arrow-right"></i>
                                                 </a>
                                             </td>
@@ -51,7 +54,9 @@
                             <h5>Não há nenhuma clínica cadastrada.</h5>
                         @endif
                     </div>
-                    <a href="{{ route('paciente.marcarconsulta') }}" class="btn btn-primary"><i class="fa fa-reply"></i> Voltar</a>
+                    <a href="{{ route('paciente.marcarconsulta') }}" class="btn btn-primary">
+                        <i class="fa fa-reply"></i> Voltar
+                    </a>
                 </div>
             </div>
         </div>

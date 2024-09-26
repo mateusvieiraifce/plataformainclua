@@ -33,7 +33,7 @@
                 <div class="modal-body">
                     <div class="container">
                         <!--aqui a rota de salvar as configuracoes -->
-                        <form method="post" action="{{route('consulta.cancelarviapaciente')}}">
+                        <form method="post" action="{{route('paciente.consulta.cancelar')}}">
                             @csrf
                             <div class="row">
                             <div class="star-rating" style="margin-left:50px">
