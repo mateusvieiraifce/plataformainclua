@@ -246,6 +246,7 @@ Route::middleware('auth')->group(function () {
     Route::post("/especialistaclinica/save/{clinica_id}", [\App\Http\Controllers\EspecialistaclinicaController::class, 'save'])->name('especialistaclinica.save');
     Route::get("/especialistaclinica/delete/{id}", [\App\Http\Controllers\EspecialistaclinicaController::class, 'delete'])->name('especialistaclinica.delete');
     Route::get("/especialistaclinica/edit/{id}", [\App\Http\Controllers\EspecialistaclinicaController::class, 'edit'])->name('especialistaclinica.edit');
+    Route::get("/especialistaclinica/vinculo/{id}", [\App\Http\Controllers\EspecialistaclinicaController::class, 'cancelarVinculo'])->name('especialistaclinica.cancelarVinculo');
 
     #CONSULTAS_DISPONIBILIZADAS_POR_ESPECIALISTA
     Route::get("/consulta/list/", [\App\Http\Controllers\ConsultaController::class, 'list'])->name('consulta.list');
@@ -259,6 +260,7 @@ Route::middleware('auth')->group(function () {
     Route::post("/consulta/saveagenda/", [\App\Http\Controllers\ConsultaController::class, 'saveVariasConsultas'])->name('consulta.saveagenda');
 
     #CLINICAS_POR_ESPECIALISTA
+    Route::get("/clinica/vinculo/", [\App\Http\Controllers\EspecialistaclinicaController::class, 'clinicasdoespecilista'])->name('especialistaclinica.clinicas');
     Route::get("/clinica/vinculo/", [\App\Http\Controllers\EspecialistaclinicaController::class, 'clinicasdoespecilista'])->name('especialistaclinica.clinicas');
 
     #CONSULTAS_POR_ESPECIALISTA

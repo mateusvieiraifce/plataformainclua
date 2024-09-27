@@ -63,8 +63,7 @@
                                  </p>                              
                            @endif                              
                            </td>
-                           <td> 
-                              
+                           <td>                               
                            @if($ent->isVinculado)
                            <a href="{{route('especialistaclinica.delete',$ent->id)}}" 
                            onclick="return confirm('Deseja relamente excluir o vínculo?')" rel="tooltip"

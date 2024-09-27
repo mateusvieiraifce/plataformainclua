@@ -61,6 +61,8 @@ class EspecialistaclinicaController extends Controller
       $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
       return $this->list($msg);
    }
+
+   //funcao para cancelar vículo - user Clinica
    function delete($id)
    {
       $especialista = Especialista::find($id);      
@@ -80,6 +82,31 @@ class EspecialistaclinicaController extends Controller
       }
       return $this->list($msg);
    }
+
+ //funcao para cancelar vículo - user Especialista
+ function cancelarVinculo($id)
+ {
+  
+    $clinica = Clinica::find($id);      
+    $especialista = Especialista::where('usuario_id', '=', Auth::user()->id)->first();      
+    $relacaoEspecialistaClinica = Especialistaclinica::
+    where('clinica_id', $clinica->id)->
+    where('especialista_id', $especialista->id)->first();
+   
+   
+    try {
+       if ($relacaoEspecialistaClinica) {
+          $relacaoEspecialistaClinica->is_vinculado = !$relacaoEspecialistaClinica->is_vinculado; 
+          $relacaoEspecialistaClinica->save();
+          $msg = ['valor' => trans("Vínculo alterado com sucesso!"), 'tipo' => 'success'];
+   }
+    } catch (QueryException $exp) {
+       $msg = ['valor' => $exp->getMessage(), 'tipo' => 'primary'];
+    }
+    return $this->clinicasdoespecilista($msg);
+ }
+
+
    function edit($id)
    {
       $entidade = Especialistaclinica::find($id);
@@ -88,23 +115,19 @@ class EspecialistaclinicaController extends Controller
       return view('userClinica/cadVinculoEspecialista/form', ['entidade' => $entidade, 'clinica' => $clinica]);
    }
 
-   function clinicasdoespecilista($clinica_id, $msg = null)
+   function clinicasdoespecilista($msg = null)
    {
-
-       $filter = "";
-      if (isset($_GET['filtro'])) {
-         $filter = $_GET['filtro'];
-      }
-
       $especialista = Especialista::where('usuario_id', '=', Auth::user()->id)->first();
       //todoas as clinicas que o especialista eh vinculado
       $lista =  Especialistaclinica::
       join('clinicas', 'clinicas.id','=','especialistaclinicas.clinica_id')->
       where('especialista_id',$especialista->id)->
       orderBy('clinicas.nome', 'asc')->
-      select('clinicas.id','clinicas.nome')->
+      select('clinicas.id','clinicas.nome','is_vinculado as isVinculado')->
       paginate(8);
-      return view('userClinica/cadVinculoEspecialista/listclinicaporespecialista', ['lista' => $lista, 'filtro' => $filter, 'especialista' => $especialista, 'msg' => $msg]);
+      return view('userEspecialista/listClinicasVinculadas', ['lista' => $lista,
+        'especialista' => $especialista,
+        'msg' => $msg]);
    }
 
    function agendaEspecialista($especialista_id)
