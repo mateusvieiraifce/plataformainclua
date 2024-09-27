@@ -9,20 +9,68 @@
             <div class="card">
                 <div class="card-header">
                     <h4 class="title">Escolha onde consultar</h4>
-                    <form action="{{ route('paciente.pesquisarclinicamarcarconsulta') }}" method="get" id="pesquisar">
+                    <form action="{{ route('paciente.pesquisarclinicamarcarconsulta') }}" method="post" id="pesquisar">
                         @csrf
-                        <div class="row search">
-                            <div class="col-sm-6">
+                        <div class="row search">                        
+                            <div class="col-lg-3 col-md-3">
                                 <div class="form-group">
-                                <input type="text" name="filtro" id="filtro" class="form-control"
-                                    placeholder="Pesquise por uma clínica digitando o nome dela aqui..." @if(isset($filtro)) value="{{ $filtro }}" @endif>
+                                    <label for="estado">
+                                        Estado
+                                    </label>
+                                    <input id="estado" list="estados" name="estado" class="form-control"
+                                        placeholder="Selecione o estado" value="{{ old('estado') }}">
+                                    <datalist id="estados" name="estado">
+                                        <option value="AC">Acre</option>
+                                        <option value="AL">Alagoas</option>
+                                        <option value="AP">Amapá</option>
+                                        <option value="AM">Amazonas</option>
+                                        <option value="BA">Bahia</option>
+                                        <option value="CE">Ceará</option>
+                                        <option value="DF">Distrito Federal</option>
+                                        <option value="ES">Espírito Santo</option>
+                                        <option value="GO">Goiás</option>
+                                        <option value="MA">Maranhão</option>
+                                        <option value="MT">Mato Grosso</option>
+                                        <option value="MS">Mato Grosso do Sul</option>
+                                        <option value="MG">Minas Gerais</option>
+                                        <option value="PA">Pará</option>
+                                        <option value="PB">Paraíba</option>
+                                        <option value="PR">Paraná</option>
+                                        <option value="PE">Pernambuco</option>
+                                        <option value="PI">Piauí</option>
+                                        <option value="RJ">Rio de Janeiro</option>
+                                        <option value="RN">Rio Grande do Norte</option>
+                                        <option value="RS">Rio Grande do Sul</option>
+                                        <option value="RO">Rondônia</option>
+                                        <option value="RR">Roraima</option>
+                                        <option value="SC">Santa Catarina</option>
+                                        <option value="SP">São Paulo</option>
+                                        <option value="SE">Sergipe</option>
+                                        <option value="TO">Tocantins</option>
+                                    </datalist>
                                 </div>
                             </div>
-                            <div class="col-sm-2">
+                            <div class="col-lg-3 col-md-3">
                                 <div class="form-group">
-                                    <button class="btn btn-primary">
-                                        <i class="tim-icons icon-zoom-split"></i>
-                                    </button> 
+                                    <label for="cidade">
+                                        Cidade
+                                    </label>
+                                    <input type="text" name="cidade" id="cidade" class="form-control"
+                                        placeholder="Cidade da clínica" value="{{ old('cidade') }}">
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-6">
+                                <div class="form-group">
+                                    <label for="nome">
+                                        Clínica
+                                    </label>
+                                    <div class="input-button-inline">
+                                    <input type="text" name="nome" id="nome" class="form-control"
+                                        placeholder="Nome da clínica" value="{{ old('nome') }}">
+                                        <button class="btn btn-primary">
+                                            <i class="tim-icons icon-zoom-split"></i>
+                                        </button> 
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -312,21 +312,23 @@ class PacienteController extends Controller
         return view('userPaciente/marcarConsultaViaClinicaPasso1', ['lista' => $lista, 'filtro' => $filter]);
     }
 
-    function pesquisarclinicamarcarconsulta()
+    function pesquisarclinicamarcarconsulta(Request $request)
     {
-        //retonando a lista de clincias
-        $filtro = "";
-        if (isset($_GET['filtro'])) {
-            $filtro = $_GET['filtro'];
-        }
-        $lista = Clinica::where('nome', 'like', "%" . $filtro . "%")
-            ->orderBy('nome', 'asc')
-            ->select('clinicas.id', 'nome')->paginate(8);
-        $msg = null;
+        $lista = Clinica::join('enderecos', 'enderecos.user_id', 'clinicas.usuario_id')
+            ->where('clinicas.nome', 'like', "%" . $request->nome . "%")
+            ->where('enderecos.cidade', 'like', "%" . $request->cidade . "%")
+            ->where('enderecos.estado', 'like', "%" . $request->estado . "%")
+            ->orderBy('clinicas.nome', 'asc')
+            ->select('clinicas.id', 'nome')
+            ->paginate(8);
+            
+
         if ($lista->isEmpty()) {
-            $msg = ['valor' => trans("Não foi encontrado nenhuma clínica com o nome digitado!"), 'tipo' => 'primary'];
+            $msg = ['valor' => trans("Não foi encontrado nenhuma clínica com os dados informados!"), 'tipo' => 'danger'];
+            session()->flash('msg', $msg);
         }
-        return view('userPaciente/marcarConsultaViaClinicaPasso1', ['lista' => $lista, 'filtro' => $filtro, 'msg' => $msg]);
+
+        return back()->with('lista', $lista)->withInput();
     }
 
     function marcarConsultaViaClinicaPasso2($clinica_id)

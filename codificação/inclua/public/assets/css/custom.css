@@ -167,7 +167,7 @@ label.link {
 }
 
 /* INVERTER COM A COR DO CALENDARIO EXIBIDO NO INPUT DO TIPO DATA */
-::-webkit-calendar-picker-indicator {
+.card.card-white:not() ::-webkit-calendar-picker-indicator {
     filter: invert(1);
 }
 
@@ -221,6 +221,11 @@ option {
 .search .btn {
     margin: 0;
     height: calc(2.25rem + 2px);
+}
+
+.input-button-inline {
+    display: flex;
+    gap: 30px;
 }
 
 /* TALWIND */

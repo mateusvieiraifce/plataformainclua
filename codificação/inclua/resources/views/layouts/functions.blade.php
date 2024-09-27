@@ -85,9 +85,14 @@
                     document.getElementById(campo.id).focus()
                 } else {
                     document.getElementById('cidade').value = response.localidade
-                    document.getElementById('estado').value = response.uf
                     document.getElementById('endereco').value = response.logradouro
                     document.getElementById('bairro').value = response.bairro
+                    
+                    $('#estados > option').each(function() {
+                        if ($(this).attr("value") == "CE" ) {
+                            $("#estado").val("CE"); 
+                        }
+                    });
                 }
             },
             error: function(error) {

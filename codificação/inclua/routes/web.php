@@ -270,7 +270,7 @@ Route::middleware('auth')->group(function () {
     Route::get("/paciente/marcarconsulta/viaclinica/etapa4/{clinica_id}/{especialidade_id}", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaClinicaPasso3'])->name('paciente.marcarConsultaViaClinicaPasso3');
     Route::get("/paciente/marcarconsulta/viaclinica/etapa5/{clinica_id}/{especialidade_id}", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaClinicaPasso4'])->name('paciente.marcarConsultaViaClinicaPasso4');
     Route::post("/paciente/marcarconsulta/viaclinica/finalizar/", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaClinicaFinalizar'])->name('paciente.marcarConsultaViaClinicaFinalizar');
-    Route::get("/paciente/viaclinica/search/", [\App\Http\Controllers\PacienteController::class, 'pesquisarclinicamarcarconsulta'])->name('paciente.pesquisarclinicamarcarconsulta');
+    Route::post("/paciente/viaclinica/search/", [\App\Http\Controllers\PacienteController::class, 'pesquisarclinicamarcarconsulta'])->name('paciente.pesquisarclinicamarcarconsulta');
 
     #VIA_ESPECIALIDADE
     Route::get("/paciente/marcarconsulta/viaespecialidade/etapa2", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaEspecialidadePasso1'])->name('paciente.marcarConsultaViaEspecialidadePasso1')->middleware('auth');
