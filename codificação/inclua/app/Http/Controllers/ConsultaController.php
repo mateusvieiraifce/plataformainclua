@@ -15,28 +15,76 @@ use Carbon\Carbon;
 
 class ConsultaController extends Controller
 {
-   //list de consultas disponiveis
+   //list de consultas disponiveis - User Especialista 
    function list($msg = null)
    {
       $especialista = Especialista::where('usuario_id', '=', Auth::user()->id)->first();
       $especialista_id = $especialista->id;
-      $filter = "";
-      if (isset($_GET['filtro'])) {
-         $filter = $_GET['filtro'];
-      }
-
+      $filter = "";     
+      
+      $hoje = Carbon::today()->startOfDay();
+      $dataAtual = Carbon::now();
+      $dataUmMesFrente = $dataAtual->addMonth()->startOfDay();      
 
       //todoas as clinicas que o especialista eh vinculado
-      $clinicas = Especialistaclinica::join('clinicas', 'clinicas.id', '=', 'especialistaclinicas.clinica_id')->where('especialista_id', $especialista->id)->orderBy('clinicas.nome', 'asc')->select('clinicas.id', 'clinicas.nome')->get();
+      $clinicas = Especialistaclinica::join('clinicas', 'clinicas.id', '=', 'especialistaclinicas.clinica_id')->
+      where('especialista_id', $especialista->id)->
+      orderBy('clinicas.nome', 'asc')->select('clinicas.id', 'clinicas.nome')->get();
       //caso o especialista esteja vinculado a apenas uma clinicar, ja estou deixando o select selecionando a clinica
       $clinicaselecionada_id = 0;
       if (sizeof($clinicas) == 1) {
          $clinicaselecionada_id = $clinicas[0]->id;
       }
       $statusConsulta = "Disponível";
+      $lista = Consulta::join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')->
+      where('especialista_id', '=', $especialista_id)->
+      where('status', '=', $statusConsulta)->
+      whereBetween('horario_agendado', [$hoje, $dataUmMesFrente])->
+      select('consultas.id', 'status', 'horario_agendado', 'clinicas.nome as nome_clinica')->
+      orderBy('horario_agendado', 'asc')->paginate(8);
+    
+      return view('userEspecialista.listtodasconsultas', 
+      ['lista' => $lista, 'clinicas' => $clinicas, 'clinicaselecionada_id' =>
+       $clinicaselecionada_id, 'status' => $statusConsulta, 'filtro' => $filter, 
+       'inicio_data' => $hoje->format('Y-m-d'),
+       'final_data' => $dataUmMesFrente->format('Y-m-d'),
+       'especialista' => $especialista, 'msg' => $msg]);
+   }
 
-      $lista = Consulta::join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')->where('especialista_id', '=', $especialista_id)->where('status', '=', $statusConsulta)->select('consultas.id', 'status', 'horario_agendado', 'clinicas.nome as nome_clinica')->orderBy('horario_agendado', 'asc')->paginate(8);
-      return view('userEspecialista.listtodasconsultas', ['lista' => $lista, 'clinicas' => $clinicas, 'clinicaselecionada_id' => $clinicaselecionada_id, 'status' => $statusConsulta, 'filtro' => $filter, 'especialista' => $especialista, 'msg' => $msg]);
+   function search(Request $request)
+   {
+      $especialista = Especialista::where('usuario_id', '=', Auth::user()->id)->first();
+      $especialista_id = $especialista->id;
+      $filter = "";
+     
+      //todoas as clinicas que o especialista eh vinculado
+      $clinicas = Especialistaclinica::join('clinicas', 'clinicas.id', '=', 'especialistaclinicas.clinica_id')->
+      where('especialista_id', $especialista->id)->
+      orderBy('clinicas.nome', 'asc')->select('clinicas.id', 'clinicas.nome')->get();
+      //caso o especialista esteja vinculado a apenas uma clinicar, ja estou deixando o select selecionando a clinica
+      $clinicaselecionada_id = 0;
+      if (sizeof($clinicas) == 1) {
+         $clinicaselecionada_id = $clinicas[0]->id;
+      }
+
+      $statusConsulta = "Disponível";
+      $inicioDoDiaFiltro = Carbon::parse($request->inicio_data)->startOfDay();
+      $fimDoDiaFiltro = Carbon::parse($request->final_data)->endOfDay();
+    
+
+      $lista = Consulta::join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')->
+      where('especialista_id', '=', $especialista_id)->
+      where('status', '=', $statusConsulta)->
+      where('clinicas.id', $request->clinica_id)->
+      whereBetween('horario_agendado', [$inicioDoDiaFiltro, $fimDoDiaFiltro])->
+      select('consultas.id', 'status', 'horario_agendado', 'clinicas.nome as nome_clinica')->
+      orderBy('horario_agendado', 'asc')->paginate(8);
+      return view('userEspecialista.listtodasconsultas', ['lista' => $lista, 'clinicas' => $clinicas,
+       'clinicaselecionada_id' => $clinicaselecionada_id, 'status' => $statusConsulta, 
+       'inicio_data' => $request->inicio_data,
+       'final_data' => $request->final_data,
+      'filtro' => $filter, 'especialista' => $especialista]);
+
    }
 
 
@@ -75,11 +123,9 @@ class ConsultaController extends Controller
    }
    function delete($id)
    {
-      $especialista_id = 0;
       try {
          $entidade = Consulta::find($id);
          if ($entidade) {
-            $especialista_id = $entidade->especialista_id;
             $entidade->delete();
             $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
          } else {
@@ -88,7 +134,7 @@ class ConsultaController extends Controller
       } catch (QueryException $exp) {
          $msg = ['valor' => $exp->getMessage(), 'tipo' => 'primary'];
       }
-      return $this->listconsultaporespecialista($msg);
+      return $this->list($msg);
    }
    function edit($id)
    {
@@ -243,8 +289,9 @@ class ConsultaController extends Controller
       }
 
       $qtdConsutasCriadas--;
-      $msg = ['valor' => trans("Operação realizada com sucesso! Foram criadas " . $qtdConsutasCriadas . " consultas."), 'tipo' => 'success'];
-      return $this->list($msg);
+    //  $msg = ['valor' => trans("Operação realizada com sucesso! Foram criadas " . $qtdConsutasCriadas . " consultas."), 'tipo' => 'success'];
+      session()->flash('msg', ['valor' => trans("Operação realizada com sucesso! Foram criadas " . $qtdConsutasCriadas . " consultas."), 'tipo' => 'success']);
+      return  redirect()->route('consulta.list'); 
    }
 
    function listconsultaporespecialista($msg = null)
@@ -279,7 +326,7 @@ class ConsultaController extends Controller
       select('consultas.id', 'status', 'horario_agendado', 'clinicas.nome as nome_clinica', 'pacientes.nome as nome_paciente')->
       orderBy('horario_agendado', 'asc')->get();
 
-      return view('userEspecialista/listconsultaporespecialista', [
+      return view('userEspecialista/listConsultaMarcadas', [
          'lista' => $lista,
          'clinicas' => $clinicas,
          'clinicaselecionada_id' => $clinicaselecionada_id,
@@ -323,7 +370,7 @@ class ConsultaController extends Controller
       select('consultas.id', 'status', 'horario_agendado', 'clinicas.nome as nome_clinica',
        'pacientes.nome as nome_paciente')->orderBy('horario_agendado', 'asc')->get();
 
-      return view('userEspecialista/listconsultaporespecialista', [
+      return view('userEspecialista/listConsultaMarcadas', [
          'lista' => $lista,
          'clinicas' => $clinicas,
          'clinicaselecionada_id' => $request->clinica_id,

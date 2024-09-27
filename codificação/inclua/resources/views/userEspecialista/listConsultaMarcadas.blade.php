@@ -1,5 +1,6 @@
 @extends('layouts.app', ['page' => __('Consultas'), 'exibirPesquisa' => false, 'pageSlug' => 'listconsultaporespecialista', 'class' => 'agenda'])
 @section('content')
+@section('title', 'Consultas')
 
 
 
@@ -131,17 +132,7 @@
                            Cancelar
                         </a>   
                                             
-                    <!--
-                        <a rel="tooltip" title="Editar" class="btn btn-link" data-original-title="Edit"
-                           href="{{route('consulta.edit', $ent->id)}}">
-                           <i class="tim-icons icon-pencil"></i>
-                        </a>
--->
-                        <a href="{{route('consulta.delete', $ent->id)}}"
-                           onclick="return confirm('Deseja relamente excluir?')" rel="tooltip" title="Excluir"
-                           class="btn btn-link" data-original-title="Remove">
-                           <i class="tim-icons icon-simple-remove"></i>
-                        </a>
+                  
                      </td>
                      </tr>
                   @endforeach 
