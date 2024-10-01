@@ -1,185 +1,224 @@
 @extends('layouts.app', ['page' => __('Histórico de consultas'), 'exibirPesquisa' => false, 'pageSlug' => 'historicoconsultas', 'class' => 'consulta'])
+@section('title', 'Minhas consultas')
 @section('content')
-<style>
-     .star-rating {
-            display: flex;
-            gap: 5px;
-        }
-
-        .star {
-            font-size: 40px;
-            cursor: pointer;
-        }
-
-        .star.selected {
-            color: gold;
-        }
-</style>
-
- <!-- Modal avaliar consulta-->
- <div class="modal mais-baixo fade" id="meuModal" tabindex="-1" role="dialog"
-         aria-labelledby="exampleModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">
-                        <label style="font-size:20px">Como foi a sua consulta?</label>
-                    </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+    <div class="row">
+        <div class="col-lg-12 col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="title d-inline">Lista de consultas realizadas</h6>              
                 </div>
-                <div class="modal-body">
-                    <div class="container">
-                        <!--aqui a rota de salvar as configuracoes -->
-                        <form method="post" action="{{route('paciente.consulta.cancelar')}}">
-                            @csrf
-                            <div class="row">
-                            <div class="star-rating" style="margin-left:50px">
-                              <span class="star" style="margin:15px" id="s1" data-value="1">&#9733;</span>
-                              <span class="star" style="margin:15px" id="s2" data-value="2">&#9733;</span>
-                              <span class="star" style="margin:15px" id="s3" data-value="3">&#9733;</span>
-                              <span class="star" style="margin:15px" id="s4" data-value="4">&#9733;</span>
-                              <span class="star" style="margin:15px" id="s5" data-value="5">&#9733;</span>
-                           </div>
-                           <input type="hidden" value="" id="consulta_idM" name="consulta_idM">
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i
-                                        class="fa fa-reply"></i> Voltar
-                                </button>
-                                <button type="submit" class="btn btn-primary">Salvar</button>
-                            </div>
-                        </form>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        @if(sizeof($consultas) > 0)
+                            <table class="table">
+                                <thead>
+                                    <th>Horário</th>
+                                    <th>Dia</th>
+                                    <th>Médico</th>
+                                    <th>Especialidade</th>
+                                    <th>Clínica</th>
+                                    <th>Status</th>
+                                </thead>
+                                <tbody>
+                                    @foreach($consultas as $consulta)
+                                        <tr>
+                                            <td>
+                                                {{ date( 'H:i', strtotime($consulta->horario_agendado)) }}
+                                            </td>
+                                            <td>
+                                                {{ date( 'd/m/Y', strtotime($consulta->horario_agendado)) }}
+                                            </td>
+                                            <td>
+                                                {{ $consulta->nome_especialista }}
+                                            </td>
+                                            <td>
+                                                {{ $consulta->descricao_especialidade }}
+                                            </td>
+                                            <td>
+                                                {{ $consulta->nome_clinica }}
+                                            </td>
+                                            <td>
+                                                {{ $consulta->status }}
+                                            </td>
+                                            <td class="avaliar-{{ $consulta->id }}">
+                                                @if($consulta->status != "Cancelada" && $consulta->noHasAvaliacao())
+                                                        <a href="#" target="_blank" rel="tooltip" title="Avaliar consulta" data-original-title="Avaliar consulta"
+                                                            data-target="#modal-form" data-toggle="modal" data-whatever="@mdo" onclick="setModal({{ $consulta->id }})">
+                                                            <i class="fa fa-star"></i>
+                                                        </a>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                           {{ $consultas->appends(request()->query())->links() }}
+                        @else
+                            <h5>Não há nenhuma consulta realizada.</h5>
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-
-<section class="bg0 p-t-104 p-b-116">
-<div class="card">
-   <div class="row">
-      <div class="col-lg-12 col-md-12">
-         <div class="card card-tasks">
-            <div class="card-header">
-               <h6 class="title d-inline">Lista de consultas realizadas </h6>              
+    {{-- MODAL DE AVALIAÇÃO --}}
+    @component('layouts.modal_form', ["title" => "Como foi a sua consulta?", "route" => route('paciente.avaliacao.store'), "textButton" => "Salvar"])
+        <h4>Avalie o especialista</h4>
+        <div class="form-group multiple-inputs-inline">
+            <div>
+                <label>
+                    Atendimento
+                </label>
+                <div class="star-rating avaliacao">
+                    <label class="star selected" id="especialista-atendimento-1" data-value="1">&#9733;</label>
+                    <label class="star selected" id="especialista-atendimento-2" data-value="2">&#9733;</label>
+                    <label class="star selected" id="especialista-atendimento-3" data-value="3">&#9733;</label>
+                    <label class="star selected" id="especialista-atendimento-4" data-value="4">&#9733;</label>
+                    <label class="star selected" id="especialista-atendimento-5" data-value="5">&#9733;</label>
+                </div>
+                <input id="especialista-atendimento" type="hidden" name="especialista_atendimento" value="5">
             </div>
-            <div class="card-body">
-               <div class="table-responsive">                  
-                  <table class="table">
-                     <thead>
-                        <th> Horário</th>
-                        <th> Dia </th>
-                        <th> Médico </th>
-                        <th> Especialidade </th>
-                        <th> Clínica </th>
-                        <th> Status </th>
-                        <th>  </th>
-                      
-                     </thead>
-                     <tbody>
-                        @if(sizeof($lista) > 0)
-                        @foreach($lista as $ent)
-                     <tr>
-                     <td>{{date( 'H:i' , strtotime($ent->horario_agendado))}}</td>                     
-                     <td>{{date( 'd/m/Y' , strtotime($ent->horario_agendado))}}</td>
-                     <td  style="padding: 12px;">{{$ent->nome_especialista}}</td>
-                     <td  style="padding: 12px;">{{$ent->descricao_especialidade}}</td>
-                     <td  style="padding: 12px;">{{$ent->nome_clinica}}</td>  
-                     <td  style="padding: 12px;">{{$ent->status}}</td>  
-                     @if($ent->status != "Cancelada")
-                       <td>
-                       <a href="#"
-                           target="_blank" rel="tooltip"
-                           title="Avaliar consulta"
-                           class="btn btn-link"
-                           data-original-title="Avaliar consulta" href="#"
-                           data-target="#meuModal"
-                           data-toggle="modal" data-whatever="@mdo"
-                           onclick="setModal({{$ent->id}})">                         
-                          Avaliar
-                        </a>
-                       </td> 
-                       
-                       
-                     @else
-                       <td></td>  
-                     @endif    
-                     </tr>
-                  @endforeach 
-                        @endif                       </tbody>
-                  </table>
-                  <div>
-                     @if ($lista->lastPage() > 1)
-                                 @php
-                           $paginator = $lista;
-                           $paginator->url = route('paciente.historicoconsultas');
-                        @endphp
-                                 <ul class="pagination">
-                                    <li class="{{ ($paginator->currentPage() == 1) ? ' disabled' : '' }}">
-                                    <a href="{{$paginator->url . "?page=1&filtro=" . $filtro }}">&nbsp;<<&nbsp;&nbsp;</a>
-                                    </li>
-                                    @for ($i = 1; $i <= $paginator->lastPage(); $i++)
-                                          <?php
-                              $link_limit = 7;
-                              $half_total_links = floor($link_limit / 2);
-                              $from = $paginator->currentPage() - $half_total_links;
-                              $to = $paginator->currentPage() + $half_total_links;
-                              if ($paginator->currentPage() < $half_total_links) {
-                                 $to += $half_total_links - $paginator->currentPage();
-                              }
-                              if ($paginator->lastPage() - $paginator->currentPage() < $half_total_links) {
-                                 $from -= $half_total_links - ($paginator->lastPage() - $paginator->currentPage()) - 1;
-                              }    ?>
-                                          @if ($from < $i && $i < $to)
-                                 <li class="{{ ($paginator->currentPage() == $i) ? ' active' : '' }}">
-                                 <a href="{{ $paginator->url . "?page=" . $i . "&filtro=" . $filtro }}">{{ $i}} &nbsp; </a>
-                                 </li>
-                              @endif
-                           @endfor
-                                    <li class="{{ ($paginator->currentPage() == $paginator->lastPage()) ? ' disabled' : '' }}">
-                                    <a href="{{ $paginator->url . "?page=" . $paginator->lastPage() . "&filtro=" . $filtro }}">
-                                       >></a>
-                                    </li>
-                                 </ul>
-               @endif
-                  </div>
-               </div>
+            <div>
+                <label>
+                    Tempo de espera
+                </label>
+                <div class="star-rating avaliacao">
+                    <label class="star selected" id="especialista-espera-1" data-value="1">&#9733;</label>
+                    <label class="star selected" id="especialista-espera-2" data-value="2">&#9733;</label>
+                    <label class="star selected" id="especialista-espera-3" data-value="3">&#9733;</label>
+                    <label class="star selected" id="especialista-espera-4" data-value="4">&#9733;</label>
+                    <label class="star selected" id="especialista-espera-5" data-value="5">&#9733;</label>
+                </div>
+                <input id="especialista-espera" type="hidden" name="especialista_espera" value="5">
             </div>
-         </div>
-      </div>
-   </div>
-</div>
+        </div>
+        <div class="form-group">
+            <textarea id="comentario-especialista" name="comentario_especialista" rows="2" cols="50" maxlength="200" placeholder="Deixe algum comentário para o especialista (opcional)..."></textarea>
+        </div>
+        
+        <h4>Avalie a clínica</h4>
+        <div class="form-group multiple-inputs-inline">
+            <div>
+                <label>
+                    Localização
+                </label>
+                <div class="star-rating avaliacao">
+                    <label class="star selected" id="clinica-localizacao-1" data-value="1">&#9733;</label>
+                    <label class="star selected" id="clinica-localizacao-2" data-value="2">&#9733;</label>
+                    <label class="star selected" id="clinica-localizacao-3" data-value="3">&#9733;</label>
+                    <label class="star selected" id="clinica-localizacao-4" data-value="4">&#9733;</label>
+                    <label class="star selected" id="clinica-localizacao-5" data-value="5">&#9733;</label>
+                </div>
+                <input id="clinica-localizacao" type="hidden" name="clinica_localizacao" value="5">
+            </div>
+            <div>
+                <label>
+                    Limpeza
+                </label>
+                <div class="star-rating avaliacao">
+                    <label class="star selected" id="clinica-limpeza-1" data-value="1">&#9733;</label>
+                    <label class="star selected" id="clinica-limpeza-2" data-value="2">&#9733;</label>
+                    <label class="star selected" id="clinica-limpeza-3" data-value="3">&#9733;</label>
+                    <label class="star selected" id="clinica-limpeza-4" data-value="4">&#9733;</label>
+                    <label class="star selected" id="clinica-limpeza-5" data-value="5">&#9733;</label>
+                </div>
+                <input id="clinica-limpeza" type="hidden" name="clinica_limpeza" value="5">
+            </div>
+        </div>
+        <div class="form-group multiple-inputs-inline">
+            <div>
+                <label>
+                    Organização
+                </label>
+                <div class="star-rating avaliacao">
+                    <label class="star selected" id="clinica-organizacao-1" data-value="1">&#9733;</label>
+                    <label class="star selected" id="clinica-organizacao-2" data-value="2">&#9733;</label>
+                    <label class="star selected" id="clinica-organizacao-3" data-value="3">&#9733;</label>
+                    <label class="star selected" id="clinica-organizacao-4" data-value="4">&#9733;</label>
+                    <label class="star selected" id="clinica-organizacao-5" data-value="5">&#9733;</label>
+                </div>
+                <input id="clinica-organizacao" type="hidden" name="clinica_organizacao" value="5">
+            </div>
+            <div>
+                <label>
+                    Tempo de espera
+                </label>
+                <div class="star-rating avaliacao">
+                    <label class="star selected" id="clinica-espera-1" data-value="1">&#9733;</label>
+                    <label class="star selected" id="clinica-espera-2" data-value="2">&#9733;</label>
+                    <label class="star selected" id="clinica-espera-3" data-value="3">&#9733;</label>
+                    <label class="star selected" id="clinica-espera-4" data-value="4">&#9733;</label>
+                    <label class="star selected" id="clinica-espera-5" data-value="5">&#9733;</label>
+                </div>
+                <input id="clinica-espera" type="hidden" name="clinica_espera" value="5">
+            </div>
+        </div>
+        <div class="form-group">
+            <textarea id="comentario-clinica" name="comentario_clinica" rows="2" cols="50" maxlength="200" placeholder="Deixe algum comentário para a clínica (opcional)..."></textarea>
+        </div>
+        <input type="hidden" id="consulta_id" name="consulta_id" value="">
+    @endcomponent
 
-<script>
-
-function setModal(consulta_id) {
-    // alert(consulta_id);
-    $("#consulta_idM").val(consulta_id);   
-}
-</script>
-
-<script>
- // Gerenciar a seleção das estrelas - para modal
- document.querySelectorAll('.star').forEach(function (star) {
+    <script>
+        function setModal(consulta_id) {
+            $("#consulta_id").val(consulta_id);
+        }
+        
+        // Gerenciar a seleção das estrelas - para modal
+        document.querySelectorAll('.star').forEach(function (star) {
             star.addEventListener('click', function () {
-                document.querySelectorAll('.star').forEach(function (s) {
-                      s.classList.remove('selected');
-                });
                 var qtd = star.getAttribute('data-value');
-                for (var i = 0; i <= qtd; i++) {
-                    var id = 's' + i;
+                console.log(qtd)
+
+                for (var i = 0; i <= 5; i++) {
+                    var id = star.id.split("-")
+                    id = id[0] + "-" + id[1] + "-" + i;
                     var estrela = document.getElementById(id);
                     if (estrela) {
-                       estrela.classList.add('selected');
+                        estrela.classList.remove('selected');
+                    }
+                }
+
+                for (var i = 0; i <= qtd; i++) {
+                    var namesId = star.id.split("-")
+                    id = namesId[0] + "-" + namesId[1] + "-" + i;
+                    var estrela = document.getElementById(id);
+                    if (estrela) {
+                        estrela.classList.add('selected');
+                        $('#'+ namesId[0] + "-" + namesId[1]).val(qtd)
                     }
                 }
             });
         });
 
-   
-</script>
+        $('#form-modal').submit(function (e) {
+            e.preventDefault();
+            $.ajax({
+                type: 'GET',
+                url: '{{ route("paciente.avaliacao.store") }}',
+                data: {
+                    consulta_id: $('#consulta_id').val(),
+                    especialista_atendimento: $('#especialista-atendimento').val(),
+                    especialista_espera: $('#especialista-espera').val(),
+                    comentario_especialista: $('#comentario-especialista').val(),
+                    clinica_localizacao: $('#clinica-localizacao').val(),
+                    clinica_limpeza: $('#clinica-limpeza').val(),
+                    clinica_organizacao: $('#clinica-organizacao').val(),
+                    clinica_espera: $('#clinica-espera').val(),
+                    comentario_clinica: $('#comentario-clinica').val(),
+                },
+                success: function(response) {
+                    nowuiDashboard.showNotification('top', 'right', 'A avaliaçao da consulta foi salva com sucesso!', 'success');
+                },
+                error: function(error) {
+                    nowuiDashboard.showNotification('top', 'right', 'Houve um erro ao salvar a avaliação da consulta, tente novamente.', 'danger');
+                }
+            });
+
+            $('#modal-form').modal('toggle');            
+            $('.avaliar-' + $('#consulta_id').val() + ' > a').remove()
+        })
+
+    </script>
 @endsection

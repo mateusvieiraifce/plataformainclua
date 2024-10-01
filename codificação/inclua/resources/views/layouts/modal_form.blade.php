@@ -3,13 +3,13 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <label class="title-medium">{{ $title }}</label>
+                <h5 class="title-medium">{{ $title }}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">                
-                <form class="flex-column" method="post" action="{{ $route }}" enctype="multipart/form-data">
+                <form id="form-modal" class="flex-column" method="post" action="{{ $route }}" enctype="multipart/form-data">
                     @csrf
                     {{ $slot }}
                     <input type="submit" id="send" style="display: none;">
@@ -19,7 +19,7 @@
                 <button class="btn btn-secundary label-medium" type="button" data-dismiss="modal">
                     Fechar
                 </button>
-                <button class="btn btn-primary label-medium" type="button" onclick="$('#send').click();">
+                <button id="submit-modal" class="btn btn-primary label-medium" type="button" onclick="$('#send').click();">
                     {{ $textButton }}
                 </button>
             </div>

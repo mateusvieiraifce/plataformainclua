@@ -187,7 +187,7 @@ class PacienteController extends Controller
         }
         $paciente = Paciente::where('usuario_id', '=', Auth::user()->id)->first();
         $statusConsulta = "Finalizada";
-        $lista = Consulta::join('especialistas', 'especialistas.id', '=', 'consultas.especialista_id')
+        $consultas = Consulta::join('especialistas', 'especialistas.id', '=', 'consultas.especialista_id')
             ->join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')
             ->join('especialidades', 'especialidades.id', '=', 'especialistas.especialidade_id')
             ->where('paciente_id', '=', $paciente->id)
@@ -199,12 +199,14 @@ class PacienteController extends Controller
                 'especialistas.nome as nome_especialista',
                 'clinicas.nome as nome_clinica',
                 'especialidades.descricao as descricao_especialidade',
-                'status'
+                'status',
+                'consultas.especialista_id',
+                'consultas.clinica_id'
             )
             ->orderBy('horario_agendado', 'desc')
             ->paginate(8);
             
-        return view('userPaciente/historicoconsultas', ['lista' => $lista, 'msg' => $msg, 'filtro' => $filtro]);
+        return view('userPaciente/historicoconsultas', ['consultas' => $consultas, 'msg' => $msg, 'filtro' => $filtro]);
     }
 
    function marcarconsulta($paciente_id = null)
@@ -486,7 +488,7 @@ class PacienteController extends Controller
 
             //CRIAR O CHECKOUT
             $checkout = Helper::createCheckouSumupTaxa(route('callback.cancelamento.consulta'));
-            //PASSAR O ID DA CUNSULTA E 
+            //PASSAR O ID DA CUNSULTA E MOTIVO DE CANCELAMENTO
             session()->put("consulta_id_$checkout->id", $consulta->id);
             session()->put("motivo_cancelamento_$checkout->id", $request->motivo_cancelamento);
             //CRIAR O PAGAMENTO

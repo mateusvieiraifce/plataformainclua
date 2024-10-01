@@ -69,7 +69,7 @@
     </div>
 
     {{-- MODAL ARQUIVO --}}
-    @component('layouts.form_modal', ["title" => "Inserir arquivo do exame", "route" => route('paciente.pedido_exames.file_store'), "textButton" => "Salvar"])
+    @component('layouts.modal_form', ["title" => "Inserir arquivo do exame", "route" => route('paciente.pedido_exames.file_store'), "textButton" => "Salvar"])
         <div class="form-group">
             <label for="arquivo">
                 Arquivo <span class="required">*</span>

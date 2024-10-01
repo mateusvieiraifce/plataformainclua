@@ -373,6 +373,8 @@ Route::middleware('auth')->group(function () {
     Route::get("/paciente/exames", [\App\Http\Controllers\PedidoExameController::class, 'pedidoExamesPaciente'])->name('paciente.pedido_exames.lista');
     Route::post("/paciente/exames/arquivo/store", [\App\Http\Controllers\PedidoExameController::class, 'storeArquivoExame'])->name('paciente.pedido_exames.file_store');
     Route::get("/paciente/exames/check", [\App\Http\Controllers\PedidoExameController::class, 'checkExame'])->name('paciente.pedido_exames.check');
+
+    Route::get("/paciente/avaliacao/store", [\App\Http\Controllers\AvaliacaoController::class, 'store'])->name('paciente.avaliacao.store');
 });
 
 /* ROTAS PARA SEREM ANALISADAS */

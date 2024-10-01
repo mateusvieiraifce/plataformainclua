@@ -62,10 +62,10 @@
     </div>
 
     {{-- MODAL CANCELAR CONSULTA --}}
-    @component('layouts.form_modal', ["title" => "Favor inserir o motivo do cancelamento!", "route" => route('paciente.consulta.cancelar'), "textButton" => "Cancelar consulta"])
+    @component('layouts.modal_form', ["title" => "Favor inserir o motivo do cancelamento!", "route" => route('paciente.consulta.cancelar'), "textButton" => "Cancelar consulta"])
         <div class="form-group">
             <label id="subTitle" class="title td-inline">Ao cancelar a consulta será cobrado uma taxa de R$ {{ env('TAXA_CANCELAMENTO_CONSULTA') }}</label>
-            <textarea id="motivoCancelamento" name="motivo_cancelamento" rows="5" cols="50" maxlength="200" placeholder="Digite o motivo do cancelamento aqui..." required></textarea>
+            <textarea id="motivoCancelamento" name="motivo_cancelamento" rows="5" cols="50" maxlength="500" placeholder="Digite o motivo do cancelamento aqui..." required></textarea>
         </div>
         <input type="hidden" id="consulta_id" name="consulta_id" value="">
     @endcomponent

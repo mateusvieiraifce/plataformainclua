@@ -31,6 +31,7 @@ class AlterTablePagamentos extends Migration
         Schema::table('pagamentos', function (Blueprint $table) {
             $table->dropColumn('transaction_code');
             $table->dropColumn('status');
+            $table->dropColumn('servico');
         });
     }
 }
