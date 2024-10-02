@@ -10,6 +10,7 @@ use App\Models\Especialista;
 use Doctrine\DBAL\Query\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class AvaliacaoController extends Controller
 {
@@ -85,5 +86,32 @@ class AvaliacaoController extends Controller
         }
 
         return response()->json($response);
+    }
+
+    public function reputacaoPaciente()
+    {
+        $user = Auth::user();
+        $avaliacoes = Avaliacao::leftJoin('avaliacoes_comentarios', 'avaliacoes_comentarios.avaliacao_id', 'avaliacoes.id')
+            ->join('consultas', 'consultas.id', 'avaliacoes.consulta_id')
+            ->join('pacientes', 'pacientes.id', 'consultas.paciente_id')
+            ->where('pacientes.usuario_id', $user->id)
+            ->where('avaliacoes.tipo_avaliado', 'P')
+            ->select(
+                'avaliacoes.categoria',
+                'avaliacoes.nota',
+                'avaliacoes_comentarios.comentario',
+            )
+            ->paginate(8);
+
+        $mediaNotas = Avaliacao::leftJoin('avaliacoes_comentarios', 'avaliacoes_comentarios.avaliacao_id', 'avaliacoes.id')
+            ->join('consultas', 'consultas.id', 'avaliacoes.consulta_id')
+            ->join('pacientes', 'pacientes.id', 'consultas.paciente_id')
+            ->where('pacientes.usuario_id', $user->id)
+            ->where('avaliacoes.tipo_avaliado', 'P')
+            ->select(DB::raw('(AVG(avaliacoes.nota)) as total'))
+            ->first()
+            ->total;
+        
+        return view('userPaciente.reputacao.lista', ['avaliacoes' => $avaliacoes, 'mediaNotas' => $mediaNotas]);
     }
 }

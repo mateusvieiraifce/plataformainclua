@@ -249,7 +249,7 @@ option {
     color: #525f7f;
 }
 
-.modal .multiple-inputs-inline {
+.modal .multiple-star-inline {
     display: flex;
     gap: 40px;
 }

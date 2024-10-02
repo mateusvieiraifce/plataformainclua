@@ -25,7 +25,7 @@
                         <br>
                         Minhas consultas
                     </a>
-                    <a href="#" class="btn btn-secundary btn-round btn-lg header-links">
+                    <a href="{{ route('paciente.pedido_exames.lista') }}" class="btn btn-secundary btn-round btn-lg header-links">
                         <i class="tim-icons icon-components"></i>
                         <br>
                         Exames
