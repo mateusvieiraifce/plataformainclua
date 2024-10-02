@@ -632,6 +632,7 @@ class ConsultaController extends Controller
          'clinica_id' => $consulta->clinica_id,
          'especialista_id' => $consulta->especialista_id,
          'paciente_id' => $consulta->paciente_id,
+         'consulta_id'=> $consulta->id
       ]);
 
 

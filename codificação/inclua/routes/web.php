@@ -344,6 +344,12 @@ Route::middleware('auth')->group(function () {
     Route::any("/clinica/fila/list", [\App\Http\Controllers\FilaController::class, 'list'])->name('fila.list');
     Route::post("/clinica/fila/novaordem", [\App\Http\Controllers\FilaController::class, 'salvarOrdemFilas'])->name('fila.salvarOrdemFilas');
 
+
+     #CAD_FILA_USER_ESPECIALISTA
+     Route::any("/especialista/fila/clinicas", [\App\Http\Controllers\FilaController::class, 'listClinicaDoEspecialista'])->name('fila.listClinicaDoEspecialista');
+     Route::any("/especialista/fila/list", [\App\Http\Controllers\FilaController::class, 'listUserEspecialista'])->name('fila.listUserEspecialista');
+     Route::post("/especialista/fila/novaordem", [\App\Http\Controllers\FilaController::class, 'salvarOrdemFilasUserEspecialista'])->name('fila.salvarOrdemFilasUserEspecialista');
+
     #CONSULTAS_POR_CLINICA
     Route::get("/clinica/consultas/search", [\App\Http\Controllers\ConsultaController::class, 'listConsultaporClinicaPesquisar'])->name('consulta.listConsultaporClinicaPesquisar');
     #MARCAR_CONSULTA_USER_CLINICA

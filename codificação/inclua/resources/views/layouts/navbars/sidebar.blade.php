@@ -399,6 +399,12 @@
             <!-- usuario tipo Especialista -->
             @if(\Illuminate\Support\Facades\Auth::user()->tipo_user ==='E')
            
+                <li @if ($pageSlug=='fila' ) class="active " @endif>
+                        <a href="{{route('fila.listClinicaDoEspecialista')}}">
+                            <i class="tim-icons icon-bullet-list-67"></i>
+                            <p>{{ __('Fila de atendimento') }}</p>
+                        </a>
+                    </li>
 
                 <li @if ($pageSlug=='listconsultaporespecialista' ) class="active " @endif>
                     <a href="{{route('consulta.listconsultaporespecialista')}}">
