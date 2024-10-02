@@ -165,6 +165,7 @@ class PacienteController extends Controller
             ->join('especialidades', 'especialidades.id', '=', 'especialistas.especialidade_id')
             ->join('pacientes', 'pacientes.id', 'consultas.paciente_id')
             ->join('users', 'users.id', 'pacientes.usuario_id')
+            ->where('users.id', $paciente->usuario_id)
             ->where('status', '=', $statusConsulta)
             ->select(
                 'pacientes.nome',
@@ -186,11 +187,13 @@ class PacienteController extends Controller
             $filtro = $_GET['filtro'];
         }
         $paciente = Paciente::where('usuario_id', '=', Auth::user()->id)->first();
-        $statusConsulta = "Finalizada";
+        $statusConsulta = "Finalizada";            
         $consultas = Consulta::join('especialistas', 'especialistas.id', '=', 'consultas.especialista_id')
             ->join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')
             ->join('especialidades', 'especialidades.id', '=', 'especialistas.especialidade_id')
-            ->where('paciente_id', '=', $paciente->id)
+            ->join('pacientes', 'pacientes.id', 'consultas.paciente_id')
+            ->join('users', 'users.id', 'pacientes.usuario_id')
+            ->where('users.id', $paciente->usuario_id)
             ->where('status', '=', $statusConsulta)
             ->orWhere('status', '=', 'Cancelada')
             ->select(
@@ -201,12 +204,13 @@ class PacienteController extends Controller
                 'especialidades.descricao as descricao_especialidade',
                 'status',
                 'consultas.especialista_id',
-                'consultas.clinica_id'
+                'consultas.clinica_id',
+                'pacientes.nome as nome_paciente'
             )
             ->orderBy('horario_agendado', 'desc')
             ->paginate(8);
             
-        return view('userPaciente/historicoconsultas', ['consultas' => $consultas, 'msg' => $msg, 'filtro' => $filtro]);
+        return view('userPaciente.historicoconsultas', ['consultas' => $consultas, 'msg' => $msg, 'filtro' => $filtro]);
     }
 
    function marcarconsulta($paciente_id = null)

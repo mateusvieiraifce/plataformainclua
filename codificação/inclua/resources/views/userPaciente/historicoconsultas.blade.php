@@ -12,6 +12,7 @@
                         @if(sizeof($consultas) > 0)
                             <table class="table">
                                 <thead>
+                                    <th>Paciente</th>
                                     <th>Horário</th>
                                     <th>Dia</th>
                                     <th>Médico</th>
@@ -22,6 +23,9 @@
                                 <tbody>
                                     @foreach($consultas as $consulta)
                                         <tr>
+                                            <td>
+                                                {{ explode(' ', $consulta->nome_paciente)[0] . " " . explode(' ', $consulta->nome_paciente)[1] }}
+                                            </td>
                                             <td>
                                                 {{ date( 'H:i', strtotime($consulta->horario_agendado)) }}
                                             </td>
@@ -42,10 +46,10 @@
                                             </td>
                                             <td class="avaliar-{{ $consulta->id }}">
                                                 @if($consulta->status != "Cancelada" && $consulta->noHasAvaliacao())
-                                                        <a href="#" target="_blank" rel="tooltip" title="Avaliar consulta" data-original-title="Avaliar consulta"
-                                                            data-target="#modal-form" data-toggle="modal" data-whatever="@mdo" onclick="setModal({{ $consulta->id }})">
-                                                            <i class="fa fa-star"></i>
-                                                        </a>
+                                                    <a href="#" target="_blank" rel="tooltip" title="Avaliar consulta" data-original-title="Avaliar consulta"
+                                                        data-target="#modal-form" data-toggle="modal" data-whatever="@mdo" onclick="setModal({{ $consulta->id }})">
+                                                        <i class="fa fa-star"></i>
+                                                    </a>
                                                 @endif
                                             </td>
                                         </tr>

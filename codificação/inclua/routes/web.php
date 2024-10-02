@@ -375,6 +375,7 @@ Route::middleware('auth')->group(function () {
     Route::get("/paciente/exames/check", [\App\Http\Controllers\PedidoExameController::class, 'checkExame'])->name('paciente.pedido_exames.check');
 
     Route::get("/paciente/avaliacao/store", [\App\Http\Controllers\AvaliacaoController::class, 'store'])->name('paciente.avaliacao.store');
+    Route::get("/paciente/reputacao", [\App\Http\Controllers\AvaliacaoController::class, 'reputacaoPaciente'])->name('paciente.avaliacao.lista');
 });
 
 /* ROTAS PARA SEREM ANALISADAS */
