@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 use App\Models\Fila;
+use App\Models\Especialista;
 use App\Models\Especialistaclinica;
 use App\Models\Consulta;
 use App\Models\Clinica;
@@ -10,6 +11,30 @@ use Illuminate\Support\Facades\Auth;
 
 class FilaController extends Controller
 {
+   
+   function listUserEspecialista(Request $request)
+   {
+
+      $especialista = Especialista::where('usuario_id', '=', Auth::user()->id)->first();
+     
+      $listaTipoNormal = Fila::
+         join('pacientes', 'pacientes.id', '=', 'filas.paciente_id')->
+         where('clinica_id', $request->clinica_id)->
+         where('especialista_id', $especialista->id)->
+         where('tipo', 'Normal')->
+         select('filas.id', 'hora_entrou', 'ordem', 'nome','consulta_id')->
+         orderBy('ordem', 'asc')->get();
+
+      $listaTipoPrioritario = Fila::
+         join('pacientes', 'pacientes.id', '=', 'filas.paciente_id')->
+         where('clinica_id', $request->clinica_id)->
+         where('especialista_id', $especialista->id)->
+         where('tipo', 'Prioritario')->
+         select('filas.id', 'hora_entrou', 'ordem', 'nome','consulta_id')->
+         orderBy('ordem', 'asc')->get();
+
+      return view('userEspecialista/fila/listaFila', ['listaTipoNormal' => $listaTipoNormal, 'listaTipoPrioritario' => $listaTipoPrioritario]);
+   }
    function list(Request $request)
    {
 
@@ -34,6 +59,24 @@ class FilaController extends Controller
       return view('userClinica/fila/listaFila', ['listaTipoNormal' => $listaTipoNormal, 'listaTipoPrioritario' => $listaTipoPrioritario]);
    }
 
+   
+   function listClinicaDoEspecialista($msg = null)
+   {
+      $especialista = Especialista::where('usuario_id', '=', Auth::user()->id)->first();
+      //retornar todos os especialistas vinculados a clinica
+      $lista = Especialistaclinica::join(
+         'clinicas',
+         'clinicas.id',
+         '=',
+         'especialistaclinicas.clinica_id'
+      )->
+         where('especialista_id', $especialista->id)->
+         orderBy('clinicas.nome', 'asc')->
+         select('clinicas.id', 'clinicas.nome')->get();
+      return view('userEspecialista/fila/listaClinica', ['lista' => $lista, 'msg' => $msg]);
+   }
+
+
    function listEspecialistaDaClinica($msg = null)
    {
       $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
@@ -49,6 +92,38 @@ class FilaController extends Controller
          orderBy('especialistas.nome', 'asc')->
          select('especialistas.id', 'especialistas.nome')->get();
       return view('userClinica/fila/listaEspecialista', ['lista' => $lista, 'msg' => $msg]);
+   }
+
+   
+
+   function salvarOrdemFilasUserEspecialista(Request $request)
+   {
+
+      // dd($request);
+      $cont = 1;
+      if (isset($request->listaNormal)) {
+         foreach ($request->listaNormal as $id) {
+            $ent = Fila::find($id);
+            $ent->ordem = $cont;
+            $ent->tipo = 'Normal';
+            $cont++;
+            $ent->save();
+         }
+      }
+
+      $cont = 1;
+      if (isset($request->listaPrioritario)) {
+         foreach ($request->listaPrioritario as $id) {
+            $ent = Fila::find($id);
+            $ent->ordem = $cont;
+            $ent->tipo = 'Prioritário';
+            $cont++;
+            $ent->save();
+         }
+      }
+      $msg = ['valor' => trans(key: "Filas ordenadas com sucesso!"), 'tipo' => 'success'];
+      return $this->listClinicaDoEspecialista($msg);
+
    }
 
    function salvarOrdemFilas(Request $request)

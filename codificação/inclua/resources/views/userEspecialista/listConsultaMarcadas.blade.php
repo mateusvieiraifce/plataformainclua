@@ -124,11 +124,11 @@
                            Iniciar atendimento
                         </a>                    
                         <a style="max-width:120px; text-align: left;padding:10px " rel="tooltip" title="Cancelar" class="btn btn-secondary" data-original-title="Edit"
-                           href="{{route('consulta.edit', $ent->id)}}">
+                           href="#">
                           Prontuário
                         </a>  
                         <a style="max-width:80px; text-align: left;padding:10px " rel="tooltip" title="Cancelar" class="btn btn-warning" data-original-title="Edit"
-                           href="{{route('consulta.edit', $ent->id)}}">
+                           href="#">
                            Cancelar
                         </a>   
                                             
