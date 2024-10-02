@@ -16,10 +16,10 @@
                    $clinica = App\Models\Clinica::where('usuario_id', '=', Auth::user()->id)->first();
                    ?>
                     <img src={{"/images/logosclinicas/". $clinica->logotipo}} style="max-width: 100px; height:60px;"/>
-                @else 
-                  <img src="/assets/img/Icone2t.png" style="max-width: 50px; height: auto;"/>
+                @else
+                  <img src="/assets/img/Icone2t.png" style="max-width: 40px; height: auto;"/>
                 @endif
-               
+
                 <a class="navbar-brand" href="#">{{ $page ?? __('Dashboard') }}</a>
             </p>
 
@@ -30,7 +30,7 @@
             <span class="navbar-toggler-bar navbar-kebab"></span>
         </button>
         <div class="collapse navbar-collapse" id="navigation">
-            <ul class="navbar-nav ml-auto">                           
+            <ul class="navbar-nav ml-auto">
                 @php
                     $exibir = true;
                     if(isset($exibirPesquisa))
@@ -101,7 +101,7 @@
                             <a onclick="if (confirm('Deseja realmente excluir?')){getElementById('formremove').submit()}" href="#" class="nav-item dropdown-item">{{ __('Excluir') }}</a>
                         </li>
 
-                      
+
                         <li class="dropdown-divider"></li>
                         <li class="nav-link">
                             <a href="{{route('logout')}}" class="nav-item dropdown-item" >{{ __('Sair') }}</a>
@@ -123,8 +123,8 @@
                     $rota = "home";
                     if(isset($rotaPesquisa))
                     {
-                        $rota =$rotaPesquisa;                      
-                    }                  
+                        $rota =$rotaPesquisa;
+                    }
                 @endphp
 
                 <form id="formPesquisar" method="post" action="{{route($rota)}}">
