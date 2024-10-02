@@ -15,7 +15,6 @@
         "laravel/socialite": "^5.5",
         "laravel/tinker": "^2.5",
         "laravelcollective/html": "^6.3",
-        "mercadopago/dx-php": "3.0.5",
         "phpmailer/phpmailer": "^6.6",
         "sendgrid/sendgrid": "~7"
     },
