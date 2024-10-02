@@ -8034,6 +8034,10 @@ section.u-image:not(.u-hover-box),
   display: flex;
   flex-direction: column;
 }
+
+.u-shape-rectangle {
+  display: flex;
+}
 @media (min-width: 1400px) {
   .u-valign-middle-xxl,
   .u-valign-top-xxl,
@@ -15129,6 +15133,7 @@ section.u-image:not(.u-hover-box),
   height: 100%;
   fill: currentColor;
 }
+
 .u-svg-content {
   width: 0;
   height: 0;

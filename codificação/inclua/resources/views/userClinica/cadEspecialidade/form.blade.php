@@ -9,14 +9,17 @@
           <h5 class="title">Editar</h5>
         </div>
         <div class="card-body">
-          <form method="post" action="{{route('especialidadeclinica.save', $clinica->id)}}">
+          <form method="post" action="{{route('especialidadeclinica.saveUserClinica', $clinica->id)}}">
             @csrf
             <div class="row">
               <div class="col-md-12 px-8">
                 <div class="form-group">
                   <label id="labelFormulario">Especialidade</label>
                   <select name="especialidade_id" id="especialidade_id" class="form-control"
-                    title="Por favor selecionar ..." required style="border-color: white" onchange="atualizaValor()">
+                    title="Por favor selecionar ..." required style="border-color: white" onchange="atualizaValor()"
+                    @if($entidade->id>0) <?php    echo 'disabled'; ?> @endif
+                   
+                    >
                     @foreach($especialidades as $iten)
                     <option style="color: #2d3748" value="{{old('especialidade_id', $iten->id)}}"
                       @if($iten->id == $entidade->especialidade_id) <?php    echo 'selected'; ?> @endif> {{$iten->descricao}}
@@ -41,7 +44,7 @@
             </div>
             <input type="hidden" name="id" value="{{$entidade->id}}">
             <input type="hidden" name="clinica_id" value="{{$clinica->id}}">
-            <a href="{{route('especialidadeclinica.list', $clinica->id)}}" class="btn btn-primary"><i
+            <a href="{{route('especialidadeclinica.listclinicas')}}" class="btn btn-primary"><i
                 class="fa fa-reply"></i> Voltar</a>
             <button class="btn btn-success" onclick="$('#send').click(); "><i class="fa fa-save"></i> Salvar</button>
         </div>

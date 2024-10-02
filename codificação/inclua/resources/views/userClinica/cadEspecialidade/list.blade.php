@@ -24,7 +24,8 @@
                         <th> Especialidade </th>
 
                         <th> Valor </th>
-                        <th> </th>
+                        <th> Editar </th>
+                        <th> Vínculo </th>
                      </thead>
                      <tbody>
                         @if(sizeof($lista) > 0)
@@ -35,18 +36,43 @@
                      <td> R$ {{ number_format($ent->valor, 2, ',', '.') }}</td>
 
                      <td>
-                       <a rel="tooltip" title="Editar" class="btn btn-link" data-original-title="Edit"
-                        href="{{route('especialidadeclinica.edit', $ent->id)}}">
-                        <i class="tim-icons icon-pencil"></i>
-                       </a>
+                     @if($ent->isVinculado)
+                        <a rel="tooltip" title="Editar" class="btn btn-link" data-original-title="Edit"
+                           href="{{route('especialidadeclinica.editUserClinica', $ent->id)}}">
+                           <i class="tim-icons icon-pencil"></i>
+                        </a>
+                      @endif   
                      </td>
                      <td>
-                       <a href="{{route('especialidadeclinica.delete', $ent->id)}}"
-                        onclick="return confirm('Deseja relamente excluir?')" rel="tooltip" title="Excluir"
-                        class="btn btn-link" data-original-title="Remove">
-                        <i class="tim-icons icon-simple-remove"></i>
-                       </a>
+                        @if($ent->isVinculado)
+                              <label class="title" style="font-color:write">Ativo
+                              </label>                             
+                        @else
+                              <p class="title">Inativo                                
+                              </p>                              
+                        @endif                              
+                        </td>
+                     <td> 
+
+
+                     <td> 
+                              
+                     @if($ent->isVinculado)
+                     <a href="{{route('especialidadeclinica.alterarvinculo',$ent->id)}}" 
+                     onclick="return confirm('Deseja relamente excluir o vínculo?')" rel="tooltip"
+                           title="Excluir vínculo" class="btn btn-link" data-original-title="Remove">
+                           <i class="tim-icons icon-simple-remove"></i>
+                        </a>
+                     @else
+                     <a href="{{route('especialidadeclinica.alterarvinculo',$ent->id)}}" 
+                     onclick="return confirm('Deseja retomar vínculo?')" rel="tooltip"
+                           title="Vincular novamente" class="btn btn-link" data-original-title="Remove">
+                           <i class="tim-icons icon-check-2"></i>
+                           </a>
+                     @endif  
                      </td>
+
+                    
 
                @endforeach
                      @endif
@@ -89,9 +115,7 @@
                </div>
             </div>
          </div>
-         <a href="{{route('clinica.list')}}" style="margin:10px" class="btn btn-primary"><i class="fa fa-reply"></i>
-            Voltar</a>
-
+       
       </div>
    </div>
    @endsection

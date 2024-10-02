@@ -597,7 +597,9 @@
                      <h6 class="title d-inline">Total de consultas realizadas: {{$qtdConsultasRealizadas}}</h6>
                   </div>
                   <div class="col-6 col-lg-2">
-                     <div id="chronometer">00:00:00</div>
+                     <div id="chronometer" name="cronometro">
+                        00:00:00
+                     </div>
                   </div>
                </div>
 
@@ -816,6 +818,7 @@
    <script>
       const chronometer = document.getElementById('chronometer');
       let startTime = Date.now();
+      //aqui add startTime dentro da sessao
       let elapsedTime = 0;
       let timerInterval;
 
@@ -830,10 +833,28 @@
          const formattedSeconds = String(seconds).padStart(2, '0');
 
          chronometer.textContent = `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+      /*  //atualizo a variavel cronomentro toda vez que a tela eh atualizada voltar com o tempo
+         //que ja tinha
+        
+         cronometroAntigo = sessionStorage.getItem('timerValue');
+         if(cronometroAntigo == '00:00:00'){  
+            sessionStorage.removeItem('timerValue');
+           
+         }else{            
+            chronometer.textContent = sessionStorage.getItem('timerValue');
+           // alert(sessionStorage.getItem('timerValue'));
+         }
+         sessionStorage.setItem('timerValue',  chronometer.textContent);
+
+         verificar a variavel startTime, eh ela que zera o tempo
+         */
       }
 
       function startTimer() {
-         timerInterval = setInterval(updateChronometer, 1000);
+         timerInterval = setInterval(updateChronometer, 1000);  
+        // chronometer.textContent = '00:00:00';
+        sessionStorage.setItem('timerValue',  '00:00:00');
+        // sessionStorage.removeItem('timerValue');
       }
 
       startTimer();

@@ -13,7 +13,7 @@
                      <i class="tim-icons icon-settings-gear-63"></i>
                   </button>
                   <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-                     <a class="dropdown-item" href="{{route('especialistaclinica.new',$clinica->id)}}">Adicionar novo especialista</a>
+                     <a class="dropdown-item" href="{{route('especialistaclinica.new')}}">Adicionar novo especialista</a>
                   </div>
                </div>
             </div>
@@ -52,8 +52,6 @@
                                  <i class="tim-icons icon-notes">
                                  Criar novas consultas</i>
                               </a>
-                           @else
-                                
                            @endif                            
                            </td>                         
                            <td>
@@ -65,8 +63,7 @@
                                  </p>                              
                            @endif                              
                            </td>
-                           <td> 
-                              
+                           <td>                               
                            @if($ent->isVinculado)
                            <a href="{{route('especialistaclinica.delete',$ent->id)}}" 
                            onclick="return confirm('Deseja relamente excluir o vínculo?')" rel="tooltip"

@@ -18,9 +18,23 @@ use App\Rules\CnpjValidationRule;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Mail\ConvidarEspecialistaMailable;
+use Illuminate\Support\Facades\Mail;
 
 class ClinicaController extends Controller
 {
+
+   public function enviarConviteEspecialista(Request $request)
+   {  
+
+      Mail::to($request->email_destino)->send(new ConvidarEspecialistaMailable());
+       
+      $msg = ['valor' => trans("E-mail enviado com sucesso!"), 'tipo' => 'success'];
+      $especialistaclinicaController = new EspecialistaclinicaController();
+      return $especialistaclinicaController->list($msg);
+   }
+
+
    function list($msg = null)
    {
       $filter = "";
@@ -357,6 +371,7 @@ class ClinicaController extends Controller
         $lista = Especialidadeclinica::join('especialidades', 'especialidades.id', 
         '=', 'especialidadeclinicas.especialidade_id')->
         where('clinica_id', $clinica->id)->
+        where('is_vinculado', 1)->
         orderBy('especialidades.descricao', 'asc')->
         select('especialidades.id', 'especialidades.descricao')->paginate(8);       
         return view('userClinica/marcarConsulta/selecionarEspecialidadePasso2', ['lista' => $lista, 'paciente_id' => $paciente_id]);
@@ -414,13 +429,13 @@ class ClinicaController extends Controller
    {
       $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
      
-      $statusConsulta = "Finalizada";
+    //  $statusConsulta = "Finalizada";
       // Obter pacientes e o número de consultas que cada um teve
       $lista = Paciente::select('pacientes.id', 'pacientes.nome as nome_paciente',
       'pacientes.cpf', 'pacientes.data_nascimento', 
       DB::raw('COUNT(consultas.id) as total_consultas'))
          ->leftJoin('consultas', 'pacientes.id', '=', 'consultas.paciente_id')
-         ->where('status', '=', $statusConsulta)
+      //   ->where('status', '=', $statusConsulta)
          ->where('clinica_id', '=', $clinica->id)
          ->groupBy('pacientes.id', 'pacientes.nome','pacientes.cpf','pacientes.data_nascimento')
          ->paginate(8);
@@ -449,13 +464,13 @@ class ClinicaController extends Controller
             $cpf = $_GET['cpf'];
       }
 
-      $statusConsulta = "Finalizada";
+    //  $statusConsulta = "Finalizada";
       // Obter pacientes e o número de consultas que cada um teve
       $lista = Paciente::select('pacientes.id', 'pacientes.nome as nome_paciente',
       'pacientes.cpf', 'pacientes.data_nascimento', 
       DB::raw('COUNT(consultas.id) as total_consultas'))
          ->leftJoin('consultas', 'pacientes.id', '=', 'consultas.paciente_id')
-         ->where('status', '=', $statusConsulta)
+       //  ->where('status', '=', $statusConsulta)
          ->where('clinica_id', '=', $clinica->id)
          ->where('nome', 'like', "%" . $filtro . "%")
          -> where('cpf', 'like', "%" . $cpf . "%")

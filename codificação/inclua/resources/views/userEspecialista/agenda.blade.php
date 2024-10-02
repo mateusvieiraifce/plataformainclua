@@ -1,5 +1,6 @@
 @extends('layouts.app', ['page' => __('Agenda'), 'exibirPesquisa' => false, 'pageSlug' => 'especialistaclinica', 'class' => 'consulta'])
 @section('content')
+@section('title', 'Agenda')
 <section class="bg0 p-t-104 p-b-116">
 <style>
 /* Adicionando um estilo personalizado para criar uma coluna e meia */

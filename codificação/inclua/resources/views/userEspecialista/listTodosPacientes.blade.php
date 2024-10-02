@@ -1,5 +1,6 @@
 @extends('layouts.app', ['page' => __('Pacientes'), 'exibirPesquisa' => false, 'pageSlug' => 'pacientes', 'class' => 'agenda'])
 @section('content')
+@section('title', 'Pacientes')
 
 
 
@@ -9,8 +10,8 @@
          <div class="card card-tasks" style="height: auto; min-height: 500px;">
             <div class="card-header">
 
-               <div class="col-lg-12 col-md-12">
-               <form action="{{route('clinica.listaPacientesPesquisar')}}" method="get" id="pesquisar">
+            <div class="col-lg-12 col-md-12">
+               <form action="{{route('especialista.listaPacientesPesquisar')}}" method="get" id="pesquisar">
                @csrf
                <fieldset>
                   <div class="row">
@@ -45,7 +46,7 @@
             <div class="card-body">
 
                <div class="table-responsive">                  
-                  <table class="table">
+               <table class="table">
                      <thead>                     
                         <th> Paciente </th>
                         <th> cpf </th>
@@ -60,51 +61,18 @@
                         <td>{{$ent->nome_paciente}}</td>
                         <td>{{$ent->cpf}}</td>
                         <td>{{date( 'd/m/Y' , strtotime($ent->data_nascimento))}}
-                        <td>{{$ent->total_consultas}}</td>                   
+                        <td>{{$ent->total_consultas}}</td> 
+                        <td><a style="max-width:120px; text-align: left;padding:10px " rel="tooltip" 
+                        title="Prontuário" class="btn btn-secondary" data-original-title="Edit"
+                           href="#">
+                          Prontuário
+                        </a>   </td>                 
                      </tr>
                   @endforeach 
                         @endif                       </tbody>
                   </table>
                   <div>
-
-                
-                  @if ($lista->lastPage() > 1)
-                  @php
-                  $paginator = $lista;
-                  $paginator->url = route('clinica.listaPacientesPesquisar');
-                  @endphp
-                  <ul class="pagination">
-                     <li class="{{ ($paginator->currentPage() == 1) ? ' disabled' : '' }}">
-                        <a href="{{$paginator->url . "?page=1&filtro=" . $filtro . "&cpf=". $cpf }}">&nbsp;<< &nbsp;&nbsp; </a>
-                     </li>
-                     @for ($i = 1; $i <= $paginator->lastPage(); $i++)
-                        <?php
-                        $link_limit = 7;
-                        $half_total_links = floor($link_limit / 2);
-                        $from = $paginator->currentPage() - $half_total_links;
-                        $to = $paginator->currentPage() + $half_total_links;
-                        if ($paginator->currentPage() < $half_total_links) {
-                           $to += $half_total_links - $paginator->currentPage();
-                        }
-                        if ($paginator->lastPage() - $paginator->currentPage() < $half_total_links) {
-                           $from -= $half_total_links - ($paginator->lastPage() - $paginator->currentPage()) - 1;
-                        }    ?>
-                        @if ($from < $i && $i < $to) <li class="{{ ($paginator->currentPage() == $i) ? ' active' : '' }}">
-                           @if($paginator->currentPage() == $i)
-                           <a href="{{ $paginator->url . "?page=" . $i . "&filtro=" . $filtro . "&cpf=". $cpf }} "> <b>{{ $i }}</b> &nbsp; </a>
-                           @else
-                           <a href="{{ $paginator->url . "?page=" . $i . "&filtro=" . $filtro . "&cpf=". $cpf}} ">{{ $i }} &nbsp; </a>
-                           @endif
-                           </li>
-                           @endif
-                           @endfor
-                           <li class="{{ ($paginator->currentPage() == $paginator->lastPage()) ? ' disabled' : '' }}">
-                              <a href="{{ $paginator->url . "?page=" . $paginator->lastPage() . "&filtro=" . $filtro . "&cpf=". $cpf}}"> >></a>
-                           </li>
-                  </ul>
-                  @endif
-
-                  
+                       {{$lista->appends(request()->query())->links()}}  
                   </div>
                </div>
             </div>

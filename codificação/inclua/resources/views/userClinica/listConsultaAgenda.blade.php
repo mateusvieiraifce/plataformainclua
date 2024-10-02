@@ -1,6 +1,6 @@
 @extends('layouts.app', ['page' => __('Consultas'), 'exibirPesquisa' => false, 'pageSlug' => 'listaAgenda', 'class' => 'agenda'])
 @section('content')
-
+@section('title', 'Agenda')
 
 
 <div class="card">
@@ -10,7 +10,7 @@
             <div class="card-header">
 
                <div class="col-lg-12 col-md-12">
-                  <form action="{{route('clinica.agendaConsultasPesquisar')}}" method="get" id="pesquisar">
+                  <form action="{{route('consulta.agendaConsultasPesquisar')}}" method="get" id="pesquisar">
                      @csrf
                      <label style="font-size: 20px"></label>
                      <fieldset>
@@ -119,7 +119,7 @@
                   <td>{{$ent->nome_paciente}} (CPF:{{$ent->cpf}})</td>
                   <td>{{$ent->nome_especialista}}</td>
                   <td> 
-                      @if($ent->status != 'Sala de espera')
+                      @if($ent->status != 'Sala de espera' && $ent->status != 'Em Atendimento')
                          <a style="width:160px; height:30px; text-align: center;padding:7px;
                           margin: 2px; font-size: 12px; "
                          rel="tooltip" title=" Fazer Encaminhamento" 
@@ -189,13 +189,25 @@
                                     <form method="post" action="{{route('consulta.encaminharPaciente')}}">
                                           @csrf                                         
                                           <div class="row">
-                                             <div class="col-md-12 px-8">
+                                             <div class="col-md-8 px-8">
                                                 <div class="form-group">
+                                                <label style="color: #111111;">Local:</label>
                                                       <input style="color: #111111" type="text"
                                                          class="form-control" maxlength="150" name="local_consulta"
                                                          value="{{$ent->local_consulta}}" required>
                                                 </div>
                                              </div>
+                                             <div class="col-md-4 px-8">
+                                                <div class="form-group">
+                                                <label style="color: #111111;">Tipo de atendimento:</label>
+                                                      
+                                                <select  class="form-control" id="tipo_fila" name="tipo_fila" style="color: #111111">
+                                                   <option value="Normal">Normal</option>
+                                                   <option value="Prioritário">Prioritário</option>                                                 
+                                                </select>                                                
+                                             </div> 
+                                          </div>
+
                                              <input type="hidden" value="{{$ent->id}}" 
                                                 name="consulta_id">
                                                    <!--dados para pesquisa modal tipo L-->

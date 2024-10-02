@@ -17,6 +17,8 @@ use App\Models\Exame;
 use App\Models\Medicamento;
 use App\Models\PedidoExame;
 use App\Models\TipoMedicamento;
+use Carbon\Carbon;
+use App\Models\Fila;
 
 
 class EspecialistaController extends Controller
@@ -262,8 +264,25 @@ class EspecialistaController extends Controller
       orderBy('pedido_medicamentos.created_at', 'desc')->
       select('pedido_medicamentos.id as id', 'nome_comercial','prescricao_indicada')->get(); 
     
-      //dd($listaPedidosExames);
-    //  dd($mostrarModal);
+      //modificando o statu da consulta para Consulta Em Atendimento
+      // e removendo da fila de espera
+      $ent = Consulta::find($consulta->id);
+      $ent->status = "Em Atendimento";
+      $dataAtual = Carbon::now('America/Fortaleza');
+      $ent->horario_iniciado = $dataAtual->format('Y-m-d H:i:s');     
+      $ent->save();
+      
+      $entidadeFila = Fila::
+         where('especialista_id', $consulta->especialista_id)->
+         where('clinica_id', $consulta->clinica_id)->
+         where('paciente_id', $consulta->paciente_id)->first();
+      if ($entidadeFila) {
+         $entidadeFila->delete();
+      }
+       
+   
+
+
       return view('userEspecialista/iniciaratendimento', [
          'consulta' => $consulta,
          'paciente' => $paciente,
@@ -312,29 +331,63 @@ class EspecialistaController extends Controller
    //lista dos pacientes que fez alguma consulta com o especialista logado
    function listaPacientes($msg = null)
    {
-      $especialista = Especialista::where('usuario_id', '=', Auth::user()->id)->first();
-      $filter = "";
-      if (isset($_GET['filtro'])) {
-         $filter = $_GET['filtro'];
-      }
-
-      $statusConsulta = "Finalizada";
-
+      $especialista = Especialista::where('usuario_id', '=', Auth::user()->id)->first();     
+      
       // Obter pacientes e o número de consultas que cada um teve
-      $lista = Paciente::select('pacientes.id', 'pacientes.nome as nome_paciente', DB::raw('COUNT(consultas.id) as total_consultas'))
+      $lista = Paciente::select('pacientes.id', 'pacientes.nome as nome_paciente',
+      'pacientes.cpf', 'pacientes.data_nascimento', 
+      DB::raw('COUNT(consultas.id) as total_consultas'))
          ->leftJoin('consultas', 'pacientes.id', '=', 'consultas.paciente_id')
-         ->where('status', '=', $statusConsulta)
+      //   ->where('status', '=', $statusConsulta)
          ->where('especialista_id', '=', $especialista->id)
-         ->groupBy('pacientes.id', 'pacientes.nome')
+         ->groupBy('pacientes.id', 'pacientes.nome','pacientes.cpf','pacientes.data_nascimento')
          ->paginate(8);
 
+      return view('userEspecialista/listTodosPacientes', [
+         'lista' => $lista,       
+         'especialista' => $especialista,       
+      ]);
 
+   }
 
-      return view('userEspecialista/listpacienteporespecialista', [
-         'lista' => $lista,
-         'filtro' => $filter,
-         'especialista' => $especialista,
-         'msg' => $msg
+   //lista dos pacientes que fez alguma consulta com o especialista logado
+   function listaPacientesPesquisar($msg = null)
+   {
+      $especialista = Especialista::where('usuario_id', '=', Auth::user()->id)->first();     
+      //retonando a lista de pacientes
+      $filtro = "";
+      if (isset($_GET['filtro'])) {
+         $filtro = $_GET['filtro'];
+      }
+      //retonando a lista de pacientes
+      $cpf = "";
+      if (isset($_GET['cpf'])) {
+            $cpf = $_GET['cpf'];
+      }
+
+      // Obter pacientes e o número de consultas que cada um teve
+      $lista = Paciente::select('pacientes.id', 'pacientes.nome as nome_paciente',
+      'pacientes.cpf', 'pacientes.data_nascimento', 
+      DB::raw('COUNT(consultas.id) as total_consultas'))
+         ->leftJoin('consultas', 'pacientes.id', '=', 'consultas.paciente_id')
+      //   ->where('status', '=', $statusConsulta)
+         ->where('especialista_id', '=', $especialista->id)
+         ->where('nome', 'like', "%" . $filtro . "%")
+         -> where('cpf', 'like', "%" . $cpf . "%")
+         ->groupBy('pacientes.id', 'pacientes.nome','pacientes.cpf','pacientes.data_nascimento')
+         ->paginate(8);
+
+         $msg = null;
+         if ($lista->isEmpty()) {
+               $msg = ['valor' => trans("Não foi encontrado nenhum paciente!"), 'tipo' => 'primary'];
+         }
+
+      return view('userEspecialista/listTodosPacientes', [
+         'lista' => $lista,       
+         'especialista' => $especialista, 
+         'filtro' => $filtro, 
+         'cpf' => $cpf,       
+         'msg' => $msg      
       ]);
 
    }

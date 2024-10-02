@@ -10,10 +10,24 @@
                    $clinica = App\Models\Clinica::where('usuario_id', '=', Auth::user()->id)->first();
                 ?>              
 
+                <li @if ($pageSlug=='dashboard' ) class="active " @endif>
+                    <a href="{{route('dashboard.dashboardClinica')}}">
+                        <i class="tim-icons icon-chart-pie-36"></i>
+                        <p>{{ __('Dashboard') }}</p>
+                    </a>
+                </li> 
+
                 <li @if ($pageSlug=='listaAgenda' ) class="active " @endif>
-                    <a href="{{route('clinica.agendaConsultas')}}">
+                    <a href="{{route('consulta.agendaConsultas')}}">
                         <i class="tim-icons icon-calendar-60"></i>
                         <p>{{ __('Agenda') }}</p>
+                    </a>
+                </li>
+
+                <li @if ($pageSlug=='fila' ) class="active " @endif>
+                    <a href="{{route('fila.listEspecialistaDaClinica')}}">
+                        <i class="tim-icons icon-bullet-list-67"></i>
+                        <p>{{ __('Fila de atendimento') }}</p>
                     </a>
                 </li>
 
@@ -26,7 +40,7 @@
 
                 <li @if ($pageSlug=='listconsultaporclinica' ) class="active " @endif>
                     <a href="{{route('consulta.listConsultaporClinica')}}"> 
-                        <i class="tim-icons icon-bullet-list-67"></i>
+                        <i class="tim-icons  icon-paper"></i>
                         <p>{{ __('Histórico de Consultas') }}</p>
                     </a>
                 </li>
@@ -38,19 +52,16 @@
                     </a>
                 </li>
                 
-                    <li @if ($pageSlug == 'especialistaclinica') class="active " @endif>
+                <li @if ($pageSlug == 'especialistaclinica') class="active " @endif>
                         <a href="{{route('especialistaclinica.list')}}">
-                <i class="tim-icons icon-badge"></i>
-                <p>{{ __('Especialistas') }}</p>
-                </a>
+                    <i class="tim-icons icon-badge"></i>
+                    <p>{{ __('Especialistas') }}</p>
+                    </a>
                 </li>
-
-
-              
 
                 <li>
                     <a data-toggle="collapse" href="#relatorioclinica" aria-expanded="true">
-                        <i class="tim-icons icon-paper"></i>
+                        <i class="tim-icons icon-single-copy-04"></i>
                         <span class="nav-link-text">{{ __('Relatórios') }}</span>
                         <b class="caret mt-1"></b>
                     </a>
@@ -104,10 +115,6 @@
                             </li>
                         </ul>
                     </div>
-
-                   
-
-                   
 
 
                 </li>
@@ -422,14 +429,14 @@
                 </li>
 
                 <li @if ($pageSlug=='favoritos' ) class="active " @endif>
-                    <a href="{{route('user.favoritos')}}">
+                    <a href="#">
                         <i class="tim-icons icon-coins"></i>
                         <p>{{ __('Histórico de Recebimentos') }}</p>
                     </a>
                 </li>
 
                 <li @if ($pageSlug=='favoritos' ) class="active " @endif>
-                    <a href="{{route('user.favoritos')}}">
+                    <a href="#">
                         <i class="tim-icons icon-chat-33"></i>
                         <p>{{ __('Reputação') }}</p>
                     </a>
