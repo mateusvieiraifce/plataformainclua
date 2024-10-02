@@ -5,15 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PedidoExame extends Model
+class Avaliacao extends Model
 {
     use HasFactory;
 
+    protected $table = 'avaliacoes';
+
+    public $timestamps = false;
+    
     protected $fillable = [
+        'categoria',
+        'nota',
+        'avaliador_id',
         'consulta_id',
-        'exame_id',
-        'laudo',
-        'exame_efetuado',
-        'local_arquivo_exame'
+        'tipo_avaliado'
     ];
 }

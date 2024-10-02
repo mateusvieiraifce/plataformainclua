@@ -30,17 +30,17 @@ class VerifyPaymentSignature
             }
 
             //PARA O CASO DO CARTÃO NECESSITAR DE TELA INTERMEDIÁRIA DE CONFIRMAÇÃO DE COMPRA
-            if ($assinatura->status == "RENOVAÇÂO PENDENTE" && $assinatura->situacao == "CANCELADA") {
+            if ($assinatura->status == "Renovação pendente" && $assinatura->situacao == "Cancelada") {
                 $assinaturaController = new AssinaturaController();
                 $response = $assinaturaController->renovacaoManual($assinatura->id);
 
                 return $response;
-            } elseif ($assinatura->status == "NEGADA" && $assinatura->situacao == "CANCELADA") {
+            } elseif ($assinatura->status == "Negada" && $assinatura->situacao == "Cancelada") {
                 //PARA O CASO DO CARTÃO NÃO TER SIDO APROVADO PARA RENOVAR A ASSINATURA
                 session()->flash('msg', ['valor' => trans("Não foi possível renovar a assinatura com o cartão cadastrado. Informe um novo cartão para continuar a utilizar os serviços da plataforma."), 'tipo' => 'danger']);
 
                 return redirect()->route('cartao.create', ['usuario_id' => $user->id]);
-            } elseif ($assinatura->status == "APROVADA" && $assinatura->situacao == "ATIVA") {
+            } elseif ($assinatura->status == "Aprovada" && $assinatura->situacao == "Ativa") {
                 //PARA O CASO DA ASSINATURA ESTAR ATIVA
                 return $next($request);
             }

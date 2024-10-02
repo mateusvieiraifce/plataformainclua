@@ -16,6 +16,8 @@ class AlterTablePagamentos extends Migration
         Schema::table('pagamentos', function (Blueprint $table) {
             $table->string('transaction_code', 256);
             $table->string('status');
+            $table->string('servico');
+            $table->dateTime('data_pagamento')->change();
         });
     }
 
@@ -29,6 +31,7 @@ class AlterTablePagamentos extends Migration
         Schema::table('pagamentos', function (Blueprint $table) {
             $table->dropColumn('transaction_code');
             $table->dropColumn('status');
+            $table->dropColumn('servico');
         });
     }
 }

@@ -16,7 +16,8 @@ class Pagamento extends Model
         'data_pagamento',
         'valor',
         'transaction_code',
-        'status'
+        'status',
+        'servico'
     ];
     
     public $timestamps=false;
