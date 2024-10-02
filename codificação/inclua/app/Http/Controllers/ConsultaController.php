@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helper;
 use App\Models\Consulta;
 use App\Models\Clinica;
 use App\Models\Fila;
@@ -244,6 +245,7 @@ class ConsultaController extends Controller
 
    function saveVariasConsultas(Request $request)
    {
+      date_default_timezone_set('America/Sao_Paulo');
       $especialista_id = $request->especialista_id;
 
       $startDate = Carbon::parse($request->data_inicio);
@@ -669,6 +671,85 @@ class ConsultaController extends Controller
      return $this->listConsultaAgendadaUserClinicaPesquisar($request,$msg);
    }
    
+   public function cancelarConsultaSemTaxa(Request $request)
+   {
+      //ver a questao financeira
+      $consulta = Consulta::find($request->consulta_id);
 
+      date_default_timezone_set('America/Sao_Paulo');
+      $dataConsulta = Carbon::parse($consulta->horario_agendado);
+      $dataAtual = Carbon::now();
+      try {
+         // Verifica se a data da consulta é maior que a data atual para poder duplicar
+         if ($dataConsulta->gt($dataAtual)) {
+            $consultaNova = $consulta->replicate();
+            $consultaNova->status = "Disponível";
+            $consultaNova->isPago = false;
+            $consultaNova->forma_pagamento = null;
+            $consultaNova->paciente_id = null;
+            $consultaNova->save();
+         }
+         
+         $consulta->status = "Cancelada";
+         $consulta->motivocancelamento = $request->motivo_cancelamento;
+         $consulta->id_usuario_cancelou = Auth::user()->id;
+         $consulta->save();
 
+         session()->flash('msg', ['valor' => trans("Consulta cancelada com sucesso!"), 'tipo' => 'success']);
+      } catch (QueryException $e) {
+         session()->flash('msg', ['valor' => trans("Houve um erro ao cancelar a consulta, tente novamente."), 'tipo' => 'danger']);
+
+         return false;
+      }
+
+      return true;
+   }
+
+   public function callbackCancelarConsultaComTaxa(Request $request)
+   {      
+      $response = Helper::getCheckout($request->checkout_id);
+      
+      $consultaId = session()->get("consulta_id_$request->checkout_id");
+      $motivo_cancelamento = session()->get("motivo_cancelamento_$request->checkout_id");
+      
+      session()->forget("consulta_id_$request->checkout_id");
+      session()->forget("motivo_cancelamento_$request->checkout_id");
+      //ver a questao financeira
+      $consulta = Consulta::find($consultaId);      
+      $pagamentoController = new PagamentoController();
+
+      if ($response->status == 'FAILED') {
+         $pagamentoController->update($response->transactions[0]->transaction_code, 'Negado');
+         session()->flash('msg', ['valor' => trans("Não foi possível realizar a cobrança da taxa e cancelar a consulta, tente novamente."), 'tipo' => 'danger']);
+
+         return redirect()->route('paciente.minhasconsultas');
+      } elseif ($response->status == 'PAID') {
+         date_default_timezone_set('America/Sao_Paulo');
+         $dataConsulta = Carbon::parse($consulta->horario_agendado);
+         $dataAtual = Carbon::now();
+         try {
+            // Verifica se a data da consulta é maior que a data atual para poder duplicar
+            if ($dataConsulta->gt($dataAtual)) {
+               $consultaNova = $consulta->replicate();
+               $consultaNova->status = "Disponível";
+               $consultaNova->isPago = false;
+               $consultaNova->forma_pagamento = null;
+               $consultaNova->paciente_id = null;
+               $consultaNova->save();
+            }
+            
+            $consulta->status = "Cancelada";
+            $consulta->motivocancelamento = $motivo_cancelamento;
+            $consulta->id_usuario_cancelou = Auth::user()->id;
+            $consulta->save();
+            
+            $pagamentoController->update($response->transactions[0]->transaction_code, 'Aprovado');
+            session()->flash('msg', ['valor' => trans("Consulta cancelada com sucesso!"), 'tipo' => 'success']);
+         } catch (QueryException $e) {
+            session()->flash('msg', ['valor' => trans("Houve um erro ao cancelar a consulta, tente novamente."), 'tipo' => 'danger']);
+         }
+
+         return redirect()->route('paciente.minhasconsultas');
+      }
+   }
 }

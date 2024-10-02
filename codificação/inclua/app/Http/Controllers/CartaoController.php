@@ -28,7 +28,7 @@ class CartaoController extends Controller
             $cartao->ano_validade = date("Y",strtotime($request->validade));
             $cartao->codigo_seguranca = Crypt::encrypt($request->codigo_seguranca);
             $cartao->nome_titular = $request->nome_titular;
-            $cartao->status = "PENDENTE";
+            $cartao->status = "Pendente";
             $cartao->save();
             
             return $cartao;

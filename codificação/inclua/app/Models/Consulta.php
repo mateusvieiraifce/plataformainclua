@@ -12,4 +12,18 @@ class Consulta extends Model
     'paciente_id', 'especialista_id', 'clinica_id','motivocancelamento',
     'isPago','forma_pagamento','id_usuario_cancelou'
   ];
-} ?>
+
+  public function noHasAvaliacao()
+  {/* 
+    $especialista = Especialista::find($especialista_id);
+    $clinica = Clinica::find($clinica_id); */
+    $avaliacao = Avaliacao::orWhere('consulta_id', $this->id)->count();
+    
+    if (empty($avaliacao)) {
+      return true;
+    } else {
+      return false;
+    }
+    
+  }
+}

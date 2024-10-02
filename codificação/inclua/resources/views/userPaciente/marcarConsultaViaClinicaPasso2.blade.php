@@ -5,7 +5,7 @@
         <div class="col-lg-12 col-md-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="title">Escolha a área de atuação</h4>
+                    <h4 class="title">Escolha a especialidade</h4>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -33,7 +33,9 @@
                             <h5>Não há nenhuma especialidade cadastrada.</h5>
                         @endif
                     </div>
-                    <a href="{{ route('paciente.marcarConsultaViaClinicaPasso1') }}" class="btn btn-primary"><i class="fa fa-reply"></i> Voltar</a>
+                    <a href="{{ route('paciente.marcarConsultaViaClinicaPasso1') }}" class="btn btn-primary">
+                        <i class="fa fa-reply"></i> Voltar
+                    </a>
                 </div>
             </div>
         </div>

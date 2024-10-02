@@ -34,11 +34,14 @@ class AssinaturaController extends Controller
             "nome_titular.min" => "O campo Nome do titular deve ter no mínimo 5 caracteres.",
         ];
         $request->validate($rules, $feedbacks);
+        
+        $cartaoController = new CartaoController();
+        $cartao = $cartaoController->store($request);
 
         //CRIAR O CHECKOUT
         $checkout = Helper::createCheckouSumup();
         //CRIAR O PAGAMENTO
-        $pagamento = Helper::createPagamento($request, $checkout);
+        $pagamento = Helper::createPagamento($cartao, $checkout);
 
         if (isset($pagamento->param) && $pagamento->param == "$.card.cvv") {
             session()->flash('msg', ['valor' => trans("O Código de segurança informado é inválido Verifique o código e tente novamente."), 'tipo' => 'danger']);
@@ -50,24 +53,21 @@ class AssinaturaController extends Controller
             return back()->withInput(request()->all());
         }
         
-        $cartaoController = new CartaoController();
-        $cartao = $cartaoController->store($request);
-        
         $pagamentoController = new PagamentoController();
 
         if (isset($pagamento->status) && $pagamento->status == "FAILED") {
-            $assinatura = $this->store($cartao, $pagamento->transactions[0]->transaction_code, $request->nome_titular, "NEGADA", "Cartão negado realizar a assinatura.");
-            $pagamentoController->store($cartao->user_id, $cartao->id, $assinatura->id, floatval(Helper::converterMonetario(env('PRECO_ASSINATURA'))), $pagamento->transactions[0]->transaction_code, 'NEGADO');
+            $assinatura = $this->store($cartao, $pagamento->transactions[0]->transaction_code, $request->nome_titular, "Negada", "Cartão negado realizar a assinatura.");
+            $pagamentoController->store($cartao->user_id, floatval(Helper::converterMonetario(env('PRECO_ASSINATURA'))), $pagamento->transactions[0]->transaction_code, 'Negado', 'Assinatura');
             
             return redirect()->route('callback.payment.assinatura', ['checkout_id' => $pagamento->id]);
         } elseif (isset($pagamento->status) && $pagamento->status == "PAID") {
-            $assinatura = $this->store($cartao, $pagamento->transactions[0]->transaction_code, $request->nome_titular, "APROVADA");
-            $pagamentoController->store($cartao->user_id, $cartao->id, $assinatura->id, floatval(Helper::converterMonetario(env('PRECO_ASSINATURA'))), $pagamento->transactions[0]->transaction_code, 'APROVADO');
+            $assinatura = $this->store($cartao, $pagamento->transactions[0]->transaction_code, $request->nome_titular, "Aprovada");
+            $pagamentoController->store($cartao->user_id, floatval(Helper::converterMonetario(env('PRECO_ASSINATURA'))), $pagamento->transactions[0]->transaction_code, 'Aprovado', 'Assinatura');
 
             return redirect()->route('callback.payment.assinatura', ['checkout_id' => $pagamento->id]);
         } elseif (isset($pagamento->next_step)) {
             $assinatura = $this->store($cartao, $pagamento->next_step->current_transaction->transaction_code, $request->nome_titular);
-            $pagamentoController->store($cartao->user_id, $cartao->id, $assinatura->id, floatval(Helper::converterMonetario(env('PRECO_ASSINATURA'))), $pagamento->next_step->current_transaction->transaction_code, 'PENDENTE');
+            $pagamentoController->store($cartao->user_id, floatval(Helper::converterMonetario(env('PRECO_ASSINATURA'))), $pagamento->next_step->current_transaction->transaction_code, 'Pendente', 'Assinatura');
 
             return redirect($pagamento->next_step->url);
         }        
@@ -79,25 +79,24 @@ class AssinaturaController extends Controller
         $response = Helper::getCheckout($request->checkout_id);
         $assinatura = Assinatura::where('transaction_code', $response->transactions[0]->transaction_code)->first();
         $cartao = Cartao::find($assinatura->cartao_id);
+        $pagamentoController = new PagamentoController();
 
         if ($response->status == 'FAILED') {
             $cartaoController = new CartaoController();
-            $cartaoController->update($assinatura->cartao_id, "NEGADO", null);
-            $this->update($assinatura->id, $response->transactions[0]->transaction_code, "NEGADA", "Cartão negado.");
+            $cartaoController->update($assinatura->cartao_id, "Negado", null);
+            $this->update($assinatura->id, $response->transactions[0]->transaction_code, "Negada", "Cartão negado.");
             
-            $pagamentoController = new PagamentoController();
-            $pagamentoController->update($response->transactions[0]->transaction_code, 'NEGADO');
+            $pagamentoController->update($response->transactions[0]->transaction_code, 'Negado');
 
             session()->flash('msg', ['valor' => trans("Não foi possível realizar a  assinatura da plataforma com o cartão informado! Informe um novo cartão e tente novamente."), 'tipo' => 'danger']);
 
             return redirect()->route('cartao.create', ['usuario_id' => $cartao->user_id]);
         } else if ($response->status == 'PAID') {
             $cartaoController = new CartaoController();
-            $cartaoController->update($assinatura->cartao_id, "APROVADO", "S");
-            $this->update($assinatura->id, $response->transactions[0]->transaction_code, "APROVADA");
+            $cartaoController->update($assinatura->cartao_id, "Aprovado", "S");
+            $this->update($assinatura->id, $response->transactions[0]->transaction_code, "Aprovada");
 
-            $pagamentoController = new PagamentoController();
-            $pagamentoController->update($response->transactions[0]->transaction_code, 'APROVADO');
+            $pagamentoController->update($response->transactions[0]->transaction_code, 'Aprovado');
             
             $user = User::find($cartao->user_id);
             $user->etapa_cadastro = 'F';
@@ -112,7 +111,7 @@ class AssinaturaController extends Controller
         return redirect()->route('cartao.create', ['usuario_id' => $cartao->user_id]);
     }
 
-    public function store($cartao, $transaction_code, $assinante, $status = "PENDENTE", $motivo = null)
+    public function store($cartao, $transaction_code, $assinante, $status = "Pendente", $motivo = null)
     {
         try {
             date_default_timezone_set('America/Sao_Paulo');
@@ -121,7 +120,7 @@ class AssinaturaController extends Controller
             $assinatura = Assinatura::where('user_id', $cartao->user_id)->first();
             if(!empty($assinatura)) {
                 $cartaoController = new CartaoController();
-                $cartaoController->update($assinatura->cartao_id, "NEGADO", null);
+                $cartaoController->update($assinatura->cartao_id, "Negado", null);
             } else {
                 $assinatura = new Assinatura();
             }
@@ -133,7 +132,7 @@ class AssinaturaController extends Controller
             $assinatura->mes_referencia = date("m", strtotime(Helper::addMonthsToDate($dataLocal, 1)));
             $assinatura->transaction_code = $transaction_code;
             $assinatura->motivo = $motivo;
-            $assinatura->situacao = $status == "APROVADA" ? "ATIVA" : ($status == "NEGADA" ? "CANCELADA" : null);
+            $assinatura->situacao = $status == "Aprovada" ? "Ativa" : ($status == "Negada" ? "Cancelada" : null);
             $assinatura->save();
 
             return $assinatura;
@@ -149,12 +148,12 @@ class AssinaturaController extends Controller
             $dataLocal = date('Y-m-d', time());
             
             $assinatura = Assinatura::find($id_assinatura);
-            $assinatura->data_renovacao = ($status == "APROVADA" ? Helper::addMonthsToDate($dataLocal, 1) : $assinatura->data_renovacao);
+            $assinatura->data_renovacao = ($status == "Aprovada" ? Helper::addMonthsToDate($dataLocal, 1) : $assinatura->data_renovacao);
             $assinatura->status = $status;
-            $assinatura->mes_referencia = ($status == "APROVADA" ? date("m", strtotime(Helper::addMonthsToDate($dataLocal, 1))) : $assinatura->mes_referencia);
+            $assinatura->mes_referencia = ($status == "Aprovada" ? date("m", strtotime(Helper::addMonthsToDate($dataLocal, 1))) : $assinatura->mes_referencia);
             $assinatura->transaction_code = $transaction_code;
             $assinatura->motivo = $motivo;
-            $assinatura->situacao = ($status == "APROVADA" ? "ATIVA" : "CANCELADA");
+            $assinatura->situacao = ($status == "Aprovada" ? "Ativa" : "Cancelada");
             $assinatura->save();
         } catch (QueryException $e) {
             $msg = ['valor' => trans("Erro ao executar a operação!"), 'tipo' => 'danger'];
@@ -167,33 +166,33 @@ class AssinaturaController extends Controller
         $usuarios = User::where('tipo_user', 'P')->get();
         //PERCORRER TODOS PACIENTES CADASTRADOS PARA RENOVAR ASSINATURA
         foreach ($usuarios as $usuario) {
-            $assinatura = Assinatura::where('user_id', $usuario->id)->where('status', 'APROVADA')->where('situacao', 'ATIVA')->first();
+            $assinatura = Assinatura::where('user_id', $usuario->id)->where('status', 'Aprovada')->where('situacao', 'Ativa')->first();
             if ($assinatura) {
-                $cartao = Cartao::where('id', $assinatura->cartao_id)->where('principal', 'S')->where('status', 'APROVADO')->first();
+                $cartao = Cartao::where('id', $assinatura->cartao_id)->where('principal', 'S')->where('status', 'Aprovado')->first();
                 
                 date_default_timezone_set('America/Sao_Paulo');
                 $dataLocal = date('Y-m-d', time());
                 
                 if ($dataLocal >= $assinatura->data_renovacao && isset($cartao)) {
                     //CANCELAR ASSINATURA
-                    $assinatura->situacao = "CANCELADA";
+                    $assinatura->situacao = "Cancelada";
                     $assinatura->save();
                     
                     //CRIAR O CHECKOUT
                     $checkout = Helper::createCheckouSumup(true);
                     //CRIAR A RENOVAÇÂO DE PAGAMENTO
-                    $pagamento = Helper::renovarPagamento($cartao, $checkout);
+                    $pagamento = Helper::createPagamento($cartao, $checkout);
 
                     $pagamentoController = new PagamentoController();
                     
                     if (isset($pagamento->status) && $pagamento->status == "FAILED") {
-                        $this->update($assinatura->id, $pagamento->transactions[0]->transaction_code, "RENOVAÇÂO PENDENTE", "Cartão negado para renovar a assinatura.");
-                        $pagamentoController->store($cartao->user_id, $cartao->id, $assinatura->id, floatval(Helper::converterMonetario(env('PRECO_ASSINATURA'))), $pagamento->transactions[0]->transaction_code, 'NEGADO');
+                        $this->update($assinatura->id, $pagamento->transactions[0]->transaction_code, "Renovação pendente", "Cartão negado para renovar a assinatura.");
+                        $pagamentoController->store($cartao->user_id, floatval(Helper::converterMonetario(env('PRECO_ASSINATURA'))), $pagamento->transactions[0]->transaction_code, 'Negado', 'Renovação da assinatura');
                     } elseif (isset($pagamento->status) && $pagamento->status == "PAID") {
-                        $this->update($assinatura->id, $pagamento->transactions[0]->transaction_code, "APROVADA");
-                        $pagamentoController->store($cartao->user_id, $cartao->id, $assinatura->id, floatval(Helper::converterMonetario(env('PRECO_ASSINATURA'))), $pagamento->transactions[0]->transaction_code, 'APROVADO');
+                        $this->update($assinatura->id, $pagamento->transactions[0]->transaction_code, "Aprovada");
+                        $pagamentoController->store($cartao->user_id,  floatval(Helper::converterMonetario(env('PRECO_ASSINATURA'))), $pagamento->transactions[0]->transaction_code, 'Aprovado', 'Renovação da assinatura');
                     } elseif (isset($pagamento->next_step)) {
-                        $this->update($assinatura->id, $pagamento->next_step->current_transaction->transaction_code, "RENOVAÇÂO PENDENTE");
+                        $this->update($assinatura->id, $pagamento->next_step->current_transaction->transaction_code, "Renovação pendente");
                     }
                 }
             }
@@ -204,36 +203,36 @@ class AssinaturaController extends Controller
     {
         $assinatura = Assinatura::find($assinatura_id);
         if ($assinatura) {
-            $cartao = Cartao::where('id', $assinatura->cartao_id)->where('principal', 'S')->where('status', 'APROVADO')->first();
+            $cartao = Cartao::where('id', $assinatura->cartao_id)->where('principal', 'S')->where('status', 'Aprovado')->first();
             
             date_default_timezone_set('America/Sao_Paulo');
             $dataLocal = date('Y-m-d', time());
             
             if ($dataLocal >= $assinatura->data_renovacao && $cartao) {
                 //CANCELAR ASSINATURA
-                $assinatura->situacao = "CANCELADA";
+                $assinatura->situacao = "Cancelada";
                 $assinatura->save();
 
                 //CRIAR O CHECKOUT
                 $checkout = Helper::createCheckouSumup(true);
                 //CRIAR A RENOVAÇÂO DE PAGAMENTO
-                $pagamento = Helper::renovarPagamento($cartao, $checkout);
+                $pagamento = Helper::createPagamento($cartao, $checkout);
                 
                 $pagamentoController = new PagamentoController();
 
                 if (isset($pagamento->status) && $pagamento->status == "FAILED") {
-                    $this->update($assinatura->id, $pagamento->transactions[0]->transaction_code, "RENOVAÇÂO PENDENTE", "Cartão negado para renovar a assinatura.");
-                    $pagamentoController->store($cartao->user_id, $cartao->id, $assinatura->id, floatval(Helper::converterMonetario(env('PRECO_ASSINATURA'))), $pagamento->transactions[0]->transaction_code, 'NEGADO');
+                    $this->update($assinatura->id, $pagamento->transactions[0]->transaction_code, "Renovação pendente", "Cartão negado para renovar a assinatura.");
+                    $pagamentoController->store($cartao->user_id, floatval(Helper::converterMonetario(env('PRECO_ASSINATURA'))), $pagamento->transactions[0]->transaction_code, 'Negado', 'Renovação da assinatura');
 
                     return false;
                 } elseif (isset($pagamento->status) && $pagamento->status == "PAID") {
-                    $this->update($assinatura->id, $pagamento->transactions[0]->transaction_code, "APROVADO");
-                    $pagamentoController->store($cartao->user_id, $cartao->id, $assinatura->id, floatval(Helper::converterMonetario(env('PRECO_ASSINATURA'))), $pagamento->transactions[0]->transaction_code, 'APROVADO');
+                    $this->update($assinatura->id, $pagamento->transactions[0]->transaction_code, "Aprovado");
+                    $pagamentoController->store($cartao->user_id, floatval(Helper::converterMonetario(env('PRECO_ASSINATURA'))), $pagamento->transactions[0]->transaction_code, 'Aprovado', 'Renovação da assinatura');
                     
                     return true;
                 } elseif (isset($pagamento->next_step)) {
-                    $this->update($assinatura->id, $pagamento->next_step->current_transaction->transaction_code, "RENOVAÇÂO PENDENTE");
-                    $pagamentoController->store($cartao->user_id, $cartao->id, $assinatura->id, floatval(Helper::converterMonetario(env('PRECO_ASSINATURA'))), $pagamento->next_step->current_transaction->transaction_code, 'PENDENTE');
+                    $this->update($assinatura->id, $pagamento->next_step->current_transaction->transaction_code, "Renovação pendente");
+                    $pagamentoController->store($cartao->user_id, floatval(Helper::converterMonetario(env('PRECO_ASSINATURA'))), $pagamento->next_step->current_transaction->transaction_code, 'Pendente', 'Renovação da assinatura');
 
                     return redirect($pagamento->next_step->url);
                 }
@@ -252,20 +251,20 @@ class AssinaturaController extends Controller
         
         if ($response->status == 'FAILED') {
             $cartaoController = new CartaoController();
-            $cartaoController->update($assinatura->cartao_id, "NEGADO", null);
-            $this->update($assinatura->id, $response->transactions[0]->transaction_code, "NEGADA", "Cartão negado para renovar a assinatura.");
+            $cartaoController->update($assinatura->cartao_id, "Negado", null);
+            $this->update($assinatura->id, $response->transactions[0]->transaction_code, "Negada", "Cartão negado para renovar a assinatura.");
 
-            $pagamentoController->update($response->transactions[0]->transaction_code, 'NEGADO');
+            $pagamentoController->update($response->transactions[0]->transaction_code, 'Negado');
             
             session()->flash('msg', ['valor' => trans("Não foi possível renovar a assinatura com o cartão cadastrado. Informe um novo cartão para continuar a utilizar os serviços da plataforma."), 'tipo' => 'danger']);
             
             return redirect()->route('cartao.create', ['usuario_id' => $cartao->user_id]);
         } else if ($response->status == 'PAID') {
             $cartaoController = new CartaoController();
-            $cartaoController->update($assinatura->cartao_id, "APROVADO", "S");
-            $this->update($assinatura->id, $response->transactions[0]->transaction_code, "APROVADA");
+            $cartaoController->update($assinatura->cartao_id, "Aprovado", "S");
+            $this->update($assinatura->id, $response->transactions[0]->transaction_code, "Aprovada");
             
-            $pagamentoController->update($response->transactions[0]->transaction_code, 'APROVADO');
+            $pagamentoController->update($response->transactions[0]->transaction_code, 'Aprovado');
             
             $user = User::find($cartao->user_id);
             $user->etapa_cadastro = 'F';

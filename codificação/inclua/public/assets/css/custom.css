@@ -21,7 +21,7 @@
     color: #344675;
 }
 
-.card-register .custom-file-label::after {
+.card-register .custom-file-label::after, .modal .custom-file-label::after {
     position: unset;
     display: inline;
     line-height: 1.428571;
@@ -167,7 +167,7 @@ label.link {
 }
 
 /* INVERTER COM A COR DO CALENDARIO EXIBIDO NO INPUT DO TIPO DATA */
-::-webkit-calendar-picker-indicator {
+.card.card-white:not() ::-webkit-calendar-picker-indicator {
     filter: invert(1);
 }
 
@@ -221,6 +221,57 @@ option {
 .search .btn {
     margin: 0;
     height: calc(2.25rem + 2px);
+}
+
+.input-button-inline {
+    display: flex;
+    gap: 30px;
+}
+
+.modal-dialog {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: 10vh;
+}
+
+.modal .modal-header h5 {
+    font-weight: 600;
+    font-size: 1.4375rem;
+    margin-bottom: 0.5rem;
+}
+
+.modal h4 {
+    font-weight: 600;
+}
+
+.modal h4, .modal h5 {
+    color: #525f7f;
+}
+
+.modal .multiple-inputs-inline {
+    display: flex;
+    gap: 40px;
+}
+
+.star-rating {
+    display: flex;
+    gap: 10px;
+}
+
+.star-rating.avaliacao .star {
+    height: 24px;
+    margin-top: -17px;
+    margin-bottom: 20px;
+}   
+
+.star {
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.star.selected {
+    color: gold;
 }
 
 /* TALWIND */

@@ -17,6 +17,7 @@
                                         <th>Valor</th>
                                         <th>Data de Pagamento</th>
                                         <th>Status</th>
+                                        <th>Servico</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -33,6 +34,9 @@
                                             </td>
                                             <td>
                                                 {{ $pagamento->status }}
+                                            </td>
+                                            <td>
+                                                {{ $pagamento->servico }}
                                             </td>
                                         </tr>
                                     @endforeach
@@ -85,7 +89,7 @@
                                             {{ $assinatura->status }}
                                         </td>
                                         <td>
-                                            {{ $assinatura->situacao == "ATIVA" ? "Sim" : "Não" }}
+                                            {{ $assinatura->situacao == "Ativa" ? "Sim" : "Não" }}
                                         </td>
                                         @if ($assinatura->motivo != null)
                                             <td>

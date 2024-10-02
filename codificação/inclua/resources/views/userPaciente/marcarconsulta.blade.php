@@ -13,7 +13,7 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
-                <h4 class="title">Marcar consulta</h4>
+                <h6 class="title d-inline">Marcar consulta</h6>
             </div>
             <div class="card-body">
                 <div class="form-group">
