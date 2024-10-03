@@ -44,7 +44,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="idade_mae_geracao">
                                             Qual a idade da mãe quando foi gerado(a)?
@@ -68,10 +68,10 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <div class="form-group">
                                         <label for="pre_natal">
-                                            Fez pré natal?
+                                            Fez o pré natal?
                                         </label>
                                         <div class="input-group {{ $errors->has('pre_natal') ? 'has-danger' : '' }}">
                                             <select name="pre_natal" class="form-control {{ $errors->has('pre_natal') ? 'is-invalid' : '' }}">
@@ -146,7 +146,7 @@
                         {{-- PERÍODO PERINATAL (PARTO) --}}
                         <div class="tab">
                             <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label>
                                             O parto foi realizado:
@@ -175,7 +175,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-2">
                                     <div class="form-group">
                                         <label for="tipo_parto">
                                             O parto foi?
@@ -241,7 +241,7 @@
                         {{-- EVOLUÇÃO NA INFÂNCIA --}}
                         <div class="tab">
                             <div class="row">
-                                <div class="col-md-3">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="amamentacao">
                                             A criança foi amamentada? Por quanto tempo? 
@@ -252,7 +252,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="comeu_pastoso_solido">
                                             Quando começou a comer pastoso? E sólido?
@@ -263,7 +263,9 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                            </div>
+                            <div class="row">
+                                <div class="col-md-5">
                                     <div class="form-group">
                                         <label for="tomou_todas_vacinas">
                                             A criança tomou todas as vacinas necessárias?
@@ -278,7 +280,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-7">
                                     <div class="form-group">
                                         <label for="permanencia_tres_anos">
                                             Nos três primeiros anos de vida, permaneceu mais tempo em casa com quem? 
@@ -294,7 +296,7 @@
                         {{-- DESENVOLVIMENTO PSICOMOTOR --}}
                         <div class="tab">
                             <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-5">
                                     <div class="form-group">
                                         <label for="iniciou_sustentacao_cabeca">
                                             Com quantos meses começou a sustentação da cabeça?
@@ -318,7 +320,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="idade_engatinhou">
                                             Com que idade engatinhou?
@@ -376,7 +378,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-5">
                                     <div class="form-group">
                                         <label for="anda_naturalidade">
                                             Anda com naturalidade ou é desastrado (atropela as pessoas)?
@@ -391,7 +393,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="dominancia_lateral">
                                             Qual sua dominância lateral?
@@ -464,7 +466,7 @@
                         {{-- DESENVOLVIMENTO DA LINGUAGEM --}}
                         <div class="tab">
                             <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="comecou_falar">
                                             Quando começou a falar?
@@ -476,7 +478,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="teve_gagueira">
                                             Teve gagueira quando pequeno?
@@ -491,7 +493,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="dificuldade_fala">
                                             Trocava, omitia, distorcia os fonemas (dislalia) ao falar?
@@ -549,7 +551,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-2">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="conta_historias">
                                             Sabe contar histórias?
@@ -564,7 +566,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="conversa_adultos">
                                             Conversa com os adultos?
@@ -579,7 +581,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="inventa_casos">
                                             Gosta de inventar casos?
@@ -594,7 +596,9 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="sabe_cantar">
                                             Sabe cantar? Que tipo de músicas?
@@ -606,7 +610,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="gosta_musicas">
                                             Gosta de ouvir músicas?
@@ -626,7 +630,7 @@
                         {{-- HISTÓRIA CLÍNICA --}}
                         <div class="tab">
                             <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="doencas_contraidas">
                                             Quais as doenças que já teve?
@@ -638,7 +642,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="teve_febre_convulsao">
                                             Teve febre alta ou convulsões, quando pequeno?
@@ -653,6 +657,8 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="row">
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="teve_queda_acidente">
@@ -668,9 +674,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="fez_exame_neurologico">
                                             Fez algum exame neurológico?
@@ -685,7 +689,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="toma_medicamento_controlado">
                                             Toma medicamento controlado?
@@ -700,10 +704,12 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="remedios_controlados">
-                                            Se sim, qual(is) medicamento(os) controlado(s) toma?
+                                            Se sim, informe o(s) medicamento(s) controlado(s):
                                         </label>
                                         <div class="input-group {{ $errors->has('remedios_controlados') ? 'has-danger' : '' }}">
                                             <input id="remedios_controlados" type="text" class="form-control" name="remedios_controlados"
@@ -727,12 +733,10 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="apresenta_deficiencia_fisica">
-                                            Apresenta alguma deficiência física?
+                                            Tem alguma dificuldade física?
                                         </label>
                                         <div class="input-group {{ $errors->has('apresenta_deficiencia_fisica') ? 'has-danger' : '' }}">
                                             <input id="apresenta_deficiencia_fisica" type="text" class="form-control" name="apresenta_deficiencia_fisica"
@@ -741,10 +745,12 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="dificuldade_relacionar_deficiencia">
-                                            Tem dificuldade em relacionar-se com essa deficiência?
+                                            Tem dificuldade em lidar com essa deficiência?
                                         </label>
                                         <div class="input-group {{ $errors->has('dificuldade_relacionar_deficiencia') ? 'has-danger' : '' }}">
                                             <select name="dificuldade_relacionar_deficiencia" class="form-control {{ $errors->has('dificuldade_relacionar_deficiencia') ? 'is-invalid' : '' }}">
@@ -756,7 +762,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="deficiencia_intelectual_familia">
                                             Possui casos de deficiência intelectual na família?
@@ -776,7 +782,7 @@
                         {{-- ENURESE, ENCOPRESE E SONO --}}
                         <div class="tab">
                             <div class="row">
-                                <div class="col-md-3">
+                                <div class="col-md-5">
                                     <div class="form-group">
                                         <label for="aprendeu_usar_sanitario">
                                             Quando aprendeu a usar o sanitário?
@@ -788,7 +794,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="teve_enurese_noturna">
                                             Teve enurese noturna?
@@ -815,6 +821,8 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="row">
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="atitude_pais_enurese">
@@ -827,8 +835,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
                                 <div class="col-md-2">
                                     <div class="form-group">
                                         <label for="onde_dorme">
@@ -841,7 +847,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="com_quem_dorme">
                                             Com quem?
@@ -853,7 +859,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="tipo_sono">
                                             Tem sono tranquilo ou agitado?
@@ -868,7 +874,9 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-2">
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="conversa_dormindo">
                                             Conversa dormindo?
@@ -883,7 +891,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="range_dentes_dormindo">
                                             Range os dentes dormindo?
@@ -898,9 +906,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-5">
                                     <div class="form-group">
                                         <label for="quando_dorme">
                                             Dorme cedo ou tarde da noite?
@@ -912,7 +918,9 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="habitos_dormir">
                                             Chupa dedo, chupeta ou possui outro hábito?
@@ -924,7 +932,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="atitude_pais_habitos_dormir">
                                             Qual a atitude dos pais?
@@ -942,7 +950,7 @@
                         {{-- RELACIONAMENTO FAMILIAR --}}
                         <div class="tab">
                             <div class="row">
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="adotado_legitimo">
                                             É adotado ou legítimo?
@@ -957,7 +965,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-5">
                                     <div class="form-group">
                                         <label for="sabe_adocao">
                                             Se for adotado, conhece esta condição?
@@ -987,6 +995,8 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="row">
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="diz_deseja_ser_crescer">
@@ -1002,8 +1012,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="desejo_familia_crianca">
@@ -1016,7 +1024,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-5">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="compreensao_familia_comportamento">
                                             Como a família se sente com relação ao comportamento da criança?
@@ -1028,6 +1036,8 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="row">
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="bom_relacionamento_familia">
@@ -1043,9 +1053,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-5">
                                     <div class="form-group">
                                         <label for="ciumes_irmaos">
                                             Se possui irmãos, demonstra ciúmes de algum deles?
@@ -1057,7 +1065,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="apresenta_agressividade">
                                             Apresenta agressividade?
@@ -1072,6 +1080,8 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="row">
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="irrita_facilmente">
@@ -1087,9 +1097,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="obediente">
                                             É obediente?
@@ -1101,7 +1109,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-5">
                                     <div class="form-group">
                                         <label for="faz_perguntas_dificeis">
                                             Faz perguntas difíceis de responder?
@@ -1116,7 +1124,9 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="busca_atencao">
                                             Procura chamar atenção para si?
@@ -1131,9 +1141,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-5">
                                     <div class="form-group">
                                         <label for="presencia_violencia">
                                             Presenciou ou presencia atos de violência na família?
@@ -1148,7 +1156,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-8">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="habitos_alimentares">
                                             Como são seus hábitos alimentares?
@@ -1166,7 +1174,7 @@
                         {{-- RELACIONAMENTO SOCIAL --}}
                         <div class="tab">
                             <div class="row">
-                                <div class="col-md-3">
+                                <div class="col-md-5">
                                     <div class="form-group">
                                         <label for="hobby">
                                             O que mais gosta de fazer (Hobby)?
@@ -1178,7 +1186,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-5">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="participa_atividades">
                                             Participa de atividades:
@@ -1214,7 +1222,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="possui_amigos">
                                             Possui amigos?
