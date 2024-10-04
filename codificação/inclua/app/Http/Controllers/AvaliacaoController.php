@@ -114,4 +114,34 @@ class AvaliacaoController extends Controller
         
         return view('userPaciente.reputacao.lista', ['avaliacoes' => $avaliacoes, 'mediaNotas' => $mediaNotas]);
     }
+
+    public function reputacaoClinica()
+    {
+        $user = Auth::user();
+        $avaliacoes = Avaliacao::leftJoin('avaliacoes_comentarios', 'avaliacoes_comentarios.avaliacao_id', 'avaliacoes.id')
+            ->join('consultas', 'consultas.id', 'avaliacoes.consulta_id')
+            ->join('clinicas', 'clinicas.id', 'consultas.clinica_id')
+            ->where('clinicas.usuario_id', $user->id)
+            ->where('avaliacoes.tipo_avaliado', 'C')
+            ->select(
+                'avaliacoes.categoria',
+                'avaliacoes.nota',
+                'avaliacoes_comentarios.comentario',
+            )
+            ->paginate(8);
+
+           
+
+        $mediaNotas = Avaliacao::leftJoin('avaliacoes_comentarios', 'avaliacoes_comentarios.avaliacao_id', 'avaliacoes.id')
+            ->join('consultas', 'consultas.id', 'avaliacoes.consulta_id')
+            ->join('clinicas', 'clinicas.id', 'consultas.clinica_id')
+            ->where('clinicas.usuario_id', $user->id)
+            ->where('avaliacoes.tipo_avaliado', 'C')
+            ->select(DB::raw('(AVG(avaliacoes.nota)) as total'))
+            ->first()
+            ->total;
+        
+        return view('userClinica.reputacao.lista', ['avaliacoes' => $avaliacoes, 'mediaNotas' => $mediaNotas]);
+    }
+     
 }

@@ -73,19 +73,26 @@
                                 <table id="table1">
                                     <thead>
                                         <tr>
-                                            <th colspan="2">Fila Normal</th>
+                                            <th colspan="4">Fila Normal</th>
                                         </tr>
                                         <tr>
                                         <th>Ordem</th>
                                             <th>Nome</th>
-                                            <th>Entrou na fila</th>
+                                            <th colspan="2">Entrou na fila</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @if(sizeof($listaTipoNormal) > 0)
+                                        @php
+                                        $cont=1;
+                                        @endphp
                                             @foreach($listaTipoNormal as $ent)
+
                                                 <tr draggable="true">
-                                                 <td class="row-number">{{$ent->ordem}}</td>
+                                                 <td class="row-number">{{$cont}}</td>
+                                                 @php
+                                        $cont=$cont+1;
+                                        @endphp
                                                     <td><input type="hidden" name="listaNormal[]" value="{{$ent->id}}">
                                                         {{$ent->nome}}</td>
                                                     <td> {{date('H:i', strtotime($ent->hora_entrou))}}</td>
@@ -105,19 +112,26 @@
                                 <table id="table2">
                                     <thead>
                                         <tr>
-                                            <th colspan="2">Fila Prioritário</th>
+                                            <th colspan="4">Fila Prioritário</th>
                                         </tr>
                                         <tr>
                                         <th>Ordem</th>
                                             <th>Nome</th>
-                                            <th>Entrou na fila</th>
+                                            <th colspan="2">Entrou na fila</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @if(sizeof($listaTipoPrioritario) > 0)
+                                        @php
+                                        $cont=1;
+                                        @endphp
                                             @foreach($listaTipoPrioritario as $ent)
                                                 <tr draggable="true">
-                                                    <td class="row-number">{{$ent->ordem}}</td>
+                                                    
+                                                    <td class="row-number">{{$cont}}</td>
+                                                    @php
+                                                    $cont=$cont+1;
+                                                    @endphp
                                                     <td><input type="hidden" name="listaPrioritario[]" value="{{$ent->id}}">
                                                         {{$ent->nome}}</td>
                                                     <td> {{date('H:i', strtotime($ent->hora_entrou))}}</td>
