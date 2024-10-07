@@ -71,7 +71,7 @@ class AvaliacaoController extends Controller
             $avaliacaoClinica->nota = $request->clinica_espera;
             $avaliacaoClinica->avaliador_id = Auth::user()->id;
             $avaliacaoClinica->consulta_id = $consulta->id;
-            $avaliacaoClinica->tipo_avaliado = "E";
+            $avaliacaoClinica->tipo_avaliado = "C";
             $avaliacaoClinica->save();
 
             if ($request->comentario_clinica != null) {
@@ -128,7 +128,7 @@ class AvaliacaoController extends Controller
                 'avaliacoes.nota',
                 'avaliacoes_comentarios.comentario',
             )
-            ->paginate(8);
+            ->paginate(32);
 
            
 
@@ -140,8 +140,52 @@ class AvaliacaoController extends Controller
             ->select(DB::raw('(AVG(avaliacoes.nota)) as total'))
             ->first()
             ->total;
+
+        $mediaNotasCategoriaLocalizacao = Avaliacao::leftJoin('avaliacoes_comentarios', 'avaliacoes_comentarios.avaliacao_id', 'avaliacoes.id')
+            ->join('consultas', 'consultas.id', 'avaliacoes.consulta_id')
+            ->join('clinicas', 'clinicas.id', 'consultas.clinica_id')
+            ->where('clinicas.usuario_id', $user->id)
+            ->where('avaliacoes.tipo_avaliado', 'C')
+            ->where('avaliacoes.categoria', 'Localização')
+            ->select(DB::raw('(AVG(avaliacoes.nota)) as total'))
+            ->first()
+            ->total;
+
+        $mediaNotasCategoriaLimpeza = Avaliacao::leftJoin('avaliacoes_comentarios', 'avaliacoes_comentarios.avaliacao_id', 'avaliacoes.id')
+            ->join('consultas', 'consultas.id', 'avaliacoes.consulta_id')
+            ->join('clinicas', 'clinicas.id', 'consultas.clinica_id')
+            ->where('clinicas.usuario_id', $user->id)
+            ->where('avaliacoes.tipo_avaliado', 'C')
+            ->where('avaliacoes.categoria', 'Limpeza')
+            ->select(DB::raw('(AVG(avaliacoes.nota)) as total'))
+            ->first()
+            ->total;
+        $mediaNotasCategoriaOrganizacao = Avaliacao::leftJoin('avaliacoes_comentarios', 'avaliacoes_comentarios.avaliacao_id', 'avaliacoes.id')
+            ->join('consultas', 'consultas.id', 'avaliacoes.consulta_id')
+            ->join('clinicas', 'clinicas.id', 'consultas.clinica_id')
+            ->where('clinicas.usuario_id', $user->id)
+            ->where('avaliacoes.tipo_avaliado', 'C')
+            ->where('avaliacoes.categoria', 'Organização')
+            ->select(DB::raw('(AVG(avaliacoes.nota)) as total'))
+            ->first()
+            ->total;
+
+        $mediaNotasCategoriaTempo = Avaliacao::leftJoin('avaliacoes_comentarios', 'avaliacoes_comentarios.avaliacao_id', 'avaliacoes.id')
+            ->join('consultas', 'consultas.id', 'avaliacoes.consulta_id')
+            ->join('clinicas', 'clinicas.id', 'consultas.clinica_id')
+            ->where('clinicas.usuario_id', $user->id)
+            ->where('avaliacoes.tipo_avaliado', 'C')
+            ->where('avaliacoes.categoria', 'Tempo de espera')
+            ->select(DB::raw('(AVG(avaliacoes.nota)) as total'))
+            ->first()
+            ->total;
         
-        return view('userClinica.reputacao.lista', ['avaliacoes' => $avaliacoes, 'mediaNotas' => $mediaNotas]);
+        return view('userClinica.reputacao.lista', ['avaliacoes' => $avaliacoes, 
+        'mediaNotas' => $mediaNotas, 
+        'mediaNotasCategoriaLocalizacao' => $mediaNotasCategoriaLocalizacao,
+        'mediaNotasCategoriaLimpeza' => $mediaNotasCategoriaLimpeza,
+        'mediaNotasCategoriaOrganizacao' => $mediaNotasCategoriaOrganizacao,
+        'mediaNotasCategoriaTempo' => $mediaNotasCategoriaTempo]);
     }
      
 }

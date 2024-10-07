@@ -20,4 +20,5 @@ class Avaliacao extends Model
         'consulta_id',
         'tipo_avaliado'
     ];
+   
 }
