@@ -11,44 +11,56 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <h6>Média Geral: {{ number_format($mediaNotas, 2, ',') }}</h6>
-                        @if(sizeof($avaliacoes) > 0)
+                         @if(sizeof($avaliacoes) > 0)
                             <table class="table">
-                                <thead>                                  
-                                    <th>Comentário</th>
+                                <thead>      
+                                    <th >Nota</th>                            
+                                    <th colspan="4">Comentário</th>
                                     <th ></th>                                   
                                 </thead>
                                 <tbody>
                                      @php
                                      $cont = 0;
                                      @endphp
-                                    @foreach($avaliacoes as $avaliacao)
-                                   
-                                     @if($cont % 4==0)
-                                        <tr>
-                                            <td>
-                                                {{ $avaliacao->comentario }}
-                                            </td>
-                                            <td colspan="4">  
+                                    @foreach($avaliacoes as $avaliacao)                                   
+                                    @if($cont % 4==0)
+                                        <tr> 
+                                          <td colspan="4">                                         
                                     @endif
-                                            @php
-                                            $cont = $cont + 1;
-                                            @endphp
-                                            
-                                                <div class="star-rating" style="font-size: 8px;!important"> 
-                                                    <div class="row" style="overflow: hidden;">                                                                                                     
-                                                            <label style="float: left; margin: 0; font-size: 8px;!important"> {{ $avaliacao->categoria }}     </label>                            
-                                                            <label style="float: left; margin-right: 10px; font-size: 8px;!important"> </label>                           
-                                                            @for ($i = 1; $i <= $avaliacao->nota; $i++)
-                                                                <label class="star selected" style="float: right; margin: 0; font-size: 8px;!important" >&#9733;</label>
-                                                            @endfor                                                     
-                                                    </div>
-                                                </div>                                         
-                                           
+                                    @php
+                                    $cont = $cont + 1;
+                                    @endphp 
+                                       
+                                            <div class="star-rating" style="font-size: 8px;!important"> 
+                                                <div class="row" style="overflow: hidden;">                                                                                                     
+                                                    <label style="float: left; margin: 0px 0px 0px 10px; font-size: 8px;!important"> {{ $avaliacao->categoria }}     </label>                            
+                                                    <label style="float: left; margin-right: 10px; font-size: 8px;!important"> </label>                           
+                                                    @for ($i = 1; $i <= $avaliacao->nota; $i++)
+                                                        <label class="star selected" style="float: right; margin: 0; font-size: 8px;!important" >&#9733;</label>
+                                                    @endfor                                                     
+                                                </div>
+                                            </div>
                                             @if($cont % 4==0)
-                                            </td>
+                                            </td>                                  
+                                          
+                                            @if(isset($avaliacao->comentario))
+                                            <td>
+                                                    {{ $avaliacao->comentario }}
+                                                </td>
+                                            @else
+                                               <td>
+                                                    SEM COMENTÁRIO
+                                                </td>
+                                            @endif  
+                                            <td>
+                                            <a style="max-height: 20px;max-width: 80px;font-size: 11px; padding:5px;"
+                                                href=""
+                                                class="btn btn-primary"> Denunciar                                                 
+                                            </a>
+                                                                                
+                                                </td>
                                                 </tr>
-                                            @endif
+                                        @endif                                    
                                         @endforeach
                                 </tbody>
                             </table>

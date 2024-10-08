@@ -130,6 +130,7 @@ class AvaliacaoController extends Controller
             )
             ->paginate(32);
 
+            //dd($avaliacoes);
            
 
         $mediaNotas = Avaliacao::leftJoin('avaliacoes_comentarios', 'avaliacoes_comentarios.avaliacao_id', 'avaliacoes.id')
