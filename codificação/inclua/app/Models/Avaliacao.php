@@ -15,10 +15,9 @@ class Avaliacao extends Model
     
     protected $fillable = [
         'categoria',
-        'nota',
-        'avaliador_id',
+        'nota',       
         'consulta_id',
-        'tipo_avaliado'
+        'comentario_id'
     ];
    
 }

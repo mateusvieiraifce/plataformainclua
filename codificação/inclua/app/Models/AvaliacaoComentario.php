@@ -14,8 +14,9 @@ class AvaliacaoComentario extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'avaliacao_id',
         'comentario',
-        'status'
+        'status',
+        'tipo_avaliado',
+        'avaliador_id'
     ];
 }
