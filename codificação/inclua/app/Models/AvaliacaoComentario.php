@@ -15,6 +15,7 @@ class AvaliacaoComentario extends Model
 
     protected $fillable = [
         'avaliacao_id',
-        'comentario'
+        'comentario',
+        'status'
     ];
 }

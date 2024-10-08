@@ -123,14 +123,19 @@ class AvaliacaoController extends Controller
             ->join('clinicas', 'clinicas.id', 'consultas.clinica_id')
             ->where('clinicas.usuario_id', $user->id)
             ->where('avaliacoes.tipo_avaliado', 'C')
+         //   ->where('avaliacoes_comentarios.status','=', 'Liberado')
+         //   ->where('avaliacoes_comentarios.status', null)
+          //  ->orWhere('avaliacoes_comentarios.status', 'null')
             ->select(
                 'avaliacoes.categoria',
                 'avaliacoes.nota',
                 'avaliacoes_comentarios.comentario',
+                 'avaliacoes_comentarios.status',
             )
+            ->orderBy('avaliacoes.id','desc')
             ->paginate(32);
 
-            //dd($avaliacoes);
+            dd($avaliacoes);
            
 
         $mediaNotas = Avaliacao::leftJoin('avaliacoes_comentarios', 'avaliacoes_comentarios.avaliacao_id', 'avaliacoes.id')
