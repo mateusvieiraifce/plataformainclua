@@ -448,8 +448,8 @@
                     </a>
                 </li>
 
-                <li @if ($pageSlug=='favoritos' ) class="active " @endif>
-                    <a href="#">
+                <li @if ($pageSlug=='reputacao' ) class="active " @endif>
+                    <a href="{{route('avaliacao.reputacaoEspecialista')}}">
                         <i class="tim-icons icon-chat-33"></i>
                         <p>{{ __('Reputação') }}</p>
                     </a>

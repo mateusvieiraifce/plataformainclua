@@ -349,7 +349,10 @@ Route::middleware('auth')->group(function () {
      Route::any("/especialista/fila/clinicas", [\App\Http\Controllers\FilaController::class, 'listClinicaDoEspecialista'])->name('fila.listClinicaDoEspecialista');
      Route::any("/especialista/fila/list", [\App\Http\Controllers\FilaController::class, 'listUserEspecialista'])->name('fila.listUserEspecialista');
      Route::post("/especialista/fila/novaordem", [\App\Http\Controllers\FilaController::class, 'salvarOrdemFilasUserEspecialista'])->name('fila.salvarOrdemFilasUserEspecialista');
-
+    
+     Route::get("/especialista/reputacao", [\App\Http\Controllers\AvaliacaoController::class, 'reputacaoEspecialista'])->name('avaliacao.reputacaoEspecialista');
+     Route::post("/especialista/reputacao/denunciar", [\App\Http\Controllers\AvaliacaoController::class, 'denuciarUserEspecialista'])->name('avaliacao.denuciarUserEspecialista');
+ 
     #CONSULTAS_POR_CLINICA
     Route::get("/clinica/consultas/search", [\App\Http\Controllers\ConsultaController::class, 'listConsultaporClinicaPesquisar'])->name('consulta.listConsultaporClinicaPesquisar');
     #MARCAR_CONSULTA_USER_CLINICA
@@ -363,6 +366,7 @@ Route::middleware('auth')->group(function () {
     Route::get("/clinica/especialista/vinculo/agenda/{especialista_id}", [\App\Http\Controllers\EspecialistaclinicaController::class, 'agendaEspecialista'])->name('especialistaclinica.agendaEspecialista');
 
     Route::get("/clinica/reputacao", [\App\Http\Controllers\AvaliacaoController::class, 'reputacaoClinica'])->name('avaliacao.reputacaoClinica');
+    Route::post("/clinica/reputacao/denunciar", [\App\Http\Controllers\AvaliacaoController::class, 'denuciarUserClinica'])->name('avaliacao.denuciarUserClinica');
 
     #FINANCEIRO PACIENTE
     Route::get("/paciente/financeiro/", [\App\Http\Controllers\PagamentoController::class, 'historicoPagamentosPaciente'])->name('paciente.financeiro');

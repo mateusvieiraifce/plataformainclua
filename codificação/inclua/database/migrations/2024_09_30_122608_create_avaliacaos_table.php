@@ -16,6 +16,7 @@ class CreateAvaliacaosTable extends Migration
         Schema::create('avaliacoes_comentarios', function (Blueprint $table) {
             $table->id();
             $table->string('comentario', 200)->nullable();
+            $table->string('motivo_denuncia')->nullable();
             $table->string('status')->nullable();
             $table->string('tipo_avaliado', 1);
             $table->unsignedBigInteger('avaliador_id');

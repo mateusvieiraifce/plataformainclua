@@ -15,6 +15,7 @@ class AvaliacaoComentario extends Model
 
     protected $fillable = [
         'comentario',
+        'motivo_denuncia',
         'status',
         'tipo_avaliado',
         'avaliador_id'

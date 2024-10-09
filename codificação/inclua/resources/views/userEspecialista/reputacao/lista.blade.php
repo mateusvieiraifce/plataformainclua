@@ -23,9 +23,9 @@
                                      $cont = 0;
                                      @endphp
                                     @foreach($avaliacoes as $avaliacao)  
-                                            @if($cont % 4==0)
-                                                <tr>                                              
-                                                    <td>
+                                            @if($cont % 2==0)
+                                                <tr>                                                
+                                                     <td>
                                                         {{ $avaliacao->comentario }}
                                                     </td>                                                      
                                                 <td>                                         
@@ -43,7 +43,7 @@
                                                             @endfor                                                     
                                                         </div>
                                                     </div>
-                                                    @if($cont % 4==0)
+                                                    @if($cont % 2==0)
                                                     </td>                                
                                                             <td>
                                                             <a style="max-height: 20px;max-width: 80px;font-size: 11px; padding:5px;"
@@ -75,7 +75,7 @@
                                                             </div>
                                                             <div class="modal-body">
                                                                 <div class="container">
-                                                                    <form method="post" action="{{route('avaliacao.denuciarUserClinica')}}">
+                                                                    <form method="post" action="{{route('avaliacao.denuciarUserEspecialista')}}">
                                                                         @csrf                                         
                                                                         <div class="row">
                                                                             <div class="col-md-12 px-8">
@@ -136,28 +136,13 @@
                                 <tbody>
                                         <tr>
                                             <td>
-                                               Limpeza
+                                               Atendimento
                                             </td>
                                             <td>
-                                               {{ number_format($mediaNotasCategoriaLimpeza, 2, ',') }}
+                                               {{ number_format($mediaNotasCategoriaAtendimento, 2, ',') }}
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td>
-                                               Localização
-                                            </td>
-                                            <td>
-                                               {{ number_format($mediaNotasCategoriaLocalizacao, 2, ',') }}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                               Organização
-                                            </td>
-                                            <td>
-                                               {{ number_format($mediaNotasCategoriaOrganizacao, 2, ',') }}
-                                            </td>
-                                        </tr>
+                                       
                                         <tr>
                                             <td>
                                                Tempo de espera

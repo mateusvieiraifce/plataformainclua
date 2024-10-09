@@ -134,14 +134,13 @@ class AvaliacaoController extends Controller
                 'avaliacoes.categoria',
                 'avaliacoes.nota',
                 'avaliacoes_comentarios.comentario',
+                'avaliacoes_comentarios.id',
                  'avaliacoes_comentarios.status',
             )
             ->orderBy('avaliacoes_comentarios.id','desc')
-            ->paginate(32);
-
+            ->orderBy('avaliacoes.categoria','asc')
+            ->paginate(32);//32 pois estou agrupando em 4 em 4
            // dd($avaliacoes);
-           
-
         $mediaNotas = AvaliacaoComentario::join('avaliacoes', 'avaliacoes.comentario_id', 'avaliacoes_comentarios.id')
             ->join('consultas', 'consultas.id', 'avaliacoes.consulta_id')
             ->join('clinicas', 'clinicas.id', 'consultas.clinica_id')
@@ -202,5 +201,90 @@ class AvaliacaoController extends Controller
         'mediaNotasCategoriaOrganizacao' => $mediaNotasCategoriaOrganizacao,
         'mediaNotasCategoriaTempo' => $mediaNotasCategoriaTempo]);
     }
+
+    public function reputacaoEspecialista()
+    {       
+        $user = Auth::user();
+        $avaliacoes = AvaliacaoComentario::
+        join('avaliacoes', 'avaliacoes.comentario_id', 'avaliacoes_comentarios.id')
+            ->join('consultas', 'consultas.id', 'avaliacoes.consulta_id')
+            ->join('especialistas', 'especialistas.id', 'consultas.especialista_id')
+            ->where('especialistas.usuario_id', $user->id)
+            ->where('avaliacoes_comentarios.tipo_avaliado', 'E')
+            ->where('avaliacoes_comentarios.status', 'Liberado')      
+            ->select(
+                'avaliacoes.categoria',
+                'avaliacoes.nota',
+                'avaliacoes_comentarios.comentario',
+                'avaliacoes_comentarios.id',
+                 'avaliacoes_comentarios.status',
+            )
+            ->orderBy('avaliacoes_comentarios.id','desc')
+            ->orderBy('avaliacoes.categoria','asc')
+            ->paginate(16);//16 pois estou agrupando em 2 em 2
+           
+
+        $mediaNotas = AvaliacaoComentario::join('avaliacoes', 'avaliacoes.comentario_id', 'avaliacoes_comentarios.id')
+            ->join('consultas', 'consultas.id', 'avaliacoes.consulta_id')
+            ->join('especialistas', 'especialistas.id', 'consultas.especialista_id')
+            ->where('especialistas.usuario_id', $user->id)
+           ->where('avaliacoes_comentarios.tipo_avaliado', 'E')
+            ->where('avaliacoes_comentarios.status', 'Liberado') 
+            ->select(DB::raw('(AVG(avaliacoes.nota)) as total'))
+            ->first()
+            ->total;
+
+        $mediaNotasCategoriaAtendimento = AvaliacaoComentario::join('avaliacoes', 'avaliacoes.comentario_id', 'avaliacoes_comentarios.id')
+            ->join('consultas', 'consultas.id', 'avaliacoes.consulta_id')
+            ->join('especialistas', 'especialistas.id', 'consultas.especialista_id')
+            ->where('especialistas.usuario_id', $user->id)
+            ->where('avaliacoes_comentarios.tipo_avaliado', 'E')
+            ->where('avaliacoes_comentarios.status', 'Liberado') 
+            ->where('avaliacoes.categoria', 'Atendimento')
+            ->select(DB::raw('(AVG(avaliacoes.nota)) as total'))
+            ->first()
+            ->total;
+
+           
+        $mediaNotasCategoriaTempo = AvaliacaoComentario::join('avaliacoes', 'avaliacoes.comentario_id', 'avaliacoes_comentarios.id')
+            ->join('consultas', 'consultas.id', 'avaliacoes.consulta_id')
+            ->join('especialistas', 'especialistas.id', 'consultas.especialista_id')
+            ->where('especialistas.usuario_id', $user->id)
+            ->where('avaliacoes_comentarios.tipo_avaliado', 'E')
+            ->where('avaliacoes_comentarios.status', 'Liberado') 
+            ->where('avaliacoes.categoria', 'Tempo de espera')
+            ->select(DB::raw('(AVG(avaliacoes.nota)) as total'))
+            ->first()
+            ->total;
+        
+        return view('userEspecialista.reputacao.lista', ['avaliacoes' => $avaliacoes, 
+        'mediaNotas' => $mediaNotas, 
+        'mediaNotasCategoriaAtendimento' => $mediaNotasCategoriaAtendimento,
+        'mediaNotasCategoriaTempo' => $mediaNotasCategoriaTempo]);
+    }
+
+    public function denuciarUserClinica(Request $request){
+       // dd($request);
+        $comentarioClinica = AvaliacaoComentario::find($request->avaliacoes_comentarios_id);
+        if ($comentarioClinica) {
+            $comentarioClinica->status = "Em análise";
+            $comentarioClinica->motivo_denuncia = $request->motivo_denuncia;
+            $comentarioClinica->save();
+            session()->flash('msg', ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success']);
+        } 
+        return redirect()->route('avaliacao.reputacaoClinica');
+    }
+
+    public function denuciarUserEspecialista(Request $request){
+        // dd($request);
+         $comentarioClinica = AvaliacaoComentario::find($request->avaliacoes_comentarios_id);
+         if ($comentarioClinica) {
+             $comentarioClinica->status = "Em análise";
+             $comentarioClinica->motivo_denuncia = $request->motivo_denuncia;
+             $comentarioClinica->save();
+             session()->flash('msg', ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success']);
+         } 
+         return redirect()->route('avaliacao.reputacaoEspecialista');
+     }
      
 }
