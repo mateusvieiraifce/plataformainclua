@@ -1,5 +1,5 @@
-@extends('layouts.app', ['class' => 'register-page', 'contentClass' => 'register-page', 'pageSlug' => 'registre'])
-@section('title', 'Cadastro de Dados para pagamento')
+@extends('layouts.app', ['page' => __('Cadastrar cartão'), 'exibirPesquisa' => false, 'pageSlug' => 'financeiro', 'class' => 'financeiro',  'contentClass' => 'register-page'])
+@section('title', 'Cadastro de dados para pagamento')
 @section('content')
     <div class="row">
         <div class="col-md-7 mr-auto">
@@ -58,7 +58,13 @@
                         </div>
 
                         <div class="input-group">
-                            <button type="submit" class="btn btn-primary btn-round btn-lg">{{ __('Finalizar') }}</button>
+                            <button type="submit" class="btn btn-primary btn-round btn-lg">
+                                @auth
+                                    {{ __('Salvar') }}
+                                @else
+                                    {{ __('Finalizar') }}
+                                @endauth
+                            </button>
                         </div>
                         <input id="instituicao" type="hidden" name="instituicao" value="">
                         <input type="hidden" name="usuario_id" value="{{ $usuario_id }}">

@@ -65,8 +65,8 @@
                                         Clínica
                                     </label>
                                     <div class="input-button-inline">
-                                    <input type="text" name="nome" id="nome" class="form-control"
-                                        placeholder="Nome da clínica" value="{{ old('nome') }}">
+                                        <input type="text" name="nome" id="nome" class="form-control"
+                                            placeholder="Nome da clínica" value="{{ old('nome') }}">
                                         <button class="btn btn-primary">
                                             <i class="tim-icons icon-zoom-split"></i>
                                         </button> 

@@ -197,7 +197,7 @@ class UsuarioController extends Controller
             $user->save();
             //ENVIAR O EMAIL COM CÓDIGO DE CONFIRMAÇÃO
             //Mail::to($user->email)->send(new verificarEmail($user->codigo_validacao));
-            Helper::sendEmail("Validação de Código", "Seu Código de Verificação é:".$user->codigo_validacao, $user->email);
+            Helper::sendEmail("Validação de Código", "Seu Código de Verificação é: ".$user->codigo_validacao, $user->email);
 
             $msg = ['valor' => trans("Cadastro do usuário realizado com sucesso!"), 'tipo' => 'success'];
             session()->flash('msg', $msg);
@@ -288,11 +288,14 @@ class UsuarioController extends Controller
             'avatar' => $providerUser->getAvatar(),
             'etapa_cadastro' => "1"
         ]);
+        
+        $user_id = $user->id;
+        $this->logout(request());
 
         if ($user && $user->docucumento != null) {
             return redirect()->route('home');
         } else {
-            return $this->verifyCadastro($user->id);
+            return $this->verifyCadastro($user_id);
         }
     }
 
@@ -313,21 +316,21 @@ class UsuarioController extends Controller
             session()->flash('msg', ['valor' => trans("Já existe um cadastro realizado com o e-mail utilizado, prossiga com o seu cadastro."), 'tipo' => 'success']);
             
             if ($user->tipo_user == "P") {
-                return redirect()->route('usuario.paciente.edit.dados', ['usuario_id' => $user->id]);
+                return redirect()->route('usuario.paciente.dados.edit', ['usuario_id' => $user->id]);
             } elseif ($user->tipo_user == "E") {
-                return redirect()->route('usuario.especialista.edit.dados', ['usuario_id' => $user->id]);
+                return redirect()->route('usuario.especialista.dados.edit', ['usuario_id' => $user->id]);
             } elseif ($user->tipo_user == "C") {
-                return redirect()->route('usuario.clinica.create.dados', ['usuario_id' => $user->id]);
+                return redirect()->route('usuario.clinica.dados.create', ['usuario_id' => $user->id]);
             }
         } else if ($user->etapa_cadastro == '3') {
             session()->flash('msg', ['valor' => trans("Já existe um cadastro realizado com o e-mail utilizado, prossiga com o seu cadastro."), 'tipo' => 'success']);
             
             if ($user->tipo_user == "P") {
-                return redirect()->route('endereco.create', ['usuario_id' => $user->id]);
+                return redirect()->route('usuario.clinica.dados.create', ['usuario_id' => $user->id]);
             } elseif ($user->tipo_user == "E") {
                 return redirect()->route('dados-bancarios.create', ['usuario_id' => $user->id]);
             } elseif ($user->tipo_user == "C") {
-                return redirect()->route('clinica.create.endereco', ['usuario_id' => $user->id]);
+                return redirect()->route('clinica.endereco.create', ['usuario_id' => $user->id]);
             }
         } else if ($user->etapa_cadastro == '4') {
             session()->flash('msg', ['valor' => trans("Já existe um cadastro realizado com o e-mail utilizado, prossiga com o seu cadastro."), 'tipo' => 'success']);
@@ -518,9 +521,9 @@ class UsuarioController extends Controller
         $msgret = ['valor' => "Operação realizada com sucesso!", 'tipo' => 'success'];
         $id = Auth::user()->id;
         $user = User::find($id);
-        $user->tipouser = "V";
+        $user->tipo_user = "V";
         $user->save();
-        Auth::user()->tipouser= "V";
+        Auth::user()->tipo_user= "V";
         session(['msg' => $msgret]);
         return back();
     }

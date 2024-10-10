@@ -53,9 +53,15 @@ class CartaoController extends Controller
         }
     }
 
-    public function getCartoes($user_id)
+    public function getCartoes($user_id, $paginas = 0)
     {
-        $cartoes = Cartao::where('user_id', $user_id)->get();
+        $cartoes = Cartao::where('user_id', $user_id)->orderBy('updated_at', 'desc');
+
+        if ($paginas != 0) {
+            $cartoes = $cartoes->paginate($paginas, ['*'], 'page_card');
+        } else {
+            $cartoes = $cartoes->get();
+        }
 
         return $cartoes;
     }

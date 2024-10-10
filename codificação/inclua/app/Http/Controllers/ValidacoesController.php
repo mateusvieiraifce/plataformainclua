@@ -22,7 +22,7 @@ class ValidacoesController extends Controller
         $user->save();
         //ENVIAR O EMAIL COM CÓDIGO DE CONFIRMAÇÃO
         //Mail::to($user->email)->send(new verificarEmail($user->codigo_validacao));
-        Helper::sendEmail("Re-Envio de Código de validação","o seu codigo de validação é:".$user->codigo_validacao,$user->email);
+        Helper::sendEmail("Re-Envio de Código de validação","O seu codigo de validação é: ".$user->codigo_validacao,$user->email);
         $response = true;
 
         return response()->json($response);
@@ -65,11 +65,11 @@ class ValidacoesController extends Controller
         }
 
         if ($user->tipo_user == "P") {
-            return redirect()->route('usuario.paciente.create.dados', ['usuario_id' => $user->id]);
+            return redirect()->route('usuario.paciente.dados.create', ['usuario_id' => $user->id]);
         } elseif ($user->tipo_user == "E") {
-            return redirect()->route('usuario.especialista.create.dados', ['usuario_id' => $user->id]);
+            return redirect()->route('usuario.especialista.dados.create', ['usuario_id' => $user->id]);
         } elseif ($user->tipo_user == "C") {
-            return redirect()->route('usuario.clinica.create.dados', ['usuario_id' => $user->id]);
+            return redirect()->route('usuario.clinica.dados.create', ['usuario_id' => $user->id]);
         } 
     }
 
@@ -125,11 +125,11 @@ class ValidacoesController extends Controller
         }
 
         if ($user->tipo_user == 'P') {
-            return redirect()->route('endereco.create', ['usuario_id' => $user->id]);
+            return redirect()->route('paciente.endereco.create', ['usuario_id' => $user->id]);
         } elseif ($user->tipo_user == 'E') {
             return redirect()->route('dados-bancarios.create', ['usuario_id' => $user->id]); 
         } elseif ($user->tipo_user == 'C') {
-            return redirect()->route('clinica.create.endereco', ['usuario_id' => $user->id]);
+            return redirect()->route('clinica.endereco.create', ['usuario_id' => $user->id]);
         }
     }
 }

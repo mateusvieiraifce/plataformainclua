@@ -151,6 +151,61 @@ class PacienteController extends Controller
         return view('cadastro.paciente.form_dados', ['user' => $user]);
     }
 
+    public function createEnderecoPaciente($usuario_id)
+    {
+        return view('cadastro.paciente.form_endereco', ['usuario_id' => $usuario_id]);
+    }
+
+    public function storeEnderecoPaciente(Request $request)
+    {
+        $rules = [
+            "cep" => "required",
+            "cidade" => "required",
+            "estado" => "required",
+            "endereco" => "required",
+            "numero" => "required",
+            "bairro" => "required",
+        ];
+        $feedbacks = [
+            "cep.required" => "O campo CEP é obrigatório.",
+            "cidade.required" => "O campo Cidade é obrigatório.",
+            "estado.required" => "O campo Estado é obrigatório.",
+            "endereco.required" => "O campo Endereço é obrigatório.",
+            "numero.required" => "O campo Número é obrigatório.",
+            "bairro.required" => "O campo Bairro é obrigatório."
+        ];
+        $request->validate($rules, $feedbacks);
+    
+        try {
+            $enderecoController = new EnderecoController();
+            $enderecoController->storeEndereco($request);
+
+            $user = User::find($request->usuario_id);
+
+            if (env('ASSINATURA_OBRIGATORIA')) {
+                $user->etapa_cadastro = '4';
+            } else {
+                $user->etapa_cadastro = "F";                
+                Auth::loginUsingId($user->id);
+            }
+
+            $user->save();
+    
+            $msg = ['valor' => trans("Cadastro de endereço realizado com sucesso!"), 'tipo' => 'success'];
+            session()->flash('msg', $msg);
+        } catch (QueryException $e) {
+            $msg = ['valor' => trans("Erro ao executar a operação!"), 'tipo' => 'danger'];
+            session()->flash('msg', $msg);
+    
+            return back();
+        }
+ 
+        if (env('ASSINATURA_OBRIGATORIA')) {
+            return redirect()->route('cartao.create', ['usuario_id' => $request->usuario_id]);
+        } else {
+            return redirect()->route('home');
+        }
+    }
 
     function minhasconsultas($msg = null)
     {
