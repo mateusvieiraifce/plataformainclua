@@ -352,7 +352,10 @@ Route::middleware('auth')->group(function () {
     
      Route::get("/especialista/reputacao", [\App\Http\Controllers\AvaliacaoController::class, 'reputacaoEspecialista'])->name('avaliacao.reputacaoEspecialista');
      Route::post("/especialista/reputacao/denunciar", [\App\Http\Controllers\AvaliacaoController::class, 'denuciarUserEspecialista'])->name('avaliacao.denuciarUserEspecialista');
+     Route::get("/especialista/prontuario/{id_paciente}", [\App\Http\Controllers\PacienteController::class, 'prontuario'])->name('paciente.prontuario');
  
+
+
     #CONSULTAS_POR_CLINICA
     Route::get("/clinica/consultas/search", [\App\Http\Controllers\ConsultaController::class, 'listConsultaporClinicaPesquisar'])->name('consulta.listConsultaporClinicaPesquisar');
     #MARCAR_CONSULTA_USER_CLINICA

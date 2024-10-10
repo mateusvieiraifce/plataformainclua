@@ -12,6 +12,8 @@ use App\Models\Consulta;
 use App\Models\Especialista;
 use App\Models\Especialidade;
 use App\Models\Paciente;
+use App\Models\PedidoExame;
+use App\Models\PedidoMedicamento;
 use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -515,6 +517,51 @@ class PacienteController extends Controller
         }
         
         return redirect()->route('paciente.minhasconsultas');
+    }
+
+
+ function prontuario($paciente_id){
+
+        // dd($consulta_id);
+        $especialista = Especialista::where('usuario_id', '=', Auth::user()->id)->first();
+   
+        $paciente = Paciente::find($paciente_id);
+        $usuarioPaciente = User::find($paciente->usuario_id);       
+        $qtdConsultasRealizadas = Consulta::where('status', '=', 'Finalizada')->
+            where('paciente_id', '=', $paciente_id)->
+            where('especialista_id', '=', $especialista->id)->
+            orderBy('horario_iniciado', 'asc')->count();
+
+  
+    //lista de pedidos de exames
+    $listaPedidosExames = PedidoExame::join('exames', 'exames.id', '=', 'pedido_exames.exame_id')
+    ->join('consultas', 'consultas.id', '=', 'pedido_exames.consulta_id')
+    ->where('paciente_id',$paciente->id)
+    ->orderBy('pedido_exames.created_at', 'desc')
+    ->select('pedido_exames.id as id', 'nome','laudo')
+    ->get(); 
+
+    //lista de pedidos de medicamentos
+    $listaPedidosMedicamentos = PedidoMedicamento::
+    join('medicamentos', 'medicamentos.id', '=', 'pedido_medicamentos.medicamento_id')
+    ->join('consultas', 'consultas.id', '=', 'pedido_medicamentos.consulta_id')
+    ->where('paciente_id',$paciente->id)  
+    ->orderBy('pedido_medicamentos.created_at', 'desc')
+    ->select('pedido_medicamentos.id as id', 'nome_comercial','prescricao_indicada')->get(); 
+
+    //paginar os resultados
+    //fazer a paginacao na view para os pedidos.
+    //na tabela de exames fazer a parte de arquivos feito pelo antony
+
+    //  dd($listaPedidosExames);
+    return view('userEspecialista.prontuario.prontuario', [
+        'paciente' => $paciente,
+        'usuarioPaciente' => $usuarioPaciente,
+        'qtdConsultasRealizadas' => $qtdConsultasRealizadas,
+        'listaPedidosExames' => $listaPedidosExames,
+        'listaPedidosMedicamentos' =>  $listaPedidosMedicamentos,
+    ]);
+
     }
 }
 
