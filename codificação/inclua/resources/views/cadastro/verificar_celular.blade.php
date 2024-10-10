@@ -41,11 +41,11 @@
 
                         <div class="input-group input-medium justify-content-between">
                             @if ($user->tipo_user == "P")
-                                <a href="{{ route('usuario.paciente.edit.dados', ['usuario_id' => $user->id])}}" class="btn btn-secundary btn-round btn-lg">{{ __('Voltar') }}</a>
+                                <a href="{{ route('usuario.paciente.dados.edit', ['usuario_id' => $user->id])}}" class="btn btn-secundary btn-round btn-lg">{{ __('Voltar') }}</a>
                             @elseif ($user->tipo_user == "E")
-                                <a href="{{ route('usuario.especialista.edit.dados', ['usuario_id' => $user->id])}}" class="btn btn-secundary btn-round btn-lg">{{ __('Voltar') }}</a>
+                                <a href="{{ route('usuario.especialista.dados.edit', ['usuario_id' => $user->id])}}" class="btn btn-secundary btn-round btn-lg">{{ __('Voltar') }}</a>
                             @elseif ($user->tipo_user == "C")
-                                <a href="{{ route('usuario.clinica.edit.dados', ['usuario_id' => $user->id])}}" class="btn btn-secundary btn-round btn-lg">{{ __('Voltar') }}</a>
+                                <a href="{{ route('usuario.clinica.dados.edit', ['usuario_id' => $user->id])}}" class="btn btn-secundary btn-round btn-lg">{{ __('Voltar') }}</a>
                             @endif
                             <button type="submit" class="btn btn-primary btn-round btn-lg">{{ __('Verificar') }}</button>
                         </div>

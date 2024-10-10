@@ -54,14 +54,14 @@ class PagamentoController extends Controller
     public function historicoPagamentosPaciente()
     {
         $user = Auth::user();
-        $pagamentos = Pagamento::where('user_id', $user->id)->orderBy('data_pagamento', 'desc')->paginate(2);
+        $pagamentos = Pagamento::where('user_id', $user->id)->orderBy('data_pagamento', 'desc')->paginate(2, ['*'], 'page_payments');
 
         $assinaturaController = new AssinaturaController();
         $assinatura = $assinaturaController->getAssinatura($user->id);
 
         $cartaoController = new CartaoController();
-        $cartoes = $cartaoController->getCartoes($user->id);
+        $cartoes = $cartaoController->getCartoes($user->id, 2);
         
-        return view('userPaciente.financeiro.lista', ['pagamentos' => $pagamentos, 'assinatura' => $assinatura, 'cartoes' => $cartoes]);
+        return view('userPaciente.financeiro.lista', ['user' => $user, 'pagamentos' => $pagamentos, 'assinatura' => $assinatura, 'cartoes' => $cartoes]);
     }
 }

@@ -11,7 +11,7 @@
 
             <br/>
             <p>
-                @if(\Illuminate\Support\Facades\Auth::user()->tipouser ==='C')
+                @if(\Illuminate\Support\Facades\Auth::user()->tipo_user ==='C')
                 <?php
                    $clinica = App\Models\Clinica::where('usuario_id', '=', Auth::user()->id)->first();
                    ?>

@@ -26,13 +26,8 @@ Route::get("/teste", function () {
     return view('teste');
 });
 
-
-
-
-
 Route::get("/", [\App\Http\Controllers\UsuarioController::class, 'index'])->name('index');
 Route::any("/sendmailback", [\App\Http\Controllers\MailController::class, 'sendEmailBack'])->name('sendMailBack');
-
 
 Route::get('/checkout', [\App\Http\Controllers\CheckoutControler::class, "checkout"])->name('finalizar');
 
@@ -48,35 +43,32 @@ Route::post("/cadastrar/usuario/store", [\App\Http\Controllers\UsuarioController
 Route::get("/cadastrar/usuario/edit/{usuario_id}", [\App\Http\Controllers\UsuarioController::class, 'editUser'])->name('usuario.edit');
 
 #USUARIO PACIENTE
-Route::get("/cadastrar/usuario/paciente/dados/create/{usuario_id}", [\App\Http\Controllers\PacienteController::class, 'createDadosUserPaciente'])->name('usuario.paciente.create.dados');
-Route::post("/cadastrar/usuario/paciente/dados/store", [\App\Http\Controllers\PacienteController::class, 'storeDadosUserPaciente'])->name('usuario.paciente.store.dados');
-Route::get("/cadastrar/usuario/paciente/dados/edit/{usuario_id}", [\App\Http\Controllers\PacienteController::class, 'editDadosUserPaciente'])->name('usuario.paciente.edit.dados');
+Route::get("/cadastrar/usuario/paciente/dados/create/{usuario_id}", [\App\Http\Controllers\PacienteController::class, 'createDadosUserPaciente'])->name('usuario.paciente.dados.create');
+Route::post("/cadastrar/usuario/paciente/dados/store", [\App\Http\Controllers\PacienteController::class, 'storeDadosUserPaciente'])->name('usuario.paciente.dados.store');
+Route::get("/cadastrar/usuario/paciente/dados/edit/{usuario_id}", [\App\Http\Controllers\PacienteController::class, 'editDadosUserPaciente'])->name('usuario.paciente.dados.edit');
+Route::get("/paciente/endereco/create/{usuario_id}", [\App\Http\Controllers\PacienteController::class, 'createEnderecoPaciente'])->name('paciente.endereco.create');
+Route::post("/paciente/endereco/store", [\App\Http\Controllers\PacienteController::class, 'storeEnderecoPaciente'])->name('paciente.endereco.store');
 
 #CADASTRO CARTAO
 Route::get("/cadastrar/cartao/create/{usuario_id}", [\App\Http\Controllers\CartaoController::class, 'create'])->name('cartao.create');
 
 #USUARIO ESPECIALISTA
-Route::get("/cadastrar/usuario/especialista/dados/create/{usuario_id}", [\App\Http\Controllers\EspecialistaController::class, 'createDadosUserEspecialista'])->name('usuario.especialista.create.dados');
-Route::post("/cadastrar/usuario/especialista/store", [\App\Http\Controllers\EspecialistaController::class, 'storeDadosUserEspecialista'])->name('usuario.especialista.store.dados');
-Route::get("/cadastrar/usuario/especialista/dados/edit/{usuario_id}", [\App\Http\Controllers\EspecialistaController::class, 'editDadosUserEspecialista'])->name('usuario.especialista.edit.dados');
+Route::get("/cadastrar/usuario/especialista/dados/create/{usuario_id}", [\App\Http\Controllers\EspecialistaController::class, 'createDadosUserEspecialista'])->name('usuario.especialista.dados.create');
+Route::post("/cadastrar/usuario/especialista/store", [\App\Http\Controllers\EspecialistaController::class, 'storeDadosUserEspecialista'])->name('usuario.especialista.dados.store');
+Route::get("/cadastrar/usuario/especialista/dados/edit/{usuario_id}", [\App\Http\Controllers\EspecialistaController::class, 'editDadosUserEspecialista'])->name('usuario.especialista.dados.edit');
 
 #USUARIO CLINICA
-Route::get("/cadastrar/usuario/clinica/dados/create/{usuario_id}", [\App\Http\Controllers\ClinicaController::class, 'createDadosUserClinica'])->name('usuario.clinica.create.dados');
-Route::post("/cadastrar/usuario/clinica/store", [\App\Http\Controllers\ClinicaController::class, 'storeDadosUserClinica'])->name('usuario.clinica.store.dados');
-Route::get("/cadastrar/usuario/clinica/dados/edit/{usuario_id}", [\App\Http\Controllers\ClinicaController::class, 'editDadosUserClinica'])->name('usuario.clinica.edit.dados');
-Route::get("/clinica/endereco/create/{usuario_id}", [\App\Http\Controllers\ClinicaController::class, 'createEnderecoClinica'])->name('clinica.create.endereco');
-Route::post("/clinica/endereco/store", [\App\Http\Controllers\ClinicaController::class, 'storeEnderecoClinica'])->name('clinica.store.endereco');
+Route::get("/cadastrar/usuario/clinica/dados/create/{usuario_id}", [\App\Http\Controllers\ClinicaController::class, 'createDadosUserClinica'])->name('usuario.clinica.dados.create');
+Route::post("/cadastrar/usuario/clinica/store", [\App\Http\Controllers\ClinicaController::class, 'storeDadosUserClinica'])->name('usuario.clinica.dados.store');
+Route::get("/cadastrar/usuario/clinica/dados/edit/{usuario_id}", [\App\Http\Controllers\ClinicaController::class, 'editDadosUserClinica'])->name('usuario.clinica.dados.edit');
+Route::get("/clinica/endereco/create/{usuario_id}", [\App\Http\Controllers\ClinicaController::class, 'createEnderecoClinica'])->name('clinica.endereco.create');
+Route::post("/clinica/endereco/store", [\App\Http\Controllers\ClinicaController::class, 'storeEnderecoClinica'])->name('clinica.endereco.store');
 
 #DADOS BANCARIOS
 Route::get("/cadastrar/dados-bancários/create/{usuario_id}", [\App\Http\Controllers\EspecialistaController::class, 'createDadosBancarios'])->name('dados-bancarios.create');
 Route::post("/cadastrar/dados-bancários/store", [\App\Http\Controllers\EspecialistaController::class, 'storeDadosBancarios'])->name('dados-bancarios.store');
 
-#CADASTRO ENDERECO
-Route::get("/cadastrar/endereço/create/{usuario_id}", [\App\Http\Controllers\EnderecoController::class, 'createEndereco'])->name('endereco.create');
-Route::post("/cadastrar/endereço/store", [\App\Http\Controllers\EnderecoController::class, 'storeEndereco'])->name('endereco.store');
-
 #ASSINATURA
-Route::get("/checkout", [\App\Http\Controllers\CartaoController::class, 'create_checkout']);
 Route::post("/pagamento/assinatura", [\App\Http\Controllers\AssinaturaController::class, 'lancarAssinatura'])->name('pagamento.assinatura');
 Route::get("/callback-payment/assinatura", [\App\Http\Controllers\AssinaturaController::class, 'callbackPaymentAssinatura'])->name('callback.payment.assinatura');
 Route::get("/pagamento/assinatura/renovar", [\App\Http\Controllers\AssinaturaController::class, 'renovacaoAutomatica'])->name('assinatura.renovar');
@@ -90,7 +82,7 @@ Route::get("/celular/verificar/{usuario_id}", [\App\Http\Controllers\ValidacoesC
 Route::get("/celular/reenviar-sms/", [\App\Http\Controllers\ValidacoesController::class, 'reenviarSMS'])->name('validar.reenviar_sms');
 Route::post("/celular/validar", [\App\Http\Controllers\ValidacoesController::class, 'validarCelular'])->name('validar.celular');
 
-Route::post("/auth/user", [\App\Http\Controllers\UsuarioController::class, 'logar'])->name('login.do')->middleware('payment.signature');
+Route::post("/auth/user", [\App\Http\Controllers\UsuarioController::class, 'logar'])->name('login.do');
 Route::get("/logout", [\App\Http\Controllers\UsuarioController::class, 'logout'])->name('logout');
 Route::get("/recuperar", [\App\Http\Controllers\UsuarioController::class, 'recover'])->name('recover');
 Route::get("/recuperar/{id?}", [\App\Http\Controllers\UsuarioController::class, 'recoverID'])->name('recover.id');
@@ -243,27 +235,62 @@ Route::middleware('auth')->group(function () {
     #ROTAS_USER_PACIENTE
     Route::get("/paciente/home/", [\App\Http\Controllers\PacienteController::class, 'home'])->name('paciente.home')->middleware('auth');
 
-    #MARCAR_CONSULTA_USUARIO_PACIENTE
-    Route::get("/paciente/marcarconsulta/{paciente_id?}", [\App\Http\Controllers\PacienteController::class, 'marcarconsulta'])->name('paciente.marcarconsulta');
-    Route::get("/paciente/marcarconsultas/pacientes", [\App\Http\Controllers\PacienteController::class, 'marcarconsultaSelecionarPaciente'])->name('paciente.marcarconsultaSelecionarPaciente');
+    #CONSULTAS_USER_PACIENTE
+    Route::get("/paciente/minhas-consultas", [\App\Http\Controllers\PacienteController::class, 'minhasconsultas'])->name('paciente.minhasconsultas');
+    Route::get("/paciente/historico-consultas", [\App\Http\Controllers\PacienteController::class, 'historicoconsultas'])->name('paciente.historicoconsultas');
+    
+    #FINANCEIRO PACIENTE
+    Route::get("/paciente/financeiro", [\App\Http\Controllers\PagamentoController::class, 'historicoPagamentosPaciente'])->name('paciente.financeiro');
+    Route::get("/paciente/assinatura/cartoes", [\App\Http\Controllers\AssinaturaController::class, 'selecionarCartao'])->name('pagamento.assinatura.cartoes');
+    Route::get("/paciente/assinatura/renovar/{cartao}", [\App\Http\Controllers\AssinaturaController::class, 'renovarAssinaturaCartao'])->name('pagamento.assinatura.renovar');
 
-    #VIA_CLINICA
-    Route::get("/paciente/marcarconsulta/viaclinica/etapa2", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaClinicaPasso1'])->name('paciente.marcarConsultaViaClinicaPasso1');
-    Route::get("/paciente/marcarconsulta/viaclinica/etapa3/{id}", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaClinicaPasso2'])->name('paciente.marcarConsultaViaClinicaPasso2');
-    Route::get("/paciente/marcarconsulta/viaclinica/etapa4/{clinica_id}/{especialidade_id}", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaClinicaPasso3'])->name('paciente.marcarConsultaViaClinicaPasso3');
-    Route::get("/paciente/marcarconsulta/viaclinica/etapa5/{clinica_id}/{especialidade_id}", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaClinicaPasso4'])->name('paciente.marcarConsultaViaClinicaPasso4');
-    Route::post("/paciente/marcarconsulta/viaclinica/finalizar/", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaClinicaFinalizar'])->name('paciente.marcarConsultaViaClinicaFinalizar');
-    Route::post("/paciente/viaclinica/search/", [\App\Http\Controllers\PacienteController::class, 'pesquisarclinicamarcarconsulta'])->name('paciente.pesquisarclinicamarcarconsulta');
+    #LISTA PACIENTES E CADASTRO
+    Route::get("/paciente/lista", [\App\Http\Controllers\PacienteController::class, 'index'])->name('paciente.index');
 
-    #VIA_ESPECIALIDADE
-    Route::get("/paciente/marcarconsulta/viaespecialidade/etapa2", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaEspecialidadePasso1'])->name('paciente.marcarConsultaViaEspecialidadePasso1')->middleware('auth');
-    Route::get("/paciente/marcarconsulta/viaespecialidade/etapa3/{especialidade_id}", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaEspecialidadePasso2'])->name('paciente.marcarConsultaViaEspecialidadePasso2')->middleware('auth');
-    Route::get("/paciente/marcarconsulta/viaespecialidade/etapa3/{especialidade_id}/{clinica_id}", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaEspecialidadePasso3'])->name('paciente.marcarConsultaViaEspecialidadePasso3')->middleware('auth');
-    Route::get("/paciente/marcarconsulta/viaespecialidade/etapa4/{clinica_id}/{especialista_id}", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaEspecialidadePasso4'])->name('paciente.marcarConsultaViaEspecialidadePasso4')->middleware('auth');
+    #LISTA DE PEDIDOS DE EXAMES DO PACIENTE
+    Route::get("/paciente/exames", [\App\Http\Controllers\PedidoExameController::class, 'pedidoExamesPaciente'])->name('paciente.pedido_exames.lista');
 
-    #ANAMNESE
-    Route::get("/paciente/anamnese/{paciente_id}", [\App\Http\Controllers\AnamneseController::class, 'create'])->name('anamnese.create');
-    Route::post("/paciente/anamnese/store", [\App\Http\Controllers\AnamneseController::class, 'store'])->name('anamnese.store');
+    #AVALIACAO PACIENTE
+    Route::get("/paciente/reputacao", [\App\Http\Controllers\AvaliacaoController::class, 'reputacaoPaciente'])->name('paciente.avaliacao.lista');
+
+    Route::middleware('payment.signature')->group(function() {
+        #MARCAR_CONSULTA_USUARIO_PACIENTE
+        Route::get("/paciente/marcar-consulta/{paciente_id?}", [\App\Http\Controllers\PacienteController::class, 'marcarconsulta'])->name('paciente.marcarconsulta');
+        Route::get("/paciente/marcar-consultas/pacientes", [\App\Http\Controllers\PacienteController::class, 'marcarconsultaSelecionarPaciente'])->name('paciente.marcarconsultaSelecionarPaciente');
+
+        #VIA_CLINICA
+        Route::get("/paciente/marcar-consulta/via-clinica/etapa2", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaClinicaPasso1'])->name('paciente.marcarConsultaViaClinicaPasso1');
+        Route::get("/paciente/marcar-consulta/via-clinica/etapa3/{id}", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaClinicaPasso2'])->name('paciente.marcarConsultaViaClinicaPasso2');
+        Route::get("/paciente/marcar-consulta/via-clinica/etapa4/{clinica_id}/{especialidade_id}", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaClinicaPasso3'])->name('paciente.marcarConsultaViaClinicaPasso3');
+        Route::get("/paciente/marcar-consulta/via-clinica/etapa5/{clinica_id}/{especialidade_id}", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaClinicaPasso4'])->name('paciente.marcarConsultaViaClinicaPasso4');
+        Route::post("/paciente/marcar-consulta/via-clinica/finalizar/", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaClinicaFinalizar'])->name('paciente.marcarConsultaViaClinicaFinalizar');
+        Route::post("/paciente/via-clinica/search/", [\App\Http\Controllers\PacienteController::class, 'pesquisarclinicamarcarconsulta'])->name('paciente.pesquisarclinicamarcarconsulta');
+
+        #VIA_ESPECIALIDADE
+        Route::get("/paciente/marcar-consulta/via-especialidade/etapa2", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaEspecialidadePasso1'])->name('paciente.marcarConsultaViaEspecialidadePasso1')->middleware('auth');
+        Route::get("/paciente/marcar-consulta/via-especialidade/etapa3/{especialidade_id}", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaEspecialidadePasso2'])->name('paciente.marcarConsultaViaEspecialidadePasso2')->middleware('auth');
+        Route::get("/paciente/marcar-consulta/via-especialidade/etapa3/{especialidade_id}/{clinica_id}", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaEspecialidadePasso3'])->name('paciente.marcarConsultaViaEspecialidadePasso3')->middleware('auth');
+        Route::get("/paciente/marcar-consulta/via-especialidade/etapa4/{clinica_id}/{especialista_id}", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaEspecialidadePasso4'])->name('paciente.marcarConsultaViaEspecialidadePasso4')->middleware('auth');
+
+        #ANAMNESE
+        Route::get("/paciente/anamnese/{paciente_id}", [\App\Http\Controllers\AnamneseController::class, 'create'])->name('anamnese.create');
+        Route::post("/paciente/anamnese/store", [\App\Http\Controllers\AnamneseController::class, 'store'])->name('anamnese.store');
+        
+        #CANCELAR CONSULTA
+        Route::post("/paciente/consulta/cancelar", [\App\Http\Controllers\PacienteController::class, 'cancelarConsulta'])->name('paciente.consulta.cancelar');
+        Route::get("/paciente/consulta/cancelar/callback", [\App\Http\Controllers\ConsultaController::class, 'callbackCancelarConsultaComTaxa'])->name('callback.cancelamento.consulta');
+
+        #LISTA CADASTRO DE PACIENTES
+        Route::get("/paciente/create", [\App\Http\Controllers\PacienteController::class, 'create'])->name('paciente.create');
+        Route::post("/paciente/store", [\App\Http\Controllers\PacienteController::class, 'store'])->name('paciente.store');
+        
+        #LISTA DE PEDIDOS DE EXAMES DO PACIENTE
+        Route::post("/paciente/exames/arquivo/store", [\App\Http\Controllers\PedidoExameController::class, 'storeArquivoExame'])->name('paciente.pedido_exames.file_store');
+        Route::get("/paciente/exames/check", [\App\Http\Controllers\PedidoExameController::class, 'checkExame'])->name('paciente.pedido_exames.check');
+
+        #AVALIACAO PACIENTE
+        Route::get("/paciente/avaliacao/store", [\App\Http\Controllers\AvaliacaoController::class, 'store'])->name('paciente.avaliacao.store');
+    });
 
     #CAD_TIPO_EXAMES_USER_ROOT
     Route::get("/tipoexame/list", [\App\Http\Controllers\TipoexameController::class, 'list'])->name('tipoexame.list')->middleware('auth');
@@ -297,11 +324,6 @@ Route::middleware('auth')->group(function () {
     Route::get("/medicamento/delete/{id}", [\App\Http\Controllers\MedicamentoController::class, 'delete'])->name('medicamento.delete')->middleware('auth');
     Route::get("/medicamento/edit/{id}", [\App\Http\Controllers\MedicamentoController::class, 'edit'])->name('medicamento.edit')->middleware('auth');
 
-    #CONSULTAS_USER_PACIENTE
-    Route::get("/paciente/minhasconsultas/", [\App\Http\Controllers\PacienteController::class, 'minhasconsultas'])->name('paciente.minhasconsultas');
-    Route::get("/paciente/historicoconsultas/", [\App\Http\Controllers\PacienteController::class, 'historicoconsultas'])->name('paciente.historicoconsultas');
-    Route::post("/paciente/consulta/cancelar/", [\App\Http\Controllers\PacienteController::class, 'cancelarConsulta'])->name('paciente.consulta.cancelar');
-    Route::get("/paciente/consulta/cancelar/callback/", [\App\Http\Controllers\ConsultaController::class, 'callbackCancelarConsultaComTaxa'])->name('callback.cancelamento.consulta');
 
     #ESPECIALISTA
     Route::get("/especialista/atendimento/{consulta_id}/{aba}", [\App\Http\Controllers\EspecialistaController::class, 'inicarAtendimento'])->name('especialista.iniciarAtendimento')->middleware('auth');
@@ -361,21 +383,6 @@ Route::middleware('auth')->group(function () {
     Route::post("/clinica/marcarconsulta/finalizar/", [\App\Http\Controllers\ClinicaController::class, 'marcarConsultaFinalizar'])->name('clinica.marcarConsultaFinalizar');
     #AGENDA_DO_ESPECIALISTA_USER_CLINICA
     Route::get("/clinica/especialista/vinculo/agenda/{especialista_id}", [\App\Http\Controllers\EspecialistaclinicaController::class, 'agendaEspecialista'])->name('especialistaclinica.agendaEspecialista');
-
-    #FINANCEIRO PACIENTE
-    Route::get("/paciente/financeiro/", [\App\Http\Controllers\PagamentoController::class, 'historicoPagamentosPaciente'])->name('paciente.financeiro');
-
-    #LISTA PACIENTES E CADASTRO
-    Route::get("/pacientes/lista", [\App\Http\Controllers\PacienteController::class, 'index'])->name('paciente.index');
-    Route::get("/pacientes/create", [\App\Http\Controllers\PacienteController::class, 'create'])->name('paciente.create');
-    Route::post("/pacientes/store", [\App\Http\Controllers\PacienteController::class, 'store'])->name('paciente.store');
-    
-    Route::get("/paciente/exames", [\App\Http\Controllers\PedidoExameController::class, 'pedidoExamesPaciente'])->name('paciente.pedido_exames.lista');
-    Route::post("/paciente/exames/arquivo/store", [\App\Http\Controllers\PedidoExameController::class, 'storeArquivoExame'])->name('paciente.pedido_exames.file_store');
-    Route::get("/paciente/exames/check", [\App\Http\Controllers\PedidoExameController::class, 'checkExame'])->name('paciente.pedido_exames.check');
-
-    Route::get("/paciente/avaliacao/store", [\App\Http\Controllers\AvaliacaoController::class, 'store'])->name('paciente.avaliacao.store');
-    Route::get("/paciente/reputacao", [\App\Http\Controllers\AvaliacaoController::class, 'reputacaoPaciente'])->name('paciente.avaliacao.lista');
 });
 
 /* ROTAS PARA SEREM ANALISADAS */

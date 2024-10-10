@@ -11,7 +11,7 @@
                     <h2 class="title">Cadastro de dados {{ env('APP_NODE') }}</h2>
                 </div>
                 <div class="card-body">
-                    <form class="form" method="post" action="{{ route('usuario.clinica.store.dados') }}" enctype="multipart/form-data">
+                    <form class="form" method="post" action="{{ route('usuario.clinica.dados.store') }}" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group">
                             <label for="image">

@@ -11,7 +11,7 @@
                     <h2 class="title">Cadastro de endereço</h2>
                 </div>
                 <div class="card-body">                    
-                    <form class="form" method="post" action="{{ route('endereco.store') }}">
+                    <form class="form" method="post" action="{{ route('paciente.endereco.store') }}">
                         @csrf
                         <div class="form-group">
                             <label for="cep">

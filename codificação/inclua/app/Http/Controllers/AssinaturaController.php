@@ -45,10 +45,12 @@ class AssinaturaController extends Controller
 
         if (isset($pagamento->param) && $pagamento->param == "$.card.cvv") {
             session()->flash('msg', ['valor' => trans("O Código de segurança informado é inválido Verifique o código e tente novamente."), 'tipo' => 'danger']);
+            $cartao->delete();
             
             return back()->withInput(request()->all());
         } elseif (isset($pagamento->param) && $pagamento->param == "$.card.number") {
             session()->flash('msg', ['valor' => trans("O Número do cartão informado é inválido! Verifique o número do cartão e tente novamente."), 'tipo' => 'danger']);
+            $cartao->delete();
             
             return back()->withInput(request()->all());
         }
@@ -102,11 +104,18 @@ class AssinaturaController extends Controller
             $user->etapa_cadastro = 'F';
             $user->save();
             
-            Auth::loginUsingId($user->id);
-            session()->flash('msg', ['valor' => trans("Seu cadastro e assinatura da plataforma foram realizados com sucesso!"), 'tipo' => 'success']);
-            return redirect()->route('home');
+            if (Auth::user()) {
+                session()->flash('msg', ['valor' => trans("Sua assinatura foi realizada com sucesso! Agora todos os serviços da plaforma Inclua estão disponíveis."), 'tipo' => 'success']);
+
+                return redirect()->route('paciente.financeiro');
+            } else {
+                session()->flash('msg', ['valor' => trans("Seu cadastro e assinatura da plataforma foram realizados com sucesso! Bem vindo a plataforma Inclua"), 'tipo' => 'success']);
+                Auth::loginUsingId($user->id);
+
+                return redirect()->route('home');
+            }
         }
-        session()->flash('msg', ['valor' => trans("Não foi possível realizar a  assinatura da plataforma com o cartão informado! Informe um novo cartão e tente novamente."), 'tipo' => 'danger']);
+        session()->flash('msg', ['valor' => trans("Não foi possível realizar a assinatura da plataforma com o cartão informado! Informe um novo cartão e tente novamente."), 'tipo' => 'danger']);
 
         return redirect()->route('cartao.create', ['usuario_id' => $cartao->user_id]);
     }
@@ -199,11 +208,12 @@ class AssinaturaController extends Controller
         }
     }
 
-    public function renovacaoManual($assinatura_id)
+    public function renovacaoManual($cartao_id)
     {
-        $assinatura = Assinatura::find($assinatura_id);
+        $user = Auth::user();
+        $assinatura = Assinatura::where('user_id', $user->id)->first();
         if ($assinatura) {
-            $cartao = Cartao::where('id', $assinatura->cartao_id)->where('principal', 'S')->where('status', 'Aprovado')->first();
+            $cartao = Cartao::where('id', $cartao_id)->first();
             
             date_default_timezone_set('America/Sao_Paulo');
             $dataLocal = date('Y-m-d', time());
@@ -256,9 +266,16 @@ class AssinaturaController extends Controller
 
             $pagamentoController->update($response->transactions[0]->transaction_code, 'Negado');
             
-            session()->flash('msg', ['valor' => trans("Não foi possível renovar a assinatura com o cartão cadastrado. Informe um novo cartão para continuar a utilizar os serviços da plataforma."), 'tipo' => 'danger']);
             
-            return redirect()->route('cartao.create', ['usuario_id' => $cartao->user_id]);
+            if (Auth::user()) {
+                session()->flash('msg', ['valor' => trans("Não foi possível renovar a assinatura com o cartão."), 'tipo' => 'danger']);
+                
+                return redirect()->route('paciente.financeiro');
+            } else {
+                session()->flash('msg', ['valor' => trans("Não foi possível renovar a assinatura com o cartão cadastrado. Informe um novo cartão para continuar a utilizar os serviços da plataforma."), 'tipo' => 'danger']);
+
+                return redirect()->route('cartao.create', ['usuario_id' => $cartao->user_id]);
+            }
         } else if ($response->status == 'PAID') {
             $cartaoController = new CartaoController();
             $cartaoController->update($assinatura->cartao_id, "Aprovado", "S");
@@ -270,9 +287,15 @@ class AssinaturaController extends Controller
             $user->etapa_cadastro = 'F';
             $user->save();
             
-            Auth::loginUsingId($user->id);
             session()->flash('msg', ['valor' => trans("Sua assinatura foi renovada com sucesso!"), 'tipo' => 'success']);
-            return redirect()->route('home');
+
+            if (Auth::user()) {
+                return redirect()->route('paciente.financeiro');
+            } else {
+                Auth::loginUsingId($user->id);
+
+                return redirect()->route('home');
+            }
         }
         session()->flash('msg', ['valor' => trans("Não foi possível renovar a assinatura com o cartão cadastrado. Informe um novo cartão para continuar a utilizar os serviços da plataforma."), 'tipo' => 'danger']);
 
@@ -284,5 +307,21 @@ class AssinaturaController extends Controller
         $assinatura = Assinatura::where('user_id', $user_id)->first();
 
         return $assinatura;
+    }
+    
+    public function selecionarCartao()
+    {
+        $user = Auth::user();
+
+        $cartaoController = new CartaoController();
+        $cartoes = $cartaoController->getCartoes($user->id, 8);
+        
+        return view('userPaciente.financeiro.selecionar_cartao', ['user' => $user, 'cartoes' => $cartoes]);
+    }
+
+    public function renovarAssinaturaCartao(Cartao $cartao)
+    {
+        $response = $this->renovacaoManual($cartao->id);
+        return $response;
     }
 }

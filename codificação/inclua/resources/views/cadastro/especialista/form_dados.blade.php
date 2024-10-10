@@ -11,7 +11,7 @@
                     <h2 class="title">Cadastro de Dados</h2>
                 </div>
                 <div class="card-body">                    
-                    <form class="form" method="post" action="{{ route('usuario.especialista.store.dados') }}">
+                    <form class="form" method="post" action="{{ route('usuario.especialista.dados.store') }}">
                         @csrf
                         <div class="form-group">
                             <label for="nome">

@@ -167,7 +167,7 @@ label.link {
 }
 
 /* INVERTER COM A COR DO CALENDARIO EXIBIDO NO INPUT DO TIPO DATA */
-.card.card-white:not() ::-webkit-calendar-picker-indicator {
+.card:not(.card-white) ::-webkit-calendar-picker-indicator {
     filter: invert(1);
 }
 

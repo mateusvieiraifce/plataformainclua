@@ -96,6 +96,13 @@
                                                 {{ $assinatura->motivo }}
                                             </td>
                                         @endif
+                                        @if($assinatura->status == "Renovação pendente" || $assinatura->status == "Negada")
+                                            <td>
+                                                <a class="btn btn-primary" href="{{ route('pagamento.assinatura.cartoes') }}">
+                                                    Renovar
+                                                </a>
+                                            </td>
+                                        @endif
                                     </tr>
                                 </tbody>
                             </table>
@@ -113,6 +120,16 @@
             <div class="card">
                 <div class="card-header">
                     <h6 class="title d-inline">Cartões</h6>
+                    @if(!isset($assinatura))
+                        <div class="dropdown">
+                            <button type="button" class="btn btn-link dropdown-toggle btn-icon" data-toggle="dropdown">
+                                <i class="tim-icons icon-settings-gear-63"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+                                <a class="dropdown-item" href="{{ route('cartao.create', ['usuario_id' => $user->id]) }}">Cadastrar cartão</a>
+                            </div>
+                        </div>
+                    @endif
                 </div>
                 <div class="card-body">
                     <div class="table-full-width table-responsive">
@@ -149,6 +166,7 @@
                                     @endforeach
                                 </tbody>
                             </table>
+                            {{ $cartoes->appends(request()->query())->links() }}
                         @else
                             <h5>Você ainda não possui um cartão cadastrado.</h5>
                         @endif
