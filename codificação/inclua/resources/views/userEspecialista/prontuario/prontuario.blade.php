@@ -59,11 +59,32 @@
     <div class="col-lg-4 col-md-12">
         <div class="card">
             <div class="card-header">
-                <h6 class="title d-inline">Exames</h6>
+                <h6 class="title d-inline">Exames solicitados</h6>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-
+                <table class="table">
+                                       <thead>
+                                          <tr>
+                                             <th> Exames </th>
+                                             <th> </th>
+                                          </tr>
+                                       </thead>
+                                       <tbody>
+                                       @if(sizeof($listaPedidosExames) > 0)
+                                       @foreach($listaPedidosExames as $pedidoexame)
+                                          <tr>
+                                             <td> {{$pedidoexame->nome}} </td>
+                                             <td>                                                                                           
+                                             {{date( 'd/m/Y' , strtotime($pedidoexame->data_pedido))}}                                                                                          
+                                       
+                                             </td>
+                                          </tr>
+                                          @endforeach 
+                                          @endif   
+                                       </tbody>
+                                    </table>
+                                    {{ $listaPedidosExames->appends(request()->query())->links() }}
                 </div>
             </div>
         </div>
@@ -74,6 +95,27 @@
             </div>
             <div class="card-body">
                 <div class="table-responsive">
+                <table class="table">
+                                       <thead>
+                                          <tr>
+                                             <th> Medicamentos </th>
+                                             <th> </th>
+                                          </tr>
+                                       </thead>
+                                       <tbody>
+                                       @if(sizeof($listaPedidosMedicamentos) > 0)
+                                       @foreach($listaPedidosMedicamentos as $pedidoMedicamento)
+                                          <tr>
+                                             <td> {{$pedidoMedicamento->nome_comercial}} </td>
+                                             <td>
+                                             {{date( 'd/m/Y' , strtotime($pedidoMedicamento->data_pedido))}}                                                                                          
+                                             </td>
+                                          </tr>
+                                          @endforeach 
+                                          @endif   
+                                       </tbody>
+                                    </table>
+                                    {{ $listaPedidosMedicamentos->appends(request()->query())->links() }}
                 </div>
             </div>
         </div>

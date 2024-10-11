@@ -522,35 +522,66 @@ class PacienteController extends Controller
 
  function prontuario($paciente_id){
 
-        // dd($consulta_id);
-        $especialista = Especialista::where('usuario_id', '=', Auth::user()->id)->first();
-   
-        $paciente = Paciente::find($paciente_id);
-        $usuarioPaciente = User::find($paciente->usuario_id);       
-        $qtdConsultasRealizadas = Consulta::where('status', '=', 'Finalizada')->
-            where('paciente_id', '=', $paciente_id)->
-            where('especialista_id', '=', $especialista->id)->
-            orderBy('horario_iniciado', 'asc')->count();
+    // dd($consulta_id);
+    $especialista = Especialista::where('usuario_id', '=', Auth::user()->id)->first();
 
-  
+    $paciente = Paciente::find($paciente_id);
+    $usuarioPaciente = User::find($paciente->usuario_id);       
+    $qtdConsultasRealizadas = Consulta::where('status', '=', 'Finalizada')->
+        where('paciente_id', '=', $paciente_id)->
+     //   where('especialista_id', '=', $especialista->id)->
+        orderBy('horario_iniciado', 'asc')->count();
+        
+    $page_exames = 1;
+    if(isset(request()->query()['page_exames'])){
+        $page_exames = request()->query()['page_exames'];
+    }
     //lista de pedidos de exames
     $listaPedidosExames = PedidoExame::join('exames', 'exames.id', '=', 'pedido_exames.exame_id')
     ->join('consultas', 'consultas.id', '=', 'pedido_exames.consulta_id')
     ->where('paciente_id',$paciente->id)
     ->orderBy('pedido_exames.created_at', 'desc')
-    ->select('pedido_exames.id as id', 'nome','laudo')
-    ->get(); 
+    ->select('pedido_exames.id as id', 'nome','laudo', 'pedido_exames.created_at as data_pedido')    
+  //  ->paginate(5)   
+    ->paginate(5, ['*'], 'page_exames',$page_exames )
+    ->setPageName('page_exames') 
+    ->appends(request()->query());
+  //  ->appends(['page_exames' => request()->get('page_exames'),request()->query()])
+   // ->setPageName('page_exames');
+  
+    // Criando novas instâncias do paginator com pageName desejado
+    $listaPedidosExames = new \Illuminate\Pagination\LengthAwarePaginator(
+        $listaPedidosExames->items(),
+        $listaPedidosExames->total(),
+        $listaPedidosExames->perPage(),
+        request()->get('page_exames', $listaPedidosExames->currentPage()), // Pega a página atual para exames
+        ['path' => request()->url(), 'pageName' => 'page_exames'] // Define o path e o pageName
+    );
 
+
+    $page_medicamentos = 1;
+    if(isset(request()->query()['page_medicamentos'])){
+        $page_medicamentos = request()->query()['page_medicamentos'];
+    }
     //lista de pedidos de medicamentos
     $listaPedidosMedicamentos = PedidoMedicamento::
     join('medicamentos', 'medicamentos.id', '=', 'pedido_medicamentos.medicamento_id')
     ->join('consultas', 'consultas.id', '=', 'pedido_medicamentos.consulta_id')
     ->where('paciente_id',$paciente->id)  
     ->orderBy('pedido_medicamentos.created_at', 'desc')
-    ->select('pedido_medicamentos.id as id', 'nome_comercial','prescricao_indicada')->get(); 
+    ->select('pedido_medicamentos.id as id', 'nome_comercial','prescricao_indicada','pedido_medicamentos.created_at as data_pedido' )
+   ->paginate(5, ['*'], 'page_medicamentos',$page_medicamentos )
+    ->setPath(request()->url())->appends(request()->query())->setPageName('page_medicamentos');
 
-    //paginar os resultados
-    //fazer a paginacao na view para os pedidos.
+    // Criando novas instâncias do paginator com pageName desejado
+    $listaPedidosMedicamentos = new \Illuminate\Pagination\LengthAwarePaginator(
+        $listaPedidosMedicamentos->items(),
+        $listaPedidosMedicamentos->total(),
+        $listaPedidosMedicamentos->perPage(),
+        request()->get('page_medicamentos', $listaPedidosMedicamentos->currentPage()), // Pega a página atual para exames
+        ['path' => request()->url(), 'pageName' => 'page_medicamentos'] // Define o path e o pageName
+    );
+   
     //na tabela de exames fazer a parte de arquivos feito pelo antony
 
     //  dd($listaPedidosExames);
