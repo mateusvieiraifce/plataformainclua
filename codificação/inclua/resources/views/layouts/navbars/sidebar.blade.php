@@ -308,7 +308,7 @@
                 </li>
 
                 <li @if ($pageSlug=='profile' ) class="active " @endif>
-                    <a href="{{route('user.preedit')}}">
+                    <a href="{{route('user.perfil')}}">
                         <i class="tim-icons icon-single-02"></i>
                         <p>{{ __('Meu Perfil') }}</p>
                     </a>
@@ -389,7 +389,7 @@
                 </li>
 
                 <li @if ($pageSlug=='profile' ) class="active " @endif>
-                    <a href="{{route('user.preedit')}}">
+                    <a href="{{route('user.perfil')}}">
                         <i class="tim-icons icon-single-02"></i>
                         <p>{{ __('Meu Perfil') }}</p>
                     </a>

@@ -1,25 +1,22 @@
-@extends('layouts.app', ['class' => 'register-page', 'contentClass' => 'register-page', 'pageSlug' => 'registre'])
-@section('title', 'Cadastro de Endereço')
+@extends('layouts.app', ['page' => __('Perfil'), 'exibirPesquisa' => false, 'pageSlug' => 'profile', 'class' => 'profile'])
+@section('title', "Formulario de Endereço")
 @section('content')
     <div class="row">
-        <div class="col-md-7 mr-auto">
-            <div class="card card-register card-white">
-                <div class="card-img">
-                    <img class="img-card" src="{{ asset('assets/img/logo-01.png') }}" alt="Card image" >
-                </div>
+        <div class="col-md-8">
+            <div class="card">
                 <div class="card-header">
-                    <h2 class="title">Cadastro de endereço</h2>
+                    <h5 class="title">{{ __('Endereço') }}</h5>
                 </div>
                 <div class="card-body">
-                    <form class="form" method="post" action="{{ route('clinica.endereco.store') }}">
+                    <form class="form" method="post" action="{{ route('user.endereco.store') }}">
                         @csrf
                         <div class="form-group">
                             <label for="cep">
                                 CEP <span class="required">*</span>
                             </label>
-                            <div class="input-group {{ $errors->has('cep') ? ' has-danger' : '' }} input-medium">
-                                <input type="text" id="cep" class="form-control border-full {{ $errors->has('cep') ? ' is-invalid' : '' }}" oninput="mascaraCep(this)"
-                                    name="cep" maxlength="9" placeholder="CEP" onblur="validarCep(this)" value="{{ (isset($clinica) ? $clinica->cep : null) ?? old('cep') }}" required>
+                            <div class="input-group {{ $errors->has('cep') ? ' has-danger' : '' }}">
+                                <input type="text" id="cep" class="form-control {{ $errors->has('cep') ? ' is-invalid' : '' }}" oninput="mascaraCep(this)"
+                                    name="cep" maxlength="9" placeholder="CEP" onblur="validarCep(this)" value="{{ (isset($endereco) ? $endereco->cep : null) ?? old('cep') }}" required>
                                 @include('alerts.feedback', ['field' => 'cep'])
                             </div>
                         </div>
@@ -28,9 +25,9 @@
                             <label for="cidade">
                                 Cidade <span class="required">*</span>
                             </label>
-                            <div class="input-group {{ $errors->has('cidade') ? ' has-danger' : '' }} input-medium">
-                                <input type="text" id="cidade" class="form-control border-full {{ $errors->has('cidade') ? ' is-invalid' : '' }}"
-                                    name="cidade" placeholder="Cidade" value="{{ (isset($clinica) ? $clinica->cidade : null) ?? old('cidade') }}" required>
+                            <div class="input-group {{ $errors->has('cidade') ? ' has-danger' : '' }}">
+                                <input type="text" id="cidade" class="form-control {{ $errors->has('cidade') ? ' is-invalid' : '' }}"
+                                    name="cidade" placeholder="Cidade" value="{{ (isset($endereco) ? $endereco->cidade : null) ?? old('cidade') }}" required>
                                 @include('alerts.feedback', ['field' => 'cidade'])
                             </div>
                         </div>
@@ -39,9 +36,9 @@
                             <label for="estado">
                                 Estado <span class="required">*</span>
                             </label>
-                            <div class="input-group input-medium{{ $errors->has('estado') ? ' has-danger' : '' }}">
-                                <input id="estado" list="estados" name="estado" class="form-control border-full {{ $errors->has('estado') ? 'is-invalid' : '' }}"
-                                    placeholder="Selecione o estado" value="{{ (isset($clinica) ? $clinica->estado : null) ?? old('estado') }}" required>
+                            <div class="input-group{{ $errors->has('estado') ? ' has-danger' : '' }}">
+                                <input id="estado" list="estados" name="estado" class="form-control {{ $errors->has('estado') ? 'is-invalid' : '' }}"
+                                    placeholder="Selecione o estado" value="{{ (isset($endereco) ? $endereco->estado : null) ?? old('estado') }}" required>
                                 <datalist id="estados" name="estado">
                                     <option value="AC">Acre</option>
                                     <option value="AL">Alagoas</option>
@@ -79,9 +76,9 @@
                             <label for="endereco">
                                 Endereço <span class="required">*</span>
                             </label>
-                            <div class="input-group {{ $errors->has('endereco') ? ' has-danger' : '' }} input-medium">
-                                <input type="text" id="endereco" class="form-control border-full {{ $errors->has('endereco') ? ' is-invalid' : '' }}"
-                                    name="endereco" placeholder="Endereço" value="{{ (isset($clinica) ? $clinica->rua : null) ?? old('endereco') }}" required>
+                            <div class="input-group {{ $errors->has('endereco') ? ' has-danger' : '' }}">
+                                <input type="text" id="endereco" class="form-control {{ $errors->has('endereco') ? ' is-invalid' : '' }}"
+                                    name="endereco" placeholder="Endereço" value="{{ (isset($endereco) ? $endereco->rua : null) ?? old('endereco') }}" required>
                                 @include('alerts.feedback', ['field' => 'endereco'])
                             </div>
                         </div>
@@ -90,9 +87,9 @@
                             <label for="numero">
                                 Número <span class="required">*</span>
                             </label>
-                            <div class="input-group {{ $errors->has('numero') ? ' has-danger' : '' }} input-medium">
-                                <input type="text" id="numero" class="form-control border-full only-numbers {{ $errors->has('numero') ? ' is-invalid' : '' }}"
-                                    name="numero" placeholder="Número" value="{{ (isset($clinica) ? $clinica->numero : null) ?? old('numero') }}" required>
+                            <div class="input-group {{ $errors->has('numero') ? ' has-danger' : '' }}">
+                                <input type="text" id="numero" class="form-control only-numbers {{ $errors->has('numero') ? ' is-invalid' : '' }}"
+                                    name="numero" placeholder="Número" value="{{ (isset($endereco) ? $endereco->numero : null) ?? old('numero') }}" required>
                                 @include('alerts.feedback', ['field' => 'numero'])
                             </div>
                         </div>
@@ -101,9 +98,9 @@
                             <label for="bairro">
                                 Bairro <span class="required">*</span>
                             </label>
-                            <div class="input-group {{ $errors->has('bairro') ? ' has-danger' : '' }} input-medium">
-                                <input type="text" id="bairro" class="form-control border-full {{ $errors->has('bairro') ? ' is-invalid' : '' }}"
-                                    name="bairro" placeholder="Bairro" value="{{ (isset($clinica) ? $clinica->bairro : null) ?? old('bairro') }}" required>
+                            <div class="input-group {{ $errors->has('bairro') ? ' has-danger' : '' }}">
+                                <input type="text" id="bairro" class="form-control {{ $errors->has('bairro') ? ' is-invalid' : '' }}"
+                                    name="bairro" placeholder="Bairro" value="{{ (isset($endereco) ? $endereco->bairro : null) ?? old('bairro') }}" required>
                                 @include('alerts.feedback', ['field' => 'bairro'])
                             </div>
                         </div>
@@ -112,53 +109,55 @@
                             <label for="complemento">
                                 Complemento
                             </label>
-                            <div class="input-group {{ $errors->has('complemento') ? ' has-danger' : '' }} input-medium">
-                                <input type="text" id="complemento" class="form-control border-full {{ $errors->has('complemento') ? ' is-invalid' : '' }}"
-                                    name="complemento" placeholder="Complemento" value="{{ (isset($clinica) ? $clinica->complemento : null) ?? old('complemento') }}">
+                            <div class="input-group {{ $errors->has('complemento') ? ' has-danger' : '' }}">
+                                <input type="text" id="complemento" class="form-control {{ $errors->has('complemento') ? ' is-invalid' : '' }}"
+                                    name="complemento" placeholder="Complemento" value="{{ (isset($endereco) ? $endereco->complemento : null) ?? old('complemento') }}">
                                 @include('alerts.feedback', ['field' => 'complemento'])
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label >
-                                Localização <span class="required">*</span>
-                            </label>
-                            <div class="mapa" id="map"></div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="longitude">
-                                Longitude <span class="required">*</span>
-                            </label>
-                            <div class="input-group {{ $errors->has('longitude') ? ' has-danger' : '' }} input-medium">
-                                <input type="text" id="longitude" class="form-control border-full only-numbers {{ $errors->has('longitude') ? ' is-invalid' : '' }}"
-                                    name="longitude" placeholder="longitude" value="{{ (isset($clinica) ? $clinica->longitude : null) ?? old('longitude') }}" required>
-                                @include('alerts.feedback', ['field' => 'longitude'])
+                        @if (auth()->user()->tipo_user == "C")
+                            <div class="form-group">
+                                <label >
+                                    Localização <span class="required">*</span>
+                                </label>
+                                <div class="mapa" id="map"></div>
                             </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="latitude">
-                                Latitude <span class="required">*</span>
-                            </label>
-                            <div class="input-group {{ $errors->has('latitude') ? ' has-danger' : '' }} input-medium">
-                                <input type="text" id="latitude" class="form-control border-full only-numbers {{ $errors->has('latitude') ? ' is-invalid' : '' }}"
-                                    name="latitude" placeholder="latitude" value="{{ (isset($clinica) ? $clinica->latitude : null) ?? old('latitude') }}" required>
-                                @include('alerts.feedback', ['field' => 'latitude'])
+                            
+                            <div class="form-group">
+                                <label for="longitude">
+                                    Longitude <span class="required">*</span>
+                                </label>
+                                <div class="input-group {{ $errors->has('longitude') ? ' has-danger' : '' }}">
+                                    <input type="text" id="longitude" class="form-control only-numbers {{ $errors->has('longitude') ? ' is-invalid' : '' }}"
+                                        name="longitude" placeholder="longitude" value="{{ (isset($endereco) ? $endereco->longitude : null) ?? old('longitude') }}" required>
+                                    @include('alerts.feedback', ['field' => 'longitude'])
+                                </div>
                             </div>
-                        </div>
+                            
+                            <div class="form-group">
+                                <label for="latitude">
+                                    Latitude <span class="required">*</span>
+                                </label>
+                                <div class="input-group {{ $errors->has('latitude') ? ' has-danger' : '' }}">
+                                    <input type="text" id="latitude" class="form-control only-numbers {{ $errors->has('latitude') ? ' is-invalid' : '' }}"
+                                        name="latitude" placeholder="latitude" value="{{ (isset($endereco) ? $endereco->latitude : null) ?? old('latitude') }}" required>
+                                    @include('alerts.feedback', ['field' => 'latitude'])
+                                </div>
+                            </div>
+                        @endif
 
                         <div class="input-group">
-                            <button type="submit" class="btn btn-primary btn-round btn-lg">{{ __('Finalizar') }}</button>
+                            <button type="submit" class="btn btn-primary btn-round btn-lg">{{ __('Salvar') }}</button>
                         </div>
-                        <input type="hidden" name="usuario_id" value="{{ $clinica->usuario_id }}">
-                        <input type="hidden" name="clinica_id" value="{{ $clinica->id }}">
+                        <input type="hidden" name="usuario_id" value="{{ auth()->user()->id }}">
+                        <input type="hidden" name="endereco_id" value="{{ isset($endereco) ? $endereco->id : null }}">
                     </form>
-                </div>                    
+                </div>
             </div>
         </div>
     </div>
-    
+
     <script src="{{env('MAP_APP_URL_KEY')}}" async defer></script>
     <script>
         var map;

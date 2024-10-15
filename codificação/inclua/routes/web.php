@@ -104,15 +104,17 @@ Route::middleware('auth')->group(function () {
     Route::get("/user/notificacao/{id}", [\App\Http\Controllers\UsuarioController::class, 'lerNotificacoes'])->name('user.notificacoes.ler');
 
     #PROFILE
-    Route::get("/profile/{id?}", [\App\Http\Controllers\UsuarioController::class, 'preEdit'])->name('user.preedit');
-    Route::post("/profile/update", [\App\Http\Controllers\UsuarioController::class, 'update'])->name('user.update');
-    Route::put("/profile/update", [\App\Http\Controllers\UsuarioController::class, 'updateCompletar'])->name('user.update.comp');
+    Route::get("/profile/{id?}", [\App\Http\Controllers\UsuarioController::class, 'perfil'])->name('user.perfil');
+    Route::post("/profile/update", [\App\Http\Controllers\UsuarioController::class, 'updateUser'])->name('user.update');
+    Route::put("/profile/update", [\App\Http\Controllers\UsuarioController::class, 'updateDadosUser'])->name('user.update.dados');
     Route::post("/profile/delete", [\App\Http\Controllers\UsuarioController::class, 'delete'])->name('user.delete');
-    Route::get("/profile/update/add", [\App\Http\Controllers\UsuarioController::class, 'addEndereco'])->name('user.update.add');
-    Route::post("/profile/update/add", [\App\Http\Controllers\UsuarioController::class, 'addEnderecoDo'])->name('user.update.add.do');
-    Route::get("/profile/endereco/del/{id}", [\App\Http\Controllers\UsuarioController::class, 'delEndereco'])->name('user.update.del.do');
-    Route::get("/profile/endereco/principal/{id}", [\App\Http\Controllers\UsuarioController::class, 'setPrincialEndereco'])->name('user.update.end.pri');
-    Route::get("/profile/update/add/{id}", [\App\Http\Controllers\UsuarioController::class, 'addEndereco'])->name('user.add.update');
+    
+    #ENDEREÇO
+    Route::get("/profile/endereco/create", [\App\Http\Controllers\EnderecoController::class, 'create'])->name('user.endereco.create');
+    Route::post("/profile/endereco/store", [\App\Http\Controllers\EnderecoController::class, 'store'])->name('user.endereco.store');
+    Route::get("/profile/endereco/delete/{id}", [\App\Http\Controllers\EnderecoController::class, 'delete'])->name('user.endereco.delete');
+    Route::get("/profile/endereco/edit/{id}", [\App\Http\Controllers\EnderecoController::class, 'edit'])->name('user.endereco.edit');
+    Route::get("/profile/endereco/principal/{id}", [\App\Http\Controllers\EnderecoController::class, 'setEnderecoPrincipal'])->name('user.endereco.principal');
 
     #ADVERTISEMENT
     Route::get("/advertisement", [\App\Http\Controllers\AnuncioController::class, 'list'])->name('advertisement.list');

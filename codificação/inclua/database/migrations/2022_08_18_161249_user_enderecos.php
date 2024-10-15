@@ -28,6 +28,7 @@ class UserEnderecos extends Migration
             $table->unsignedBigInteger('user_id');
             $table->boolean('princial');
 
+            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

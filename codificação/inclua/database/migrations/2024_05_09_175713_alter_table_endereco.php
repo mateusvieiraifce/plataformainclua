@@ -31,7 +31,7 @@ class AlterTableEndereco extends Migration
      */
     public function down()
     {
-       /* Schema::table('enderecos', function (Blueprint $table) {
+       Schema::table('enderecos', function (Blueprint $table) {
             $table->dropColumn('principal');
             $table->dropColumn('recebedor');
         });
@@ -39,6 +39,6 @@ class AlterTableEndereco extends Migration
         Schema::table('enderecos', function (Blueprint $table) {
             $table->string('recebedor')->nullable();
             $table->boolean('princial');
-        });*/
+        });
     }
 }

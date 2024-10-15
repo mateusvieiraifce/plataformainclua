@@ -91,7 +91,7 @@
                     </a>
                     <ul class="dropdown-menu dropdown-navbar">
                         <li class="nav-link">
-                            <a href="{{route('user.preedit')}}" class="nav-item dropdown-item">{{ __('Perfil') }}</a>
+                            <a href="{{route('user.perfil')}}" class="nav-item dropdown-item">{{ __('Perfil') }}</a>
                         </li>
                         <li class="nav-link">
                             <form action="{{route('user.delete')}}" id="formremove" method="post">

@@ -131,31 +131,11 @@ class Helper
     }
     public static function mascaraCelular($fone)
     {
-        if (is_array($fone)) {
-            foreach ($fone as $n => $v) {
-                $fone[$n] = mensagens::encodeFone($v);
-            }
-            return $fone;
-        }
-        $fone = preg_replace("/\D/", '', $fone);
-        $ddd = substr($fone, 0, 2);
-        $tamanho_telefone = strlen((string)$fone);
-        if ($tamanho_telefone < 10) {
-            for ($i = 0; $i < (10 - $tamanho_telefone); $i++) {
-                $fone = "0" . $fone;
-            }
-        }
-        $terceiro_digito = substr($fone, 2, 1);
-        if ($terceiro_digito == 9) {
-            // Celular
-            $prefixo = substr($fone, 2, 5);
-            $sufixo = substr($fone, 7, 4);
-        } else {
-            // Telefone fixo
-            $prefixo = substr($fone, 2, 4);
-            $sufixo = substr($fone, 6, 4);
-        }
-        return '(' . $ddd . ') ' . $prefixo . '-' . $sufixo;
+        // Remove qualquer caractere que não seja número
+        $telefone = preg_replace('/[^0-9]/', '', $fone);
+
+        // Aplica a máscara
+        return preg_replace('/(\d{2})(\d{5})(\d{4})/', '($1) $2-$3', $telefone);
     }
 
     public static function mascaraTelefone($telefone)

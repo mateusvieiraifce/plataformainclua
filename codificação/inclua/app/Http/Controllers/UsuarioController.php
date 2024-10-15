@@ -353,82 +353,83 @@ class UsuarioController extends Controller
         }
     }
 
-    public function preEdit($id=null){
+    public function perfil($id=null)
+    {
         return view('profile/edit');
     }
 
-    public function  update(Request $request){
-        $msgret = ['valor'=>"Operação realizada com sucesso!",'tipo'=>'success'];
-
-        try{
-            $input = $request->validate([
-                'name' => 'required|between :5,100',
-                'email' => 'required|unique:users,email,'.$request->id,
-            ]);
-
-            $usuario = User::find(intval($request->id));
-            $usuario->name = $request->name;
+    public function updateUser(Request $request)
+    {
+        $rules = [
+            "nome" => "required|min:5",
+            "email" => "required|unique:users,email,{$request->usuario_id}"
+        ];
+        $feedbacks = [
+            "nome.required" => "O campo Nome é obrigatório.",
+            "nome.min" => "O campo nome deve ter no mínomo 5 caracteres.",
+            "email.required" => "O campo Email é obrigatório.",
+            "email.unique" => "O email utilizado já foi cadastrado.",
+        ];
+        $request->validate($rules, $feedbacks);
+        
+        try {
+            $usuario = User::find($request->usuario_id);
+            $usuario->nome_completo = $request->nome;
             $usuario->email = $request->email;
-            $usuario->nomecompleto = $request->nome_completo;
-            $usuario->documento = $request->documento;
-            $usuario->nacionalidade = $request->nacionalidade;
-            $usuario->telefone = $request->telefone;
-            $usuario->celular = $request->celular;
-
-
             $usuario->save();
-        }catch (QueryException $exp ){
-            $msgret = ['valor'=>"Erro ao executar a operação",'tipo'=>'danger'];
+            
+            session()->flash('msg', ['valor' => "Operação realizada com sucesso!", 'tipo' => 'success']);
+        } catch (QueryException $exp) {
+            session()->flash('msg', ['valor' => "Erro ao executar a operação", 'tipo' => 'danger']);
         }
 
-
-        return view('profile/edit',['msg'=>$msgret]);
+        return back();
     }
 
-    public function  updateCompletar(Request $request){
-        $msgret = ['valor'=>"Operação realizada com sucesso!",'tipo'=>'success'];
+    public function  updateDadosUser(Request $request)
+    {
+        if ($request->tipo_pessoa === "F") {
+            $rules = [
+                "tipo_pessoa" => "required",
+                "documento" => "required|unique:users,documento,{$request->usuario_id}",
+                "telefone" => "unique:users,telefone,{$request->usuario_id}",
+                "celular" => "required|unique:users,celular,{$request->usuario_id}",
+                "sexo" => "required"
+            ];
+        } else {
+            $rules = [
+                "tipo_pessoa" => "required",
+                "documento" => "required|unique:users,documento,{$request->usuario_id}",
+                "telefone" => "unique:users,telefone,{$request->usuario_id}",
+                "celular" => "required|unique:users,celular,{$request->usuario_id}",
+            ];
+        }
+        $feedbacks = [
+            "tipo_pessoa.required" => "O campo Tipo Pessoa é obrigatório.",
+            "documento.required" => "O campo CPF é obrigatório.",
+            "documento.unique" => "Este CPF já foi utilizado.",
+            "telefone.unique" => "Este número de telefone já foi utilizado.",
+            "celular.required" => "O campo Celular é obrigatório.",
+            "celular.unique" => "Este número de celular já foi utilizado.",
+            "sexo.required" => "O campo Gênero é obrigatório."
+        ];
+        $request->validate($rules, $feedbacks);
 
-        try{
-
-            if ($request->tipopessoa==="F"){
-            $input = $request->validate([
-                'nome_completo' => 'required|between :20,100',
-                'documento' => 'required|cpf|unique:users,documento,'.$request->id,
-                'telefone' => 'required',
-                'celular' => 'required',
-                'email_alternativo' => 'required',
-            ]);
-            } else{
-                $input = $request->validate([
-                    'nome_completo' => 'required|between :20,100',
-                    'documento' => 'required|cnpj|unique:users,documento,'.$request->id,
-                    'telefone' => 'required',
-                    'celular' => 'required',
-                    'email_alternativo' => 'required',
-                ]);
-
-            }
-
-            $usuario = User::find(intval($request->id));
-            $usuario->nomecompleto = $request->nome_completo;
+        try {
+            $usuario = User::find($request->usuario_id);
+            $usuario->tipo_pessoa = $request->tipo_pessoa;
             $usuario->documento = $request->documento;
-            $usuario->nacionalidade = $request->nacionalidade;
             $usuario->telefone = $request->telefone;
             $usuario->celular = $request->celular;
-            $usuario->email_alternativo = $request->email_alternativo;
-            $usuario->instagram = $request->instagram;
-            $usuario->facebook = $request->facebook;
-            $usuario->twitter = $request->twitter;
             $usuario->sexo = $request->sexo;
-            $usuario->tipopessoa= $request->tipopessoa;
-
             $usuario->save();
-        }catch (QueryException $exp ){
-            $msgret = ['valor'=>"Erro ao executar a operação",'tipo'=>'danger'];
+            
+            session()->flash('msg', ['valor' => "Operação realizada com sucesso!", 'tipo' => 'success']);
+        } catch (QueryException $exp) {
+            session()->flash('msg', ['valor' => "Erro ao executar a operação", 'tipo' => 'danger']);
         }
 
-
-        return view('profile/edit',['msg'=>$msgret]);
+        return back();
     }
 
     public function delete(Request $request){
@@ -445,42 +446,6 @@ class UsuarioController extends Controller
         }
         return view('auth/login',['msg'=>$msgret] );
      }
-
-     public function addEndereco($id=null){
-         $endereco = new Endereco();
-        if ($id){
-            $endereco = Endereco::find($id);
-        }
-        return view("profile/endereco",['msg'=>null,'obj'=>$endereco]);
-     }
-
-    public function delEndereco($id=null){
-        $msgret = ['valor'=>"Operação realizada com sucesso!",'tipo'=>'success'];
-        try{
-            Endereco::find($id)->delete();
-        }
-        catch (QueryException $exp ){
-            $msgret = ['valor'=>"Erro ao executar a operação",'tipo'=>'danger'];
-        }
-        $endereco = new Endereco();
-        return view("profile/edit",['msg'=>null,'obj'=>$endereco]);
-    }
-
-    public function setPrincialEndereco($id=null){
-        $msgret = ['valor'=>"Operação realizada com sucesso!",'tipo'=>'success'];
-        try{
-            $bd = Endereco::find($id);
-            DB::table('enderecos')->where('user_id','=',$bd->user_id)->update(['principal'=>false]);
-            $bd = Endereco::find($id);
-            $bd->principal=True;
-            $bd->save();
-        }
-        catch (QueryException $exp ){
-            $msgret = ['valor'=>"Erro ao executar a operação",'tipo'=>'danger'];
-        }
-        $endereco = new Endereco();
-        return view("profile/edit",['msg'=>null,'obj'=>$endereco]);
-    }
 
     public function addEnderecoDo(Request $request){
         $msgret = ['valor'=>"Operação realizada com sucesso!",'tipo'=>'success'];

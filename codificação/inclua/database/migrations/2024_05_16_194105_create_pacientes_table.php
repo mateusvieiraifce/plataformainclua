@@ -15,7 +15,7 @@ class CreatePacientesTable extends Migration
     });
 
     Schema::table('pacientes', function (Blueprint $table) {
-      $table->foreign('usuario_id')->references('id')->on('users');
+      $table->foreign('usuario_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
     });
   }
   public function down()
