@@ -104,15 +104,17 @@ Route::middleware('auth')->group(function () {
     Route::get("/user/notificacao/{id}", [\App\Http\Controllers\UsuarioController::class, 'lerNotificacoes'])->name('user.notificacoes.ler');
 
     #PROFILE
-    Route::get("/profile/{id?}", [\App\Http\Controllers\UsuarioController::class, 'preEdit'])->name('user.preedit');
-    Route::post("/profile/update", [\App\Http\Controllers\UsuarioController::class, 'update'])->name('user.update');
-    Route::put("/profile/update", [\App\Http\Controllers\UsuarioController::class, 'updateCompletar'])->name('user.update.comp');
+    Route::get("/profile/{id?}", [\App\Http\Controllers\UsuarioController::class, 'perfil'])->name('user.perfil');
+    Route::post("/profile/update", [\App\Http\Controllers\UsuarioController::class, 'updateUser'])->name('user.update');
+    Route::put("/profile/update", [\App\Http\Controllers\UsuarioController::class, 'updateDadosUser'])->name('user.update.dados');
     Route::post("/profile/delete", [\App\Http\Controllers\UsuarioController::class, 'delete'])->name('user.delete');
-    Route::get("/profile/update/add", [\App\Http\Controllers\UsuarioController::class, 'addEndereco'])->name('user.update.add');
-    Route::post("/profile/update/add", [\App\Http\Controllers\UsuarioController::class, 'addEnderecoDo'])->name('user.update.add.do');
-    Route::get("/profile/endereco/del/{id}", [\App\Http\Controllers\UsuarioController::class, 'delEndereco'])->name('user.update.del.do');
-    Route::get("/profile/endereco/principal/{id}", [\App\Http\Controllers\UsuarioController::class, 'setPrincialEndereco'])->name('user.update.end.pri');
-    Route::get("/profile/update/add/{id}", [\App\Http\Controllers\UsuarioController::class, 'addEndereco'])->name('user.add.update');
+    
+    #ENDEREÇO
+    Route::get("/profile/endereco/create", [\App\Http\Controllers\EnderecoController::class, 'create'])->name('user.endereco.create');
+    Route::post("/profile/endereco/store", [\App\Http\Controllers\EnderecoController::class, 'store'])->name('user.endereco.store');
+    Route::get("/profile/endereco/delete/{id}", [\App\Http\Controllers\EnderecoController::class, 'delete'])->name('user.endereco.delete');
+    Route::get("/profile/endereco/edit/{id}", [\App\Http\Controllers\EnderecoController::class, 'edit'])->name('user.endereco.edit');
+    Route::get("/profile/endereco/principal/{id}", [\App\Http\Controllers\EnderecoController::class, 'setEnderecoPrincipal'])->name('user.endereco.principal');
 
     #ADVERTISEMENT
     Route::get("/advertisement", [\App\Http\Controllers\AnuncioController::class, 'list'])->name('advertisement.list');
@@ -366,11 +368,14 @@ Route::middleware('auth')->group(function () {
     Route::any("/clinica/fila/list", [\App\Http\Controllers\FilaController::class, 'list'])->name('fila.list');
     Route::post("/clinica/fila/novaordem", [\App\Http\Controllers\FilaController::class, 'salvarOrdemFilas'])->name('fila.salvarOrdemFilas');
 
+    #CAD_FILA_USER_ESPECIALISTA
+    Route::any("/especialista/fila/clinicas", [\App\Http\Controllers\FilaController::class, 'listClinicaDoEspecialista'])->name('fila.listClinicaDoEspecialista');
+    Route::any("/especialista/fila/list", [\App\Http\Controllers\FilaController::class, 'listUserEspecialista'])->name('fila.listUserEspecialista');
+    Route::post("/especialista/fila/novaordem", [\App\Http\Controllers\FilaController::class, 'salvarOrdemFilasUserEspecialista'])->name('fila.salvarOrdemFilasUserEspecialista');
 
-     #CAD_FILA_USER_ESPECIALISTA
-     Route::any("/especialista/fila/clinicas", [\App\Http\Controllers\FilaController::class, 'listClinicaDoEspecialista'])->name('fila.listClinicaDoEspecialista');
-     Route::any("/especialista/fila/list", [\App\Http\Controllers\FilaController::class, 'listUserEspecialista'])->name('fila.listUserEspecialista');
-     Route::post("/especialista/fila/novaordem", [\App\Http\Controllers\FilaController::class, 'salvarOrdemFilasUserEspecialista'])->name('fila.salvarOrdemFilasUserEspecialista');
+    Route::get("/especialista/reputacao", [\App\Http\Controllers\AvaliacaoController::class, 'reputacaoEspecialista'])->name('avaliacao.reputacaoEspecialista');
+    Route::post("/especialista/reputacao/denunciar", [\App\Http\Controllers\AvaliacaoController::class, 'denuciarUserEspecialista'])->name('avaliacao.denuciarUserEspecialista');
+    Route::get("/especialista/prontuario/{id_paciente}", [\App\Http\Controllers\PacienteController::class, 'prontuario'])->name('paciente.prontuario');
 
     #CONSULTAS_POR_CLINICA
     Route::get("/clinica/consultas/search", [\App\Http\Controllers\ConsultaController::class, 'listConsultaporClinicaPesquisar'])->name('consulta.listConsultaporClinicaPesquisar');
@@ -383,6 +388,9 @@ Route::middleware('auth')->group(function () {
     Route::post("/clinica/marcarconsulta/finalizar/", [\App\Http\Controllers\ClinicaController::class, 'marcarConsultaFinalizar'])->name('clinica.marcarConsultaFinalizar');
     #AGENDA_DO_ESPECIALISTA_USER_CLINICA
     Route::get("/clinica/especialista/vinculo/agenda/{especialista_id}", [\App\Http\Controllers\EspecialistaclinicaController::class, 'agendaEspecialista'])->name('especialistaclinica.agendaEspecialista');
+
+    Route::get("/clinica/reputacao", [\App\Http\Controllers\AvaliacaoController::class, 'reputacaoClinica'])->name('avaliacao.reputacaoClinica');
+    Route::post("/clinica/reputacao/denunciar", [\App\Http\Controllers\AvaliacaoController::class, 'denuciarUserClinica'])->name('avaliacao.denuciarUserClinica');
 });
 
 /* ROTAS PARA SEREM ANALISADAS */

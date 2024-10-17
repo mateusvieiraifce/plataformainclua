@@ -272,6 +272,7 @@ class EspecialistaController extends Controller
       $ent->horario_iniciado = $dataAtual->format('Y-m-d H:i:s');     
       $ent->save();
       
+      //deletando o item da fila
       $entidadeFila = Fila::
          where('especialista_id', $consulta->especialista_id)->
          where('clinica_id', $consulta->clinica_id)->

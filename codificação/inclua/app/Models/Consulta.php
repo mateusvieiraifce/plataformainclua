@@ -14,10 +14,13 @@ class Consulta extends Model
   ];
 
   public function noHasAvaliacao()
-  {/* 
-    $especialista = Especialista::find($especialista_id);
-    $clinica = Clinica::find($clinica_id); */
-    $avaliacao = Avaliacao::orWhere('consulta_id', $this->id)->count();
+  {
+    $avaliacao = AvaliacaoComentario::join('avaliacoes', 'avaliacoes.comentario_id', 'avaliacoes_comentarios.id')
+      ->where('avaliacoes.consulta_id', $this->id)
+      ->where(function ($query) {
+        $query->orWhere('tipo_avaliado', 'E')->orWhere('tipo_avaliado', 'C');
+      })
+      ->count();
     
     if (empty($avaliacao)) {
       return true;

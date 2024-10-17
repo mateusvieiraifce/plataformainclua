@@ -24,7 +24,7 @@ class CreateAssinaturasTable extends Migration
             $table->string('motivo', 256)->nullable();
             $table->string('situacao', 256)->nullable();
 
-            $table->foreign('cartao_id')->references('id')->on('cartoes');
+            $table->foreign('cartao_id')->references('id')->on('cartoes')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

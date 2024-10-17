@@ -59,6 +59,13 @@
                     </a>
                 </li>
 
+                <li @if ($pageSlug=='reputacao' ) class="active " @endif>
+                    <a href="{{route('avaliacao.reputacaoClinica')}}">
+                        <i class="tim-icons icon-chat-33"></i>
+                        <p>{{ __('Reputação') }}</p>
+                    </a>
+                </li>
+
                 <li>
                     <a data-toggle="collapse" href="#relatorioclinica" aria-expanded="true">
                         <i class="tim-icons icon-single-copy-04"></i>
@@ -308,7 +315,7 @@
                 </li>
 
                 <li @if ($pageSlug=='profile' ) class="active " @endif>
-                    <a href="{{route('user.preedit')}}">
+                    <a href="{{route('user.perfil')}}">
                         <i class="tim-icons icon-single-02"></i>
                         <p>{{ __('Meu Perfil') }}</p>
                     </a>
@@ -389,7 +396,7 @@
                 </li>
 
                 <li @if ($pageSlug=='profile' ) class="active " @endif>
-                    <a href="{{route('user.preedit')}}">
+                    <a href="{{route('user.perfil')}}">
                         <i class="tim-icons icon-single-02"></i>
                         <p>{{ __('Meu Perfil') }}</p>
                     </a>
@@ -441,8 +448,8 @@
                     </a>
                 </li>
 
-                <li @if ($pageSlug=='favoritos' ) class="active " @endif>
-                    <a href="#">
+                <li @if ($pageSlug=='reputacao' ) class="active " @endif>
+                    <a href="{{route('avaliacao.reputacaoEspecialista')}}">
                         <i class="tim-icons icon-chat-33"></i>
                         <p>{{ __('Reputação') }}</p>
                     </a>

@@ -21,9 +21,9 @@ class CreatePagamentosTable extends Migration
             $table->date('data_pagamento');
             $table->double('valor', 8, 2);
             
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('cartao_id')->references('id')->on('cartoes');
-            $table->foreign('assinatura_id')->references('id')->on('assinaturas');
+            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('cartao_id')->references('id')->on('cartoes')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('assinatura_id')->references('id')->on('assinaturas')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

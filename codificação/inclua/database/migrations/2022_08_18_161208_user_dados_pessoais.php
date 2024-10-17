@@ -16,13 +16,8 @@ class UserDadosPessoais extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->string('nome_completo')->nullable();
             $table->string('documento')->nullable();
-            $table->string('nacionalidade')->nullable();
             $table->string('telefone')->nullable();
             $table->string('celular')->nullable();
-            $table->string('email_alternativo')->nullable();
-            $table->string('facebook')->nullable();
-            $table->string('twitter')->nullable();
-            $table->string('instagram')->nullable();
             $table->boolean('ativo')->nullable();
         });
     }
@@ -37,13 +32,8 @@ class UserDadosPessoais extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('nome_completo');
             $table->dropColumn('documento');
-            $table->dropColumn('nacionalidade');
             $table->dropColumn('telefone');
             $table->dropColumn('celular');
-            $table->dropColumn('email_alternativo');
-            $table->dropColumn('facebook');
-            $table->dropColumn('twitter');
-            $table->dropColumn('instagram');
             $table->dropColumn('ativo');
         });
     }
