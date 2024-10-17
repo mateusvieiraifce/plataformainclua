@@ -64,7 +64,7 @@
                         <td>{{$ent->total_consultas}}</td> 
                         <td><a style="max-width:120px; text-align: left;padding:10px " rel="tooltip" 
                         title="Prontuário" class="btn btn-secondary" data-original-title="Edit"
-                           href="#">
+                           href="{{route('paciente.prontuario', $ent->id)}}">
                           Prontuário
                         </a>   </td>                 
                      </tr>
