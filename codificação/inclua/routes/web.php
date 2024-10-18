@@ -71,7 +71,7 @@ Route::post("/cadastrar/dados-bancários/store", [\App\Http\Controllers\Especial
 #ASSINATURA
 Route::post("/pagamento/assinatura", [\App\Http\Controllers\AssinaturaController::class, 'lancarAssinatura'])->name('pagamento.assinatura');
 Route::get("/callback-payment/assinatura", [\App\Http\Controllers\AssinaturaController::class, 'callbackPaymentAssinatura'])->name('callback.payment.assinatura');
-Route::get("/pagamento/assinatura/renovar", [\App\Http\Controllers\AssinaturaController::class, 'renovacaoAutomatica'])->name('assinatura.renovar');
+Route::get("/pagamento/assinatura/renovar", [\App\Http\Controllers\AssinaturaController::class, 'renovacaoAutomatica'])->name('assinatura.renocacao.automatica');
 Route::get("/callback-payment/assinatura/renovar", [\App\Http\Controllers\AssinaturaController::class, 'callbackPaymentRenovarAssinatura'])->name('callback.payment.assinatura.renovar');
 
 #VALIDAÇÕES
@@ -91,7 +91,7 @@ Route::post("/updatepassword", [\App\Http\Controllers\UsuarioController::class, 
 
 Route::middleware('auth')->group(function () {
     #DASHBORD
-    Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'home'])->name('home');
+    Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'home'])->name('home')->middleware('verify.signature');
     Route::get('/dashboard/clinica', [\App\Http\Controllers\DashboardController::class, 'dashboardClinica'])->name('dashboard.dashboardClinica');
 
     Route::get("/turnvendedor", [\App\Http\Controllers\UsuarioController::class, 'turnVendedor'])->name('user.turnvendedor');
@@ -255,7 +255,7 @@ Route::middleware('auth')->group(function () {
     #AVALIACAO PACIENTE
     Route::get("/paciente/reputacao", [\App\Http\Controllers\AvaliacaoController::class, 'reputacaoPaciente'])->name('paciente.avaliacao.lista');
 
-    Route::middleware('payment.signature')->group(function() {
+    Route::middleware('verify.signature')->group(function() {
         #MARCAR_CONSULTA_USUARIO_PACIENTE
         Route::get("/paciente/marcar-consulta/{paciente_id?}", [\App\Http\Controllers\PacienteController::class, 'marcarconsulta'])->name('paciente.marcarconsulta');
         Route::get("/paciente/marcar-consultas/pacientes", [\App\Http\Controllers\PacienteController::class, 'marcarconsultaSelecionarPaciente'])->name('paciente.marcarconsultaSelecionarPaciente');
