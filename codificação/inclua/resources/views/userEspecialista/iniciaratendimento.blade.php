@@ -598,7 +598,7 @@
                   </div>
                   <div class="col-6 col-lg-2">
                      <div id="chronometer" name="cronometro">
-                        00:00:00
+                        
                      </div>
                   </div>
                </div>
@@ -805,7 +805,7 @@
                   <a href="{{route('consulta.listconsultaporespecialista')}}" class="btn btn-primary"><i
                         class="fa fa-reply"></i>
                      Voltar</a>
-                  <a rel="tooltip" title="Finalizar" class="btn btn-success" data-original-title="Edit"                  
+                  <a rel="tooltip" title="Finalizar" id="btnFinalizar" class="btn btn-success" data-original-title="Edit"                  
                      href="{{route('especialista.finalizarAtendimento', $consulta->id)}}">
                      <i class="fa fa-save"></i> Finalizar
                   </a>
@@ -822,11 +822,22 @@
       let elapsedTime = 0;
       let timerInterval;
 
-      function updateChronometer() {
-         elapsedTime = Date.now() - startTime;
+      let tempo = localStorage.getItem('tempo') ? parseInt(localStorage.getItem('tempo')) : 0;
+   
+
+      function updateChronometer() {         
+         tempo++;
+         localStorage.setItem('tempo', tempo);
+         const hours = String(Math.floor(tempo / 3600)).padStart(2, '0');
+         const minutes = String(Math.floor((tempo % 3600) / 60)).padStart(2, '0');
+         const seconds = String(tempo % 60).padStart(2, '0');       
+
+
+    /*     elapsedTime = Date.now() - startTime;
          const hours = Math.floor(elapsedTime / (1000 * 60 * 60));
          const minutes = Math.floor((elapsedTime % (1000 * 60 * 60)) / (1000 * 60));
          const seconds = Math.floor((elapsedTime % (1000 * 60)) / 1000);
+*/
 
          const formattedHours = String(hours).padStart(2, '0');
          const formattedMinutes = String(minutes).padStart(2, '0');
@@ -852,12 +863,16 @@
 
       function startTimer() {
          timerInterval = setInterval(updateChronometer, 1000);  
-        // chronometer.textContent = '00:00:00';
-        sessionStorage.setItem('timerValue',  '00:00:00');
-        // sessionStorage.removeItem('timerValue');
+        
       }
 
       startTimer();
+
+      document.getElementById('btnFinalizar').onclick = () => {
+            tempo = 0;
+            localStorage.removeItem('tempo'); // Remove o tempo do localStorage
+            document.getElementById('chronometer').innerText = '00:00:00'; 
+        };
    </script>
 
 

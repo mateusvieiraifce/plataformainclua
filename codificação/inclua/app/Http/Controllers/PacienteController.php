@@ -92,7 +92,7 @@ class PacienteController extends Controller
         $request->request->set('documento', Helper::removerCaractereEspecial($request->documento));
         $rules = [
             "image" => "required",
-            "documento" => "required|unique:users,documento,{$request->usuario_id}",
+            "documento" => "required|unique:users,documento,{$request->usuario_id}|unique:pacientes,cpf,{$request->usuario_id}",
             "nome" => "required|min:5",
             "celular" => "required|unique:users,celular,{$request->usuario_id}",
             "data_nascimento" => "required",
