@@ -307,6 +307,11 @@ option {
     padding-top: 0.5rem !important;
 }
 
+a.close {
+    color: #fd5d93;
+    text-shadow: none;
+}
+
 @media (max-width: 576px) {
     .card-header > a.header-links {
         width: 100%;

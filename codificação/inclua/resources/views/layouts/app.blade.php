@@ -192,6 +192,10 @@
                             }
                     });
                 });
+                
+                const htmlEl = document.querySelector('html');
+                htmlEl.style.setProperty('--primary', '#0000ff');
+                htmlEl.style.setProperty('--color-gradient', '#15171a');
             });
         </script>
         @stack('js')

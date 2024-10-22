@@ -5,7 +5,7 @@
 
         <ul class="nav">
             <!-- usuario tipo clinica -->
-            @if(\Illuminate\Support\Facades\Auth::user()->tipo_user ==='C')
+            @if(\Illuminate\Support\Facades\Auth::user()->tipo_user === 'C')
                 <?php
                    $clinica = App\Models\Clinica::where('usuario_id', '=', Auth::user()->id)->first();
                 ?>              
@@ -128,7 +128,7 @@
             @endif
 
             <!-- usuario tipo Root -->
-            @if(\Illuminate\Support\Facades\Auth::user()->tipo_user ==='R')
+            @if(\Illuminate\Support\Facades\Auth::user()->tipo_user === 'R')
                 <li @if ($pageSlug=='dashboard' ) class="active " @endif>
                     <a href="{{route('home')}}">
                         <i class="tim-icons icon-chart-pie-36"></i>
@@ -273,26 +273,26 @@
                                 </a>
                             </li>
 
-                        <li @if ($pageSlug=='tipoexames' ) class="active " @endif>
-                            <a href="{{route('tipoexame.list')}}">
-                                <i class="tim-icons  icon-components"></i>
-                                <p>{{ __('Tipo de Exames') }}</p>
-                            </a>
-                        </li> 
+                            <li @if ($pageSlug=='tipoexames' ) class="active " @endif>
+                                <a href="{{route('tipoexame.list')}}">
+                                    <i class="tim-icons  icon-components"></i>
+                                    <p>{{ __('Tipo de Exames') }}</p>
+                                </a>
+                            </li> 
 
-                        <li @if ($pageSlug=='tipomedicamento' ) class="active " @endif>
-                            <a href="{{route('tipomedicamento.list')}}">
-                                <i class="tim-icons  icon-components"></i>
-                                <p>{{ __('Tipo de Medicamentos') }}</p>
-                            </a>
-                        </li>
+                            <li @if ($pageSlug=='tipomedicamento' ) class="active " @endif>
+                                <a href="{{route('tipomedicamento.list')}}">
+                                    <i class="tim-icons  icon-components"></i>
+                                    <p>{{ __('Tipo de Medicamentos') }}</p>
+                                </a>
+                            </li>
 
-                        <li @if ($pageSlug=='medicamento' ) class="active " @endif>
-                            <a href="{{route('medicamento.list')}}">
-                                <i class="tim-icons  icon-components"></i>
-                                <p>{{ __('Medicamentos') }}</p>
-                            </a>
-                        </li>
+                            <li @if ($pageSlug=='medicamento' ) class="active " @endif>
+                                <a href="{{route('medicamento.list')}}">
+                                    <i class="tim-icons  icon-components"></i>
+                                    <p>{{ __('Medicamentos') }}</p>
+                                </a>
+                            </li>
 
                             <li @if ($pageSlug=='exames' ) class="active " @endif>
                                 <a href="{{route('exame.list')}}">
@@ -323,7 +323,7 @@
             @endif
 
             <!-- usuario tipo Paciente -->
-            @if(\Illuminate\Support\Facades\Auth::user()->tipo_user ==='P')
+            @if(\Illuminate\Support\Facades\Auth::user()->tipo_user === 'P')
                 <!-- <li @if ($pageSlug=='dashboard' ) class="active " @endif>
                     <a href="{{route('home')}}">
                         <i class="tim-icons icon-chart-pie-36"></i>
@@ -404,7 +404,7 @@
             @endif
 
             <!-- usuario tipo Especialista -->
-            @if(\Illuminate\Support\Facades\Auth::user()->tipo_user ==='E')
+            @if(\Illuminate\Support\Facades\Auth::user()->tipo_user === 'E')
            
                 <li @if ($pageSlug=='fila' ) class="active " @endif>
                         <a href="{{route('fila.listClinicaDoEspecialista')}}">

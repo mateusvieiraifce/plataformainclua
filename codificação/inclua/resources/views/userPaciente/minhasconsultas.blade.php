@@ -18,7 +18,6 @@
                                     <th>Médico</th>
                                     <th>Especialidade</th>
                                     <th>Clínica</th>
-                                    <th>Cancelar</th>
                                 </thead>
                                 <tbody>
                                     @foreach($consultas as $consulta)
@@ -42,9 +41,9 @@
                                                 {{ $consulta->nome_clinica }}
                                             </td>
                                             <td>
-                                                <a href="#" target="_blank" rel="tooltip" title="Cancelar consulta" class="btn btn-link" data-original-title="Cancelar consulta"
+                                                <a href="#" target="_blank" rel="tooltip" title="Cancelar consulta" class="btn btn-danger" data-original-title="Cancelar consulta"
                                                     href="#" data-target="#modal-form" data-toggle="modal" data-whatever="@mdo" onclick="setModal({{ $consulta->id }}, {{ \App\Helper::verificarPrazoCancelamentoGratuito($consulta->horario_agendado) }})">
-                                                    <i class="tim-icons icon-simple-remove"></i>
+                                                    Cancelar
                                                 </a>
                                             </td>
                                         </tr>

@@ -7,6 +7,7 @@ use App\Models\Comentarios;
 use App\Models\Endereco;
 use App\Models\Favoritos;
 use App\Models\Notificacoes;
+use App\Models\Paciente;
 use App\Models\PasswordResets;
 use App\Models\User;
 use App\Models\Vendas;
@@ -377,6 +378,12 @@ class UsuarioController extends Controller
             $usuario->nome_completo = $request->nome;
             $usuario->email = $request->email;
             $usuario->save();
+            
+            if ($usuario->tipo_user == "P") {
+                $paciente = Paciente::where('usuario_id', $usuario->id);
+                $paciente->nome = $request->nome;
+                $paciente->save();
+            }
             
             session()->flash('msg', ['valor' => "Operação realizada com sucesso!", 'tipo' => 'success']);
         } catch (QueryException $exp) {
