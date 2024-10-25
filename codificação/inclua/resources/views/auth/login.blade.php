@@ -1,6 +1,7 @@
 @extends('layouts.app', ['class' => 'login-page', 'page' => __(''), 'contentClass' => 'login-page'])
 @section('title', 'Login')
 @section('content')
+    @inject('configuracao', 'App\Models\Configuracao')
 
     <style>
         .cookie-banner {
@@ -55,7 +56,7 @@
             @csrf
             <div class="card card-login card-white">
                 <div class="card-img justify-content-center">
-                    <img src="{{ asset('assets/img/logo-01.png') }}" alt="Logo Plataforma Inclua" width="250px">
+                    <img src="{{ !empty($configuracao->getLogo()) ? asset($configuracao->getLogo()) : asset('assets/img/logo-01.png') }}" alt="Logo Plataforma Inclua" width="250px">
                 </div>
                 <div class="card-body">
                     <p class="text-dark mb-2">Entre com seu usuário e senha</p>

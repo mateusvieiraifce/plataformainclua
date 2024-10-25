@@ -108,6 +108,7 @@ Route::middleware('auth')->group(function () {
     Route::post("/profile/update", [\App\Http\Controllers\UsuarioController::class, 'updateUser'])->name('user.update');
     Route::put("/profile/update", [\App\Http\Controllers\UsuarioController::class, 'updateDadosUser'])->name('user.update.dados');
     Route::post("/profile/delete", [\App\Http\Controllers\UsuarioController::class, 'delete'])->name('user.delete');
+    Route::post("/profile/update/avatar", [\App\Http\Controllers\UsuarioController::class, 'updateAvatar'])->name('user.update.avatar');
     
     #ENDEREÇO
     Route::get("/profile/endereco/create", [\App\Http\Controllers\EnderecoController::class, 'create'])->name('user.endereco.create');
@@ -391,6 +392,9 @@ Route::middleware('auth')->group(function () {
 
     Route::get("/clinica/reputacao", [\App\Http\Controllers\AvaliacaoController::class, 'reputacaoClinica'])->name('avaliacao.reputacaoClinica');
     Route::post("/clinica/reputacao/denunciar", [\App\Http\Controllers\AvaliacaoController::class, 'denuciarUserClinica'])->name('avaliacao.denuciarUserClinica');
+    
+    Route::get("/configuracao/layout", [\App\Http\Controllers\ConfiguracaoController::class, 'index'])->name('configuracao.layout');    
+    Route::post("/configuracao/layout/store", [\App\Http\Controllers\ConfiguracaoController::class, 'store'])->name('configuracao.layout.store');    
 });
 
 /* ROTAS PARA SEREM ANALISADAS */

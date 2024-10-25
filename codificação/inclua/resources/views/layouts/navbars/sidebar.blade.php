@@ -300,6 +300,21 @@
                                     <p>{{ __('Exames') }}</p>
                                 </a>
                             </li>
+
+                            <li @if ($pageSlug == 'layout') class="active " @endif>
+                                <a href="{{route('configuracao.layout')}}">
+                                    <i class="tim-icons icon-html5"></i>
+                                    <p>{{ __('Layout') }}</p>
+                                </a>
+                            </li>
+                            {{-- 
+                                <li @if ($pageSlug=='compras' ) class="active " @endif>
+                                    <a data-toggle="collapse" aria-expanded="false" href="{{route('especialidade.list')}}">
+                                        <span class="sidebar-mini-icon">I</span>
+                                        <span class="sidebar-normal">{{ __('Especialidades') }}</span>
+                                    </a>
+                                </li>
+                             --}}
                         </ul>
                     </div>
                     <!-- <div class="collapse" id="config">

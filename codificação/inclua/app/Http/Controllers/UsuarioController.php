@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Helper;
+use App\Models\Clinica;
 use App\Models\Comentarios;
 use App\Models\Endereco;
+use App\Models\Especialista;
 use App\Models\Favoritos;
 use App\Models\Notificacoes;
 use App\Models\Paciente;
@@ -380,9 +382,17 @@ class UsuarioController extends Controller
             $usuario->save();
             
             if ($usuario->tipo_user == "P") {
-                $paciente = Paciente::where('usuario_id', $usuario->id);
+                $paciente = Paciente::where('usuario_id', $usuario->id)->first();
                 $paciente->nome = $request->nome;
                 $paciente->save();
+            } elseif ($usuario->tipo_user == "E") {
+                $especialista = Especialista::where('usuario_id', $usuario->id)->first();
+                $especialista->nome = $request->nome;
+                $especialista->save();
+            } elseif ($usuario->tipo_user == "C") {
+                $clinica = Clinica::where('usuario_id', $usuario->id)->first();
+                $clinica->nome = $request->nome;
+                $clinica->save();
             }
             
             session()->flash('msg', ['valor' => "Operação realizada com sucesso!", 'tipo' => 'success']);
@@ -452,41 +462,42 @@ class UsuarioController extends Controller
             $msgret = ['valor'=>"Erro ao executar a operação",'tipo'=>'danger'];
         }
         return view('auth/login',['msg'=>$msgret] );
-     }
-
-    public function addEnderecoDo(Request $request){
-        $msgret = ['valor'=>"Operação realizada com sucesso!",'tipo'=>'success'];
+    }
+    
+    public function updateAvatar(Request $request)
+    {
         try {
-            $endereco = new Endereco();
-            if ($request->id_add){
-                $endereco = Endereco::find($request->id_add);
+            //salvando a avatar do usuario
+            if ($request->hasFile('image') && $request->file('image')->isValid()) {
+                //VERIFICANDO SE EXISTE ALGUM AVATAR JA CADASTRADO PARA DELETAR
+                $avatar = User::find($request->usuario_id)->avatar;
+                if(!empty($avatar)) {
+                    //REMOÇÃO DE 'storage/' PARA DELETAR O ARQUIVO NA RAIZ
+                    $linkStorage = explode('/', $avatar);
+                    $linkStorage = "$linkStorage[1]/$linkStorage[2]";
+                    Storage::delete([$linkStorage]);
+                }
+
+                // Nome do Arquivo
+                $requestImage = $request->image;
+                // Recupera a extensão do arquivo
+                $extension = $requestImage->extension();
+                // Define o nome
+                $imageName = md5($requestImage->getClientOriginalName() . strtotime("now")) . "." . $extension;
+                // Faz o upload:
+                $pathAvatar = $request->file('image')->storeAs('avatar-user', $imageName);
             }
+            
+            $user = User::find($request->usuario_id);
+            $user->avatar = !empty($pathAvatar) ? "storage/$pathAvatar" : null;
+            $user->save();
 
-            $endereco->recebedor = $request->recebedor;
-            $endereco->cep = $request->cep;
-            $endereco->estado = $request->estado;
-            $endereco->cep = $request->cep;
-            $endereco->cidade = $request->cidade;
-            $endereco->bairro = $request->bairro;
-            $endereco->rua = $request->rua;
-            $endereco->numero = $request->numero;
-            $endereco->complemento = $request->complemento;
-            $endereco->informacoes = $request->informacoes;
-            if ($request->principal){
-            $endereco->principal = $request->principal;
-            }else{
-                $endereco->principal=false;
-            }
-
-
-            $endereco->user_id= $request->id;
-            $endereco->save();
-
-        }catch (QueryException $exception){
-            $msgret = ['valor'=>"Erro ao executar a operação",'tipo'=>'danger'];
+            $response = true;
+        } catch (QueryException $e) {
+            $response = false;
         }
 
-        return view("profile/edit",['msg'=>$msgret,'obj'=>$endereco]);
+        return response()->json($response);
     }
 
     public function turnVendedor(){
