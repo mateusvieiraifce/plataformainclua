@@ -2,7 +2,7 @@
 @section('title', 'Marcar Consulta')
 @section('content')
     @php
-        $lista = Session::get('lista') ?? $lista;
+        $clinicas = Session::get('clinicas') ?? $clinicas;
     @endphp
     <div class="row">
         <div class="col-lg-12 col-md-12">
@@ -78,18 +78,18 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        @if($lista->count())
+                        @if($clinicas->count())
                             <table class="table">
                                 <thead>
                                     <th>Clínica</th>
                                     <th></th>
                                 </thead>
                                 <tbody>
-                                    @foreach($lista as $ent)
+                                    @foreach($clinicas as $clinica)
                                         <tr>
-                                            <td>{{ $ent->nome }}</td>
+                                            <td>{{ $clinica->nome }}</td>
                                             <td>
-                                                <a href="{{ route('paciente.marcarConsultaViaEspecialidadePasso3', [$especialidade_id, $ent->id]) }}" class="btn btn-primary">
+                                                <a href="{{ route('paciente.marcarConsultaViaEspecialidadePasso3', [$especialidade_id, $clinica->id]) }}" class="btn btn-primary">
                                                     Próximo <i class="fa fa-arrow-right"></i>
                                                 </a>
                                             </td>
@@ -97,9 +97,9 @@
                                     @endforeach
                                 </tbody>
                             </table>
-                            {{ $lista->appends(request()->query())->links() }}
+                            {{ $clinicas->appends(request()->query())->links() }}
                         @else
-                            <h5>Não há nenhuma clínica cadastrada.</h5>
+                            <h5>Não há nenhuma clínica disponível.</h5>
                         @endif
                     </div>
                     <a href="{{ route('paciente.marcarConsultaViaEspecialidadePasso1') }}" class="btn btn-primary">
