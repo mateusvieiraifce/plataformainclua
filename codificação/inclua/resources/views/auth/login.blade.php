@@ -1,4 +1,4 @@
-@extends('layouts.app2', ['class' => 'login-page', 'page' => __(''), 'contentClass' => 'login-page'])
+@extends('layouts.app', ['class' => 'login-page', 'page' => __(''), 'contentClass' => 'login-page'])
 @section('title', 'Login')
 @section('content')
 
@@ -13,7 +13,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background-color: #eee;
+           // background-color: #eee;
             border-radius: 5px;
             box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.2);
         }
@@ -25,10 +25,8 @@
             border-radius: 2px;
             cursor: pointer;
         }
-        
-        
     </style>
-    {{-- <div class='cookie-banner' style=''>
+    <div class='cookie-banner' style=''>
         <p>
             Para usar nossa plataforma, você aceita nossa
             <a href='/docs/privacidade.pdf'>Política de privacidade</a>
@@ -42,69 +40,63 @@
             $('.cookie-banner').delay(2000).fadeIn();
             localStorage.setItem('cookieSeen','shown')
         };
-    </script> --}}
-   <div class="limiter">
-        <div class="container-login100">
-            <div class="wrap-login100">
-                <form class="login100-form validate-form" method="post" action="{{ route('login.do') }}">
-                    @csrf
-                    <div class="image-inclua" style="text-align: left; position: relative;">
-                        <img src="images/logo-01.png" style="position: relative; top: -7.5rem; width: 100px;">
-                    </div>
-                    <span class="login100-form-title p-b-43" style="color: #3b57d2; font-size: 2.77rem; font-family: 'Dosis', sans-serif;">
-                        Bem-vindo(a) de volta!
-                    </span>
-                    <span class="sub-title">
-                        Entre com seu usuário e senha
-                    </span>
-                    <div class="wrap-input100 validate-input" data-validate="Valid email is required: ex@abc.xyz" style="">
-                        <input class="input100" type="email" name="email" required>
-                        <span class="focus-input100"></span>
-                        <span class="label-input100">
-                            Email
-                            <i class="fas fa-user" style="margin-left: 5px;"></i> <!-- Ícone de pessoa -->
-                        </span>
-                    </div>
-                    <div class="wrap-input100 validate-input" data-validate="Password is required">
-                        <input class="input100" type="password" name="password" required>
-                        <span class="focus-input100"></span>
-                        <span class="label-input100">
-                            Senha
-                            <i class="fas fa-lock" style="margin-left: 5px;"></i> <!-- Ícone de cadeado -->
-                        </span>
-                    </div>
-                    <div class="flex-sb-m w-full p-t-3 p-b-32">
-                        <div class="text-right"> <!-- Adicione esta classe para garantir que o conteúdo esteja alinhado à direita -->
-                            <a href="{{route('recover')}}" class="txt1">
-                                Esqueci minha senha 
-                            </a>
+    </script>
+
+    <div class="col-md-10 text-center ml-auto mr-auto">
+        <h3 class="mb-5"></h3>
+    </div>
+    <div class="col-lg-4 col-md-6 ml-auto mr-auto" style="
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    ">
+        <form class="form" method="post" action="{{ route('login.do') }}">
+            @csrf
+            <div class="card card-login card-white">
+                <div class="card-img justify-content-center">
+                    <img src="{{ asset('assets/img/logo-01.png') }}" alt="Logo Plataforma Inclua" width="250px">
+                </div>
+                <div class="card-body">
+                    <p class="text-dark mb-2">Entre com seu usuário e senha</p>
+                    <div class="input-group{{ $errors->has('email') ? ' has-danger' : '' }}">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                                <i class="tim-icons icon-email-85"></i>
+                            </div>
                         </div>
+                        <input type="email" name="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" placeholder="{{ __('Email') }}">
+                        @include('alerts.feedback', ['field' => 'email'])
                     </div>
-                    <div class="container-login100-form-btn">
-                        <button type="submit" class="login100-form-btn" >
-                            Login
-                        </button>
+                    <div class="input-group{{ $errors->has('password') ? ' has-danger' : '' }}">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                                <i class="tim-icons icon-lock-circle"></i>
+                            </div>
+                        </div>
+                        <input type="password" placeholder="{{ __('Password') }}" name="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}">
+                        @include('alerts.feedback', ['field' => 'password'])
                     </div>
-                    <div class="container-login100-form-btn-google" style="margin-top: 4px;">
-                        <a href="{{ route('google.redirect') }}" class="login100-form-btn-google" style="text-decoration: none;">
-                            <i class="fab fa-google google-icon"></i> <!-- Ícone do Google -->
-                            Entrar com o Google
-                        </a>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" href="" class="btn btn-primary btn-lg btn-block mb-3">{{ __('Entrar') }}</button>
+                    <div class="pull-left">
+                        <h6>
+                            <a href="{{route('usuario.create')}}" class="link footer-link">{{ __('Criar uma conta') }}</a>
+                        </h6>
+                        <h6>
+                            <a href="{{route('google.redirect')}}" class="link footer-link">{{ __('Entrar com google') }}</a>
+                        </h6>
                     </div>
-                    <div class="text-center p-t-46 p-b-20" style="font-size : 10px; font-weight: 80px;">
-                        <span class="txt2">
-                            Ainda não tem uma conta? <a href="{{ route('usuario.create') }}">Cadastre-se!</a>
-                        </span>
+                    <div class="pull-right">
+                        <h6>
+                            <a href="{{route('recover')}}" class="link footer-link">{{ __('Esqueceu a senha?') }}</a>
+                        </h6>
                     </div>
-                </form>
-                <div class="login100-more" style="background-image: url('images/pikaso_embed.png');">
                 </div>
             </div>
-        </div>
+        </form>
     </div>
-    
-        
-    
 
 
 @endsection
