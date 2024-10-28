@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
+        @inject('configuracao', 'App\Models\Configuracao')
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -10,8 +11,8 @@
         <!--<title>{{ config('app.name', 'Black Dashboard') }}</title> -->
         <title>@yield('title') | Inclua</title>
         <!-- Favicon -->
-        <link rel="apple-touch-icon" sizes="76x76" href="/assets/img/apple-icon.png">
-        <link rel="icon" type="image/png" href="/assets/img/favicon.png">
+        <link rel="apple-touch-icon" sizes="76x76" href="{{ !empty($configuracao->getFavicon()) ? asset($configuracao->getFavicon()) : asset('asset/img/Icone2t.png') }}">
+        <link rel="icon" type="image/png" href="{{ !empty($configuracao->getFavicon()) ? asset($configuracao->getFavicon()) : asset('assets/img/Icone2t.png') }}">
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,600,700,800" rel="stylesheet" />
         <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
@@ -32,8 +33,6 @@
                 <div class="content">
                     @yield('content')
                 </div>
-
-                @include('layouts.footer')
             </div>
         </div>
         <form id="logout-form" action="" method="POST" style="display: none;">
@@ -193,6 +192,9 @@
                     });
                 });
             });
+            const htmlEl = document.querySelector('html');
+            htmlEl.style.setProperty('--primary', "{{ $configuracao->first()->color_primary ?? '#ba54f5' }}");
+            htmlEl.style.setProperty('--color-gradient', "{{ $configuracao->first()->color_gradiente ?? 'rgb(137,119,249)' }}");
         </script>
         @stack('js')
     </body>

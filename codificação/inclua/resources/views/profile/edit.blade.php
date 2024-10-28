@@ -190,11 +190,15 @@
                             <div class="block block-three"></div>
                             <div class="block block-four"></div>
                             <a href="#">
-                                <img class="avatar" src="{{ auth()->user()->avatar }}" alt="">
+                                <img class="avatar" id="preview" src="{{ auth()->user()->avatar }}">
                                 <h5 class="title">{{ auth()->user()->name }}</h5>
                             </a>
                         </div>
                     </p>
+                    <div class="custom-file justify-content-center">
+                        <input class="custom-file-input hidden" type="file" id="image" name="image" onchange="visualizarImagem(event)" accept="image/jpeg,image/jpg,image/png">
+                        <label class="btn custom-file-label {{ $errors->has('image') ? 'is-invalid' : '' }}" for="image">Alterar imagem</label>
+                    </div>
                 </div>
             </div>
         </div>
@@ -230,6 +234,41 @@
                 cpf.innerText="CPF";
                 nome.innerText = "Nome Completo";
             }
+        }
+
+        function visualizarImagem(event) {
+            var input = event.target;
+            var reader = new FileReader();
+            reader.onload = function(){
+                var preview = document.getElementById('preview');
+                preview.src = reader.result;
+            };
+            reader.readAsDataURL(input.files[0]);
+        
+            var file_data = $('#image').prop('files')[0];
+            var form_data = new FormData();
+            form_data.append('image', file_data);
+            form_data.append('usuario_id', "{{ auth()->user()->id }}");
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                },
+            });
+            $.ajax({
+                url: '{{ route("user.update.avatar") }}',
+                method: 'POST',
+                dataType: 'JSON',
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: form_data,
+                success: function (response) {
+                    nowuiDashboard.showNotification('top', 'right', 'A sua imagem de perfil foi atualizada com sucesso!', 'success');
+                },
+                error: function (response) {
+                    nowuiDashboard.showNotification('top', 'right', 'Houve um erro ao salvar a imagem selecionada, tente novamente.', 'danger');
+                }
+            });
         }
     </script>
 @endsection

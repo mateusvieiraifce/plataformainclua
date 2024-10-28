@@ -308,18 +308,17 @@ class PacienteController extends Controller
         if (isset($_GET['filtro'])) {
             $filter = $_GET['filtro'];
         }
-        $lista =  Especialidadeclinica::join('clinicas', 'clinicas.id', '=', 'especialidadeclinicas.clinica_id')
-        ->where('especialidade_id', $especialidade_id)
-        ->orderBy('nome', 'asc')
-        ->select('clinicas.id', 'nome')->paginate(8);
 
-     /*   Clinica::join('especialidadeclinicas', 'especialidadeclinicas.id', '=', 'clinica_id')
+        $clinicas = Especialidadeclinica::join('clinicas', 'clinicas.id', '=', 'especialidadeclinicas.clinica_id')
+            ->join('consultas', 'consultas.clinica_id', 'clinicas.id')
+            ->where('consultas.status', 'Disponível')
             ->where('especialidade_id', $especialidade_id)
             ->orderBy('nome', 'asc')
-            ->select('clinicas.id', 'nome')->paginate(8);*/
-
-       // dd($lista);
-        return view('userPaciente/marcarConsultaViaEspecialidadePasso2', ['lista' => $lista, 'filtro' => $filter, 'especialidade_id' => $especialidade_id]);
+            ->select('clinicas.id', 'nome')
+            ->groupBy('consultas.clinica_id')
+            ->paginate(8);
+        
+        return view('userPaciente/marcarConsultaViaEspecialidadePasso2', ['clinicas' => $clinicas, 'filtro' => $filter, 'especialidade_id' => $especialidade_id]);
     }
 
     function marcarConsultaViaEspecialidadePasso3($especialidade_id, $clinica_id)
@@ -367,12 +366,15 @@ class PacienteController extends Controller
             $filter = $_GET['filtro'];
         }
 
-        $lista = Clinica::where('ativo', '1')
+        $clinicas = Clinica::join('consultas', 'consultas.clinica_id', 'clinicas.id')
+            ->where('ativo', '1')
+            ->where('consultas.status', 'Disponível')
             ->orderBy('nome', 'asc')
             ->select('clinicas.id', 'nome')
+            ->groupBy('consultas.clinica_id')
             ->paginate(8);
 
-        return view('userPaciente/marcarConsultaViaClinicaPasso1', ['lista' => $lista, 'filtro' => $filter]);
+        return view('userPaciente/marcarConsultaViaClinicaPasso1', ['clinicas' => $clinicas, 'filtro' => $filter]);
     }
 
     function pesquisarclinicamarcarconsulta(Request $request)
