@@ -11,15 +11,7 @@
 
             <br/>
             <p>
-                @if(\Illuminate\Support\Facades\Auth::user()->tipo_user ==='C')
-                <?php
-                   $clinica = App\Models\Clinica::where('usuario_id', '=', Auth::user()->id)->first();
-                   ?>
-                    <img src={{"/images/logosclinicas/". $clinica->logotipo}} style="max-width: 100px; height:60px;"/>
-                @else
-                  <img src="/assets/img/Icone2t.png" style="max-width: 40px; height: auto;"/>
-                @endif
-
+                <img src="{{ !empty($configuracao->getIcon()) ? asset($configuracao->getIcon()) : asset('assets/img/Icone2t.png') }}" style="max-width: 40px; height: auto;"/>
                 <a class="navbar-brand" href="#">{{ $page ?? __('Dashboard') }}</a>
             </p>
 

@@ -70,6 +70,12 @@
                                             <td>
                                                 {{ $consulta->nome_clinica }}
                                             </td>
+                                            <td>
+                                                <a href="#" target="_blank" rel="tooltip" title="Cancelar consulta" class="btn btn-danger" data-original-title="Cancelar consulta"
+                                                    href="#" data-target="#modal-form" data-toggle="modal" data-whatever="@mdo" onclick="setModal({{ $consulta->id }}, {{ \App\Helper::verificarPrazoCancelamentoGratuito($consulta->horario_agendado) }})">
+                                                    Cancelar
+                                                </a>
+                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -83,4 +89,24 @@
             </div>
         </div>
     </div>
+
+    {{-- MODAL CANCELAR CONSULTA --}}
+    @component('layouts.modal_form', ["title" => "Favor inserir o motivo do cancelamento!", "route" => route('paciente.consulta.cancelar'), "textButton" => "Cancelar consulta"])
+        <div class="form-group">
+            <label id="subTitle" class="title td-inline">Ao cancelar a consulta será cobrado uma taxa de R$ {{ env('TAXA_CANCELAMENTO_CONSULTA') }}</label>
+            <textarea id="motivoCancelamento" name="motivo_cancelamento" rows="5" cols="50" maxlength="500" placeholder="Digite o motivo do cancelamento aqui..." required></textarea>
+        </div>
+        <input type="hidden" id="consulta_id" name="consulta_id" value="">
+    @endcomponent
+
+    <script>
+        function setModal(consulta_id, cancelamentoGratuito) {
+            $("#consulta_id").val(consulta_id);
+            if (cancelamentoGratuito) {
+                $("#subTitle").css("display", "none");
+            } else {
+                $("#subTitle").css("display", "block");
+            }
+        }
+    </script>
 @endsection
