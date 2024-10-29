@@ -1,6 +1,7 @@
 @extends('layouts.app', ['class' => 'login-page', 'page' => __('Reset password'), 'contentClass' => 'login-page'])
 
 @section('content')
+    @inject('configuracao', 'App\Models\Configuracao')
 
 <style>
     /* Estilos do Card e Responsividade */
@@ -32,7 +33,7 @@
         @csrf
         <div class="card card-login card-white" style="width: 38.4rem; height: 29.7rem;">
             <div class="card-header text-center">
-                <img src="/assets/img/logo-01.png" alt="">
+                <img src="{{ !empty($configuracao->getLogo()) ? asset($configuracao->getLogo()) : asset('assets/img/logo-01.png') }}" alt="Logo Plataforma Inclua">
             </div>
 
             <div class="card-body">
