@@ -240,7 +240,7 @@ Route::middleware('auth')->group(function () {
 
     #CONSULTAS_USER_PACIENTE
     Route::get("/paciente/minhas-consultas", [\App\Http\Controllers\PacienteController::class, 'minhasconsultas'])->name('paciente.minhasconsultas');
-    Route::get("/paciente/historico-consultas", [\App\Http\Controllers\PacienteController::class, 'historicoconsultas'])->name('paciente.historicoconsultas');
+    Route::get("/paciente/historico-consultas", [\App\Http\Controllers\PacienteController::class, 'historicoConsultas'])->name('paciente.historicoconsultas');
     
     #FINANCEIRO PACIENTE
     Route::get("/paciente/financeiro", [\App\Http\Controllers\PagamentoController::class, 'historicoPagamentosPaciente'])->name('paciente.financeiro');
