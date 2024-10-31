@@ -237,35 +237,60 @@ class PacienteController extends Controller
       return view('userPaciente/minhasconsultas', ['consultas' => $consultas,  'msg' => $msg,'filtro' => $filtro]);
    }
 
-    function historicoconsultas($msg = null)
+    function historicoConsultas($msg = null)
     {
+        $user = auth()->user();
         $filtro = "";
         if (isset($_GET['filtro'])) {
             $filtro = $_GET['filtro'];
         }
         $paciente = Paciente::where('usuario_id', '=', Auth::user()->id)->first();
-        $statusConsulta = "Finalizada";            
-        $consultas = Consulta::join('especialistas', 'especialistas.id', '=', 'consultas.especialista_id')
-            ->join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')
-            ->join('especialidades', 'especialidades.id', '=', 'especialistas.especialidade_id')
-            ->join('pacientes', 'pacientes.id', 'consultas.paciente_id')
-            ->join('users', 'users.id', 'pacientes.usuario_id')
-            ->where('users.id', $paciente->usuario_id)
-            ->where('status', '=', $statusConsulta)
-            ->orWhere('status', '=', 'Cancelada')
-            ->select(
-                'consultas.id',
-                'horario_agendado',
-                'especialistas.nome as nome_especialista',
-                'clinicas.nome as nome_clinica',
-                'especialidades.descricao as descricao_especialidade',
-                'status',
-                'consultas.especialista_id',
-                'consultas.clinica_id',
-                'pacientes.nome as nome_paciente'
-            )
-            ->orderBy('horario_agendado', 'desc')
-            ->paginate(8);
+        $statusConsulta = "Finalizada";
+
+        if ($user->tipo_user == "P") {
+            $consultas = Consulta::join('especialistas', 'especialistas.id', '=', 'consultas.especialista_id')
+                ->join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')
+                ->join('especialidades', 'especialidades.id', '=', 'especialistas.especialidade_id')
+                ->join('pacientes', 'pacientes.id', 'consultas.paciente_id')
+                ->join('users', 'users.id', 'pacientes.usuario_id')
+                ->where('users.id', $paciente->usuario_id)
+                ->where('status', '=', $statusConsulta)
+                ->orWhere('status', '=', 'Cancelada')
+                ->select(
+                    'consultas.id',
+                    'horario_agendado',
+                    'especialistas.nome as nome_especialista',
+                    'clinicas.nome as nome_clinica',
+                    'especialidades.descricao as descricao_especialidade',
+                    'status',
+                    'consultas.especialista_id',
+                    'consultas.clinica_id',
+                    'pacientes.nome as nome_paciente'
+                )
+                ->orderBy('horario_agendado', 'desc')
+                ->paginate(8);
+        } elseif ($user->tipo_user == "R") {
+            $consultas = Consulta::join('especialistas', 'especialistas.id', '=', 'consultas.especialista_id')
+                ->join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')
+                ->join('especialidades', 'especialidades.id', '=', 'especialistas.especialidade_id')
+                ->join('pacientes', 'pacientes.id', 'consultas.paciente_id')
+                ->join('users', 'users.id', 'pacientes.usuario_id')
+                ->where('status', '=', $statusConsulta)
+                ->orWhere('status', '=', 'Cancelada')
+                ->select(
+                    'consultas.id',
+                    'horario_agendado',
+                    'especialistas.nome as nome_especialista',
+                    'clinicas.nome as nome_clinica',
+                    'especialidades.descricao as descricao_especialidade',
+                    'status',
+                    'consultas.especialista_id',
+                    'consultas.clinica_id',
+                    'pacientes.nome as nome_paciente'
+                )
+                ->orderBy('horario_agendado', 'desc')
+                ->paginate(8);
+        }
             
         return view('userPaciente.historicoconsultas', ['consultas' => $consultas, 'msg' => $msg, 'filtro' => $filtro]);
     }
@@ -280,15 +305,18 @@ class PacienteController extends Controller
       return view('userPaciente/marcarconsulta');
    }
 
-   function marcarconsultaSelecionarPaciente()
-   {
-    $user = Auth::user();
-    if ($user->tipo_user == "P") {
-        $pacientes = Paciente::where('usuario_id', $user->id)->paginate(8);
+    function marcarconsultaSelecionarPaciente()
+    {
+        $user = Auth::user();
+
+        if ($user->tipo_user == "P") {
+            $pacientes = Paciente::where('usuario_id', $user->id)->paginate(8);
+        } elseif ($user->tipo_user = "R") {
+            $pacientes = Paciente::paginate(8);
+        }
 
         return view('userPaciente/marcarconsulta/marcarConsultaEscolherPaciente', ['pacientes' => $pacientes]);
     }
-   }
 
     function marcarConsultaViaEspecialidadePasso1()
     {
