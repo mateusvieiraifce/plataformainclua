@@ -43033,13 +43033,48 @@ a.u-link.u-text-hover-grey-90:hover {
     display: none;
 }
 .h2-1 {
-  margin-right: 25px;
+  margin-right: 5rem;
 }
-.h2-3, .para-3 {
-  margin-right: 25px;
+.h2-2 {
+  margin-right: 5rem;
 }
-.para-2 {
-  margin-left: 3rem;
+.para-1 {
+ margin-right: 3rem;
 }
 
-  } 
+.h2-3{
+  margin-right: 5rem;
+}
+.para-3 {
+  margin-right: 3rem;
+}
+.para-2 {
+  margin-left: 4rem;
+}
+
+
+} 
+
+.aoredor-textcenter {
+    display: flex;
+    gap: 50px;
+    flex-wrap: wrap;
+    justify-content: center; /* Centraliza os elementos horizontalmente */
+    text-align: center;
+}
+
+@media (max-width: 600px) {
+    .aoredor-textcenter {
+        flex-direction: column; /* Coloca os itens em coluna no celular */
+        align-items: center; /* Centraliza os itens na coluna */
+    }
+    
+    .text-center-image {
+        max-width: 100%; /* Ajusta a largura para preencher a tela do celular */
+    }
+
+    .text-center-image p,
+    .text-center-image img {
+        margin: 0 auto; /* Centraliza os parágrafos e imagens */
+    }
+}
