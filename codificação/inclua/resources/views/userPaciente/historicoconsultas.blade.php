@@ -1,5 +1,5 @@
-@extends('layouts.app', ['page' => __('Histórico de consultas'), 'exibirPesquisa' => false, 'pageSlug' => 'historicoconsultas', 'class' => 'consulta'])
-@section('title', 'Minhas consultas')
+@extends('layouts.app', ['page' => __('Histórico de consultas'), 'exibirPesquisa' => false, 'pageSlug' => 'historico-consultas', 'class' => 'consulta'])
+@section('title', 'Histórico de consultas')
 @section('content')
     <div class="row">
         <div class="col-lg-12 col-md-12">
@@ -44,14 +44,16 @@
                                             <td>
                                                 {{ $consulta->status }}
                                             </td>
-                                            <td class="avaliar-{{ $consulta->id }}">
-                                                @if($consulta->status != "Cancelada" && $consulta->noHasAvaliacao())
-                                                    <a href="#" target="_blank" rel="tooltip" title="Avaliar consulta" data-original-title="Avaliar consulta"
-                                                        data-target="#modal-form" data-toggle="modal" data-whatever="@mdo" onclick="setModal({{ $consulta->id }})">
-                                                        <i class="fa fa-star"></i>
-                                                    </a>
-                                                @endif
-                                            </td>
+                                            @if (auth()->user()->tipo_user == 'P')
+                                                <td class="avaliar-{{ $consulta->id }}">
+                                                    @if($consulta->status != "Cancelada" && $consulta->noHasAvaliacao())
+                                                        <a href="#" target="_blank" rel="tooltip" title="Avaliar consulta" data-original-title="Avaliar consulta"
+                                                            data-target="#modal-form" data-toggle="modal" data-whatever="@mdo" onclick="setModal({{ $consulta->id }})">
+                                                            <i class="fa fa-star"></i>
+                                                        </a>
+                                                    @endif
+                                                </td>
+                                            @endif
                                         </tr>
                                     @endforeach
                                 </tbody>

@@ -531,9 +531,16 @@ class ConsultaController extends Controller
       if (isset($_GET['filtro'])) {
          $filter = $_GET['filtro'];
       }
-
       //todoas os especialistas que a clinica eh vinculado
-      $especialistas = Especialistaclinica::join('especialistas', 'especialistas.id', '=', 'especialistaclinicas.especialista_id')->where('clinica_id', $clinica->id)->orderBy('especialistas.nome', 'asc')->select('especialistas.id', 'especialistas.nome')->get();
+      $especialistas = Especialistaclinica::join('especialistas', 'especialistas.id', '=', 'especialistaclinicas.especialista_id');
+      
+      if(auth()->user()->tipo_user == "C") {
+         $especialistas = $especialistas->where('clinica_id', $clinica->id);
+      }
+
+      $especialistas = $especialistas->orderBy('especialistas.nome', 'asc')
+         ->select('especialistas.id', 'especialistas.nome')
+         ->get();
 
       // Obtém a data atual
       $dataAtual = Carbon::now();
@@ -542,15 +549,22 @@ class ConsultaController extends Controller
       $inicioDoDia = $dataUmMesAtras->startOfDay();
       $fimDoDia = Carbon::today()->endOfDay();
 
+      $lista = Consulta::join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')
+         ->join('pacientes', 'pacientes.id', '=', 'consultas.paciente_id')
+         ->join('especialistas', 'especialistas.id', '=', 'consultas.especialista_id');
+         
+      if(auth()->user()->tipo_user == "C") {
+         $lista = $lista->where('clinica_id', '=', $clinica->id);
+      }
 
-      $lista = Consulta::join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')->
-      join('pacientes', 'pacientes.id', '=', 'consultas.paciente_id')->
-      join('especialistas', 'especialistas.id', '=', 'consultas.especialista_id')->
-      where('clinica_id', '=', $clinica->id)->
-      whereBetween('horario_agendado', [$inicioDoDia, $fimDoDia])->
-      select('consultas.id', 'status', 'horario_agendado', 'especialistas.nome as nome_especialista', 
-      'pacientes.nome as nome_paciente')->orderBy('horario_agendado', 'asc')
-      ->paginate(10);
+      $lista = $lista->whereBetween('horario_agendado', [$inicioDoDia, $fimDoDia])
+         ->select(
+            'consultas.id', 'status', 'horario_agendado', 'especialistas.nome as nome_especialista',
+            'pacientes.nome as nome_paciente', 'clinicas.nome as nome_clinica'
+         )
+         ->orderBy('horario_agendado', 'asc')
+         ->paginate(10);
+
       return view('userClinica/listConsulta', [
          'lista' => $lista,
          'especialistas' => $especialistas,
@@ -574,9 +588,15 @@ class ConsultaController extends Controller
       }
 
       //todoas os especialistas que a clinica eh vinculado
-      $especialistas = Especialistaclinica::join('especialistas', 'especialistas.id', '=', 'especialistaclinicas.especialista_id')->
-      where('clinica_id', $clinica->id)->orderBy('especialistas.nome', 'asc')->
-      select('especialistas.id', 'especialistas.nome')->get();
+      $especialistas = Especialistaclinica::join('especialistas', 'especialistas.id', '=', 'especialistaclinicas.especialista_id');
+
+      if (auth()->user()->tipo_user == "C") {
+         $especialistas = $especialistas->where('clinica_id', $clinica->id);
+      }
+
+      $especialistas = $especialistas->orderBy('especialistas.nome', 'asc')
+         ->select('especialistas.id', 'especialistas.nome')
+         ->get();
 
 
       $inicioDoDiaFiltro = Carbon::parse($request->inicio_data)->startOfDay();
@@ -589,30 +609,28 @@ class ConsultaController extends Controller
          $statusConsulta = $request->status;
       }
 
-      if ($request->especialista_id == "todos") {
-         $lista = Consulta::join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')->
-         join('pacientes', 'pacientes.id', '=', 'consultas.paciente_id')->
-         join('especialistas', 'especialistas.id', '=', 'consultas.especialista_id')->
-         where('clinica_id', '=', $clinica->id)->
-         where('status', 'like', $statusConsulta)->
-         where('pacientes.nome', 'like', '%' . $request->nomepaciente . "%")->
-         whereBetween('horario_agendado', [$inicioDoDiaFiltro, $fimDoDiaFiltro])->
-         select('consultas.id', 'status', 'horario_agendado', 'especialistas.nome as nome_especialista', 
-         'pacientes.nome as nome_paciente')->orderBy('horario_agendado', 'asc')->paginate(10);
-      } else {
-         $lista = Consulta::join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')->
-         join('pacientes', 'pacientes.id', '=', 'consultas.paciente_id')->
-         join('especialistas', 'especialistas.id', '=', 'consultas.especialista_id')->
-         where('clinica_id', '=', $clinica->id)->
-         where('status', 'like', $statusConsulta)->
-         where('pacientes.nome', 'like', '%' . $request->nomepaciente . "%")->
-         where('especialista_id', $request->especialista_id)->
-         whereBetween('horario_agendado', [$inicioDoDiaFiltro, $fimDoDiaFiltro])->
-         select('consultas.id', 'status', 'horario_agendado', 'especialistas.nome as nome_especialista', 
-         'pacientes.nome as nome_paciente')->orderBy('horario_agendado', 'asc')->paginate(10);
+      $lista = Consulta::join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')
+         ->join('pacientes', 'pacientes.id', '=', 'consultas.paciente_id')
+         ->join('especialistas', 'especialistas.id', '=', 'consultas.especialista_id')
+         ->where('status', 'like', $statusConsulta)
+         ->where('pacientes.nome', 'like', '%' . $request->nomepaciente . "%");
+
+      if ($request->especialista_id != "todos") {
+         $lista = $lista->where('especialista_id', $request->especialista_id);
       }
 
-    // dd($request, $lista);
+      if (auth()->user()->tipo_user == "C") {
+         $lista = $lista->where('clinica_id', '=', $clinica->id);
+      }
+      
+      $lista = $lista->whereBetween('horario_agendado', [$inicioDoDiaFiltro, $fimDoDiaFiltro])
+         ->select(
+            'consultas.id', 'status', 'horario_agendado', 'especialistas.nome as nome_especialista', 
+            'pacientes.nome as nome_paciente', 'clinicas.nome as nome_clinica'
+         )
+         ->orderBy('horario_agendado', 'asc')
+         ->paginate(10);
+
       return view('userClinica/listConsulta', [
          'lista' => $lista,
          'especialistas' => $especialistas,

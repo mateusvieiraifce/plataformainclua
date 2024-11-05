@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Helper;
+use App\Models\Assinatura;
 use App\Models\Pagamento;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -63,5 +65,20 @@ class PagamentoController extends Controller
         $cartoes = $cartaoController->getCartoes($user->id, 2);
         
         return view('userPaciente.financeiro.lista', ['user' => $user, 'pagamentos' => $pagamentos, 'assinatura' => $assinatura, 'cartoes' => $cartoes]);
+    }
+    
+    public function historicoPagamentosPacientes()
+    {
+        $pagamentos = Pagamento::orderBy('data_pagamento', 'desc')->paginate(4, ['*'], 'page_payments');
+/* 
+        foreach ($pagamentos as $pagamento) {
+            $assinaturaController = new AssinaturaController();
+            $assinatura = $assinaturaController->getAssinatura($pagamento->user_id);
+            dd($assinatura);
+        } */
+       
+        $assinaturas = Assinatura::paginate(4, ['*'], 'page_signature');
+
+        return view('user_root.pacientes.financeiro', ['pagamentos' => $pagamentos, 'assinaturas' => $assinaturas]);
     }
 }

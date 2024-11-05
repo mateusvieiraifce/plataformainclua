@@ -246,15 +246,20 @@ Route::middleware('auth')->group(function () {
     Route::get("/paciente/financeiro", [\App\Http\Controllers\PagamentoController::class, 'historicoPagamentosPaciente'])->name('paciente.financeiro');
     Route::get("/paciente/assinatura/cartoes", [\App\Http\Controllers\AssinaturaController::class, 'selecionarCartao'])->name('pagamento.assinatura.cartoes');
     Route::get("/paciente/assinatura/renovar/{cartao}", [\App\Http\Controllers\AssinaturaController::class, 'renovarAssinaturaCartao'])->name('pagamento.assinatura.renovar');
-
+    
     #LISTA PACIENTES E CADASTRO
     Route::get("/paciente/lista", [\App\Http\Controllers\PacienteController::class, 'index'])->name('paciente.index');
-
+    
     #LISTA DE PEDIDOS DE EXAMES DO PACIENTE
     Route::get("/paciente/exames", [\App\Http\Controllers\PedidoExameController::class, 'pedidoExamesPaciente'])->name('paciente.pedido_exames.lista');
-
+    
     #AVALIACAO PACIENTE
     Route::get("/paciente/reputacao", [\App\Http\Controllers\AvaliacaoController::class, 'reputacaoPaciente'])->name('paciente.avaliacao.lista');
+    
+    #AVALIACAO PACIENTE - USUÁRIO ROOT
+    Route::get("/pacientes/reputacao", [\App\Http\Controllers\AvaliacaoController::class, 'reputacaoPacientes'])->name('pacientes.avaliacao.lista');
+    #HISTORICO PAGAMENTOS PACIENTES - USUÁRIO ROOT
+    Route::get("/pacientse/financeiro", [\App\Http\Controllers\PagamentoController::class, 'historicoPagamentosPacientes'])->name('pacientes.financeiro');
 
     Route::middleware('verify.signature')->group(function() {
         #MARCAR_CONSULTA_USUARIO_PACIENTE

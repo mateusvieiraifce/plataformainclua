@@ -37,7 +37,7 @@
                             </a>
                         </li>
 
-                        <li @if ($pageSlug == 'listconsultaporclinica') class="active" @endif>
+                        <li @if ($pageSlug == 'historico-consultas-clinica') class="active" @endif>
                             <a href="{{route('consulta.listConsultaporClinica')}}"> 
                                 <i class="tim-icons icon-single-copy-04"></i>
                                 <p>{{ __('Histórico de Consultas') }}</p>
@@ -152,15 +152,15 @@
                                         </a>
                                     </li>
 
-                                    <li @if ($pageSlug == 'reputacao') class="active" @endif>
-                                        <a href="#">
+                                    <li @if ($pageSlug == 'reputacao-pacientes') class="active" @endif>
+                                        <a href="{{ route('pacientes.avaliacao.lista') }}">
                                             <i class="tim-icons icon-chat-33"></i>
                                             <p>{{ __('Reputação') }}</p>
                                         </a>
                                     </li>
 
-                                    <li @if ($pageSlug == 'historico-pagamentos') class="active" @endif>
-                                        <a href="#">
+                                    <li @if ($pageSlug == 'historico-pagamentos-pacientes') class="active" @endif>
+                                        <a href="{{ route('pacientes.financeiro') }}">
                                             <i class="tim-icons icon-money-coins"></i>
                                             <p>{{ __('Histórico de Pagamentos') }}</p>
                                         </a>
@@ -238,7 +238,7 @@
                                             </a>
                                         </li>
 
-                                        <li @if ($pageSlug == 'listconsultaporclinica') class="active" @endif>
+                                        <li @if ($pageSlug == 'historico-consultas-clinica') class="active" @endif>
                                             <a href="{{route('consulta.listConsultaporClinica')}}"> 
                                                 <i class="tim-icons icon-single-copy-04"></i>
                                                 <p>{{ __('Histórico de Consultas') }}</p>

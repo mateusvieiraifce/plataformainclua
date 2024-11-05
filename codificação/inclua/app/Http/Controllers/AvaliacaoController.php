@@ -7,6 +7,8 @@ use App\Models\AvaliacaoComentario;
 use App\Models\Clinica;
 use App\Models\Consulta;
 use App\Models\Especialista;
+use App\Models\Paciente;
+use App\Models\User;
 use Doctrine\DBAL\Query\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -319,6 +321,40 @@ class AvaliacaoController extends Controller
              session()->flash('msg', ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success']);
          } 
          return redirect()->route('avaliacao.reputacaoEspecialista');
-     }
-     
+    }
+
+    public function reputacaoPacientes()
+    {
+        $users = User::where('tipo_user', "P")->get();
+        $pacientes = [];
+        foreach ($users as $key => $user) {
+            $pacienteResponsavel = Paciente::where('usuario_id', $user->id)->where('responsavel', 1)->first();
+            
+            $pacientesUser = Paciente::join('consultas', 'consultas.paciente_id', 'pacientes.id')
+                ->where('consultas.status', 'Finalizada')
+                ->where('usuario_id', $user->id)
+                ->select('pacientes.id', 'nome', 'cpf')
+                ->groupBy('pacientes.id')
+                ->get();
+
+            foreach ($pacientesUser as $paciente) {
+                $paciente->avaliacoes = AvaliacaoComentario::join('avaliacoes', 'avaliacoes.comentario_id', 'avaliacoes_comentarios.id')
+                    ->join('consultas', 'consultas.id', 'avaliacoes.consulta_id')
+                    ->join('pacientes', 'pacientes.id', 'consultas.paciente_id')
+                    ->where('consultas.paciente_id', $paciente->id)
+                    ->where('avaliacoes_comentarios.tipo_avaliado', 'P')
+                    ->whereNotNull('avaliacoes.nota')
+                    ->select(
+                        'avaliacoes.categoria',
+                        DB::raw('(AVG(avaliacoes.nota)) as media')
+                    )
+                    ->groupBy('avaliacoes.categoria')
+                    ->get();
+                $paciente->responsavel = $pacienteResponsavel->nome;
+            }
+            $pacientes[$key] = $pacientesUser;
+        }
+
+        return view('user_root.pacientes.reputacao', ['pacientes' => $pacientes]);
+    }
 }

@@ -24,7 +24,13 @@ class Pagamento extends Model
 
     public function getCard()
     {
-        
         return $this->hasOne(Cartao::class, 'id', 'cartao_id');
+    }
+
+    public function getNomeResponsavel($userId)
+    {
+        $responsavel = Paciente::where('usuario_id', $userId)->where('responsavel', 1)->first();
+
+        return $responsavel->nome;
     }
 }

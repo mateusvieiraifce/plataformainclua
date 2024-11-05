@@ -1,4 +1,4 @@
-@extends('layouts.app', ['page' => __('Marcar Consulta'), 'exibirPesquisa' => false,'pageSlug' => 'marcarconsulta', 'class' => 'marcar-consulta'])
+@extends('layouts.app', ['page' => __('Marcar Consulta'), 'exibirPesquisa' => false,'pageSlug' => 'marcar-consulta', 'class' => 'marcar-consulta'])
 @section('title', 'Marcar Consulta')
 @section('content')
     <div class="row">
