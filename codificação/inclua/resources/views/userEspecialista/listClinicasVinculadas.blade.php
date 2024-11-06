@@ -41,13 +41,13 @@
                            </td>
                            <td>                               
                               @if($ent->isVinculado)
-                              <a href="{{route('especialistaclinica.cancelarVinculo',$ent->id)}}" 
+                              <a href="{{route('especialistaclinica.cancelarVinculo', [$ent->id, $especialista->id])}}" 
                               onclick="return confirm('Deseja relamente excluir o vínculo?')" rel="tooltip"
                                     title="Excluir vínculo" class="btn btn-link" data-original-title="Remove">
                                     <i class="tim-icons icon-simple-remove"></i>
                                  </a>
                               @else
-                              <a href="{{route('especialistaclinica.cancelarVinculo',$ent->id)}}" 
+                              <a href="{{route('especialistaclinica.cancelarVinculo', [$ent->id, $especialista->id])}}" 
                               onclick="return confirm('Deseja retomar vínculo?')" rel="tooltip"
                                     title="Vincular novamente" class="btn btn-link" data-original-title="Remove">
                                     <i class="tim-icons icon-check-2"></i>

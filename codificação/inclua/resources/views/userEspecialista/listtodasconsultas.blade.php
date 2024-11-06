@@ -66,15 +66,17 @@
 
 
                <h6 class="title d-inline">Lista de consultas disponíveis </h6>
-               <div class="dropdown">
-                  <button type="button" class="btn btn-link dropdown-toggle btn-icon" data-toggle="dropdown">
-                     <i class="tim-icons icon-settings-gear-63"></i>
-                  </button>
-                  <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-                     <!--   <a class="dropdown-item" href="{{route('consulta.new', $especialista->id)}}">Adicionar</a>-->
-                     <a class="dropdown-item" href="{{route('consulta.agenda')}}">Disponibilizar consultas</a>
+               @if (auth()->user()->tipo_user == "E")
+                  <div class="dropdown">
+                     <button type="button" class="btn btn-link dropdown-toggle btn-icon" data-toggle="dropdown">
+                        <i class="tim-icons icon-settings-gear-63"></i>
+                     </button>
+                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+                        <!--   <a class="dropdown-item" href="{{route('consulta.new', $especialista->id)}}">Adicionar</a>-->
+                        <a class="dropdown-item" href="{{route('consulta.agenda')}}">Disponibilizar consultas</a>
+                     </div>
                   </div>
-               </div>
+               @endif
             </div>
             <div class="card-body">
 

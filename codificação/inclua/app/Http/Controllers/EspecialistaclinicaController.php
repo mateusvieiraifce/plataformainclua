@@ -84,12 +84,16 @@ class EspecialistaclinicaController extends Controller
    }
 
  //funcao para cancelar vículo - user Especialista
- function cancelarVinculo($id)
- {
-  
-    $clinica = Clinica::find($id);      
-    $especialista = Especialista::where('usuario_id', '=', Auth::user()->id)->first();      
-    $relacaoEspecialistaClinica = Especialistaclinica::
+ function cancelarVinculo($clinica_id, $especialista_id)
+ {  
+   $clinica = Clinica::find($clinica_id);
+   if (Auth::user()->tipo_user == "E") {
+      $especialista = Especialista::where('usuario_id', '=', Auth::user()->id)->first();
+   } else {
+      $especialista = Especialista::find($especialista_id);
+   }
+
+   $relacaoEspecialistaClinica = Especialistaclinica::
     where('clinica_id', $clinica->id)->
     where('especialista_id', $especialista->id)->first();
    
@@ -103,7 +107,7 @@ class EspecialistaclinicaController extends Controller
     } catch (QueryException $exp) {
        $msg = ['valor' => $exp->getMessage(), 'tipo' => 'primary'];
     }
-    return $this->clinicasdoespecilista($msg);
+    return $this->clinicasdoespecilista($especialista->id,$msg);
  }
 
 
@@ -115,16 +119,21 @@ class EspecialistaclinicaController extends Controller
       return view('userClinica/cadVinculoEspecialista/form', ['entidade' => $entidade, 'clinica' => $clinica]);
    }
 
-   function clinicasdoespecilista($msg = null)
+   function clinicasdoespecilista($especialista_id = null, $msg = null)
    {
-      $especialista = Especialista::where('usuario_id', '=', Auth::user()->id)->first();
+      if (Auth::user()->tipo_user == "E") {
+         $especialista = Especialista::where('usuario_id', '=', Auth::user()->id)->first();
+      } else {
+         $especialista = Especialista::find($especialista_id);
+      }
+
       //todoas as clinicas que o especialista eh vinculado
-      $lista =  Especialistaclinica::
-      join('clinicas', 'clinicas.id','=','especialistaclinicas.clinica_id')->
-      where('especialista_id',$especialista->id)->
-      orderBy('clinicas.nome', 'asc')->
-      select('clinicas.id','clinicas.nome','is_vinculado as isVinculado')->
-      paginate(8);
+      $lista =  Especialistaclinica:: join('clinicas', 'clinicas.id','=','especialistaclinicas.clinica_id')
+         ->where('especialista_id',$especialista->id)
+         ->orderBy('clinicas.nome', 'asc')
+         ->select('clinicas.id','clinicas.nome','is_vinculado as isVinculado')
+         ->paginate(8);
+
       return view('userEspecialista/listClinicasVinculadas', ['lista' => $lista,
         'especialista' => $especialista,
         'msg' => $msg]);

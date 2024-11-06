@@ -325,36 +325,68 @@ class AvaliacaoController extends Controller
 
     public function reputacaoPacientes()
     {
-        $users = User::where('tipo_user', "P")->get();
-        $pacientes = [];
-        foreach ($users as $key => $user) {
-            $pacienteResponsavel = Paciente::where('usuario_id', $user->id)->where('responsavel', 1)->first();
-            
-            $pacientesUser = Paciente::join('consultas', 'consultas.paciente_id', 'pacientes.id')
-                ->where('consultas.status', 'Finalizada')
-                ->where('usuario_id', $user->id)
-                ->select('pacientes.id', 'nome', 'cpf')
-                ->groupBy('pacientes.id')
-                ->get();
+        $pacientes = User::join('pacientes', 'pacientes.usuario_id', 'users.id')
+            ->join('consultas', 'consultas.paciente_id', 'pacientes.id')
+            ->join('avaliacoes', 'avaliacoes.consulta_id', 'consultas.id')
+            ->join('avaliacoes_comentarios', 'avaliacoes_comentarios.id', 'avaliacoes.comentario_id')
+            ->where('avaliacoes_comentarios.tipo_avaliado', 'P')
+            ->where('users.tipo_user', 'P')
+            ->where('consultas.status', 'Finalizada')
+            ->select(
+                'pacientes.cpf', 'pacientes.id', 'pacientes.nome', 'pacientes.usuario_id'
+            )
+            ->groupBy('pacientes.cpf', 'pacientes.id', 'pacientes.nome')
+            ->paginate(8);
 
-            foreach ($pacientesUser as $paciente) {
-                $paciente->avaliacoes = AvaliacaoComentario::join('avaliacoes', 'avaliacoes.comentario_id', 'avaliacoes_comentarios.id')
-                    ->join('consultas', 'consultas.id', 'avaliacoes.consulta_id')
-                    ->join('pacientes', 'pacientes.id', 'consultas.paciente_id')
-                    ->where('consultas.paciente_id', $paciente->id)
-                    ->where('avaliacoes_comentarios.tipo_avaliado', 'P')
-                    ->whereNotNull('avaliacoes.nota')
-                    ->select(
-                        'avaliacoes.categoria',
-                        DB::raw('(AVG(avaliacoes.nota)) as media')
-                    )
-                    ->groupBy('avaliacoes.categoria')
-                    ->get();
-                $paciente->responsavel = $pacienteResponsavel->nome;
-            }
-            $pacientes[$key] = $pacientesUser;
+        foreach ($pacientes as $paciente) {
+            $paciente->responsavel = Paciente::where('usuario_id', $paciente->usuario_id)->where('responsavel', 1)->first()->nome;
+
+            $paciente->avaliacoes = AvaliacaoComentario::join('avaliacoes', 'avaliacoes.comentario_id', 'avaliacoes_comentarios.id')
+                ->join('consultas', 'consultas.id', 'avaliacoes.consulta_id')
+                ->join('pacientes', 'pacientes.id', 'consultas.paciente_id')
+                ->where('consultas.paciente_id', $paciente->id)
+                ->where('avaliacoes_comentarios.tipo_avaliado', 'P')
+                ->whereNotNull('avaliacoes.nota')
+                ->select(
+                    'avaliacoes.categoria',
+                    DB::raw('(AVG(avaliacoes.nota)) as media')
+                )
+                ->groupBy('avaliacoes.categoria')
+                ->get();                
         }
 
         return view('user_root.pacientes.reputacao', ['pacientes' => $pacientes]);
+    }
+    
+    public function reputacaoEspecialistas()
+    {
+        $especialistas = User::join('especialistas', 'especialistas.usuario_id', 'users.id')
+            ->join('consultas', 'consultas.especialista_id', 'especialistas.id')
+            ->join('avaliacoes', 'avaliacoes.consulta_id', 'consultas.id')
+            ->join('avaliacoes_comentarios', 'avaliacoes_comentarios.id', 'avaliacoes.comentario_id')
+            ->where('avaliacoes_comentarios.tipo_avaliado', 'E')
+            ->where('users.tipo_user', "E")
+            ->where('consultas.status', 'Finalizada')
+            ->select(
+                'users.documento as documento', 'especialistas.id', 'especialistas.nome'
+            )
+            ->groupBy('documento', 'especialistas.id', 'especialistas.nome')
+            ->paginate(8);
+
+        foreach ($especialistas as $especialista) {
+            $especialista->avaliacoes = AvaliacaoComentario::join('avaliacoes', 'avaliacoes.comentario_id', 'avaliacoes_comentarios.id')
+                ->join('consultas', 'consultas.id', 'avaliacoes.consulta_id')
+                ->join('especialistas', 'especialistas.id', 'consultas.especialista_id')
+                ->where('avaliacoes_comentarios.tipo_avaliado', 'E')
+                ->whereNotNull('avaliacoes.nota')
+                ->select(
+                    'avaliacoes.categoria',
+                    DB::raw('(AVG(avaliacoes.nota)) as media')
+                )
+                ->groupBy('avaliacoes.categoria')
+                ->get();
+        }
+
+        return view('user_root.especialistas.reputacao', ['especialistas' => $especialistas]);
     }
 }

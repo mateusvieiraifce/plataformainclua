@@ -505,7 +505,11 @@ class PacienteController extends Controller
             $msg = ['valor' => trans("Consulta marcada com sucesso!"), 'tipo' => 'success'];
             session()->flash('msg', $msg);
 
-            return redirect()->route('paciente.minhasconsultas');
+            if (Auth::user()->tipo_user == "R") {
+                return redirect()->route('paciente.marcarconsultaSelecionarPaciente');
+            } else {
+                return redirect()->route('paciente.minhasconsultas');
+            }
         }
     }
     function home($msg = null)

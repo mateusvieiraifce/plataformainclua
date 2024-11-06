@@ -10,33 +10,29 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        @if($pacientes->count())
+                        @if($especialistas->count())
                             <table class="table">
                                 <thead>
                                     <th>Paciente</th>
-                                    <th>CPF</th>
-                                    <th>Responsável</th>
+                                    <th>CNPJ</th>
                                     <th>Medias</th>
                                 </thead>
                                 <tbody>
                                     @php
                                        $contador = 0;
                                     @endphp
-                                    @foreach($pacientes as $paciente)
+                                    @foreach($especialistas as $especialista)
                                         @if($contador % 2 == 0)
                                             <tr>
                                                 <td>
-                                                    {{ $paciente->nome }}
+                                                    {{ $especialista->nome }}
                                                 </td>
                                                 <td>
-                                                    {{ $helper::mascaraCPF($paciente->cpf) }}
-                                                </td>
-                                                <td>
-                                                    {{ $paciente->responsavel }}
+                                                    {{ $helper::mascaraCNPJ($especialista->documento) }}
                                                 </td>
                                                 <td>
                                         @endif
-                                                    @foreach ($paciente->avaliacoes as $avaliacao)
+                                                    @foreach ($especialista->avaliacoes as $avaliacao)
                                                         @php
                                                             $contador = $contador + 1;
                                                         @endphp
@@ -54,7 +50,7 @@
                                     @endforeach
                                 </tbody>
                             </table>
-                            {{ $pacientes->appends(request()->query())->links() }}
+                            {{ $especialistas->appends(request()->query())->links() }}
                         @else
                             <h5>Ainda não há nenhuma avaliação.</h5>
                         @endif

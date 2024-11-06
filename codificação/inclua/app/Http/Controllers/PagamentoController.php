@@ -70,12 +70,6 @@ class PagamentoController extends Controller
     public function historicoPagamentosPacientes()
     {
         $pagamentos = Pagamento::orderBy('data_pagamento', 'desc')->paginate(4, ['*'], 'page_payments');
-/* 
-        foreach ($pagamentos as $pagamento) {
-            $assinaturaController = new AssinaturaController();
-            $assinatura = $assinaturaController->getAssinatura($pagamento->user_id);
-            dd($assinatura);
-        } */
        
         $assinaturas = Assinatura::paginate(4, ['*'], 'page_signature');
 

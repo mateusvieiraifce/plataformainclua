@@ -178,21 +178,21 @@
 
                             <div class="collapse" id="especilistas">
                                 <ul class="nav pl-4"><li @if ($pageSlug == 'listconsultaporespecialista') class="active" @endif>
-                                        <a href="{{route('consulta.listconsultaporespecialista')}}">
+                                        <a href="{{ route('consulta.listconsultaporespecialista') }}">
                                             <i class="tim-icons icon-notes"></i>
                                             <p>{{ __('Consultas') }}</p>
                                         </a>
                                     </li>
 
                                     <li @if ($pageSlug == 'agendaespecialista') class="active" @endif>
-                                        <a href="{{route('consulta.list')}}">
+                                        <a href="{{ route('agenda.selecionar.especialista', ['rota' => 'agenda']) }}">
                                             <i class="tim-icons icon-calendar-60"></i>
                                             <p>{{ __('Agenda') }}</p>
                                         </a>
                                     </li>
 
                                     <li @if ($pageSlug == 'clinicas') class="active" @endif>
-                                        <a href="{{route('especialistaclinica.clinicas')}}">
+                                        <a href="{{ route('agenda.selecionar.especialista', ['rota' => 'clinicas']) }}">
                                             <i class="tim-icons icon-bank"></i>
                                             <p>{{ __('Clínicas') }}</p>
                                         </a>
@@ -206,7 +206,7 @@
                                     </li>
 
                                     <li @if ($pageSlug == 'reputacao') class="active" @endif>
-                                        <a href="{{route('avaliacao.reputacaoEspecialista')}}">
+                                        <a href="{{ route('especialistas.avaliacao.lista') }}">
                                             <i class="tim-icons icon-chat-33"></i>
                                             <p>{{ __('Reputação') }}</p>
                                         </a>
