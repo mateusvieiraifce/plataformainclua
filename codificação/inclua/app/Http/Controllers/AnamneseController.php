@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Anamnese;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AnamneseController extends Controller
 {
@@ -132,6 +133,10 @@ class AnamneseController extends Controller
             return back()->withInput();
         }
         
-        return redirect()->route('paciente.minhasconsultas');
+        if (Auth::user()->tipo_user == "R") {
+            return redirect()->route('paciente.marcarconsultaSelecionarPaciente');
+        } else {
+            return redirect()->route('paciente.minhasconsultas');
+        }
     }
 }

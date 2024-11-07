@@ -14,7 +14,9 @@
                            <div class="row">
                               <div class="col-md-2 ">
                                  <div class="form-group">
-                                    <label id="labelFormulario" style="color: white">&nbsp;Data início:</label>
+                                    <label id="labelFormulario" style="color: white">
+                                       &nbsp;Data início:
+                                    </label>
                                     <input style="border-color: #C0C0C0" type="date" name="inicio_data" id="inicio_data" 
                                        class="form-control" value="{{ (isset($inicio_data)) ? $inicio_data : date('Y-m-d') }}">
                                  </div>
@@ -31,12 +33,14 @@
                               </div>
                               <div class="col-md-3 px-8">
                                  <div class="form-group">
-                                    <label style="color: white">&nbsp; &nbsp; Paciente:</label>
+                                    <label style="color: white">
+                                       &nbsp; &nbsp;
+                                       Paciente:
+                                    </label>
                                     <input style="border-color: #C0C0C0" type="text" placeholder="Nome do paciente" name="nomepaciente"
                                        id="nomepaciente" class="form-control" value="{{ isset($nomepaciente) ? $nomepaciente : null}}">
                                  </div>
                               </div>
-
                               <div class="col-md-2 px-8">
                                  <div class="form-group">
                                     <label style="color: white">
@@ -47,13 +51,12 @@
                                        <option style="color: #111111" value="todos" @if($status == "Todos") selected @endif>Todos</option>
                                        <option style="color: #111111" value="Sala de espera" @if($status == "Sala de espera") selected @endif>Sala de espera</option>
                                        <option style="color: #111111" value="Aguardando atendimento" @if($status == "Aguardando atendimento") selected @endif>Aguardando atendimento</option>
-                                       <option  style="color: #111111"value="Cancelada" @if($status == "Cancelada") selected @endif>Cancelada</option>
-                                       <option  style="color: #111111"value="Em atendimento" @if($status == "Em atendimento") selected @endif>Em atendimento</option>
+                                       <option style="color: #111111"value="Cancelada" @if($status == "Cancelada") selected @endif>Cancelada</option>
+                                       <option style="color: #111111"value="Em atendimento" @if($status == "Em atendimento") selected @endif>Em atendimento</option>
                                        <option style="color: #111111" value="Finalizada" @if($status == "Finalizada") selected @endif>Finalizada</option>
                                     </select>
                                  </div>
                               </div>
-
                               <div class="col-md-2 px-8">
                                  <div class="form-group">
                                     <label id="labelFormulario">
@@ -68,7 +71,6 @@
                                     </select>
                                  </div>
                               </div>
-
                               <div class="col-md-1 ">                       
                                  <button style="max-height: 40px; max-width: 40px;margin-top: 25px" class="btn btn-primary">
                                     <i  class="tim-icons icon-zoom-split"></i>
@@ -99,21 +101,21 @@
                               @foreach($lista as $ent)
                                  <tr>
                                     <td>
-                                       {{$ent->status}}
+                                       {{ $ent->status }}
                                     </td>
                                     <td>
-                                       {{date( 'd/m/Y H:i' , strtotime($ent->horario_agendado))}}
+                                       {{ date( 'd/m/Y H:i' , strtotime($ent->horario_agendado)) }}
                                     </td>
                                     @if (auth()->user()->tipo_user == "R")
                                        <td>
-                                          {{$ent->nome_especialista}}
+                                          {{ $ent->nome_especialista }}
                                        </td>
                                     @endif
                                     <td>
-                                       {{$ent->nome_paciente}}
+                                       {{ $ent->nome_paciente }}
                                     </td>
                                     <td>
-                                       {{$ent->nome_clinica}}
+                                       {{ $ent->nome_clinica }}
                                     </td>
                                     <td>
                                        <a rel="tooltip" title="Iniciar atendimento" class="btn btn-primary" data-original-title="Edit" 
