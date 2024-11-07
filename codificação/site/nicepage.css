@@ -42998,9 +42998,9 @@ a.u-link.u-text-hover-grey-90:hover {
     .up-computer {
     display: flex;
     flex-direction: column;
-    align-items: center; /* Centraliza os itens horizontalmente */
-    justify-content: center; /* Centraliza os itens verticalmente */
-    text-align: center; /* Centraliza o texto */
+    align-items: center;
+    justify-content: center;
+    text-align: center; 
   }
 
     .up-computer p {
@@ -43014,19 +43014,19 @@ a.u-link.u-text-hover-grey-90:hover {
     .up-computer a {
         color: #260556;
         font-size: 1rem;
-        margin-top: 20px; /* Espaço entre o texto e o link */
+        margin-top: 20px; 
     }
 
     #turnon-flex-div {
     display: flex;
     flex-direction: column;
-    align-items: center; /* Centraliza horizontalmente */
-    justify-content: center; /* Centraliza verticalmente */
-    text-align: center; /* Centraliza o texto dentro de cada div */
+    align-items: center; 
+    justify-content: center; 
+    text-align: center; 
 }
 
 .topicos > div {
-    margin-bottom: 20px; /* Espaço entre os tópicos, se desejado */
+    margin-bottom: 20px; 
 }
 
 #computador-foto-2 {
@@ -43059,22 +43059,53 @@ a.u-link.u-text-hover-grey-90:hover {
     display: flex;
     gap: 50px;
     flex-wrap: wrap;
-    justify-content: center; /* Centraliza os elementos horizontalmente */
+    justify-content: center; 
     text-align: center;
 }
 
 @media (max-width: 600px) {
     .aoredor-textcenter {
-        flex-direction: column; /* Coloca os itens em coluna no celular */
-        align-items: center; /* Centraliza os itens na coluna */
+        flex-direction: column; 
+        align-items: center; 
     }
     
     .text-center-image {
-        max-width: 100%; /* Ajusta a largura para preencher a tela do celular */
+        max-width: 100%; 
     }
 
     .text-center-image p,
     .text-center-image img {
-        margin: 0 auto; /* Centraliza os parágrafos e imagens */
+        margin: 0 auto; 
     }
 }
+
+@media only screen and (min-width: 450px) and (max-width: 580px) {
+    .para-2 {
+        margin-right: 3rem; 
+        margin-left: auto;
+    }
+
+    .aoredor-textcenter {
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        margin: 0 auto;
+    }
+}
+
+
+@media only screen and (min-width: 500px) and (max-width: 580px) {
+    .para-2 {
+        margin-right: 8rem; 
+    }
+}
+
+@media only screen and (min-width: 470px) and (max-width: 500px) {
+    .para-2 {
+        margin-right: 6rem; 
+    }
+}
+
