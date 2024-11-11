@@ -389,4 +389,36 @@ class AvaliacaoController extends Controller
 
         return view('user_root.especialistas.reputacao', ['especialistas' => $especialistas]);
     }
+    
+    public function reputacaoClinicas()
+    {
+        $clinicas = User::join('clinicas', 'clinicas.usuario_id', 'users.id')
+            ->join('consultas', 'consultas.especialista_id', 'clinicas.id')
+            ->join('avaliacoes', 'avaliacoes.consulta_id', 'consultas.id')
+            ->join('avaliacoes_comentarios', 'avaliacoes_comentarios.id', 'avaliacoes.comentario_id')
+            ->where('avaliacoes_comentarios.tipo_avaliado', 'C')
+            ->where('users.tipo_user', "C")
+            ->where('consultas.status', 'Finalizada')
+            ->select(
+                'users.documento as documento', 'clinicas.id', 'clinicas.nome'
+            )
+            ->groupBy('documento', 'clinicas.id', 'clinicas.nome')
+            ->paginate(8);
+
+        foreach ($clinicas as $clinica) {
+            $clinica->avaliacoes = AvaliacaoComentario::join('avaliacoes', 'avaliacoes.comentario_id', 'avaliacoes_comentarios.id')
+                ->join('consultas', 'consultas.id', 'avaliacoes.consulta_id')
+                ->join('clinicas', 'clinicas.id', 'consultas.clinica_id')
+                ->where('avaliacoes_comentarios.tipo_avaliado', 'C')
+                ->whereNotNull('avaliacoes.nota')
+                ->select(
+                    'avaliacoes.categoria',
+                    DB::raw('(AVG(avaliacoes.nota)) as media')
+                )
+                ->groupBy('avaliacoes.categoria')
+                ->get();
+        }
+        
+        return view('user_root.clinicas.reputacao', ['clinicas' => $clinicas]);
+    }
 }

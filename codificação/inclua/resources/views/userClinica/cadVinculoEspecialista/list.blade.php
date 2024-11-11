@@ -34,7 +34,7 @@
                            <td>{{$ent->nome}}</td>                          
                            <td>{{$ent->especialidade}}</td>
                            <td>
-                              <a href="{{route('especialistaclinica.agendaEspecialista',$ent->id)}}" rel="tooltip"
+                              <a href="{{route('especialistaclinica.agendaEspecialista', [$ent->id, $clinica->id])}}" rel="tooltip"
                                  title="Ver agenda"
                                  class="btn btn-link"
                                  data-original-title="Remove">
@@ -45,7 +45,7 @@
 
                            <td>
                            @if($ent->isVinculado)
-                             <a href="{{route('consulta.novaConsultasUserClinica',$ent->id)}}" rel="tooltip"
+                             <a href="{{route('consulta.novaConsultasUserClinica', [$ent->id, $clinica->id])}}" rel="tooltip"
                                  title="Novas consultas"
                                  class="btn btn-link"
                                  data-original-title="Remove">

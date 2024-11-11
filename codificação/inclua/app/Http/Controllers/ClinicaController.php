@@ -335,11 +335,12 @@ class ClinicaController extends Controller
       return redirect()->route('home');
    }
 
-   function marcarConsultaSelecionarPaciente($msg=null)
-    {      
-        $lista = Paciente::orderBy('nome', 'asc')->paginate(8);  
-        return view('userClinica/marcarConsulta/selecionarPacientePasso1', ['lista' => $lista, 'msg' => $msg,'filtro' => null,'cpf' => null]);
-    }
+   function marcarConsultaSelecionarPaciente($clinica_id = null, $msg = null)
+    {
+      $lista = Paciente::orderBy('nome', 'asc')->paginate(8);  
+      
+      return view('userClinica/marcarConsulta/selecionarPacientePasso1', ['lista' => $lista, 'clinica_id' => $clinica_id, 'msg' => $msg, 'filtro' => null,'cpf' => null]);
+   }
 
     function pesquisarPacienteMarcarconsulta()
     {
@@ -364,9 +365,13 @@ class ClinicaController extends Controller
         return view('userClinica/marcarConsulta/selecionarPacientePasso1', ['lista' => $lista, 'filtro' => $filtro, 'cpf' => $cpf,'msg' => $msg]);
    }
 
-   function marcarConsultaSelecionarEspecialidade($paciente_id)
+   function marcarConsultaSelecionarEspecialidade($paciente_id, $clinica_id = null)
    {
-        $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
+      if ( Auth::user()->tipo_user == "E") {
+         $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
+      } else {
+         $clinica = Clinica::find($clinica_id);
+      }
         //todas as especialidades que eh vinculado a clinica
         $lista = Especialidadeclinica::join('especialidades', 'especialidades.id', 
         '=', 'especialidadeclinicas.especialidade_id')->
@@ -374,12 +379,17 @@ class ClinicaController extends Controller
         where('is_vinculado', 1)->
         orderBy('especialidades.descricao', 'asc')->
         select('especialidades.id', 'especialidades.descricao')->paginate(8);       
-        return view('userClinica/marcarConsulta/selecionarEspecialidadePasso2', ['lista' => $lista, 'paciente_id' => $paciente_id]);
+        return view('userClinica/marcarConsulta/selecionarEspecialidadePasso2', ['lista' => $lista, 'clinica' => $clinica, 'paciente_id' => $paciente_id]);
    }
    
-   function marcarConsultaSelecionarEspecialista($paciente_id, $especialidade_id)
+   function marcarConsultaSelecionarEspecialista($paciente_id, $especialidade_id, $clinica_id = null)
    {
-      $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
+      if (Auth::user()->tipo_user == "E") {
+         $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
+      } else {
+         $clinica = Clinica::find($clinica_id);
+      }
+      
        //retornar todos os especialista vinculados a clinica e com a especiladade selecionada
        $lista = Especialistaclinica::join('especialistas', 'especialistas.id', '=',
         'especialistaclinicas.especialista_id')->
@@ -387,15 +397,19 @@ class ClinicaController extends Controller
        where('especialidade_id', $especialidade_id)->
        orderBy('especialistas.nome', 'asc')->
        select('especialistas.id', 'especialistas.nome')->paginate(8);
-       return view('userClinica/marcarConsulta/selecionarEspecialistaPasso3', ['lista' => $lista, 'paciente_id' => $paciente_id, 'especialidade_id' =>$especialidade_id]);
+       return view('userClinica/marcarConsulta/selecionarEspecialistaPasso3', ['lista' => $lista, 'clinica' => $clinica, 'paciente_id' => $paciente_id, 'especialidade_id' =>$especialidade_id]);
    }
 
    
-   function marcarConsultaSelecionarHoraConsulta($paciente_id, $especialista_id)
+   function marcarConsultaSelecionarHoraConsulta($paciente_id, $especialista_id, $clinica_id = null)
    {
        $especialista = Especialista::find($especialista_id);
 
-       $clinica =  Clinica::where('usuario_id', '=', Auth::user()->id)->first();
+       if (Auth::user()->tipo_user == "E") {
+         $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
+      } else {
+         $clinica = Clinica::find($clinica_id);
+      }
        $especialidade = Especialidade::find($especialista->especialidade_id);
        $paciente = Paciente::find($paciente_id);
        //retornar todos a agenda(consultas) do especialista vinculados a clinica
@@ -412,14 +426,15 @@ class ClinicaController extends Controller
 
    function marcarConsultaFinalizar(Request $request)
     {   
-        $paciente =  Paciente::find($request->paciente_id);
-        $ent = Consulta::find($request->consulta_id);
-
-        $ent->status = "Aguardando atendimento";
-        $ent->paciente_id = $paciente->id;
-        $ent->save();
-        $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
-        return  $this->marcarConsultaSelecionarPaciente($msg);
+      $paciente =  Paciente::find($request->paciente_id);
+      $ent = Consulta::find($request->consulta_id);
+      $clinica_id = $ent->clinica_id;
+      $ent->status = "Aguardando atendimento";
+      $ent->paciente_id = $paciente->id;
+      $ent->save();
+      $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
+      
+      return  $this->marcarConsultaSelecionarPaciente($clinica_id, $msg);
     }
 
 

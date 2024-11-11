@@ -23,7 +23,7 @@
                    <td>{{$ent->descricao}}</td>
                    <td>
                      <a style="max-height: 35px;"
-                       href="{{route('clinica.marcarConsultaSelecionarEspecialista',[$paciente_id, $ent->id])}}"
+                       href="{{route('clinica.marcarConsultaSelecionarEspecialista', [$paciente_id, $ent->id, $clinica->id])}}"
                        class="btn btn-success">Próximo <i class="tim-icons icon-double-right"> </i> </a>
                    </td>
              @endforeach 
@@ -73,7 +73,7 @@
            
          </div>
          <div class="col-2">          
-          <a href="{{route('clinica.marcarConsultaSelecionarPaciente')}}" class="btn btn-primary"><i class="fa fa-reply"></i>
+          <a href="{{route('clinica.marcarConsultaSelecionarPaciente', $clinica->id)}}" class="btn btn-primary"><i class="fa fa-reply"></i>
              Voltar</a>
              </div>
       </div>

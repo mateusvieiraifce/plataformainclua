@@ -1,8 +1,9 @@
 @extends('layouts.app', ['page' => __('Consultas'), 'exibirPesquisa' => false, 'pageSlug' => 'listaAgenda', 'class' => 'agenda'])
 @section('content')
 @section('title', 'Agenda')
-
-
+@php
+   $lista = Session::get('lista') ?? $lista;
+@endphp
 <div class="card">
    <div class="row">
       <div class="col-lg-12 col-md-12">
@@ -10,7 +11,7 @@
             <div class="card-header">
 
                <div class="col-lg-12 col-md-12">
-                  <form action="{{route('consulta.agendaConsultasPesquisar')}}" method="get" id="pesquisar">
+                  <form action="{{route('consulta.agendaConsultasPesquisar')}}" method="post" id="pesquisar">
                      @csrf
                      <label style="font-size: 20px"></label>
                      <fieldset>
@@ -86,12 +87,13 @@
                               </div>
 
                               <div class="col-md-1 ">                       
-                                 <button style="max-height: 40px; max-width: 40px;margin-top: 25px" class="btn btn-primary" >
+                                 <button type="submit" style="max-height: 40px; max-width: 40px;margin-top: 25px" class="btn btn-primary" >
                                     <i  class="tim-icons icon-zoom-split" >
                                     </i></button>
                               </div>
                         </div>
                      </fieldset>
+                     <input type="hidden" name="clinica_id" value="{{ $clinica->id }}">
                   </form>
                </div>
 
@@ -227,6 +229,7 @@
                                                 <button type="submit"
                                                       class="btn btn-primary">Encaminhar</button>
                                              </div>
+                                       <input type="hidden" name="clinica_id" value="{{ $clinica->id }}">
                                     </form>
                                  </div>
                               </div>
@@ -301,6 +304,7 @@
                                                 <button type="submit"
                                                       class="btn btn-primary">Confirmar pagamento</button>
                                              </div>
+                                       <input type="hidden" name="clinica_id" value="{{ $clinica->id }}">
                                     </form>
                                  </div>
                               </div>
@@ -351,6 +355,7 @@
                                              </button>
                                              <button type="submit" class="btn btn-primary">Cancelar consulta</button>
                                           </div>
+                                       <input type="hidden" name="clinica_id" value="{{ $clinica->id }}">
                                     </form>
                                  </div>
                               </div>

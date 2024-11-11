@@ -54,7 +54,7 @@
                         <td>{{$ent->cpf}}</td>
                         <td>{{date( 'd/m/Y' , strtotime($ent->data_nascimento))}}
                         <td>
-                           <a style="max-height: 35px;" href="{{route('clinica.marcarConsultaSelecionarEspecialidade',$ent->id)}}" class="btn btn-success">Próximo <i class="tim-icons icon-double-right"> </i> </a>
+                           <a style="max-height: 35px;" href="{{route('clinica.marcarConsultaSelecionarEspecialidade', [$ent->id, $clinica_id])}}" class="btn btn-success">Próximo <i class="tim-icons icon-double-right"> </i> </a>
                         </td>
                         @endforeach
                         @endif

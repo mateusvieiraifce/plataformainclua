@@ -38,7 +38,7 @@
                      <td>
                      @if($ent->isVinculado)
                         <a rel="tooltip" title="Editar" class="btn btn-link" data-original-title="Edit"
-                           href="{{route('especialidadeclinica.editUserClinica', $ent->id)}}">
+                           href="{{route('especialidadeclinica.editUserClinica', [$ent->id, $clinica->id])}}">
                            <i class="tim-icons icon-pencil"></i>
                         </a>
                       @endif   

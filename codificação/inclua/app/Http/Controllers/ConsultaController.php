@@ -50,17 +50,17 @@ class ConsultaController extends Controller
          ->orderBy('horario_agendado', 'asc')
          ->paginate(8);
     
-      return view('userEspecialista.listtodasconsultas', 
-      ['lista' => $lista, 'clinicas' => $clinicas, 'clinicaselecionada_id' =>
-       $clinicaselecionada_id, 'status' => $statusConsulta, 'filtro' => $filter, 
-       'inicio_data' => $hoje->format('Y-m-d'),
-       'final_data' => $dataUmMesFrente->format('Y-m-d'),
-       'especialista' => $especialista, 'msg' => $msg]);
+      return view('userEspecialista.listtodasconsultas', [
+         'lista' => $lista, 'clinicas' => $clinicas, 'clinicaselecionada_id' => $clinicaselecionada_id,
+         'status' => $statusConsulta, 'filtro' => $filter, 'inicio_data' => $hoje->format('Y-m-d'), 
+         'final_data' => $dataUmMesFrente->format('Y-m-d'), 
+         'especialista' => $especialista, 'msg' => $msg
+      ]);
    }
 
    function search(Request $request)
    {
-      $especialista = Especialista::where('usuario_id', '=', Auth::user()->id)->first();
+      $especialista = Especialista::find( $request->especialista_id);
       $especialista_id = $especialista->id;
       $filter = "";
      
@@ -173,42 +173,47 @@ class ConsultaController extends Controller
       'relacaoEspecialidadeClinica' =>  $relacaoEspecialidadeClinica]);
    }
 
-   function novaConsultasUserClinica($especialista_id)
+   function novaConsultasUserClinica($especialista_id, $clinica_id = null)
    {  
       $especialista = Especialista::find($especialista_id); 
      
       //esse treco de codigo serve apenas para verificar se nao foi alterado a url
-      $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();      
-      $relacaoEspecialistaClinica = Especialistaclinica::
-      where('clinica_id', $clinica->id)->
-      where('especialista_id', $especialista->id)->
-      where('is_vinculado', true)->
-      first();
+      if (Auth::user()->tipo_user == "C") {
+         $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
+      } else {
+         $clinica = Clinica::find($clinica_id);
+      }
+
+      $relacaoEspecialistaClinica = Especialistaclinica::where('clinica_id', $clinica->id)
+         ->where('especialista_id', $especialista->id)
+         ->where('is_vinculado', true)
+         ->first();
+         
       if(!isset($relacaoEspecialistaClinica)){
          return redirect()->route('especialistaclinica.list');
       }     
       
       // pegando o preco da consulta que esta associado a clinica
-      $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();      
-      $relacaoEspecialidadeClinica = Especialidadeclinica::
-      where('clinica_id', $clinica->id)->
-      where('especialidade_id', $especialista->especialidade_id)->
-      first();
+      $relacaoEspecialidadeClinica = Especialidadeclinica::where('clinica_id', $clinica->id)
+         ->where('especialidade_id', $especialista->especialidade_id)
+         ->first();
     
       $precoConsulta = $relacaoEspecialidadeClinica->valor;
+
       return view('userClinica/cadVinculoEspecialista/cadAgenda', [
-         'entidade' => new Consulta(), 
-      'especialista' => $especialista, 'precoConsulta'=>$precoConsulta]); 
+         'entidade' => new Consulta(), 'especialista' => $especialista,
+         'precoConsulta' => $precoConsulta, 'clinica' => $clinica
+      ]);
    }
 
    function saveVariasConsultasUserClinica(Request $request)
    {
       $especialista_id = $request->especialista_id;
-      $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
-
+      $clinica = Clinica::find($request->clinica_id);
+      
       $startDate = Carbon::parse($request->data_inicio);
       $endDate = Carbon::parse($request->data_fim);
-
+      
       //  dd($request);
       // Loop através do intervalo de datas
       $qtdConsutasCriadas = 1;
@@ -248,7 +253,7 @@ class ConsultaController extends Controller
       $qtdConsutasCriadas--;
       $msg = ['valor' => trans("Operação realizada com sucesso! Foram criadas " . $qtdConsutasCriadas . " consultas."), 'tipo' => 'success'];
       $especialistaclinicaController = new EspecialistaclinicaController();
-      return $especialistaclinicaController->list($msg);
+      return $especialistaclinicaController->list($clinica->id, $msg);
    }
 
    function saveVariasConsultas(Request $request)
@@ -425,9 +430,14 @@ class ConsultaController extends Controller
    }
 
    
-   function listConsultaAgendadaUserClinica($msg = null)
+   function listConsultaAgendadaUserClinica($clinica_id = null, $msg = null)
    {
-      $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
+      if (Auth::user()->tipo_user == "E") {
+         $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
+      } else {
+         $clinica = Clinica::find($clinica_id);
+      }
+
       $filter = "";
       if (isset($_GET['filtro'])) {
          $filter = $_GET['filtro'];
@@ -472,7 +482,7 @@ class ConsultaController extends Controller
    {    
       // dd($request);
 
-      $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
+      $clinica = Clinica::find($request->clinica_id);
       $filter = "";
       if (isset($_GET['filtro'])) {
          $filter = $_GET['filtro'];
@@ -518,18 +528,7 @@ class ConsultaController extends Controller
          'pacientes.nome as nome_paciente')->orderBy('horario_agendado', 'asc')->get();
       }
 
-    // dd($request, $lista);
-      return view('userClinica/listConsultaAgenda', [
-         'lista' => $lista,
-         'especialistas' => $especialistas,
-         'especialistaSelecionado_id' => $request->especialista_id,
-         'filtro' => $filter,
-         'inicio_data' => $request->inicio_data,
-         'final_data' => $request->final_data,
-         'nomepaciente' => $request->nomepaciente,
-         'cpf' => $request->cpf,
-         'msg' => $msg
-      ]);
+      return back()->with('lista', $lista)->withInput();
    }
 
    function listConsultaporClinica($msg = null)
@@ -809,7 +808,7 @@ class ConsultaController extends Controller
       }
    }
 
-   public function selectEspecialistaAgenda($rota = null)
+   public function selectEspecialista($rota = null)
    {
       $especialistas = Especialista::paginate(8);
       if ($rota == "agenda") {
@@ -819,7 +818,34 @@ class ConsultaController extends Controller
       }
    }
 
-   public function selectEspecialistaAgendasSearch(Request $request)
+   public function selectEspecialistaSearch(Request $request)
+   {
+      $especialistas = Especialista::where('nome', 'like', "%$request->nome%")
+         ->paginate(8);
+
+      if ($especialistas->isEmpty()) {
+         $msg = ['valor' => trans("Não foi encontrado nenhum especialista com os dados informados!"), 'tipo' => 'danger'];
+         session()->flash('msg', $msg);
+      }
+
+      return back()->with('especialistas', $especialistas)->withInput();
+   }
+   
+   public function selectClinica($rota = null)
+   {
+      $clinicas = Clinica::paginate(8);
+      if ($rota == "agenda") {
+         return view('user_root.clinicas.selecionar_clinica', ['clinicas' => $clinicas, 'route' => 'consulta.agendaConsultas']);
+      } else if ($rota == "marcar-consulta") {
+         return view('user_root.clinicas.selecionar_clinica', ['clinicas' => $clinicas, 'route' => 'clinica.marcarConsultaSelecionarPaciente']);
+      } else if ($rota == "especialista") {
+         return view('user_root.clinicas.selecionar_clinica', ['clinicas' => $clinicas, 'route' => 'especialistaclinica.list']);
+      } else if ($rota == "especialidades") {
+         return view('user_root.clinicas.selecionar_clinica', ['clinicas' => $clinicas, 'route' => 'especialidadeclinica.listclinicas']);
+      }
+   }
+
+   public function selectClinicaSearch(Request $request)
    {
       $especialistas = Especialista::where('nome', 'like', "%$request->nome%")
          ->paginate(8);
