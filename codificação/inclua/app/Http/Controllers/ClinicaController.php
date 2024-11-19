@@ -62,8 +62,6 @@ class ClinicaController extends Controller
    }
    function save(Request $request)
    {
-
-
       $imageName = "";
       //salvando a logo na clinica
       if ($request->hasFile('image') && $request->file('image')->isValid()) {
@@ -224,7 +222,7 @@ class ClinicaController extends Controller
          //SALVAR LOGO DA CLÍNICA
          if ($request->hasFile('logo') && $request->file('logo')->isValid()) {
             //VERIFICANDO SE EXISTE ALGUMA LOGO JA CADASTRADA PARA DELETAR
-            $logotipo = Clinica::where('usuario_id', $request->usuario_id)->logotipo;
+            $logotipo = Clinica::where('usuario_id', $request->usuario_id);
             if(!empty($logotipo->logotipo)) {
                //REMOÇÃO DE 'storage/' PARA DELETAR O ARQUIVO NA RAIZ
                $linkStorage = explode('/', $logotipo);

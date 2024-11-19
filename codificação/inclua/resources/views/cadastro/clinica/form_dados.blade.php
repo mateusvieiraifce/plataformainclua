@@ -32,7 +32,7 @@
                             </label>
                             <div class="input-group input-medium{{ $errors->has('documento') ? ' has-danger' : '' }}">
                                 <input type="text" id="documento" class="form-control border-full {{ $errors->has('documento') ? 'is-invalid' : '' }}"
-                                    name="documento" maxlength="18" placeholder="00.000.000/0000-00" oninput="mascaraCnpj(this)" onblur="consultarCNPJ(this)"
+                                    name="documento" maxlength="18" placeholder="00.000.000/0000-00" oninput="mascaraCnpj(this)" onblur="consultarCNPJ(this)
                                     value="{{ (isset($clinica) && $clinica->cnpj ? $clinica->cnpj : null) ?? old('documento') }}" required>
                                 @include('alerts.feedback', ['field' => 'documento'])
                             </div>

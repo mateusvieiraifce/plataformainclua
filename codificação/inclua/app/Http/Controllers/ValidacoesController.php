@@ -44,11 +44,9 @@ class ValidacoesController extends Controller
                 // CRIA UMA VARIAVEL E ARMAZENA A HORA ATUAL DO FUSO-HORÀRIO DEFINIDO (BRASÍLIA)
                 date_default_timezone_set('America/Sao_Paulo');
                 $dataLocal = date('Y-m-d H:i:s', time());
-
                 $user->email_verified_at = $dataLocal;
                 $user->etapa_cadastro = '2';
                 $user->save();
-
                 $msg = ['valor' => trans("Seu email foi verificado com sucesso!"), 'tipo' => 'success'];
                 session()->flash('msg', $msg);
             } else {
