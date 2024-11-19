@@ -106,12 +106,12 @@ Route::middleware('auth')->group(function () {
     #PROFILE
     Route::get("/profile/{id?}", [\App\Http\Controllers\UsuarioController::class, 'perfil'])->name('user.perfil');
     Route::post("/profile/update", [\App\Http\Controllers\UsuarioController::class, 'updateUser'])->name('user.update');
-    Route::put("/profile/update", [\App\Http\Controllers\UsuarioController::class, 'updateDadosUser'])->name('user.update.dados');
+    Route::post("/profile/update/dados", [\App\Http\Controllers\UsuarioController::class, 'updateDadosUser'])->name('user.update.dados');
     Route::post("/profile/delete", [\App\Http\Controllers\UsuarioController::class, 'delete'])->name('user.delete');
     Route::post("/profile/update/avatar", [\App\Http\Controllers\UsuarioController::class, 'updateAvatar'])->name('user.update.avatar');
     
     #ENDEREÇO
-    Route::get("/profile/endereco/create", [\App\Http\Controllers\EnderecoController::class, 'create'])->name('user.endereco.create');
+    Route::get("/profile/endereco/create/{usuario_id?}", [\App\Http\Controllers\EnderecoController::class, 'create'])->name('user.endereco.create');
     Route::post("/profile/endereco/store", [\App\Http\Controllers\EnderecoController::class, 'store'])->name('user.endereco.store');
     Route::get("/profile/endereco/delete/{id}", [\App\Http\Controllers\EnderecoController::class, 'delete'])->name('user.endereco.delete');
     Route::get("/profile/endereco/edit/{id}", [\App\Http\Controllers\EnderecoController::class, 'edit'])->name('user.endereco.edit');
@@ -208,11 +208,11 @@ Route::middleware('auth')->group(function () {
     Route::get("/especialista/edit/{id}", [\App\Http\Controllers\EspecialistaController::class, 'edit'])->name('especialista.edit');
 
     #ESPECIALISTA_POR_CLINICA
-    Route::get("/especialistaclinica/list/{clinica_id?}", [\App\Http\Controllers\EspecialistaclinicaController::class, 'list'])->name('especialistaclinica.list');
-    Route::get("/especialistaclinica/new", [\App\Http\Controllers\EspecialistaclinicaController::class, 'new'])->name('especialistaclinica.new');
+    Route::get("/especialistaclinica/list/{clinica_id?}", [\App\Http\Controllers\EspecialistaclinicaController::class, 'list'])->name(name: 'especialistaclinica.list');
+    Route::get("/especialistaclinica/new/{clinica_id?}", [\App\Http\Controllers\EspecialistaclinicaController::class, 'new'])->name('especialistaclinica.new');
     Route::get("/especialistaclinica/search/{clinica_id}", [\App\Http\Controllers\EspecialistaclinicaController::class, 'search'])->name('especialistaclinica.search');
     Route::post("/especialistaclinica/save/{clinica_id}", [\App\Http\Controllers\EspecialistaclinicaController::class, 'save'])->name('especialistaclinica.save');
-    Route::get("/especialistaclinica/delete/{id}", [\App\Http\Controllers\EspecialistaclinicaController::class, 'delete'])->name('especialistaclinica.delete');
+    Route::get("/especialistaclinica/delete/{id}/{clinica_id?}", [\App\Http\Controllers\EspecialistaclinicaController::class, 'delete'])->name('especialistaclinica.delete');
     Route::get("/especialistaclinica/edit/{id}", [\App\Http\Controllers\EspecialistaclinicaController::class, 'edit'])->name('especialistaclinica.edit');
     Route::get("/especialistaclinica/vinculo/{clinica_id}/{especialista_id?}", [\App\Http\Controllers\EspecialistaclinicaController::class, 'cancelarVinculo'])->name('especialistaclinica.cancelarVinculo');
 

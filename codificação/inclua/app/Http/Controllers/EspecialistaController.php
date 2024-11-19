@@ -19,7 +19,7 @@ use App\Models\PedidoExame;
 use App\Models\TipoMedicamento;
 use Carbon\Carbon;
 use App\Models\Fila;
-
+use Illuminate\Support\Facades\Storage;
 
 class EspecialistaController extends Controller
 {
@@ -157,74 +157,126 @@ class EspecialistaController extends Controller
    }
    function save(Request $request)
    {
-      $input = $request->validate([
-         'email' => 'required|unique:users,email,' . $request->usuario_id,
-         'password' => 'confirmed',
-      ]);
-      if ($request->id) {
-         $ent = Especialista::find($request->id);
-         $ent->nome = $request->nome;
-         $ent->telefone = $request->telefone;
-         $ent->especialidade_id = $request->especialidade_id;
-         $ent->usuario_id = $request->usuario_id;
-         $ent->save();
-
-         $usuario = User::find(intval($request->usuario_id));
-         $usuario->nome_completo = $request->nome;
-         $usuario->telefone = $request->telefone;
-         $usuario->email = $request->email;
-         if (isset($request->password)) {
-            $usuario->password = bcrypt($request->password);
+      //SALVANDO AVATAR DO ESPECIALISTA
+      if ($request->hasFile('image') && $request->file('image')->isValid()) {
+         //VERIFICANDO SE EXISTE ALGUM AVATAR JA CADASTRADO PARA DELETAR
+         $usuario = User::find($request->usuario_id);
+         
+         if(!empty($usuario->avatar)) {
+            //REMOÇÃO DE 'storage/' PARA DELETAR O ARQUIVO NA RAIZ
+            $linkStorage = explode('/', $usuario->avatar);
+            $linkStorage = "$linkStorage[1]/$linkStorage[2]";
+            Storage::delete([$linkStorage]);
          }
-         $usuario->save();
-      } else {
-         $usuario = User::create([
-            'nome_completo' => $request->nome,
-            'password' => bcrypt($request->password),
-            'email' => $request->email,
-            'telefone' => $request->telefone,
-            'tipo_user' => 'E' //E eh especialista
-         ]);
-
-
-
-         $entidade = Especialista::create([
-            'nome' => $request->nome,
-            'telefone' => $request->telefone,
-            'especialidade_id' => $request->especialidade_id,
-            'usuario_id' => $request->usuario_id
-         ]);
-
-
-         //salvando o id do usuario no especialista
-         $entidade->usuario_id = $usuario->id;
-         $entidade->save();
-
+         
+         // Nome do Arquivo
+         $requestImage = $request->image;
+         // Recupera a extensão do arquivo
+         $extension = $requestImage->extension();
+         // Define o nome
+         $imageName = md5($requestImage->getClientOriginalName() . strtotime("now")) . "." . $extension;
+         // Faz o upload:
+         $pathAvatar = $request->file('image')->storeAs('avatar-user', $imageName);
       }
-      $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
-      return $this->list($msg);
+
+      //REMOÇÃO DA MASCARA DO CELULAR, TELEFONE E CNPJ PARA COMPARAR COM O BD
+      $request->request->set('telefone', Helper::removerCaractereEspecial($request->telefone));
+      $request->request->set('celular', Helper::removerCaractereEspecial($request->celular));
+      try {
+         if ($request->especialista_id) {
+            $rules = [
+               "email" => "required|unique:users,email,$request->usuario_id",
+               "telefone" => "required|unique:users,telefone,$request->usuario_id",
+               "celular" => "required|unique:users,celular,$request->usuario_id",
+               "password" => "confirmed"
+            ];
+         } else {
+            $rules = [
+               "image" => "required",
+               "telefone" => "nullable|unique:users,telefone",
+               "celular" => "required|unique:users,celular",
+               "nome_completo" => "required",
+               "email" => "required|unique:users,email",
+               "password" => "required|min:8|confirmed"
+            ];
+         }
+         $feedbacks = [
+            "image.required" => "O campo Avatar é obrigatório.",
+            'telefone.unique' => 'Já existe um Especialista cadastrado com este telefone.',
+            'celular.required' => 'O campo Celular é obrigatório.',
+            'celular.unique' => 'Este número de celular já foi utilizado.',
+            "nome_completo.required" => "O campo Nome é obrigatório.",
+            "email.required" => "O campo E-mail é obrigatório.",
+            "email.unique" => "Este E-mail já foi utilizado.",
+            "password.required" => "O campo Senha é obrigatório.",
+            "password.min" => "O campo Senha deve ter no mínico 8 caracteres.",
+            "password.confirmed" => "A senha informada não corresponde."
+         ];
+         $request->validate($rules, $feedbacks);
+
+         if($request->usuario_id) {
+            $usuario = User::find($request->usuario_id);
+         } else {
+            $usuario = new User();
+         }
+         $usuario->nome_completo = $request->nome_completo;
+         $usuario->email = $request->email;
+         $usuario->avatar = !empty($pathAvatar) ? "storage/$pathAvatar" : ($especialista->avatar ?? null);
+         $usuario->telefone = Helper::removerCaractereEspecial($request->telefone);
+         $usuario->celular = Helper::removerCaractereEspecial($request->celular);
+         $usuario->password = bcrypt($request->password);
+         $usuario->tipo_user = "E";
+         $usuario->etapa_cadastro = "F";
+         $usuario->save();
+         
+         if($request->especialista_id) {
+            $especialista = Especialista::find($request->especialista_id);
+         } else {
+            $especialista = new Especialista();
+         }
+         $especialista->nome = $request->nome_completo;
+         $especialista->usuario_id = $usuario->id;
+         $especialista->especialidade_id = $request->especialidade_id;
+         $especialista->conta_bancaria = $request->conta_bancaria;
+         $especialista->agencia = $request->agencia;
+         $especialista->banco = $request->banco;
+         $especialista->chave_pix = $request->chave_pix;
+         $especialista->save();
+         
+         session()->flash('msg', ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success']);
+      } catch (QueryException $e) {
+         dd($e);
+         session()->flash('msg', ['valor' => trans("Houve um erro ao realizar o cadastro, tente novamente!"), 'tipo' => 'danger']);
+
+         return back()->withInput();
+      }
+      
+      return redirect()->route('especialista.list');
    }
    function delete($id)
    {
       try {
-         $entidade = Especialista::find($id);
-         if ($entidade) {
-            $entidade->delete();
-            $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
-         } else {
-            $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
+         $especialista = Especialista::find($id);
+         $usuario = User::find($especialista->usuario_id);
+         if ($especialista) {
+            $especialista->delete();
+            $usuario->delete();
+            session()->flash('msg', ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success']);
          }
       } catch (QueryException $exp) {
-         $msg = ['valor' => $exp->getMessage(), 'tipo' => 'primary'];
+         session()->flash('msg', ['valor' => trans("Houve um erro ao deletar o especialista, tente novamente!"), 'tipo' => 'danger']);
+
+         return back();
       }
-      return $this->list($msg);
+      
+      return redirect()->route('especialista.list');
    }
    function edit($id)
    {
+      $especialista = Especialista::find($id);
+      $usuario = User::find($especialista->usuario_id);
 
-      $entidade = Especialista::find($id);
-      $usuario = User::find($entidade->usuario_id);
-      return view('especialista/form', ['entidade' => $entidade, 'especialidades' => Especialidade::all(), 'usuario' => $usuario]);
+      return view('especialista/form', ['especialista' => $especialista, 'especialidades' => Especialidade::all(), 'usuario' => $usuario]);
    }
 
    function inicarAtendimento($consulta_id,$aba,$mostrarModal=null)

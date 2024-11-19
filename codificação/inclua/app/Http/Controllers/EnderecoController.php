@@ -39,9 +39,11 @@ class EnderecoController extends Controller
         }
     }
 
-    public function create()
+    public function create($usuario_id = null)
     {
-        return view("profile.form_endereco");
+        $user = User::find($usuario_id);
+
+        return view("profile.form_endereco", ['user' => $user]);
     }
 
     public function store(Request $request)

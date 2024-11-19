@@ -38,9 +38,14 @@ class EspecialistaclinicaController extends Controller
       
       return view('userClinica/cadVinculoEspecialista/list', ['lista' => $lista, 'filtro' => $filter, 'clinica' => $clinica, 'msg' => $msg]);
    }
-   function new()
+   function new($clinica_id = null)
    {
-      $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
+      if (Auth::user()->tipo_user == "C") {
+         $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
+      } else {
+         $clinica = Clinica::find($clinica_id);
+      }
+
       return view('userClinica/cadVinculoEspecialista/form', ['entidade' => new Especialistaclinica(), 'clinica' => $clinica, 'especialistas'=>Especialista::all()]);
    }
    function search(Request $request, $clinica_id)
@@ -67,14 +72,14 @@ class EspecialistaclinicaController extends Controller
          ]);
       }
       $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
-      return $this->list($msg);
+      return $this->list($request->clinica_id, $msg);
    }
 
    //funcao para cancelar vículo - user Clinica
-   function delete($id)
+   function delete($id, $clinica_id = null)
    {
       $especialista = Especialista::find($id);      
-      $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();      
+      $clinica = Clinica::find($clinica_id);      
       $relacaoEspecialistaClinica = Especialistaclinica::
       where('clinica_id', $clinica->id)->
       where('especialista_id', $especialista->id)->first();
@@ -88,7 +93,7 @@ class EspecialistaclinicaController extends Controller
       } catch (QueryException $exp) {
          $msg = ['valor' => $exp->getMessage(), 'tipo' => 'primary'];
       }
-      return $this->list($msg);
+      return $this->list($clinica->id, $msg);
    }
 
  //funcao para cancelar vículo - user Especialista

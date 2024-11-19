@@ -356,9 +356,15 @@ class UsuarioController extends Controller
         }
     }
 
-    public function perfil($id=null)
+    public function perfil($id = null)
     {
-        return view('profile/edit');
+        if ($id) {
+            $user = User::find($id);
+        } else {
+            $user = Auth::user();
+        }
+
+        return view('profile/edit', ['user' => $user]);
     }
 
     public function updateUser(Request $request)
@@ -381,15 +387,15 @@ class UsuarioController extends Controller
             $usuario->email = $request->email;
             $usuario->save();
             
-            if ($usuario->tipo_user == "P") {
+            if ($request->tipo_user == "P") {
                 $paciente = Paciente::where('usuario_id', $usuario->id)->first();
                 $paciente->nome = $request->nome;
                 $paciente->save();
-            } elseif ($usuario->tipo_user == "E") {
+            } elseif ($request->tipo_user == "E") {
                 $especialista = Especialista::where('usuario_id', $usuario->id)->first();
                 $especialista->nome = $request->nome;
                 $especialista->save();
-            } elseif ($usuario->tipo_user == "C") {
+            } elseif ($request->tipo_user == "C") {
                 $clinica = Clinica::where('usuario_id', $usuario->id)->first();
                 $clinica->nome = $request->nome;
                 $clinica->save();
@@ -405,12 +411,16 @@ class UsuarioController extends Controller
 
     public function  updateDadosUser(Request $request)
     {
-        if ($request->tipo_pessoa === "F") {
+        //REMOÇÃO DA MASCARA DO CELULAR E DOCUMENTO PARA COMPARAR COM O BD
+        $request->request->set('telefone', Helper::removerCaractereEspecial($request->telefone));
+        $request->request->set('celular', Helper::removerCaractereEspecial($request->celular));
+        $request->request->set('documento', Helper::removerCaractereEspecial($request->documento));
+        if ($request->tipo_pessoa == "F") {
             $rules = [
                 "tipo_pessoa" => "required",
                 "documento" => "required|unique:users,documento,{$request->usuario_id}",
                 "telefone" => "unique:users,telefone,{$request->usuario_id}",
-                "celular" => "required|unique:users,celular,{$request->usuario_id}",
+                "celular" => "unique:users,celular,{$request->usuario_id}",
                 "sexo" => "required"
             ];
         } else {
@@ -418,13 +428,13 @@ class UsuarioController extends Controller
                 "tipo_pessoa" => "required",
                 "documento" => "required|unique:users,documento,{$request->usuario_id}",
                 "telefone" => "unique:users,telefone,{$request->usuario_id}",
-                "celular" => "required|unique:users,celular,{$request->usuario_id}",
+                "celular" => "unique:users,celular,{$request->usuario_id}",
             ];
         }
         $feedbacks = [
             "tipo_pessoa.required" => "O campo Tipo Pessoa é obrigatório.",
-            "documento.required" => "O campo CPF é obrigatório.",
-            "documento.unique" => "Este CPF já foi utilizado.",
+            "documento.required" => "O campo CPF/CNPJ é obrigatório.",
+            "documento.unique" => "Este CPF/CNPJ já foi utilizado.",
             "telefone.unique" => "Este número de telefone já foi utilizado.",
             "celular.required" => "O campo Celular é obrigatório.",
             "celular.unique" => "Este número de celular já foi utilizado.",

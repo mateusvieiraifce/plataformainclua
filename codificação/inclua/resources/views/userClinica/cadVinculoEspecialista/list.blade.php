@@ -13,7 +13,7 @@
                      <i class="tim-icons icon-settings-gear-63"></i>
                   </button>
                   <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-                     <a class="dropdown-item" href="{{route('especialistaclinica.new')}}">Adicionar novo especialista</a>
+                     <a class="dropdown-item" href="{{route('especialistaclinica.new', $clinica->id)}}">Adicionar novo especialista</a>
                   </div>
                </div>
             </div>
@@ -21,101 +21,63 @@
                <div class="table-responsive">
                   <table class="table">
                      <thead>
-                        <th> Nome </th>                      
-                        <th> Especialidade </th>
-                        <th>Agenda </th>
-                        <th> Novas Consultas</th>
-                        <th>Vínculo </th>
+                        <th>Nome</th>                      
+                        <th>Especialidade</th>
+                        <th>Agenda</th>
+                        <th>Novas Consultas</th>
+                        <th>Vínculo</th>
                      </thead>
                      <tbody>
                         @if(sizeof($lista)>0)
-                        @foreach($lista as $ent)
-                        <tr>
-                           <td>{{$ent->nome}}</td>                          
-                           <td>{{$ent->especialidade}}</td>
-                           <td>
-                              <a href="{{route('especialistaclinica.agendaEspecialista', [$ent->id, $clinica->id])}}" rel="tooltip"
-                                 title="Ver agenda"
-                                 class="btn btn-link"
-                                 data-original-title="Remove">
-                                 <i class="tim-icons icon-calendar-60">
-                                   Ver Agenda</i>
-                              </a>
-                           </td>
-
-                           <td>
-                           @if($ent->isVinculado)
-                             <a href="{{route('consulta.novaConsultasUserClinica', [$ent->id, $clinica->id])}}" rel="tooltip"
-                                 title="Novas consultas"
-                                 class="btn btn-link"
-                                 data-original-title="Remove">
-                                 <i class="tim-icons icon-notes">
-                                 Criar novas consultas</i>
-                              </a>
-                           @endif                            
-                           </td>                         
-                           <td>
-                           @if($ent->isVinculado)
-                                 <label class="title" style="font-color:write">Ativo
-                                 </label>                             
-                           @else
-                                 <p class="title">Inativo                                
-                                 </p>                              
-                           @endif                              
-                           </td>
-                           <td>                               
-                           @if($ent->isVinculado)
-                           <a href="{{route('especialistaclinica.delete',$ent->id)}}" 
-                           onclick="return confirm('Deseja relamente excluir o vínculo?')" rel="tooltip"
-                                 title="Excluir vínculo" class="btn btn-link" data-original-title="Remove">
-                                 <i class="tim-icons icon-simple-remove"></i>
-                              </a>
-                           @else
-                           <a href="{{route('especialistaclinica.delete',$ent->id)}}" 
-                           onclick="return confirm('Deseja retomar vínculo?')" rel="tooltip"
-                                 title="Vincular novamente" class="btn btn-link" data-original-title="Remove">
-                                 <i class="tim-icons icon-check-2"></i>
+                           @foreach($lista as $ent)
+                           <tr>
+                              <td>{{$ent->nome}}</td>                          
+                              <td>{{$ent->especialidade}}</td>
+                              <td>
+                                 <a href="{{route('especialistaclinica.agendaEspecialista', [$ent->id, $clinica->id])}}" rel="tooltip"
+                                    title="Ver agenda">
+                                    <i class="tim-icons icon-calendar-60">
+                                       Ver Agenda
+                                    </i>
                                  </a>
-                           @endif  
-                           </td>
-                           @endforeach
-                           @endif
+                              </td>
+                              <td>
+                                 @if($ent->isVinculado)
+                                 <a href="{{route('consulta.novaConsultasUserClinica', [$ent->id, $clinica->id])}}" rel="tooltip"
+                                       title="Novas consultas">
+                                       <i class="tim-icons icon-notes">
+                                          Criar novas consultas
+                                       </i>
+                                    </a>
+                                 @endif                            
+                              </td>
+                              <td>
+                                 @if($ent->isVinculado)
+                                    Ativo
+                                 @else
+                                    Inativo
+                                 @endif
+                              </td>
+                              <td>
+                                 @if($ent->isVinculado)
+                                 <a href="{{route('especialistaclinica.delete', [$ent->id, $clinica->id])}}" 
+                                    onclick="return confirm('Deseja relamente excluir o vínculo?')" rel="tooltip"
+                                    title="Excluir vínculo" class="btn btn-link" data-original-title="Remove">
+                                    <i class="tim-icons icon-simple-remove"></i>
+                                 </a>
+                                 @else
+                                    <a href="{{route('especialistaclinica.delete', [$ent->id, $clinica->id])}}" 
+                                       onclick="return confirm('Deseja retomar vínculo?')" rel="tooltip"
+                                       title="Vincular novamente" class="btn btn-link" data-original-title="Remove">
+                                       <i class="tim-icons icon-check-2"></i>
+                                    </a>
+                                 @endif  
+                              </td>
+                              @endforeach
+                        @endif
                      </tbody>
                   </table>
-                  <div>
-                     @if ($lista->lastPage() > 1)
-                     @php
-                     $paginator=$lista;
-                     $paginator->url = route('especialistaclinica.list');
-                     @endphp
-                     <ul class="pagination">
-                        <li class="{{ ($paginator->currentPage() == 1) ? ' disabled' : '' }}">
-                           <a href="{{$paginator->url."?page=1&filtro=".$filtro }}">&nbsp;<<&nbsp;&nbsp;< /a>
-                        </li>
-                        @for ($i = 1; $i <= $paginator->lastPage(); $i++)
-                           <?php
-                           $link_limit = 7;
-                           $half_total_links = floor($link_limit / 2);
-                           $from = $paginator->currentPage() - $half_total_links;
-                           $to = $paginator->currentPage() + $half_total_links;
-                           if ($paginator->currentPage() < $half_total_links) {
-                              $to += $half_total_links - $paginator->currentPage();
-                           }
-                           if ($paginator->lastPage() - $paginator->currentPage() < $half_total_links) {
-                              $from -= $half_total_links - ($paginator->lastPage() - $paginator->currentPage()) - 1;
-                           }    ?>
-                           @if ($from < $i && $i < $to)
-                              <li class="{{ ($paginator->currentPage() == $i) ? ' active' : '' }}">
-                              <a href="{{ $paginator->url."?page=".$i."&filtro=".$filtro }} ">{{ $i}} &nbsp; </a>
-                              </li>
-                              @endif
-                              @endfor
-                              <li class="{{ ($paginator->currentPage() == $paginator->lastPage()) ? ' disabled' : '' }}">
-                                 <a href="{{ $paginator->url."?page=".$paginator->lastPage()."&filtro=".$filtro }}"> >></a>
-                              </li>
-                     </ul>
-                     @endif
-                  </div>
+                  {{ $lista->appends(request()->query())->links() }}
                </div>
             </div>
          </div>
