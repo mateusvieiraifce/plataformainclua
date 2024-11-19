@@ -160,59 +160,64 @@ class UsuarioController extends Controller
     }
 
     public function storeUser(Request $request)
-    {
-        //QUANDO O USUARIO INSERIR UM E-MAIL JÁ CADASTRADO
-        if ($request->usuario_id == null) {
-            $user = User::where('email', $request->email)->first();
-            
-            if ($user) {
-                return $this->verifyCadastro($user->id);
-            }
+{
+    // QUANDO O USUÁRIO INSERIR UM EMAIL JÁ CADASTRADO
+    if ($request->usuario_id == null) {
+        $user = User::where('email', $request->email)->first();
+        
+        if ($user) {
+            return $this->verifyCadastro($user->id);
         }
-
-        $rules = [
-            "email" => "required|unique:users,email,{$request->usuario_id}",
-            'password' => 'required|min:8|confirmed',
-            'password_confirmation' => 'required',
-        ];
-        $feedbacks = [
-            "email.required" => "O campo Email é obrigatório.",
-            "email.unique" => "O email utilizado já foi cadastrado.",
-            "password.required" => "O campo Senha é obrigatório.",
-            "password.confirmed" => "As senhas não são correspondentes.",
-            "password.min" => "O campo senha deve ter no mínimo 8 caracteres.",
-            "password_confirmation.required" => "O campo Confirmar a senha é obrigatório."
-        ];
-        $request->validate($rules, $feedbacks);
-
-        try {
-            if($request->usuario_id) {
-                $user = User::find($request->usuario_id );
-            } else {
-                $user = new User();
-            }
-            $user->email = $request->email;
-            $user->nome_completo = $request->nome ?? null;
-            $user->password = bcrypt($request->password);
-            $user->codigo_validacao = Helper::generateRandomNumberString(5);
-            $user->tipo_pessoa = $request->tipo_pessoa;
-            $user->tipo_user = $request->tipo_user;
-            $user->save();
-            //ENVIAR O EMAIL COM CÓDIGO DE CONFIRMAÇÃO
-            //Mail::to($user->email)->send(new verificarEmail($user->codigo_validacao));
-            Helper::sendEmail("Validação de Código", "Seu Código de Verificação é: ".$user->codigo_validacao, $user->email);
-
-            $msg = ['valor' => trans("Cadastro do usuário realizado com sucesso!"), 'tipo' => 'success'];
-            session()->flash('msg', $msg);
-        } catch (QueryException $e) {
-            $msg = ['valor' => trans("Erro ao executar a operação!"), 'tipo' => 'danger'];
-            session()->flash('msg', $msg);
-
-            return back();
-        }
-
-        return redirect()->route('view.verificar_email', ['usuario_id' => $user->id]);
     }
+
+    $rules = [
+        "email" => "required|unique:users,email,{$request->usuario_id}",
+        'password' => 'required|min:8|confirmed',
+        'password_confirmation' => 'required',
+    ];
+
+    $feedbacks = [
+        "email.required" => "O campo Email é obrigatório.",
+        "email.unique" => "O email utilizado já foi cadastrado.",
+        "password.required" => "O campo Senha é obrigatório.",
+        "password.confirmed" => "As senhas não são correspondentes.",
+        "password.min" => "O campo senha deve ter no mínimo 8 caracteres.",
+        "password_confirmation.required" => "O campo Confirmar a senha é obrigatório."
+    ];
+
+    $request->validate($rules, $feedbacks);
+
+    try {
+        if ($request->usuario_id) {
+            $user = User::find($request->usuario_id);
+        } else {
+            $user = new User();
+        }
+
+        $user->email = $request->email;
+        $user->nome_completo = $request->nome ?? null;
+        $user->password = bcrypt($request->password);
+        $user->codigo_validacao = Helper::generateRandomNumberString(5);
+        $user->tipo_pessoa = $request->tipo_pessoa;
+        $user->tipo_user = $request->tipo_user;
+        $user->save();
+
+        // ENVIAR O EMAIL COM CÓDIGO DE CONFIRMAÇÃO
+        Helper::sendEmail("Validação de Código", "Seu Código de Verificação é: " . $user->codigo_validacao, $user->email);
+
+        $msg = ['valor' => trans("Cadastro do usuário realizado com sucesso!"), 'tipo' => 'success'];
+        session()->flash('msg', $msg);
+
+    } catch (QueryException $e) {
+        $msg = ['valor' => trans("Erro ao executar a operação! Detalhes: {$e->getMessage()}"), 'tipo' => 'danger'];
+        session()->flash('msg', $msg);
+
+        return back();
+    }
+
+    return redirect()->route('view.verificar_email', ['usuario_id' => $user->id]);
+}
+
 
     public function editUser($usuario_id)
     {
