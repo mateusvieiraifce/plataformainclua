@@ -177,7 +177,7 @@ class PacienteController extends Controller
             "bairro.required" => "O campo Bairro é obrigatório."
         ];
         $request->validate($rules, $feedbacks);
-    
+
         try {
             $enderecoController = new EnderecoController();
             $enderecoController->storeEndereco($request);
@@ -187,21 +187,21 @@ class PacienteController extends Controller
             if (env('ASSINATURA_OBRIGATORIA')) {
                 $user->etapa_cadastro = '4';
             } else {
-                $user->etapa_cadastro = "F";                
+                $user->etapa_cadastro = "F";
                 Auth::loginUsingId($user->id);
             }
 
             $user->save();
-    
+
             $msg = ['valor' => trans("Cadastro de endereço realizado com sucesso!"), 'tipo' => 'success'];
             session()->flash('msg', $msg);
         } catch (QueryException $e) {
             $msg = ['valor' => trans("Erro ao executar a operação!"), 'tipo' => 'danger'];
             session()->flash('msg', $msg);
-    
+
             return back();
         }
- 
+
         if (env('ASSINATURA_OBRIGATORIA')) {
             return redirect()->route('cartao.create', ['usuario_id' => $request->usuario_id]);
         } else {
@@ -291,7 +291,7 @@ class PacienteController extends Controller
                 ->orderBy('horario_agendado', 'desc')
                 ->paginate(8);
         }
-            
+
         return view('userPaciente.historicoconsultas', ['consultas' => $consultas, 'msg' => $msg, 'filtro' => $filtro]);
     }
 
@@ -345,7 +345,7 @@ class PacienteController extends Controller
             ->select('clinicas.id', 'nome')
             ->groupBy('clinicas.id','nome')
             ->paginate(8);
-        
+
         return view('userPaciente/marcarConsultaViaEspecialidadePasso2', ['clinicas' => $clinicas, 'filtro' => $filter, 'especialidade_id' => $especialidade_id]);
     }
 
@@ -399,7 +399,7 @@ class PacienteController extends Controller
             ->where('consultas.status', 'Disponível')
             ->orderBy('nome', 'asc')
             ->select('clinicas.id', 'nome')
-            ->groupBy('consultas.clinica_id')
+            ->groupBy('clinicas.id','nome')
             ->paginate(8);
 
         return view('userPaciente/marcarConsultaViaClinicaPasso1', ['clinicas' => $clinicas, 'filtro' => $filter]);
@@ -414,7 +414,7 @@ class PacienteController extends Controller
             ->orderBy('clinicas.nome', 'asc')
             ->select('clinicas.id', 'nome')
             ->paginate(8);
-            
+
 
         if ($lista->isEmpty()) {
             $msg = ['valor' => trans("Não foi encontrado nenhuma clínica com os dados informados!"), 'tipo' => 'danger'];
@@ -490,7 +490,7 @@ class PacienteController extends Controller
         $consulta->status = "Aguardando atendimento";
         $consulta->paciente_id = $paciente->id;
         $consulta->save();
-        
+
 
         $anamnese = Anamnese::where('paciente_id', $paciente->id)->first();
         $clinica = Clinica::find($consulta->clinica_id);
@@ -548,27 +548,29 @@ class PacienteController extends Controller
 
     date_default_timezone_set('America/Sao_Paulo');
     $dataConsultaCancelada = Carbon::parse($consultaCancelada->horario_agendado);
-    $dataAtual = Carbon::now();   
+    $dataAtual = Carbon::now();
     // Verifica se a data da consulta é maior que a data atual para poder duplicar
-    if ($dataConsultaCancelada->gt($dataAtual)) {      
+    if ($dataConsultaCancelada->gt($dataAtual)) {
       $consultaNova = $consultaCancelada->replicate();
       $consultaNova->status="Disponível";
       $consultaNova->paciente_id = null;
-      $consultaNova->save();  
+      $consultaNova->save();
     }
 
     $consultaCancelada->status="Cancelada";
     $consultaCancelada->motivocancelamento= $request->motivocancelamento;
     $consultaCancelada->id_usuario_cancelou =  Auth::user()->id;
     $consultaCancelada->save();
+
     $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
     return  $this->minhasconsultas($msg);
    }
-   
+
    public function cancelarConsulta(Request $request)
    {
         $consulta = Consulta::find($request->consulta_id);
         $consultaController = new ConsultaController();
+
 
         if (Helper::verificarPrazoCancelamentoGratuito($consulta->horario_agendado)) {
             $retornoConsultaCancelada = $consultaController->cancelarConsultaSemTaxa($request);
@@ -581,6 +583,7 @@ class PacienteController extends Controller
                 ->select('cartoes.*', 'assinaturas.id as assinatura_id')
                 ->first();
 
+           if ($cartao) {
             //CRIAR O CHECKOUT
             $checkout = Helper::createCheckouSumupTaxa(route('callback.cancelamento.consulta'));
             //PASSAR O ID DA CUNSULTA E MOTIVO DE CANCELAMENTO
@@ -602,9 +605,41 @@ class PacienteController extends Controller
                 $pagamentoController->store($cartao->user_id, floatval(Helper::converterMonetario(env('TAXA_CANCELAMENTO_CONSULTA'))), $pagamento->next_step->current_transaction->transaction_code, 'Pendente', 'Taxa de cancelamento da consulta');
 
                 return redirect($pagamento->next_step->url);
-            }
+            }} else{
+               if (env('ASSINATURA_OBRIGATORIA')) {
+                    $msg = ['valor' => trans("Nenhum cartão associado!"), 'tipo' => 'danger'];
+                     return  $this->minhasconsultas($msg);
+               } else{
+
+                   $consulta = Consulta::find($consulta->id);
+                   $consulta->status="Cancelada";
+                   $consulta->motivocancelamento=$request->motivo_cancelamento;
+                   $consulta->id_usuario_cancelou = Auth::user()->id;
+                   $consulta->save();
+
+                   date_default_timezone_set('America/Sao_Paulo');
+                   $dataConsultaCancelada = Carbon::parse($consulta->horario_agendado);
+                   $dataAtual = Carbon::now();
+
+
+                   if ($dataConsultaCancelada->gt($dataAtual)) {
+                       $consultaNova = $consulta->replicate();
+
+                       $consultaNova->status="Disponível";
+                       $consultaNova->paciente_id = null;
+                       $consultaNova->save();
+                   }
+
+
+                   $msg = ['valor' => trans("Operação Realizada com sucesso!!"), 'tipo' => 'success'];
+                   return  $this->minhasconsultas($msg);
+                 //  dd($consulta);
+                  // dd("Fazer o cancelamento");
+               }
+             //  return redirect()->route('paciente.minhasconsultas',);
+           }
         }
-        
+
         return redirect()->route('paciente.minhasconsultas');
     }
 
@@ -615,12 +650,12 @@ class PacienteController extends Controller
     $especialista = Especialista::where('usuario_id', '=', Auth::user()->id)->first();
 
     $paciente = Paciente::find($paciente_id);
-    $usuarioPaciente = User::find($paciente->usuario_id);       
+    $usuarioPaciente = User::find($paciente->usuario_id);
     $qtdConsultasRealizadas = Consulta::where('status', '=', 'Finalizada')->
         where('paciente_id', '=', $paciente_id)->
      //   where('especialista_id', '=', $especialista->id)->
         orderBy('horario_iniciado', 'asc')->count();
-        
+
     $page_exames = 1;
     if(isset(request()->query()['page_exames'])){
         $page_exames = request()->query()['page_exames'];
@@ -630,14 +665,14 @@ class PacienteController extends Controller
     ->join('consultas', 'consultas.id', '=', 'pedido_exames.consulta_id')
     ->where('paciente_id',$paciente->id)
     ->orderBy('pedido_exames.created_at', 'desc')
-    ->select('pedido_exames.id as id', 'nome','laudo', 'pedido_exames.created_at as data_pedido')    
-  //  ->paginate(5)   
+    ->select('pedido_exames.id as id', 'nome','laudo', 'pedido_exames.created_at as data_pedido')
+  //  ->paginate(5)
     ->paginate(5, ['*'], 'page_exames',$page_exames )
-    ->setPageName('page_exames') 
+    ->setPageName('page_exames')
     ->appends(request()->query());
   //  ->appends(['page_exames' => request()->get('page_exames'),request()->query()])
    // ->setPageName('page_exames');
-  
+
     // Criando novas instâncias do paginator com pageName desejado
     $listaPedidosExames = new \Illuminate\Pagination\LengthAwarePaginator(
         $listaPedidosExames->items(),
@@ -656,7 +691,7 @@ class PacienteController extends Controller
     $listaPedidosMedicamentos = PedidoMedicamento::
     join('medicamentos', 'medicamentos.id', '=', 'pedido_medicamentos.medicamento_id')
     ->join('consultas', 'consultas.id', '=', 'pedido_medicamentos.consulta_id')
-    ->where('paciente_id',$paciente->id)  
+    ->where('paciente_id',$paciente->id)
     ->orderBy('pedido_medicamentos.created_at', 'desc')
     ->select('pedido_medicamentos.id as id', 'nome_comercial','prescricao_indicada','pedido_medicamentos.created_at as data_pedido' )
    ->paginate(5, ['*'], 'page_medicamentos',$page_medicamentos )
@@ -670,7 +705,7 @@ class PacienteController extends Controller
         request()->get('page_medicamentos', $listaPedidosMedicamentos->currentPage()), // Pega a página atual para exames
         ['path' => request()->url(), 'pageName' => 'page_medicamentos'] // Define o path e o pageName
     );
-   
+
     //na tabela de exames fazer a parte de arquivos feito pelo antony
 
     //  dd($listaPedidosExames);
