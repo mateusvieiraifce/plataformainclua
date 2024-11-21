@@ -90,10 +90,11 @@
                             </label>
                             <div class="input-group input-medium{{ $errors->has('numero_atendimento_social_mensal') ? ' has-danger' : '' }}">
                                 <input type="number" id="numero_atendimento_social_mensal" class="form-control border-full {{ $errors->has('numero_atendimento_social_mensal') ? 'is-invalid' : '' }}"
-                                    name="numero_atendimento_social_mensal" maxlength="15" placeholder="" value="{{ (isset($clinica) && $clinica->numero_atendimento_social_mensal ? $clinica->numero_atendimento_social_mensal : null) ?? old('numero_atendimento_social_mensal') }}" required>
+                                    name="numero_atendimento_social_mensal" maxlength="15" placeholder="" value="{{ (isset($clinica) && $clinica->numero_atendimento_social_mensal ? $clinica->numero_atendimento_social_mensal : null) ?? old('numero_atendimento_social_mensal') }}" required min="0">
                                 @include('alerts.feedback', ['field' => 'numero_atendimento_social_mensal'])
                             </div>
                         </div>
+
                         
                         <div class="form-group">
                             <label for="anamnese_obrigatoria">
