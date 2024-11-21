@@ -1,6 +1,9 @@
 @extends('layouts.app', ['page' => __('agenda'), 'exibirPesquisa' => false, 'pageSlug' => 'agendaespecialista', 'class' => 'agenda'])
 @section('content')
 @section('title', 'Agenda')
+@php
+   $lista = Session::get('lista') ?? $lista;
+@endphp
 <div class="card">
    <div class="row">
       <div class="col-lg-12 col-md-12">
@@ -61,6 +64,7 @@
                               </div>
                         </div>
                      </fieldset>
+                     <input type="hidden" name="especialista_id" value="{{ $especialista->id }}">
                   </form>
                </div>
 

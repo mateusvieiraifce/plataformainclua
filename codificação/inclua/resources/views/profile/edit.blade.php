@@ -8,7 +8,7 @@
                     <h5 class="title">Dados da conta</h5>
                 </div>
                 <div class="card-body">
-                    <form method="post" action="{{route('user.update')}}" autocomplete="off">
+                    <form method="post" action="{{ route('user.update') }}" autocomplete="off">
                         @csrf
                         @include('alerts.success')
 
@@ -18,7 +18,7 @@
                             </label>
                             <div class="input-group{{ $errors->has('nome') ? ' has-danger' : '' }}">
                                 <input type="text" id="nome" class="form-control {{ $errors->has('nome') ? 'is-invalid' : '' }}"
-                                    name="nome" placeholder="Nome" value="{{ old('nome') ?? auth()->user()->nome_completo }}">
+                                    name="nome" placeholder="Nome" value="{{ old('nome') ?? isset($user) ? $user->nome_completo : auth()->user()->nome_completo }}">
                                 @include('alerts.feedback', ['field' => 'nome'])
                             </div>
                         </div>
@@ -28,14 +28,15 @@
                             </label>
                             <div class="input-group{{ $errors->has('email') ? ' has-danger' : '' }}">
                                 <input type="text" id="email" class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}"
-                                    name="email" placeholder="E-mail" value="{{ old('email') ?? auth()->user()->email }}">
+                                    name="email" placeholder="E-mail" value="{{ old('email') ?? isset($user) ? $user->email : auth()->user()->email }}">
                                 @include('alerts.feedback', ['field' => 'email'])
                             </div>
                         </div>
                         <div class="form-group">
                             <button type="submit" class="btn btn-fill btn-primary">Salvar</button>
                         </div>
-                        <input type="hidden" name="usuario_id" value="{{auth()->user()->id}}">
+                        <input type="hidden" name="tipo_user" value="{{ isset($user) ? $user->tipo_user : auth()->user()->tipo_user }}">
+                        <input type="hidden" name="usuario_id" value="{{ isset($user) ? $user->id : auth()->user()->id }}">
                     </form>
                 </div>
             </div>
@@ -47,9 +48,6 @@
                 <div class="card-body">
                     <form method="post" action="{{route('user.update.dados')}}" autocomplete="off">
                         @csrf
-                        @method('put')
-
-                        @include('alerts.success', ['key' => 'password_status'])
                         <div class="form-group">
                             <label for="tipo_pessoa">
                                 Tipo Pessoa
@@ -57,8 +55,8 @@
                             <div class="input-group{{ $errors->has('tipo_pessoa') ? ' has-danger' : '' }}">
                                 <select id="tipo_pessoa" name="tipo_pessoa" class="form-control{{ $errors->has('tipo_pessoa') ? 'is-invalid' : '' }}" onchange="escondeSexo()">
                                     <option value=""></option>
-                                    <option value="F" @if ((auth()->user()->tipo_pessoa == 'F') || old('tipo_pessoa') == 'F') selected @endif>FÍSICA</option>
-                                    <option value="J" @if ((auth()->user()->tipo_pessoa == 'J') || old('tipo_pessoa') == 'J') selected @endif>JURÍDICA</option>
+                                    <option value="F" @if ((old('tipo_pessoa') == 'F') || (isset($user) && $user->tipo_pessoa == 'F') || (!isset($user) && auth()->user()->tipo_pessoa == 'F')) selected @endif>FÍSICA</option>
+                                    <option value="J" @if ((old('tipo_pessoa') == 'J') || (isset($user) && $user->tipo_pessoa == 'J') || (!isset($user) && auth()->user()->tipo_pessoa == 'J')) selected @endif>JURÍDICA</option>
                                 </select>
                                 @include('alerts.feedback', ['field' => 'tipo_pessoa'])
                             </div>
@@ -70,10 +68,10 @@
                             <div class="input-group{{ $errors->has('sexo') ? ' has-danger' : '' }}">
                                 <select id="sexo" name="sexo" class="form-control{{ $errors->has('sexo') ? 'is-invalid' : '' }}">
                                     <option value=""></option>
-                                    <option value="F" @if ((auth()->user()->sexo == 'F') || old('sexo') == 'F') selected @endif>Feminino</option>
-                                    <option value="M" @if ((auth()->user()->sexo == 'M') || old('sexo') == 'M') selected @endif>Masculino</option>
-                                    <option value="O" @if ((auth()->user()->sexo == 'O') || old('sexo') == 'O') selected @endif>Outro</option>
-                                    <option value="N" @if ((auth()->user()->sexo == 'N') || old('sexo') == 'N') selected @endif>Prefiro não informar</option>
+                                    <option value="F" @if ((old('sexo') == 'F') || (isset($user) && $user->tipo_pessoa == "F") || (isset($user) && auth()->user()->sexo == 'F')) selected @endif>Feminino</option>
+                                    <option value="M" @if ((old('sexo') == 'M') || (isset($user) && $user->tipo_pessoa == "M") || (isset($user) && auth()->user()->sexo == 'M')) selected @endif>Masculino</option>
+                                    <option value="O" @if ((old('sexo') == 'O') || (isset($user) && $user->tipo_pessoa == "O") || (isset($user) && auth()->user()->sexo == 'O')) selected @endif>Outro</option>
+                                    <option value="N" @if ((old('sexo') == 'N') || (isset($user) && $user->tipo_pessoa == "N") || (isset($user) && auth()->user()->sexo == 'N')) selected @endif>Prefiro não informar</option>
                                 </select>
                                 @include('alerts.feedback', ['field' => 'sexo'])
                             </div>
@@ -84,7 +82,7 @@
                             </label>
                             <div class="input-group{{ $errors->has('documento') ? ' has-danger' : '' }}">
                                 <input type="text" id="documento" class="form-control {{ $errors->has('documento') ? 'is-invalid' : '' }}"
-                                    name="documento" placeholder="CPF/CNPJ" value="{{ old('documento') ?? auth()->user()->documento }}">
+                                    name="documento" placeholder="CPF/CNPJ" value="{{ old('documento') ?? isset($user) ? $user->documento : auth()->user()->documento }}">
                                 @include('alerts.feedback', ['field' => 'documento'])
                             </div>
                         </div>
@@ -94,7 +92,7 @@
                             </label>
                             <div class="input-group{{ $errors->has('telefone') ? ' has-danger' : '' }}">
                                 <input type="text" id="telefone" class="form-control {{ $errors->has('telefone') ? 'is-invalid' : '' }}" pattern="\([0-9]{2}\) [0-9]{4,6}-[0-9]{3,4}$"
-                                    name="telefone" placeholder="(**) ****-****" value="{{ old('telefone') ?? auth()->user()->telefone }}">
+                                    name="telefone" placeholder="(**) ****-****" value="{{ old('telefone') ?? isset($user) ? $user->telefone : auth()->user()->telefone }}">
                                 @include('alerts.feedback', ['field' => 'telefone'])
                             </div>
                         </div>
@@ -104,14 +102,14 @@
                             </label>
                             <div class="input-group{{ $errors->has('celular') ? ' has-danger' : '' }}">
                                 <input type="text" id="celular" class="form-control {{ $errors->has('celular') ? 'is-invalid' : '' }}" oninput="mascaraCelular(this)"
-                                    pattern="\([0-9]{2}\) [0-9]{4,6}-[0-9]{3,4}$" name="celular" placeholder="(**) 9****-****" value="{{ old('celular') ?? auth()->user()->celular }}">
+                                    pattern="\([0-9]{2}\) [0-9]{4,6}-[0-9]{3,4}$" name="celular" placeholder="(**) 9****-****" value="{{ old('celular') ?? isset($user) ? $user->celular : auth()->user()->celular }}">
                                 @include('alerts.feedback', ['field' => 'celular'])
                             </div>
                         </div>
                         <div class="form-group">
                             <button type="submit" class="btn btn-fill btn-primary">Atualizar Dados</button>
                         </div>
-                        <input type="hidden" name="usuario_id" value="{{auth()->user()->id}}">
+                        <input type="hidden" name="usuario_id" value="{{ isset($user) ? $user->id : auth()->user()->id }}">
                     </form>
                 </div>
             </div>
@@ -124,7 +122,7 @@
                             <i class="tim-icons icon-settings-gear-63"></i>
                         </button>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-                            <a class="dropdown-item" href="{{ route('user.endereco.create') }}">Adicionar</a>
+                            <a class="dropdown-item" href="{{ route('user.endereco.create', isset($user) ? $user->id : auth()->user()->id) }}">Adicionar</a>
                         </div>
                     </div>
                 </div>
@@ -188,10 +186,13 @@
                             <div class="block block-one"></div>
                             <div class="block block-two"></div>
                             <div class="block block-three"></div>
-                            <div class="block block-four"></div>
+                            <h3 class="title">Avatar</h3>
                             <a href="#">
-                                <img class="avatar" id="preview" src="{{ auth()->user()->avatar }}">
-                                <h5 class="title">{{ auth()->user()->name }}</h5>
+                                @if((isset($user) && $user->avatar) || (!isset($user) && auth()->user()->avatar))
+                                    <img class="avatar" id="preview" src="{{ isset($user) ? $user->avatar : auth()->user()->avatar }}">
+                                @else
+                                    <img class="avatar" id="preview" src={{ asset("assets/img/anime3.png") }} alt="IMG-LOGO">
+                                @endif
                             </a>
                         </div>
                     </p>
@@ -211,6 +212,7 @@
                 documento.mask("000.000.000-00");
             } else{
                 documento.mask("00.000.000/0000-00");
+                escondeSexo()
             }
             
             $("#telefone").mask("(00) 0000-0000");
@@ -248,7 +250,7 @@
             var file_data = $('#image').prop('files')[0];
             var form_data = new FormData();
             form_data.append('image', file_data);
-            form_data.append('usuario_id', "{{ auth()->user()->id }}");
+            form_data.append('usuario_id', "{{ isset($user) ? $user->id : auth()->user()->id }}");
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': "{{ csrf_token() }}"

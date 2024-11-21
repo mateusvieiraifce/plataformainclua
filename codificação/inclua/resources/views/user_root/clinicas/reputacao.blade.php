@@ -1,4 +1,4 @@
-@extends('layouts.app', ['page' => __('Reputação'), 'exibirPesquisa' => false, 'pageSlug' => 'reputacao-especialista', 'class' => 'reputacao'])
+@extends('layouts.app', ['page' => __('Reputação'), 'exibirPesquisa' => false, 'pageSlug' => 'reputacao-clinicas', 'class' => 'reputacao'])
 @section('title', 'Reputação')
 @section('content')
     @inject('helper', 'App\Helper')
@@ -10,10 +10,10 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        @if($especialistas->count())
+                        @if($clinicas->count())
                             <table class="table">
                                 <thead>
-                                    <th>Especialista</th>
+                                    <th>Clinica</th>
                                     <th>CNPJ</th>
                                     <th>Medias</th>
                                 </thead>
@@ -21,8 +21,8 @@
                                     @php
                                        $contador = 0;
                                     @endphp
-                                    @foreach($especialistas as $especialista)
-                                        @if($contador % 2 == 0)
+                                    @foreach($clinicas as $especialista)
+                                        @if($contador % 4 == 0)
                                             <tr>
                                                 <td>
                                                     {{ $especialista->nome }}
@@ -43,14 +43,14 @@
                                                             @endfor
                                                         </div>
                                                     @endforeach
-                                        @if($contador % 2 == 0)                                       
+                                        @if($contador % 4 == 0)                                       
                                                 </td>
                                             </tr>
                                         @endif
                                     @endforeach
                                 </tbody>
                             </table>
-                            {{ $especialistas->appends(request()->query())->links() }}
+                            {{ $clinicas->appends(request()->query())->links() }}
                         @else
                             <h5>Ainda não há nenhuma avaliação.</h5>
                         @endif

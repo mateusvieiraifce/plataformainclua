@@ -150,7 +150,7 @@
                         <div class="input-group">
                             <button type="submit" class="btn btn-primary btn-round btn-lg">{{ __('Salvar') }}</button>
                         </div>
-                        <input type="hidden" name="usuario_id" value="{{ auth()->user()->id }}">
+                        <input type="hidden" name="usuario_id" value="{{ isset($user) ? $user->id : auth()->user()->id }}">
                         <input type="hidden" name="endereco_id" value="{{ isset($endereco) ? $endereco->id : null }}">
                     </form>
                 </div>

@@ -162,9 +162,10 @@ function validarCheckBoxes() {
               </div>
               <input type="hidden" name="id" value="{{$entidade->id}}">
               <input type="hidden" name="especialista_id" value="{{$especialista->id}}">
+              <input type="hidden" name="clinica_id" value="{{ $clinica->id }}">
 
 
-              <a href="{{route('especialistaclinica.list')}}" class="btn btn-primary"><i
+              <a href="{{route('especialistaclinica.list', $clinica->id)}}" class="btn btn-primary"><i
                   class="fa fa-reply"></i>
                 Voltar</a>
               <button class="btn btn-success" onclick="$('#send').click(); "><i class="fa fa-save"></i> Disponibilizar</button>

@@ -44,7 +44,7 @@
             </div>
             <input type="hidden" name="id" value="{{$entidade->id}}">
             <input type="hidden" name="clinica_id" value="{{$clinica->id}}">
-            <a href="{{route('especialidadeclinica.listclinicas')}}" class="btn btn-primary"><i
+            <a href="{{route('especialidadeclinica.listclinicas', $clinica->id)}}" class="btn btn-primary"><i
                 class="fa fa-reply"></i> Voltar</a>
             <button class="btn btn-success" onclick="$('#send').click(); "><i class="fa fa-save"></i> Salvar</button>
         </div>

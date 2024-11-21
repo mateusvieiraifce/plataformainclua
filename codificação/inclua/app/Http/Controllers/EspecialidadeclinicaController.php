@@ -10,14 +10,18 @@ use App\Models\Especialidade;
 
 class EspecialidadeclinicaController extends Controller
 {
-   function listUserClinica($msg = null)
+   function listUserClinica($clinica_id = null, $msg = null)
    {
       $filter = "";
       if (isset($_GET['filtro'])) {
          $filter = $_GET['filtro'];
       }
 
-      $clinica = Clinica::where('usuario_id', Auth::user()->id)->first();
+      if (Auth::user()->tipo_user == "C") {
+         $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
+      } else {
+         $clinica = Clinica::find($clinica_id);
+      }
 
       $lista = Especialidadeclinica::join('especialidades', 'especialidades.id', '=', 'especialidade_id')->
          where('clinica_id', '=', $clinica->id)->
@@ -27,7 +31,8 @@ class EspecialidadeclinicaController extends Controller
       return view('userClinica/cadEspecialidade/list', [
          'lista' => $lista,
          'filtro' => $filter,
-         'msg' => $msg
+         'msg' => $msg, 
+         'clinica' => $clinica
       ]);
    }
 
@@ -61,10 +66,14 @@ class EspecialidadeclinicaController extends Controller
       return view('userClinica/cadEspecialidade/form', ['entidade' => new Especialidadeclinica(), 'clinica' => $clinica, 'especialidades' => Especialidade::all()]);
    }
 
-   function editUserClinica($id)
+   function editUserClinica($id, $clinica_id = null)
    {
       $entidade = Especialidadeclinica::find($id);
-      $clinica = Clinica::where('usuario_id', Auth::user()->id)->first();
+      if (Auth::user()->tipo_user == "C") {
+         $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
+      } else {
+         $clinica = Clinica::find($clinica_id);
+      }
       return view(
          'userClinica/cadEspecialidade/form',
          [
@@ -120,7 +129,7 @@ class EspecialidadeclinicaController extends Controller
          ]);
       }
       $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
-      return $this->listUserClinica( $msg);
+      return $this->listUserClinica( $clinica_id, $msg);
    }
 
 
@@ -146,6 +155,7 @@ class EspecialidadeclinicaController extends Controller
    {
       try {
          $entidade = Especialidadeclinica::find($id);
+         $clinica_id = $entidade->clinica_id;
          if ($entidade) {
             $entidade->is_vinculado = !$entidade->is_vinculado;
             $msg = ['valor' => trans("Vínculo alterado com sucesso!"), 'tipo' => 'success'];
@@ -154,7 +164,7 @@ class EspecialidadeclinicaController extends Controller
       } catch (QueryException $exp) {
          $msg = ['valor' => $exp->getMessage(), 'tipo' => 'primary'];
       }
-      return $this->listUserClinica($msg);
+      return $this->listUserClinica($clinica_id, $msg);
    }
 
 
