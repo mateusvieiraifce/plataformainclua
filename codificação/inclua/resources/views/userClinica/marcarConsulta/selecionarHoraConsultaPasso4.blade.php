@@ -1,144 +1,144 @@
 @extends('layouts.app', ['page' => __('Marcar Consulta'),'exibirPesquisa' => false, 'pageSlug' => 'marcarconsulta', 'class' => 'especialidade'])
 @section('title', 'Marcar Consulta')
 @section('content')
+    <style>
+        .calendar {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 10px;
+        }
 
-<style>
-    .calendar {
-        max-width: 100%;
-        margin: 0 auto;
-        padding: 10px;
-    }
+        .weekdays {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 5px;
+        }
 
-    .weekdays {
-        display: flex;
-        justify-content: space-around;
-        margin-bottom: 5px;
-    }
+        .weekdays span {
+            width: 100px;
+            text-align: center;
+        }
 
-    .weekdays span {
-        width: 100px;
-        text-align: center;
-    }
+        .days {
+            display: flex;
+            flex-wrap: wrap;
+        }
 
-    .days {
-        display: flex;
-        flex-wrap: wrap;
-    }
+        .day {
+            width: 80px;
+            height: 80px;
+            border: 1px solid #ccc;
+            text-align: center;
+            line-height: 1.5;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            padding-top: 20px;
+            cursor: pointer;
+            border-radius: 10px;
+            color: white;
+        }
 
-    .day {
-        width: 80px;
-        height: 80px;
-        border: 1px solid #ccc;
-        text-align: center;
-        line-height: 1.5;
-        margin-right: 10px;
-        margin-bottom: 10px;
-        padding-top: 20px;
-        cursor: pointer;
-        border-radius: 10px;
-        color: white;
-    }
+        .navigation {
+            margin-top: 5px;
+            padding: 5px;
+            text-align: center;
+            border: 1px solid #ccc;
+        }
 
-    .navigation {
-        margin-top: 5px;
-        padding: 5px;
-        text-align: center;
-        border: 1px solid #ccc;
-    }
+        .navigation button {
+            margin: 0 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
 
-    .navigation button {
-        margin: 0 10px;
-        padding: 10px 20px;
-        font-size: 16px;
-        cursor: pointer;
-    }
-</style>
-
- <!-- Modal confirmar consulta-->
- <div class="modal" id="modalFinalizarConsulta" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-            <h3 class="modal-title">
-                <label style="color:black; font-size: 20px;">Revise sua consulta</label>
-            </h3>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            </div>
-            <div class="modal-body">
-            <div class="container">
-                <!--aqui a rota de salvar de confirmar consulta -->
-                <form method="post" action="{{route('clinica.marcarConsultaFinalizar')}}">
-                    @csrf
-                    <div class="row">
-                        <div class="col-md-12">
-                        <div class="form-group" style=" border-bottom: 1px solid black; ">
-                            <label style="color:black; font-size: 15px;"><strong>Paciente:</strong> {{$paciente->nome}}</label>
-                        </div>
-                        </div>
-                        <div class="col-md-12 px-8">
-                        <div class="form-group" style="border-bottom: 1px solid black; ">
-                            <label style="color:black; font-size: 15px; "><strong>Data:</strong></label>
-                            <label id="diaModal" style="color:black; font-size: 15px;"></label>
-                        </div>
-                        </div>
-                        <div class="col-md-12 px-8">
-                        <div class="form-group" style=" border-bottom: 1px solid black; ">
-                        <label style="color:black; font-size: 15px; "><strong>Hora:</strong></label>
-                            <label id="horarioModal" style="color:black; font-size: 15px;"> </label>
-                        </div>
-                        </div>
-                        <div class="col-md-12 px-8">
-                        <div class="form-group" style="border-bottom: 1px solid black;">
-                            <label style="color:black; font-size: 15px;"><strong>Área de atuação:</strong> {{$especialidade->descricao}}</label>
-                        </div>
-                        </div>
-                        <div class="col-md-12 px-8">
-                        <div class="form-group"  style=" border-bottom: 1px solid black;">
-                            <label style="color:black; font-size: 15px;"><strong>Especialista:</strong> {{$especialista->nome}}</label>
-                        </div>
-                        </div>
-                        <div class="col-md-12 px-8">
-                        <div class="form-group"  style=" border-bottom: 1px solid black; ">
-                            <label style="color:black; font-size: 15px;"><strong>Clínica:</strong> {{$clinica->nome}}</label>
-                        </div>
-                        </div>
+    <!-- Modal confirmar consulta-->
+    <div class="modal" id="modalFinalizarConsulta" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">
+                        <label style="color:black; font-size: 20px;">Revise sua consulta</label>
+                    </h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <!--aqui a rota de salvar de confirmar consulta -->
+                        <form method="post" action="{{route('clinica.marcarConsultaFinalizar')}}">
+                            @csrf
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group" style=" border-bottom: 1px solid black; ">
+                                        <label style="color:black; font-size: 15px;"><strong>Paciente:</strong> {{$paciente->nome}}</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 px-8">
+                                    <div class="form-group" style="border-bottom: 1px solid black; ">
+                                        <label style="color:black; font-size: 15px; "><strong>Data:</strong></label>
+                                        <label id="diaModal" style="color:black; font-size: 15px;"></label>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 px-8">
+                                    <div class="form-group" style=" border-bottom: 1px solid black; ">
+                                    <label style="color:black; font-size: 15px; "><strong>Hora:</strong></label>
+                                        <label id="horarioModal" style="color:black; font-size: 15px;"> </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 px-8">
+                                    <div class="form-group" style="border-bottom: 1px solid black;">
+                                        <label style="color:black; font-size: 15px;"><strong>Área de atuação:</strong> {{$especialidade->descricao}}</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 px-8">
+                                    <div class="form-group"  style=" border-bottom: 1px solid black;">
+                                        <label style="color:black; font-size: 15px;"><strong>Especialista:</strong> {{$especialista->nome}}</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 px-8">
+                                    <div class="form-group"  style=" border-bottom: 1px solid black; ">
+                                        <label style="color:black; font-size: 15px;"><strong>Clínica:</strong> {{$clinica->nome}}</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" id="consulta_id" name="consulta_id">
+                            <input type="hidden" id="paciente_id" value=" {{$paciente->id}}" name="paciente_id">
+                            <input type="submit" id="send" style="display: none">
+                        </form>
                     </div>
-                    <input type="hidden" id="consulta_id" name="consulta_id">
-                    <input type="hidden" id="paciente_id" value=" {{$paciente->id}}" name="paciente_id">
-            </div>
-
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-reply"></i>
-                    Voltar
-                </button>
-                <button type="submit" class="btn btn-success">Confirmar consulta</button>
-            </div>
-            </form>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">
+                            <i class="fa fa-reply"></i> Voltar
+                        </button>
+                        <button type="button" class="btn btn-success" onclick="$('#send').click();">
+                            Confirmar consulta
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 <div class="row">
     <div class="col-lg-12 col-md-12">
-        <div class="card card-tasks"  style="height: auto; min-height: 500px;">
+        <div class="card card-tasks">
             <div class="card-header">
                 <div class="navigation">
                     <button onclick="previousWeek()">
-                        <i class="tim-icons icon-minimal-left">
-                        </i> </button>
+                        <i class="tim-icons icon-minimal-left"></i>
+                    </button>
                     <span id="intervalodias">Segunda-feira</span>
-                    <button onclick="nextWeek()"> <i class="tim-icons icon-minimal-right">
-                        </i></button>
+                    <button onclick="nextWeek()">
+                        <i class="tim-icons icon-minimal-right"></i>
+                    </button>
                 </div>
-
             </div>
             <div class="card-body">
                 <div class="calendar">
-                    <div class="weekdays">
-                    </div>
+                    <div class="weekdays"></div>
                     <p>Selecione o dia</p>
                     <div class="days" id="calendarDays">
                         <!-- Dias da semana serão gerados dinamicamente pelo JavaScript -->
@@ -147,14 +147,11 @@
                     <div class="days" id="consultasDisponivel">
                         <!-- Dias da semana serão gerados dinamicamente pelo JavaScript -->
                     </div>
-
                 </div>
-
             </div>
-            <div class="col-2">
-                <a href="{{route('clinica.marcarConsultaSelecionarEspecialista',[$paciente->id,$especialista->especialidade_id])}}" class="btn btn-primary"><i class="fa fa-reply"></i>
-                    Voltar</a>
-            </div>
+            <a href="{{route('clinica.marcarConsultaSelecionarEspecialista',[$paciente->id, $especialista->especialidade_id, $clinica->id])}}" class="btn btn-primary">
+                <i class="fa fa-reply"></i> Voltar
+            </a>
         </div>
     </div>
 </div>

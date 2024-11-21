@@ -1,4 +1,4 @@
-@extends('layouts.app', ['page' => __('Reputação'), 'exibirPesquisa' => false, 'pageSlug' => 'reputacao-pacientes', 'class' => 'reputacao'])
+@extends('layouts.app', ['page' => __('Reputação'), 'exibirPesquisa' => false, 'pageSlug' => 'reputacao-clinicas', 'class' => 'reputacao'])
 @section('title', 'Reputação')
 @section('content')
     @inject('helper', 'App\Helper')

@@ -820,8 +820,7 @@ class ConsultaController extends Controller
 
    public function selectEspecialistaSearch(Request $request)
    {
-      $especialistas = Especialista::where('nome', 'like', "%$request->nome%")
-         ->paginate(8);
+      $especialistas = Especialista::where('nome', 'like', "%$request->nome%")->paginate(8);
 
       if ($especialistas->isEmpty()) {
          $msg = ['valor' => trans("Não foi encontrado nenhum especialista com os dados informados!"), 'tipo' => 'danger'];
@@ -834,6 +833,7 @@ class ConsultaController extends Controller
    public function selectClinica($rota = null)
    {
       $clinicas = Clinica::paginate(8);
+
       if ($rota == "agenda") {
          return view('user_root.clinicas.selecionar_clinica', ['clinicas' => $clinicas, 'route' => 'consulta.agendaConsultas']);
       } else if ($rota == "marcar-consulta") {
@@ -847,14 +847,13 @@ class ConsultaController extends Controller
 
    public function selectClinicaSearch(Request $request)
    {
-      $especialistas = Especialista::where('nome', 'like', "%$request->nome%")
-         ->paginate(8);
+      $clinicas = Clinica::where('nome', 'like', "%$request->nome%")->paginate(8);
 
-      if ($especialistas->isEmpty()) {
-         $msg = ['valor' => trans("Não foi encontrado nenhum especialista com os dados informados!"), 'tipo' => 'danger'];
+      if ($clinicas->isEmpty()) {
+         $msg = ['valor' => trans("Não foi encontrado nenhuma clinica com os dados informados!"), 'tipo' => 'danger'];
          session()->flash('msg', $msg);
       }
 
-      return back()->with('especialistas', $especialistas)->withInput();
+      return back()->with('clinicas', $clinicas)->withInput();
    }
 }

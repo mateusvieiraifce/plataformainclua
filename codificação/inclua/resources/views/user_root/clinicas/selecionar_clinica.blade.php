@@ -1,5 +1,5 @@
-@extends('layouts.app', ['page' => __('Marcar Consulta'), 'exibirPesquisa' => false,'pageSlug' => 'marcarconsulta', 'class' => 'marcar-consulta'])
-@section('title', 'Marcar Consulta')
+@extends('layouts.app', ['page' => __('Clínicas'), 'exibirPesquisa' => false, 'pageSlug' => '', 'class' => ''])
+@section('title', 'Clínicas')
 @section('content')
     @php
         $clinicas = Session::get('clinicas') ?? $clinicas;
@@ -9,8 +9,7 @@
             <div class="card">
                 <div class="card-header">
                     <h4 class="title">Escolha a clínica</h4>
-                    <form action="{{ route('selecionar.especialista.search') }}" method="post" id="pesquisar">
-                        @csrf
+                    <form action="{{ route('selecionar.clinica.search') }}" method="get" id="pesquisar">
                         <div class="row search">
                             <div class="col-lg-4 col-md-6">
                                 <div class="form-group">
@@ -52,7 +51,7 @@
                             </table>
                             {{ $clinicas->appends(request()->query())->links() }}
                         @else
-                            <h5>Não há nenhum especialista disponível.</h5>
+                            <h5>Não há nenhuma clínica disponível.</h5>
                         @endif
                     </div>
                 </div>

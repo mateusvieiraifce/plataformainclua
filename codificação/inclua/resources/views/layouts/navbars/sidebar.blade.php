@@ -109,7 +109,7 @@
 
                             <div class="collapse" id="configclinica">
                                 <ul class="nav pl-4">
-                                    <li @if ($pageSlug == 'dashboard2') class="active" @endif>
+                                    <li @if ($pageSlug == 'especialidades-clinica') class="active" @endif>
                                         <a href="{{route('especialidadeclinica.listclinicas')}}">
                                             <i class="tim-icons icon-components"></i>
                                             <p>{{ __('Especialidades') }}</p>
@@ -205,7 +205,7 @@
                                         </a>
                                     </li>
 
-                                    <li @if ($pageSlug == 'reputacao') class="active" @endif>
+                                    <li @if ($pageSlug == 'reputacao-especialista') class="active" @endif>
                                         <a href="{{ route('especialistas.avaliacao.lista') }}">
                                             <i class="tim-icons icon-chat-33"></i>
                                             <p>{{ __('Reputação') }}</p>
@@ -252,7 +252,7 @@
                                             </a>
                                         </li>
 
-                                        <li @if ($pageSlug == 'reputacao') class="active" @endif>
+                                        <li @if ($pageSlug == 'reputacao-clinicas') class="active" @endif>
                                             <a href="{{route('clinicas.avaliacao.lista')}}">
                                                 <i class="tim-icons icon-chat-33"></i>
                                                 <p>{{ __('Reputação') }}</p>
@@ -303,7 +303,7 @@
 
                                             <div class="collapse" id="configclinica">
                                                 <ul class="nav pl-4">
-                                                    <li @if ($pageSlug == 'dashboard2') class="active" @endif>
+                                                    <li @if ($pageSlug == 'especialidades-clinica') class="active" @endif>
                                                         <a href="{{ route('selecionar.clinica', ['rota' => 'especialidades']) }}">
                                                             <i class="tim-icons icon-components"></i>
                                                             <p>{{ __('Especialidades') }}</p>

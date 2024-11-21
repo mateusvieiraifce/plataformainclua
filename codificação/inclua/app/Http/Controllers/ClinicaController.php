@@ -402,14 +402,17 @@ class ClinicaController extends Controller
              $cpf = $_GET['cpf'];
          }
 
-        $lista = Paciente::where('nome', 'like', "%" . $filtro . "%")->
-        where('cpf', 'like', "%" . $cpf . "%")
-            ->orderBy('nome', 'asc')->paginate(8);         
-        $msg = null;
-        if ($lista->isEmpty()) {
+         $lista = Paciente::where('nome', 'like', "%" . $filtro . "%")
+            ->where('cpf', 'like', "%" . $cpf . "%")
+            ->orderBy('nome', 'asc')
+            ->paginate(8);
+         
+         if ($lista->isEmpty()) {
             $msg = ['valor' => trans("Não foi encontrado nenhum paciente!"), 'tipo' => 'primary'];
-        }
-        return view('userClinica/marcarConsulta/selecionarPacientePasso1', ['lista' => $lista, 'filtro' => $filtro, 'cpf' => $cpf,'msg' => $msg]);
+            session()->flash('msg', $msg);
+         }
+
+         return back()->with('lista', $lista)->withInput();
    }
 
    function marcarConsultaSelecionarEspecialidade($paciente_id, $clinica_id = null)

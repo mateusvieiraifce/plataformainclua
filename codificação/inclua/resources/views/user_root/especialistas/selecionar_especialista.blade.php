@@ -1,5 +1,5 @@
-@extends('layouts.app', ['page' => __('Marcar Consulta'), 'exibirPesquisa' => false,'pageSlug' => 'marcarconsulta', 'class' => 'marcar-consulta'])
-@section('title', 'Marcar Consulta')
+@extends('layouts.app', ['page' => __('Especialistas'), 'exibirPesquisa' => false, 'pageSlug' => '', 'class' => ''])
+@section('title', 'Especialistas')
 @section('content')
     @php
         $especialistas = Session::get('especialistas') ?? $especialistas;
@@ -9,8 +9,7 @@
             <div class="card">
                 <div class="card-header">
                     <h4 class="title">Escolha o especialista</h4>
-                    <form action="{{ route('selecionar.especialista.search') }}" method="post" id="pesquisar">
-                        @csrf
+                    <form action="{{ route('selecionar.especialista.search') }}" method="get" id="pesquisar">
                         <div class="row search">
                             <div class="col-lg-4 col-md-6">
                                 <div class="form-group">
