@@ -343,7 +343,7 @@ class PacienteController extends Controller
             ->where('especialidade_id', $especialidade_id)
             ->orderBy('nome', 'asc')
             ->select('clinicas.id', 'nome')
-            ->groupBy('consultas.clinica_id')
+            ->groupBy('clinicas.id','nome')
             ->paginate(8);
         
         return view('userPaciente/marcarConsultaViaEspecialidadePasso2', ['clinicas' => $clinicas, 'filtro' => $filter, 'especialidade_id' => $especialidade_id]);

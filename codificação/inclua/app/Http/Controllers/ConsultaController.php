@@ -433,6 +433,7 @@ class ConsultaController extends Controller
    function listConsultaAgendadaUserClinica($clinica_id = null, $msg = null)
    {
       if (Auth::user()->tipo_user == "E") {
+         dd("aqui");
          $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
       } else {
          $clinica = Clinica::find($clinica_id);
@@ -443,6 +444,7 @@ class ConsultaController extends Controller
          $filter = $_GET['filtro'];
       }
 
+      //dd($clinica);
       //todoas os especialistas que a clinica eh vinculado
       $especialistas = Especialistaclinica::join('especialistas', 'especialistas.id', '=', 'especialistaclinicas.especialista_id')->where('clinica_id', $clinica->id)->orderBy('especialistas.nome', 'asc')->select('especialistas.id', 'especialistas.nome')->get();
 
