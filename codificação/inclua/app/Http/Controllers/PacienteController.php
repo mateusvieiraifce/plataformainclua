@@ -45,7 +45,7 @@ class PacienteController extends Controller
         $rules = [
             "nome" => "required|min:5",
             "documento" => "required|unique:users,documento,{$request->usuario_id}",
-            "data_nascimento" => "required",
+            'data_nascimento' => 'required|date|before_or_equal:today',
             "sexo" => "required"
         ];
         $feedbacks = [
@@ -71,10 +71,69 @@ class PacienteController extends Controller
             $msg = ['valor' => trans("Cadastro do paciente realizado com sucesso!"), 'tipo' => 'success'];
             session()->flash('msg', $msg);
         } catch (QueryException $e) {
+            if ($e->errorInfo[1] == 1062) {
+
+                $msg = ['valor' => trans("Já existe um paciente com este CPF. Tente novamente."), 'tipo' => 'danger'];
+                session()->flash('msg', $msg);
+                return back()->withInput();
+
+            }
             $msg = ['valor' => trans("Houve um erro ao realizar o cadastro do paciente. Tente novamente."), 'tipo' => 'danger'];
             session()->flash('msg', $msg);
+            return back()->withInput();
+        }
 
-            return back();
+        return redirect()->route('paciente.index');
+    }
+
+    public function edit($id) {
+        $paciente = Paciente::find($id);
+        return view('userPaciente.paciente.edit', ['paciente' => $paciente]);
+    }
+
+    public function update(Request $request) {
+        $request->request->set('documento', Helper::removerCaractereEspecial($request->documento));
+        $rules = [
+            "nome" => "required|min:5",
+            "documento" => "required|unique:users,documento,{$request->usuario_id}",
+            'data_nascimento' => 'required|date|before_or_equal:today',
+            "sexo" => "required"
+        ];
+        $feedbacks = [
+            "nome.required" => "O campo Nome é obrigatório.",
+            "nome.min" => "O campo nome deve ter no mínomo 5 caracteres.",
+            "documento.required" => "O campo CPF é obrigatório.",
+            "documento.unique" => "Este CPF já foi utilizado.",
+            "data_nascimento.required" => "O campo Data de nascimento é obrigatório.",
+            "estado_civil.required" => "O campo Estado civil é obrigatório.",
+            "sexo.required" => "O campo Gênero é obrigatório."
+        ];
+
+        $request->validate($rules, $feedbacks);
+
+        try {
+
+        $paciente = Paciente::find($request->id);
+        $paciente->usuario_id = Auth::user()->id;
+        $paciente->nome = $request->nome;
+        $paciente->data_nascimento = $request->data_nascimento;
+        $paciente->sexo = $request->sexo;
+        $paciente->cpf = $request->documento;
+        $paciente->save();
+
+        $msg = ['valor' => trans("Edição do paciente realizada com sucesso!"), 'tipo' => 'success'];
+            session()->flash('msg', $msg);
+        } catch (QueryException $e) {
+            if ($e->errorInfo[1] == 1062) {
+
+                $msg = ['valor' => trans("Já existe um paciente com este CPF. Tente novamente."), 'tipo' => 'danger'];
+                session()->flash('msg', $msg);
+                return back()->withInput();
+
+            }
+            $msg = ['valor' => trans("Houve um erro ao realizar o cadastro do paciente. Tente novamente."), 'tipo' => 'danger'];
+            session()->flash('msg', $msg);
+            return back()->withInput();
         }
 
         return redirect()->route('paciente.index');
