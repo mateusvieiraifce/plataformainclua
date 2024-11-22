@@ -45,7 +45,7 @@ class PacienteController extends Controller
         $rules = [
             "nome" => "required|min:5",
             "documento" => "required|unique:users,documento,{$request->usuario_id}",
-            "data_nascimento" => "required",
+            'data_nascimento' => 'required|date|before_or_equal:today',
             "sexo" => "required"
         ];
         $feedbacks = [
@@ -71,10 +71,16 @@ class PacienteController extends Controller
             $msg = ['valor' => trans("Cadastro do paciente realizado com sucesso!"), 'tipo' => 'success'];
             session()->flash('msg', $msg);
         } catch (QueryException $e) {
+            if ($e->errorInfo[1] == 1062) {
+
+                $msg = ['valor' => trans("Já existe um paciente com este CPF. Tente novamente."), 'tipo' => 'danger'];
+                session()->flash('msg', $msg);
+                return back()->withInput();
+
+            }
             $msg = ['valor' => trans("Houve um erro ao realizar o cadastro do paciente. Tente novamente."), 'tipo' => 'danger'];
             session()->flash('msg', $msg);
-
-            return back();
+            return back()->withInput();
         }
 
         return redirect()->route('paciente.index');

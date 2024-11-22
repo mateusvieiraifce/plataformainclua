@@ -40,10 +40,16 @@
                                 <div class="form-group">
                                     <label for="data_nascimento">
                                         Data de nascimento <span class="required">*</span>
-                                    </label>
+                                    </label>    
                                     <div class="input-group {{ $errors->has('data_nascimento') ? 'has-danger' : '' }}">
-                                        <input type="date" id="data_nascimento" class="form-control {{ $errors->has('data_nascimento') ? 'is-invalid' : '' }}"
-                                            name="data_nascimento" value="{{ old('data_nascimento') }}" required>
+                                        <input type="date" 
+                                           id="data_nascimento" 
+                                           class="form-control {{ $errors->has('data_nascimento') ? 'is-invalid' : '' }}"
+                                           name="data_nascimento" 
+                                           value="{{ old('data_nascimento') }}" 
+                                           max="{{ date('Y-m-d') }}" 
+                                           required>
+
                                         @include('alerts.feedback', ['field' => 'data_nascimento'])
                                     </div>
                                 </div>
