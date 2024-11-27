@@ -355,35 +355,38 @@
                                 <ul class="nav pl-4">
                                     <li @if ($pageSlug == 'especialidades') class="active" @endif>
                                         <a href="{{ route('especialidade.list') }}">
-                                            <i class="tim-icons icon-components"></i>
+                                            <i class="tim-icons icon-puzzle-10"></i>
+
                                             <p>{{ __('Especialidades') }}</p>
                                         </a>
                                     </li>
 
                                     <li @if ($pageSlug == 'tipo-exames') class="active" @endif>
                                         <a href="{{ route('tipoexame.list') }}">
-                                            <i class="tim-icons icon-components"></i>
+                                            <i class="tim-icons icon-chart-bar-32"></i>
+
                                             <p>{{ __('Tipo de Exames') }}</p>
                                         </a>
                                     </li>
 
                                     <li @if ($pageSlug == 'tipo-medicamento') class="active" @endif>
                                         <a href="{{ route('tipomedicamento.list') }}">
-                                            <i class="tim-icons icon-components"></i>
+                                            <i class="tim-icons icon-simple-add"></i>
                                             <p>{{ __('Tipo de Medicamentos') }}</p>
                                         </a>
                                     </li>
 
                                     <li @if ($pageSlug == 'medicamentos') class="active" @endif>
                                         <a href="{{ route('medicamento.list') }}">
-                                            <i class="tim-icons icon-components"></i>
+                                            <i class="tim-icons icon-caps-small"></i>
                                             <p>{{ __('Medicamentos') }}</p>
                                         </a>
                                     </li>
 
                                     <li @if ($pageSlug == 'exames') class="active" @endif>
                                         <a href="{{ route('exame.list') }}">
-                                            <i class="tim-icons icon-components"></i>
+                                            <i class="tim-icons icon-zoom-split"></i>
+
                                             <p>{{ __('Exames') }}</p>
                                         </a>
                                     </li>
