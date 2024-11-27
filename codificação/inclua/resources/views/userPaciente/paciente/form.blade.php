@@ -29,9 +29,17 @@
                                         CPF <span class="required">*</span>
                                     </label>
                                     <div class="input-group {{ $errors->has('documento') ? 'has-danger' : '' }}">
-                                        <input type="text" id="documento" class="form-control {{ $errors->has('documento') ? 'is-invalid' : '' }}"
-                                            name="documento" maxlength="14" placeholder="000.000.000-00" oninput="mascaraCpf(this)" onblur="validarCPF(this)"
-                                            value="{{ old('documento') }}" required>
+                                        <input type="text" 
+                                           id="documento" 
+                                           class="form-control {{ $errors->has('documento') ? 'is-invalid' : '' }}" 
+                                           name="documento" 
+                                           maxlength="14" 
+                                           placeholder="000.000.000-00" 
+                                           oninput="mascaraCpf(this)" 
+                                           onblur="validarCPF(this)" 
+                                           value="{{ old('documento') ? \App\Helper::mascaraCPF(old('documento')) : '' }}" 
+                                           required>
+
                                         @include('alerts.feedback', ['field' => 'documento'])
                                     </div>
                                 </div>

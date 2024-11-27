@@ -29,9 +29,17 @@
                                         CPF <span class="required">*</span>
                                     </label>
                                     <div class="input-group {{ $errors->has('documento') ? 'has-danger' : '' }}">
-                                        <input type="text" id="documento" class="form-control {{ $errors->has('documento') ? 'is-invalid' : '' }}"
-                                            name="documento" maxlength="14" placeholder="000.000.000-00" oninput="mascaraCpf(this)" onblur="validarCPF(this)"
-                                            value="{{ old("documento", $paciente->cpf) }}" required>
+                                        <input type="text" 
+                                           id="documento" 
+                                           class="form-control {{ $errors->has('documento') ? 'is-invalid' : '' }}" 
+                                           name="documento" 
+                                           maxlength="14" 
+                                           placeholder="000.000.000-00" 
+                                           oninput="mascaraCpf(this)" 
+                                           onblur="validarCPF(this)" 
+                                           value="{{ old('documento') ? \App\Helper::mascaraCPF(old('documento')) : \App\Helper::mascaraCPF($paciente->cpf) }}" 
+                                           required>
+
                                         @include('alerts.feedback', ['field' => 'documento'])
                                     </div>
                                 </div>
@@ -46,9 +54,10 @@
                                            id="data_nascimento" 
                                            class="form-control {{ $errors->has('data_nascimento') ? 'is-invalid' : '' }}"
                                            name="data_nascimento" 
-                                           value="{{ old("data_nascimento", $paciente->data_nascimento) }}" 
+                                           value="{{ old('data_nascimento', $paciente->data_nascimento ? \Carbon\Carbon::parse($paciente->data_nascimento)->format('Y-m-d') : '') }}" 
                                            max="{{ date('Y-m-d') }}" 
                                            required>
+
 
                                         @include('alerts.feedback', ['field' => 'data_nascimento'])
                                     </div>
@@ -79,7 +88,7 @@
                                     <i class="fa fa-reply"></i> Voltar
                                 </a>
                                 <button type="submit" class="btn btn-primary">
-                                    Editar <i class="fa fa-save"></i>
+                                    Salvar <i class="fa fa-save"></i>
                                 </button>
                             </div>
                         </div>
