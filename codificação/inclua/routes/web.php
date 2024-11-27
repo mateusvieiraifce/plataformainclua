@@ -4,7 +4,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
-|--------------------------------------------------------------------------
+|----------------------------------                                CNPJ <span class="required">*</span>
+----------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
 |
@@ -249,6 +250,8 @@ Route::middleware('auth')->group(function () {
     Route::get("/paciente/assinatura/renovar/{cartao}", [\App\Http\Controllers\AssinaturaController::class, 'renovarAssinaturaCartao'])->name('pagamento.assinatura.renovar');
     
     #LISTA PACIENTES E CADASTRO
+    Route::get("/paciente/editar/{id}", [\App\Http\Controllers\PacienteController::class, 'edit'])->name('paciente.edit');
+    Route::post("/paciente/update/", [\App\Http\Controllers\PacienteController::class, 'update'])->name('paciente.update');
     Route::get("/paciente/lista", [\App\Http\Controllers\PacienteController::class, 'index'])->name('paciente.index');
     
     #LISTA DE PEDIDOS DE EXAMES DO PACIENTE

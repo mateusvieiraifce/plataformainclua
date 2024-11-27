@@ -30,13 +30,13 @@ class AnamneseController extends Controller
         if (is_array($request->atividade_fisicas)) {
             $atividade_fisicas = implode(', ', $request->atividade_fisicas);
         }
-        
+
         $participa_atividades = $request->participa_atividades;
         /* CONVERTER CHECKBOX EM UMA UNICA STRING */
         if (is_array($request->participa_atividades)) {
             $participa_atividades = implode(', ', $request->participa_atividades);
         }
-        
+
         try {
             $anamnese = new Anamnese();
             $anamnese->paciente_id = $request->paciente_id;
@@ -123,16 +123,17 @@ class AnamneseController extends Controller
             $anamnese->cuidadoso_desligado = $request->cuidadoso_desligado;
             $anamnese->brinquendo_preferido = $request->brinquendo_preferido;
             $anamnese->save();
-            
+
             $msg = ['valor' => trans("Anamnese realizada com sucesso!"), 'tipo' => 'success'];
             session()->flash('msg', $msg);
         } catch (QueryException $e) {
+          //  dd($e->getMessage());
             $msg = ['valor' => trans("Houve um erro ao salvar os dados. Tente novamente!"), 'tipo' => 'danger'];
             session()->flash('msg', $msg);
 
             return back()->withInput();
         }
-        
+
         if (Auth::user()->tipo_user == "R") {
             return redirect()->route('paciente.marcarconsultaSelecionarPaciente');
         } else {

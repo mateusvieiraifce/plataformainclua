@@ -14,10 +14,10 @@
                                 <i class="tim-icons icon-chart-pie-36"></i>
                                 <p>{{ __('Dashboard') }}</p>
                             </a>
-                        </li> 
+                        </li>
 
                         <li @if ($pageSlug == 'listaAgenda') class="active" @endif>
-                            <a href="{{route('consulta.agendaConsultas')}}">
+                            <a href="{{route('consulta.agendaConsultas',$clinica->id)}}">
                                 <i class="tim-icons icon-calendar-60"></i>
                                 <p>{{ __('Agenda') }}</p>
                             </a>
@@ -38,7 +38,7 @@
                         </li>
 
                         <li @if ($pageSlug == 'historico-consultas-clinica') class="active" @endif>
-                            <a href="{{route('consulta.listConsultaporClinica')}}"> 
+                            <a href="{{route('consulta.listConsultaporClinica')}}">
                                 <i class="tim-icons icon-single-copy-04"></i>
                                 <p>{{ __('Histórico de Consultas') }}</p>
                             </a>
@@ -50,7 +50,7 @@
                                 <p>{{ __('Pacientes') }}</p>
                             </a>
                         </li>
-                        
+
                         <li @if ($pageSlug == 'especialistaclinica') class="active" @endif>
                                 <a href="{{route('especialistaclinica.list')}}">
                             <i class="tim-icons icon-badge"></i>
@@ -144,7 +144,7 @@
                                             <p>{{ __('Marcar de consulta') }}</p>
                                         </a>
                                     </li>
-                                    
+
                                     <li @if ($pageSlug == 'historico-consultas') class="active" @endif>
                                         <a href="{{route('paciente.historicoconsultas')}}">
                                             <i class="tim-icons icon-single-copy-04"></i>
@@ -239,12 +239,12 @@
                                         </li>
 
                                         <li @if ($pageSlug == 'historico-consultas-clinica') class="active" @endif>
-                                            <a href="{{route('consulta.listConsultaporClinica')}}"> 
+                                            <a href="{{route('consulta.listConsultaporClinica')}}">
                                                 <i class="tim-icons icon-single-copy-04"></i>
                                                 <p>{{ __('Histórico de Consultas') }}</p>
                                             </a>
                                         </li>
-                                        
+
                                         <li @if ($pageSlug == 'especialistaclinica') class="active" @endif>
                                                 <a href="{{ route('selecionar.clinica', ['rota' => 'especialista']) }}">
                                             <i class="tim-icons icon-badge"></i>
@@ -365,7 +365,7 @@
                                             <i class="tim-icons icon-components"></i>
                                             <p>{{ __('Tipo de Exames') }}</p>
                                         </a>
-                                    </li> 
+                                    </li>
 
                                     <li @if ($pageSlug == 'tipo-medicamento') class="active" @endif>
                                         <a href="{{ route('tipomedicamento.list') }}">
@@ -426,11 +426,11 @@
                         <li @if ($pageSlug == 'marcarconsulta') class="active" @endif>
                             <!-- caso o paciente nao possua dependete abrir loga a tela de selecionar clinica/especialista-->
                             <?php
-                            $pacientes = App\Models\Paciente::where('usuario_id', '=', Auth::user()->id)->get();                    
-                        ?>  
+                            $pacientes = App\Models\Paciente::where('usuario_id', '=', Auth::user()->id)->get();
+                        ?>
                             @if(sizeof($pacientes) > 1)
                             <a href="{{route('paciente.marcarconsultaSelecionarPaciente')}}">
-                            @else                       
+                            @else
                                 <a href="{{route('paciente.marcarconsulta')}}">
                             @endif
                                 <i class="tim-icons icon-calendar-60"></i>

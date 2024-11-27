@@ -23,6 +23,8 @@
                                     <th>Nome</th>
                                     <th>Sexo</th>
                                     <th>Data de Nascimento</th>
+                                    <th>Editar</th>
+                                    <th>Excluir</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -44,6 +46,14 @@
                                         </td>
                                         <td>
                                             {{ isset($paciente->data_nascimento) ? date('d/m/Y', strtotime($paciente->data_nascimento)) : "-" }}
+                                        </td>
+                                        <td class="td-actions text-left">
+                                            <a href="{{ route('paciente.edit', $paciente->id) }}">
+                                                <button type="button" rel="tooltip" title="Editar" class="btn btn-link"
+                                                        data-original-title="Edit Task" style="color: white;">
+                                                    <i class="tim-icons icon-pencil"></i>
+                                                </button>
+                                            </a>
                                         </td>
                                     </tr>
                                 @endforeach
