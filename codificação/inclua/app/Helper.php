@@ -207,7 +207,7 @@ class Helper
         return date('Y-m-d', $nextdate);
     }
 
-    public static function createCheckouSumup($renovacao = false)
+    public static function createCheckoutSumup($renovacao = false)
     {
         $route = ($renovacao) ? route('callback.payment.assinatura.renovar') : route('callback.payment.assinatura');
 
@@ -269,38 +269,6 @@ class Helper
 
         return $response;
     }
-/* 
-    public static function renovarPagamento($cartao, $checkout)
-    {
-        //PAGAMENTO PADRÃO
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://api.sumup.com/v0.1/checkouts/'.$checkout->id,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_CUSTOMREQUEST => 'PUT',
-            CURLOPT_POSTFIELDS => '{
-                "payment_type": "card",
-                "card": {
-                    "name": "'.$cartao->nome_titular.'",
-                    "number": "'.Crypt::decrypt($cartao->numero_cartao).'",
-                    "expiry_month": "'.$cartao->mes_validade.'",
-                    "expiry_year": "'.$cartao->ano_validade.'",
-                    "cvv": "'.Crypt::decrypt($cartao->codigo_seguranca).'"
-                }
-            }',
-            CURLOPT_HTTPHEADER => array(
-                'accept: application/json',
-                'content-type: application/json',
-                'Authorization: Bearer '.env("SAMUP_KEY")
-            ),
-        ));
-
-        $response = curl_exec($curl);
-        $response = json_decode($response);
-        curl_close($curl);
-
-        return $response;
-    } */
 
     public static function getCheckout($checkout_id)
     {
@@ -367,7 +335,7 @@ class Helper
         return false;
     }
     
-    public static function createCheckouSumupTaxa($route)
+    public static function createCheckouSumupTaxa()
     {
         //CODIGO CREATE CHECKOUT
         $curl = curl_init();
@@ -381,7 +349,36 @@ class Helper
                 "currency": "BRL",
                 "pay_to_email": "'.env('EMAIL_TO_PAY').'",
                 "description": "Plataforma Inclua - Taxa de cancelamento da consulta",
-                "redirect_url": "'. $route .'"
+                "redirect_url": "'. route('callback.cancelamento.consulta') .'"
+            }',
+            CURLOPT_HTTPHEADER => array(
+                'accept: application/json',
+                'content-type: application/json',
+                'Authorization: Bearer '.env("SAMUP_KEY")
+            ),
+        ));
+        $response = curl_exec($curl);
+        $response = json_decode($response);
+        curl_close($curl);
+
+        return $response;
+    }
+
+    public static function createCheckoutSumupConsulta($valorConsulta)
+    {
+        //CODIGO CREATE CHECKOUT
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://api.sumup.com/v0.1/checkouts',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => '{
+                "checkout_reference": "Pagamento Consulta '.Helper::generateRandomNumberString(5).'",
+                "amount": '.floatval(Helper::converterMonetario($valorConsulta)).',
+                "currency": "BRL",
+                "pay_to_email": "'.env('EMAIL_TO_PAY').'",
+                "description": "Plataforma Inclua - Pagamento Consulta",
+                "redirect_url": "'. route('callback.pagamento.consulta') .'"
             }',
             CURLOPT_HTTPHEADER => array(
                 'accept: application/json',

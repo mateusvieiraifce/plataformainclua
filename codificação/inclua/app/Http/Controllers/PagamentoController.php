@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Helper;
 use App\Models\Assinatura;
+use App\Models\Cartao;
+use App\Models\Consulta;
 use App\Models\Pagamento;
 use App\Models\User;
 use Carbon\Carbon;
@@ -13,7 +15,7 @@ use Illuminate\Support\Facades\Auth;
 
 class PagamentoController extends Controller
 {
-    public function store($user_id, /* $cartao_id, $assinatura_id,  */$valor, $transaction_code, $status, $servico)
+    public function store($user_id, $valor, $transaction_code, $status, $servico)
     {
         date_default_timezone_set('America/Sao_Paulo');
         $dataLocal = Carbon::now();
@@ -74,5 +76,40 @@ class PagamentoController extends Controller
         $assinaturas = Assinatura::paginate(4, ['*'], 'page_signature');
 
         return view('user_root.pacientes.financeiro', ['pagamentos' => $pagamentos, 'assinaturas' => $assinaturas]);
+    }
+    
+    public function pagarConsulta($consulta_id, $aba)
+    {
+        $consulta = Consulta::find($consulta_id);
+        $usuario = User::join('pacientes', 'pacientes.usuario_id', 'users.id')
+            ->where('pacientes.id', $consulta->paciente_id)
+            ->select('users.*')
+            ->first();
+        $cartao = Cartao::join('assinaturas', 'assinaturas.cartao_id', 'cartoes.id')
+            ->where('cartoes.user_id', $usuario->id)
+            ->select('cartoes.*')
+            ->first();
+            
+        //CRIAR O CHECKOUT
+        $checkout = Helper::createCheckoutSumupConsulta($consulta->preco);
+        //PASSAR O ID DA CUNSULTA E MOTIVO DE CANCELAMENTO
+        session()->put("consulta_id_$checkout->id", $consulta->id);
+        session()->put("aba_$checkout->id", $aba);
+        //CRIAR O PAGAMENTO
+        $pagamento = Helper::createPagamento($cartao, $checkout);
+
+        if (isset($pagamento->status) && $pagamento->status == "FAILED") {
+            $this->store($cartao->user_id, floatval(Helper::converterMonetario($consulta->preco)), $pagamento->transactions[0]->transaction_code, 'Negado', 'Pagamento da consulta');
+
+            return redirect()->route('callback.pagamento.consulta', ['checkout_id' => $pagamento->id]);
+        } elseif (isset($pagamento->status) && $pagamento->status == "PAID") {
+            $this->store($cartao->user_id, floatval(Helper::converterMonetario($consulta->preco)), $pagamento->transactions[0]->transaction_code, 'Aprovado', 'Pagamento da consulta');
+
+            return redirect()->route('callback.pagamento.consulta', ['checkout_id' => $pagamento->id]);
+        } elseif (isset($pagamento->next_step)) {
+            $this->store($cartao->user_id, floatval(Helper::converterMonetario($consulta->preco)), $pagamento->next_step->current_transaction->transaction_code, 'Pendente', 'Pagamento da consulta');
+
+            return redirect($pagamento->next_step->url);
+        }
     }
 }
