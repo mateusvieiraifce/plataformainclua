@@ -9,8 +9,10 @@
                 </button>
             </div>
             <div class="modal-body">                
-                <form id="form-modal" class="flex-column" method="post" action="{{ $route }}" enctype="multipart/form-data">
-                    @csrf
+                <form id="form-modal" class="flex-column" method="{{ $method ?? 'post' }}" action="{{ $route }}" enctype="multipart/form-data">
+                    @if (!isset($method) || $method != 'get')
+                        @csrf
+                    @endif
                     {{ $slot }}
                     <input type="submit" id="send" style="display: none;">
                 </form>

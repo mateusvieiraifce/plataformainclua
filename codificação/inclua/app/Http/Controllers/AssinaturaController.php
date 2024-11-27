@@ -39,7 +39,7 @@ class AssinaturaController extends Controller
         $cartao = $cartaoController->store($request);
 
         //CRIAR O CHECKOUT
-        $checkout = Helper::createCheckouSumup();
+        $checkout = Helper::createCheckoutSumup();
         //CRIAR O PAGAMENTO
         $pagamento = Helper::createPagamento($cartao, $checkout);
 
@@ -188,7 +188,7 @@ class AssinaturaController extends Controller
                     $assinatura->save();
                     
                     //CRIAR O CHECKOUT
-                    $checkout = Helper::createCheckouSumup(true);
+                    $checkout = Helper::createCheckoutSumup(true);
                     //CRIAR A RENOVAÇÂO DE PAGAMENTO
                     $pagamento = Helper::createPagamento($cartao, $checkout);
 
@@ -224,7 +224,7 @@ class AssinaturaController extends Controller
                 $assinatura->save();
 
                 //CRIAR O CHECKOUT
-                $checkout = Helper::createCheckouSumup(true);
+                $checkout = Helper::createCheckoutSumup(true);
                 //CRIAR A RENOVAÇÂO DE PAGAMENTO
                 $pagamento = Helper::createPagamento($cartao, $checkout);
                 

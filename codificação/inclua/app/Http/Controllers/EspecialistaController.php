@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Helper;
+use App\Models\Cartao;
 use App\Models\Especialista;
 use App\Models\PedidoMedicamento;
 use App\Models\Consulta;
@@ -281,11 +282,27 @@ class EspecialistaController extends Controller
 
    function inicarAtendimento($consulta_id,$aba,$mostrarModal=null)
    {
-     // dd($consulta_id);
       if (!($this->consultaPertenceEspecialistaLogado($consulta_id))) {
          return redirect()->route('consulta.listconsultaporespecialista');
       }
+      
       $consulta = Consulta::find($consulta_id);
+      $request = request();
+      
+      if ($request->metodo_pagamento == "null") {
+         session()->flash('msg',  ['valor' => trans("Selecione a forma de pagamento com o cartão."), 'tipo' => 'danger']);
+
+         return back();
+      }
+
+      if($request->metodo_pagamento == "Cartão") {
+         return redirect()->route('consulta.pagamento', ['consulta_id' => $consulta->id, 'aba' => $aba]);
+      } elseif ($request->metodo_pagamento) {
+         $consulta->isPago = true;
+         $consulta->forma_pagamento = $request->metodo_pagamento;
+         $consulta->save();
+      }
+      
       $paciente = Paciente::find($consulta->paciente_id);
       $usuarioPaciente = User::find($paciente->usuario_id);
       $primeiraConsulta = Consulta::where('status', '=', 'Finalizada')->
