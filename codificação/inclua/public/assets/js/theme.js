@@ -106,7 +106,7 @@ demo = {
     });
   },
 
-  initDashboardPageCharts: function() {
+  initDashboardPageCharts: function(monthlyCountsUsers, monthlyCountsQueries, monthlyCountsQueriesSale, monthlyCountsQueriesCancellations) {
 
     gradientChartOptionsConfigurationWithTooltipBlue = {
       maintainAspectRatio: false,
@@ -349,6 +349,9 @@ demo = {
       }
     };
 
+    chart_labels2 = ['JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
+    chart_data2 = monthlyCountsQueries;
+
     var ctx = document.getElementById("chartLinePurple").getContext("2d");
 
     var gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
@@ -358,7 +361,7 @@ demo = {
     gradientStroke.addColorStop(0, 'rgba(119,52,169,0)'); //purple colors
 
     var data = {
-      labels: ['JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
+      labels: chart_labels2,
       datasets: [{
         label: "Data",
         fill: true,
@@ -374,7 +377,7 @@ demo = {
         pointHoverRadius: 4,
         pointHoverBorderWidth: 15,
         pointRadius: 4,
-        data: [80, 100, 70, 80, 120, 80],
+        data: chart_data2,
       }]
     };
 
@@ -384,6 +387,7 @@ demo = {
       options: gradientChartOptionsConfigurationWithTooltipPurple
     });
 
+    chart_data4 = monthlyCountsQueriesCancellations;
 
     var ctxGreen = document.getElementById("chartLineGreen").getContext("2d");
 
@@ -394,7 +398,7 @@ demo = {
     gradientStroke.addColorStop(0, 'rgba(66,134,121,0)'); //green colors
 
     var data = {
-      labels: ['JUL', 'AUG', 'SEP', 'OCT', 'NOV'],
+      labels: chart_labels2,
       datasets: [{
         label: "My First dataset",
         fill: true,
@@ -410,7 +414,7 @@ demo = {
         pointHoverRadius: 4,
         pointHoverBorderWidth: 15,
         pointRadius: 4,
-        data: [90, 27, 60, 12, 80],
+        data: chart_data4,
       }]
     };
 
@@ -424,7 +428,7 @@ demo = {
 
 
     var chart_labels = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
-    var chart_data = [100, 70, 90, 70, 85, 60, 75, 60, 90, 80, 110, 100];
+    var chart_data = monthlyCountsUsers;
 
 
     var ctx = document.getElementById("chartBig1").getContext('2d');
@@ -489,7 +493,7 @@ demo = {
     gradientStroke.addColorStop(1, 'rgba(29,140,248,0.2)');
     gradientStroke.addColorStop(0.4, 'rgba(29,140,248,0.0)');
     gradientStroke.addColorStop(0, 'rgba(29,140,248,0)'); //blue colors
-
+    var chart_data3 = monthlyCountsQueriesSale;
 
     var myChart = new Chart(ctx, {
       type: 'bar',
@@ -498,7 +502,7 @@ demo = {
         display: false
       },
       data: {
-        labels: ['USA', 'GER', 'AUS', 'UK', 'RO', 'BR'],
+        labels: chart_labels2,
         datasets: [{
           label: "Countries",
           fill: true,
@@ -508,7 +512,7 @@ demo = {
           borderWidth: 2,
           borderDash: [],
           borderDashOffset: 0.0,
-          data: [53, 20, 10, 80, 100, 45],
+          data: chart_data3,
         }]
       },
       options: gradientBarChartConfiguration

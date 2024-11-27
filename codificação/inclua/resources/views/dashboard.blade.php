@@ -8,8 +8,8 @@
                     <div class="card-header ">
                         <div class="row">
                             <div class="col-sm-6 text-left">
-                                <h5 class="card-category">Total Shipments</h5>
-                                <h2 class="card-title">Performance</h2>
+                                <h5 class="card-category">Usuários</h5>
+                                <h2 class="card-title">Total de usuários - {{ $totalUsers }} </h2>
                             </div>
                             <div class="col-sm-6">
                                 <div class="btn-group btn-group-toggle float-right" data-toggle="buttons">
@@ -51,8 +51,8 @@
             <div class="col-lg-4">
                 <div class="card card-chart">
                     <div class="card-header">
-                        <h5 class="card-category">Total Shipments</h5>
-                        <h3 class="card-title"><i class="tim-icons icon-bell-55 text-primary"></i> 763,215</h3>
+                        <h5 class="card-category">Consultas</h5>
+                        <h3 class="card-title"><i class="tim-icons icon-bell-55 text-primary"></i> Total de consultas - {{ $totalQueries }}</h3>
                     </div>
                     <div class="card-body">
                         <div class="chart-area">
@@ -64,8 +64,8 @@
             <div class="col-lg-4">
                 <div class="card card-chart">
                     <div class="card-header">
-                        <h5 class="card-category">Daily Sales</h5>
-                        <h3 class="card-title"><i class="tim-icons icon-delivery-fast text-info"></i> 3,500€</h3>
+                        <h5 class="card-category">Consultas em reais</h5>
+                        <h3 class="card-title"><i class="tim-icons icon-delivery-fast text-info"></i> Total das consultas em reais - {{$totalSale}} </h3>
                     </div>
                     <div class="card-body">
                         <div class="chart-area">
@@ -77,8 +77,8 @@
             <div class="col-lg-4">
                 <div class="card card-chart">
                     <div class="card-header">
-                        <h5 class="card-category">Completed Tasks</h5>
-                        <h3 class="card-title"><i class="tim-icons icon-send text-success"></i> 12,100K</h3>
+                        <h5 class="card-category">Cancelamentos de consultas</h5>
+                        <h3 class="card-title"><i class="tim-icons icon-send text-success"></i> Total de cancelamentos - {{ $totalCancellations }} </h3>
                     </div>
                     <div class="card-body">
                         <div class="chart-area">
@@ -154,8 +154,18 @@
 @push('js')
     <script src="/assets/js/plugins/chartjs.min.js"></script>
     <script>
-        $(document).ready(function() {
-          demo.initDashboardPageCharts();
+        document.addEventListener('DOMContentLoaded', function() {
+            // Passando os dados do PHP (transformados em JSON) para o JavaScript
+            var chart_data = @json(array_values($monthlyCountsUsers));
+
+            var chart_data2 = @json(array_values($monthlyCountsQueries));
+
+            var chart_data3 = @json(array_values($monthlyCountsQueriesSale));
+
+            var chart_data4 = @json(array_values($monthlyCountsCancellations));
+
+            // Inicializa o gráfico
+            demo.initDashboardPageCharts(chart_data, chart_data2, chart_data3, chart_data4);
         });
     </script>
 @endpush
