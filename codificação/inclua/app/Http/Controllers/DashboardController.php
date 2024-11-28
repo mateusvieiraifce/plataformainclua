@@ -8,6 +8,7 @@ use App\Models\Consulta;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -26,7 +27,90 @@ class DashboardController extends Controller
           //home user Clinica
           return redirect()->route('dashboard.dashboardClinica');
          }
-        return view('dashboard');
+        $year = Carbon::now()->year;
+
+        // Consulta que conta os usuários criados por mês
+        $usersByMonth = DB::table('users')
+            ->selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+            ->whereYear('created_at', $year) // Filtra pelo ano atual
+            ->groupByRaw('MONTH(created_at)')
+            ->orderByRaw('MONTH(created_at) DESC')
+            ->pluck('total', 'month');
+        $totalUsers = DB::table('users')->count();
+        $monthlyCountsUsers = array_fill(1, 12, 0);
+        
+        foreach ($usersByMonth as $month => $count) {
+            $monthlyCountsUsers[$month] = $count;
+        }
+
+        // Consulta que conta as consultas criadas por mês
+        $queriesByMonth = DB::table('consultas')
+            ->selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+            ->whereYear('created_at', $year) // Filtra pelo ano atual
+            ->groupByRaw('MONTH(created_at)')
+            ->orderByRaw('MONTH(created_at) DESC')
+            ->take(6)
+            ->pluck('total', 'month');
+        $queriesByMonth = $queriesByMonth->sortKeys();
+        $totalQueries = DB::table('consultas')->count();
+
+        $monthlyCountsQueries = array_fill(7, 6, 0);
+        
+        foreach ($queriesByMonth as $month => $count) {
+            $monthlyCountsQueries[$month] = $count;
+        }
+
+        // Consulta que conta as o total de reais das consultas criadas por mês
+        $queriesSaleByMonth = DB::table('consultas')
+            ->selectRaw('MONTH(created_at) as month, SUM(preco) as total')
+            ->whereYear('created_at', $year) 
+            ->groupByRaw('MONTH(created_at)')
+            ->orderByRaw('MONTH(created_at) DESC') 
+            ->take(6) 
+            ->pluck('total', 'month');
+        $queriesSaleByMonth = $queriesByMonth->sortKeys();
+        $totalSale = DB::table('consultas')
+            ->whereYear('created_at', $year) 
+            ->sum('preco');
+
+        $monthlyCountsQueriesSale = array_fill(7, 6, 0);
+        
+        foreach ($queriesSaleByMonth as $month => $count) {
+            $monthlyCountsQueriesSale[$month] = $count;
+        }
+
+        // Consulta que conta os cancelamentos por mês
+        $cancellationsByMonth = DB::table('consultas')
+            ->selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+            ->whereYear('created_at', $year)
+            ->whereNotNull('id_usuario_cancelou')
+            ->groupByRaw('MONTH(created_at)')
+            ->orderByRaw('MONTH(created_at) DESC')
+            ->take(6)
+            ->pluck('total', 'month');
+
+        $cancellationsByMonth = $cancellationsByMonth->sortKeys();
+
+        $totalCancellations = DB::table('consultas')
+            ->whereNotNull('id_usuario_cancelou')
+            ->whereYear('created_at', $year)
+            ->count();
+
+        $monthlyCountsCancellations = array_fill(7, 6, 0);
+
+        foreach ($cancellationsByMonth as $month => $count) {
+            $monthlyCountsCancellations[$month] = $count;
+        }
+        return view('dashboard', [
+            'monthlyCountsUsers' => $monthlyCountsUsers,
+            'totalUsers' => $totalUsers,
+            'monthlyCountsQueries' => $monthlyCountsQueries,
+            'totalQueries' => $totalQueries,
+            'monthlyCountsQueriesSale' => $monthlyCountsQueriesSale,
+            'totalSale' => $totalSale,
+            'monthlyCountsCancellations' => $monthlyCountsCancellations,
+            'totalCancellations' => $totalCancellations
+        ]);
     }
 
     function dashboardClinica()
