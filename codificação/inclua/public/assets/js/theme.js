@@ -400,7 +400,7 @@ demo = {
     var data = {
       labels: chart_labels2,
       datasets: [{
-        label: "My First dataset",
+        label: "",
         fill: true,
         backgroundColor: gradientStroke,
         borderColor: '#00d6b4',
@@ -427,7 +427,7 @@ demo = {
 
 
 
-    var chart_labels = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+    var chart_labels = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
     var chart_data = monthlyCountsUsers;
 
 
@@ -443,7 +443,7 @@ demo = {
       data: {
         labels: chart_labels,
         datasets: [{
-          label: "My First dataset",
+          label: "",
           fill: true,
           backgroundColor: gradientStroke,
           borderColor: '#d346b1',
@@ -504,7 +504,7 @@ demo = {
       data: {
         labels: chart_labels2,
         datasets: [{
-          label: "Countries",
+          label: "",
           fill: true,
           backgroundColor: gradientStroke,
           hoverBackgroundColor: gradientStroke,
