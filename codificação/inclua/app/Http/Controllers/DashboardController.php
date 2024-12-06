@@ -29,18 +29,49 @@ class DashboardController extends Controller
          }
         $year = Carbon::now()->year;
 
-        // Consulta que conta os usuários criados por mês
+        // Consulta que conta os pacientes criados por mês
         $usersByMonth = DB::table('users')
             ->selectRaw('MONTH(created_at) as month, COUNT(*) as total')
-            ->whereYear('created_at', $year) // Filtra pelo ano atual
+            ->whereYear('created_at', $year)
+            ->where('tipo_user', 'P') // Filtra pelo ano atual
             ->groupByRaw('MONTH(created_at)')
             ->orderByRaw('MONTH(created_at) DESC')
             ->pluck('total', 'month');
-        $totalUsers = DB::table('users')->count();
+        $totalUsers = DB::table('users')->where('tipo_user', 'P')->count();
         $monthlyCountsUsers = array_fill(1, 12, 0);
         
         foreach ($usersByMonth as $month => $count) {
             $monthlyCountsUsers[$month] = $count;
+        }
+
+        // Consulta que conta os especialistas criados por mês
+        $especialistasByMonth = DB::table('users')
+            ->selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+            ->whereYear('created_at', $year)
+            ->where('tipo_user', 'E') // Filtra pelo ano atual
+            ->groupByRaw('MONTH(created_at)')
+            ->orderByRaw('MONTH(created_at) DESC')
+            ->pluck('total', 'month');
+        $totalEspecialistas = DB::table('users')->where('tipo_user', 'E')->count();
+        $monthlyCountsEspecialistas = array_fill(1, 12, 0);
+        
+        foreach ($especialistasByMonth as $month => $count) {
+            $monthlyCountsEspecialistas[$month] = $count;
+        }
+
+        // Consulta que conta as clínicas criados por mês
+        $clinicasByMonth = DB::table('users')
+            ->selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+            ->whereYear('created_at', $year)
+            ->where('tipo_user', 'C') // Filtra pelo ano atual
+            ->groupByRaw('MONTH(created_at)')
+            ->orderByRaw('MONTH(created_at) DESC')
+            ->pluck('total', 'month');
+        $totalClinicas = DB::table('users')->where('tipo_user', 'C')->count();
+        $monthlyCountsClinicas = array_fill(1, 12, 0);
+        
+        foreach ($clinicasByMonth as $month => $count) {
+            $monthlyCountsClinicas[$month] = $count;
         }
 
         // Consulta que conta as consultas criadas por mês
@@ -104,6 +135,10 @@ class DashboardController extends Controller
         return view('dashboard', [
             'monthlyCountsUsers' => $monthlyCountsUsers,
             'totalUsers' => $totalUsers,
+            'monthlyCountsEspecialistas' => $monthlyCountsEspecialistas,
+            'totalEspecialistas' => $totalEspecialistas,
+            'monthlyCountsClinicas' => $monthlyCountsClinicas,
+            'totalClinicas' => $totalClinicas,
             'monthlyCountsQueries' => $monthlyCountsQueries,
             'totalQueries' => $totalQueries,
             'monthlyCountsQueriesSale' => $monthlyCountsQueriesSale,
