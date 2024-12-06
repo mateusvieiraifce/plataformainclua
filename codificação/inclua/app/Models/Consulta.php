@@ -29,4 +29,10 @@ class Consulta extends Model
     }
     
   }
+  // No modelo Consulta (Consulta.php)
+  public function paciente()
+  {
+      return $this->belongsTo(Paciente::class);
+  }
+
 }

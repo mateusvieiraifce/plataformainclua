@@ -352,6 +352,11 @@ Route::middleware('auth')->group(function () {
 
     Route::get("/consulta/selecionar-clinica/{rota?}", [\App\Http\Controllers\ConsultaController::class, 'selectClinica'])->name('selecionar.clinica');
     Route::get("/consulta/selecionar-clinica/search/result", [\App\Http\Controllers\ConsultaController::class, 'selectClinicaSearch'])->name('selecionar.clinica.search');
+    
+    Route::post("/especialista/selecionar-especialista/search/result", [\App\Http\Controllers\ClinicaController::class, 'selectEspecialistaSearch'])->name('selecionar.especialista.search');
+    Route::get("/clinica/selecionar-clinica/", [\App\Http\Controllers\ClinicaController::class, 'listarClinicaRelatorio'])->name('selecionar.clinica.relatorio');
+    Route::get('/remover-filtro/{tipo}', [\App\Http\Controllers\ClinicaController::class, 'removerFiltro'])->name('remover.filtro');
+
 
     #CLINICA ++++++++++++++
     Route::get("/clinica/consultas/", [\App\Http\Controllers\ConsultaController::class, 'listConsultaporClinica'])->name('consulta.listConsultaporClinica');
@@ -363,6 +368,10 @@ Route::middleware('auth')->group(function () {
     Route::post("/clinica/agenda/efetuarpagamento", [\App\Http\Controllers\ConsultaController::class, 'efetuarPagamentoUserClinica'])->name('consulta.efetuarPagamentoUserClinica');
     Route::post("/clinica/agenda/consulta/cancelar/", [\App\Http\Controllers\ClinicaController::class, 'canelarconsultaViaClinica'])->name('clinica.canelarconsultaViaClinica');
     Route::get("/clinica/relatorio/especialista", [\App\Http\Controllers\ClinicaController::class, 'formRelatorioEspecialista'])->name('clinica.formRelatorioEspecialista');
+    Route::get("clinica/relatorio/caixa", [\App\Http\Controllers\ClinicaController::class, 'relatorioView'])->name('user.relatorio');
+    Route::post("clinica/relatorio/caixa/gerar", [\App\Http\Controllers\ClinicaController::class, 'relatorioCaixa'])->name('user.relatorio.gerar');
+    Route::get("clinica/relatorio/caixa/selecionar-especialista", [\App\Http\Controllers\ClinicaController::class, 'listarEspecialistaRelatorio'])->name('user.relatorio.especialista');
+
 
    #CLINICA_VINCULO_COM_ESPECIALISTA
     Route::get("/clinica/especialista/novasconsultas/{especialista_id}/{clinica_id?}", [\App\Http\Controllers\ConsultaController::class, 'novaConsultasUserClinica'])->name('consulta.novaConsultasUserClinica');

@@ -41,8 +41,8 @@
                                         <tr>
                                             <td>{{ $clinica->nome }}</td>
                                             <td>
-                                                <a href="{{ route("$route", [$clinica->id]) }}" class="btn btn-primary">
-                                                    Próximo <i class="fa fa-arrow-right"></i>
+                                                <a href="{{ route('user.relatorio', ['clinica_id' => $clinica->id] + session()->only(['especialista_id'])) }}" class="btn btn-primary">
+                                                    Selecionar <i class="fa fa-arrow-right"></i>
                                                 </a>
                                             </td>
                                         </tr>
