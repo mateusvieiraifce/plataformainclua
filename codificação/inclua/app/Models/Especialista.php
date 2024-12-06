@@ -3,7 +3,7 @@
 
 use App\Helper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-    use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Model;
 
     class Especialista extends Model
     {

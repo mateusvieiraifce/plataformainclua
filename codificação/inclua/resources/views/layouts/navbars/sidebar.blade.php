@@ -291,6 +291,14 @@
                                                         </a>
                                                     </li>
                                                 </ul>
+                                                <ul class="nav pl-4">
+                                                    <li @if ($pageSlug == 'dashboard2') class="active" @endif>
+                                                        <a href="{{  route("user.relatorio")  }}">
+                                                            <i class="tim-icons icon-paper"></i>
+                                                            <p>{{ __('Caixa') }}</p>
+                                                        </a>    
+                                                    </li>
+                                                </ul>
                                             </div>
                                         </li>
 

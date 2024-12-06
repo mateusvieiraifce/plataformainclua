@@ -31,19 +31,19 @@ class ConsultasSeeder extends Seeder
                 $id_usuario_cancelou = $usuarios->random()->id;
             }
 
-            $consulta = Consulta::create([
+            Consulta::create([
                 'status' => null,  
                 'horario_agendado' => $horario_agendado,  
                 'horario_iniciado' => $horario_iniciado,  
                 'horario_finalizado' => $horario_finalizado,  
                 'preco' => $faker->numberBetween(200, 500),  
                 'isPago' => null,  
-                'forma_pagamento' => null,  
+                'forma_pagamento' => collect(['Dinheiro', 'PIX', 'Cartão de Crédito'])->random(),
                 'porcetagem_repasse_clinica' => 10,  
                 'porcetagem_repasse_plataforma' => 10,  
                 'paciente_id' => $pacientes->random()->id,
                 'clinica_id' => $clinicas->random()->id,  
-                'especialista_id' => $especialistas->random()->id,
+                'especialista_id' => $faker->randomElement($especialistas->pluck('id')->toArray()),
                 'motivocancelamento' => $isCancelled ? 'porque sim' : null,  
                 'id_usuario_cancelou' => $id_usuario_cancelou,
                 'created_at' => now(),
