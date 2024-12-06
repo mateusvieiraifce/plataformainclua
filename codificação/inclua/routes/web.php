@@ -248,6 +248,14 @@ Route::middleware('auth')->group(function () {
     Route::get("/paciente/assinatura/cartoes", [\App\Http\Controllers\AssinaturaController::class, 'selecionarCartao'])->name('pagamento.assinatura.cartoes');
     Route::get("/paciente/assinatura/renovar/{cartao}", [\App\Http\Controllers\AssinaturaController::class, 'renovarAssinaturaCartao'])->name('pagamento.assinatura.renovar');
     
+    #FINANCEIRO CONTA A PAGAR CLINICA
+    Route::get("/clinica/financeiro", [\App\Http\Controllers\PagamentoContaController::class, 'list'])->name('clinica.financeiro');
+    Route::get("/clinica/financeiro/create", [\App\Http\Controllers\PagamentoContaController::class, 'create'])->name('clinica.financeiro.create');
+    Route::post("/clinica/financeiro", [\App\Http\Controllers\PagamentoContaController::class, 'store'])->name('clinica.financeiro.store');
+    Route::get("/clinica/financeiro/{conta}/edit", [\App\Http\Controllers\PagamentoContaController::class, 'edit'])->name('clinica.financeiro.edit');
+    Route::put("/clinica/financeiro/{conta}", [\App\Http\Controllers\PagamentoContaController::class, 'update'])->name('clinica.financeiro.update');
+    Route::get("/clinica/financeiro/{conta}/delete", [\App\Http\Controllers\PagamentoContaController::class, 'destroy'])->name('clinica.financeiro.destroy');
+
     #LISTA PACIENTES E CADASTRO
     Route::get("/paciente/lista", [\App\Http\Controllers\PacienteController::class, 'index'])->name('paciente.index');
     

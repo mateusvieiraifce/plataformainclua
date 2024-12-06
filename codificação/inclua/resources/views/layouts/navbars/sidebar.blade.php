@@ -88,16 +88,13 @@
                                     </li>
                                 </ul>
                             </div>
-                            <div class="collapse" id="relatorioclinica">
-                                <ul class="nav pl-4">
-                                    <li @if ($pageSlug == 'dashboard2') class="active" @endif>
-                                        <a href="#">
-                                            <i class="tim-icons icon-components"></i>
-                                            <p>{{ __('Financeiro') }}</p>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
+                        </li>
+
+                        <li @if ($pageSlug == 'financeiro') class="active" @endif>
+                            <a href="{{route('clinica.financeiro')}}">
+                                <i class="tim-icons icon-coins"></i>
+                                <p>{{ __('Financeiro') }}</p>
+                            </a>
                         </li>
 
                         <li>
