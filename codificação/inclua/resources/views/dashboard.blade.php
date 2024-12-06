@@ -52,7 +52,7 @@
                 <div class="card card-chart">
                     <div class="card-header">
                         <h5 class="card-category">Consultas</h5>
-                        <h3 class="card-title"><i class="tim-icons icon-bell-55 text-primary"></i> Total de consultas - {{ $totalQueries }}</h3>
+                        <h3 class="card-title"><i class="tim-icons icon-bullet-list-67"></i> Total de consultas - {{ $totalQueries }}</h3>
                     </div>
                     <div class="card-body">
                         <div class="chart-area">
@@ -65,7 +65,7 @@
                 <div class="card card-chart">
                     <div class="card-header">
                         <h5 class="card-category">Consultas em reais</h5>
-                        <h3 class="card-title"><i class="tim-icons icon-delivery-fast text-info"></i> Total - R$ {{ number_format($totalSale, 2, ',', '.') }} </h3>
+                        <h3 class="card-title"><i class="tim-icons icon-bank"></i> Total - R$ {{ number_format($totalSale, 2, ',', '.') }} </h3>
                     </div>
                     <div class="card-body">
                         <div class="chart-area">
@@ -78,7 +78,7 @@
                 <div class="card card-chart">
                     <div class="card-header">
                         <h5 class="card-category">Cancelamentos de consultas</h5>
-                        <h3 class="card-title"><i class="tim-icons icon-send text-success"></i>Total - {{ $totalCancellations }} </h3>
+                        <h3 class="card-title"><i class="tim-icons icon-alert-circle-exc"></i>Total - {{ $totalCancellations }} </h3>
                     </div>
                     <div class="card-body">
                         <div class="chart-area">
