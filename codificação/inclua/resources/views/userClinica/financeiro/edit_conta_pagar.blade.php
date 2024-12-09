@@ -43,7 +43,7 @@
                             <div class="input-group {{ $errors->has('status') ? ' has-danger' : '' }} input-medium">
                                 <select name="status" id="status" class="form-control border-full {{ $errors->has('status') ? ' is-invalid' : '' }}" required>
                                        <option value="Pago" {{ (old('status') == 'Pago' || $conta->status == 'Pago') ? 'selected' : '' }}>Pago</option>
-                                       <option value="Pendente" {{ (old('status')  == 'Pendente' || $conta->status == 'Pendente') ? 'selected' : '' }}>Pendente</option>
+                                       <option value="Pendente" {{ (old('status')  == 'Pendente' || $conta->status == 'Pendente') ? 'selected' : 'selected' }}>Pendente</option>
                                 </select>
                                 @include('alerts.feedback', ['field' => 'status'])
                             </div>
