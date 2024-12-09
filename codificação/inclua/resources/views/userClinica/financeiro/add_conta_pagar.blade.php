@@ -29,7 +29,7 @@
                                 Valor<span class="required">*</span>
                             </label>
                             <div class="input-group {{ $errors->has('valor') ? ' has-danger' : '' }} input-medium">
-                                <input type="month" id="valor" class="form-control border-full {{ $errors->has('valor') ? ' is-invalid' : '' }}"
+                                <input type="text" id="valor" class="form-control border-full {{ $errors->has('valor') ? ' is-invalid' : '' }}"
                                     name="valor" placeholder="R$0,00" value="{{ old('valor') }}" required>
                                 @include('alerts.feedback', ['field' => 'valor'])
                             </div>
