@@ -86,6 +86,12 @@
                                             <p>{{ __('Paciente') }}</p>
                                         </a>
                                     </li>
+                                    <li @if ($pageSlug == 'dashboard2') class="active" @endif>
+                                        <a href="{{ route("user.relatorio") }}">
+                                            <i class="tim-icons icon-components"></i>
+                                            <p>{{ __('Clínica') }}</p>
+                                        </a>
+                                    </li>
                                 </ul>
                             </div>
                             <div class="collapse" id="relatorioclinica">
@@ -291,14 +297,6 @@
                                                         </a>
                                                     </li>
                                                 </ul>
-                                                <ul class="nav pl-4">
-                                                    <li @if ($pageSlug == 'dashboard2') class="active" @endif>
-                                                        <a href="{{  route("user.relatorio")  }}">
-                                                            <i class="tim-icons icon-paper"></i>
-                                                            <p>{{ __('Caixa') }}</p>
-                                                        </a>    
-                                                    </li>
-                                                </ul>
                                             </div>
                                         </li>
 
@@ -321,6 +319,7 @@
                                             </div>
                                         </li>
                                 </ul>
+
                             </div>
                         </li>
 
@@ -414,6 +413,12 @@
                                 <i class="tim-icons icon-single-02"></i>
                                 <p>{{ __('Meu Perfil') }}</p>
                             </a>
+                        </li>
+                        <li @if ($pageSlug == 'dashboard2') class="active" @endif>
+                            <a href="{{  route("user.relatorio")  }}">
+                                <i class="tim-icons icon-paper"></i>
+                                <p>{{ __('Relatório de Caixa') }}</p>
+                            </a>    
                         </li>
                     @endif
 
@@ -541,6 +546,12 @@
                                 <i class="tim-icons icon-chat-33"></i>
                                 <p>{{ __('Reputação') }}</p>
                             </a>
+                        </li>
+                        <li @if ($pageSlug == 'dashboard2') class="active" @endif>
+                            <a href="{{  route("user.relatorio")  }}">
+                                <i class="tim-icons icon-paper"></i>
+                                <p>{{ __('Relatório de Caixa') }}</p>
+                            </a>    
                         </li>
                     @endif
                 </ul>

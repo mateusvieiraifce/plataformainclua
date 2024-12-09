@@ -4,6 +4,8 @@ namespace App\Models;
 use App\Helper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Especialista;
+use App\Models\Clinica;
 
 class Clinica extends Model
 {
@@ -39,4 +41,25 @@ class Clinica extends Model
 
     return $celular;
   }
+
+   public function especialistas()
+    {
+        return $this->belongsToMany(
+            Especialista::class,    // Modelo relacionado
+            'especialistaclinicas',            // Tabela de ligação
+            'clinica_id',           // Chave estrangeira na tabela de ligação (da clínica)
+            'especialista_id'       // Chave estrangeira na tabela de ligação (do especialista)
+        )->withPivot('is_vinculado') // Inclui dados adicionais da tabela de ligação, se necessário
+         ->wherePivot('is_vinculado', 1); // Filtra apenas vínculos ativos
+    }
+    public function clinicas()
+    {
+        return $this->belongsToMany(
+            Clinica::class,          // Modelo relacionado
+            'especialistaclinicas',             // Tabela de ligação
+            'especialista_id',       // Chave estrangeira na tabela de ligação (do especialista)
+            'clinica_id'             // Chave estrangeira na tabela de ligação (da clínica)
+        )->withPivot('is_vinculado') // Inclui dados adicionais da tabela de ligação, se necessário
+         ->wherePivot('is_vinculado', 1); // Filtra apenas vínculos ativos
+    }
 }

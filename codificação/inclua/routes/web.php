@@ -356,6 +356,10 @@ Route::middleware('auth')->group(function () {
     Route::post("/especialista/selecionar-especialista/search/result", [\App\Http\Controllers\ClinicaController::class, 'selectEspecialistaSearch'])->name('selecionar.especialista.search');
     Route::get("/clinica/selecionar-clinica/", [\App\Http\Controllers\ClinicaController::class, 'listarClinicaRelatorio'])->name('selecionar.clinica.relatorio');
     Route::get('/remover-filtro/{tipo}', [\App\Http\Controllers\ClinicaController::class, 'removerFiltro'])->name('remover.filtro');
+    Route::get("/clinica/meu-relatorio/", [\App\Http\Controllers\ClinicaController::class, 'relatorioClinicaView'])->name('relatorio.clinica.view');
+    Route::post('/limpar-sessao', [\App\Http\Controllers\ClinicaController::class, 'limparSessao'])->name('user.relatorio.limpar');
+
+
 
 
     #CLINICA ++++++++++++++

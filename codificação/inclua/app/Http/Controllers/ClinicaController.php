@@ -39,6 +39,19 @@ class ClinicaController extends Controller
 
 
    public function listarEspecialistaRelatorio() {
+         if (Auth::user()->tipo_user == 'C') {
+           $clinica = Clinica::where('usuario_id', Auth::user()->id)->first();
+
+           if ($clinica) {
+               $especialistas = $clinica->especialistas()->paginate(10);
+               
+               return view('user_root.clinicas.selecionar_especialista', compact('especialistas'));
+           } else {
+               // Caso não encontre a clínica associada ao usuário
+               $especialistas = collect(); // Coleção vazia
+               return view('user_root.clinicas.selecionar_especialista', compact('especialistas'));
+           }
+       }
       $especialistas = Especialista::paginate(10);
       return view('user_root.clinicas.selecionar_especialista', 
          [
@@ -47,33 +60,35 @@ class ClinicaController extends Controller
    }
 
    public function listarClinicaRelatorio() {
+      if (Auth::user()->tipo_user == 'E') {
+           $especialista = Especialista::where('usuario_id', Auth::user()->id)->first();
+
+           if ($especialista) {
+               $clinicas = $especialista->clinicas()->paginate(10);
+               
+               return view('user_root.clinicas.selecionar_clinica2', compact('clinicas'));
+           } else {
+               // Caso não encontre a clínica associada ao usuário
+               $clinicas = collect(); // Coleção vazia
+               return view('user_root.clinicas.selecionar_clinica2', compact('clinicas'));
+           }
+       }
       $clinicas = Clinica::paginate(10);
       return view('user_root.clinicas.selecionar_clinica2', 
          [
             'clinicas' => $clinicas
          ]);
    }
-
-   public function removerFiltro($tipo)
+   public function limparSessao(Request $request)
    {
-       if ($tipo == 'especialista') {
-           // Remove apenas o especialista da sessão
-           session()->forget('especialista_id');
-       } elseif ($tipo == 'clinica') {
-           // Remove apenas a clínica da sessão
-           session()->forget('clinica_id');
-       } 
+       
+       session()->forget(['especialista_id', 'clinica_id', 'data_inicio', 'data_fim']);
 
-       // Redireciona de volta à página do relatório com os filtros atualizados
-       return redirect()->route('user.relatorio', [
-           'especialista_id' => session('especialista_id'),
-           'clinica_id' => session('clinica_id'),
-       ]);
+       return response()->json(['message' => 'Sessão limpa com sucesso!']);
    }
 
-
-
    public function relatorioCaixa(Request $request) {
+      if (Auth::user()->tipo_user == 'R') {
        $request->validate([
           'especialista_id' => 'nullable|exists:especialistas,id',
           'clinica_id' => 'nullable|exists:clinicas,id',
@@ -86,8 +101,6 @@ class ClinicaController extends Controller
           'data_fim.date' => 'A data de término deve ser uma data válida.',
           'data_fim.after_or_equal' => 'A data de término deve ser igual ou posterior à data de início.',
       ]);
-
-
        // Caminho para a imagem
        $imagePath = public_path('images/logo-01.png');
        $imageData = base64_encode(file_get_contents($imagePath));
@@ -153,6 +166,134 @@ class ClinicaController extends Controller
        ])->loadView('user_root.clinicas.relatoriocaixapdf', $dados);
 
        return $pdf->stream('relatorio_caixa.pdf');
+      }
+      if (Auth::user()->tipo_user == 'E') {
+         $request->validate([
+          'data_inicio' => 'required|date',
+          'data_fim' => 'required|date|after_or_equal:data_inicio',
+      ], [
+          'data_inicio.required' => 'A data de início é obrigatória.',
+          'data_inicio.date' => 'A data de início deve ser uma data válida.',
+          'data_fim.required' => 'A data de término é obrigatória.',
+          'data_fim.date' => 'A data de término deve ser uma data válida.',
+          'data_fim.after_or_equal' => 'A data de término deve ser igual ou posterior à data de início.',
+      ]);
+         $imagePath = public_path('images/logo-01.png');
+         $imageData = base64_encode(file_get_contents($imagePath));
+         $src = 'data:image/png;base64,' . $imageData;
+
+         $data_inicio = $request->data_inicio;
+         $data_fim = $request->data_fim;
+         $especialista = Especialista::find($request->especialista_id);
+         $clinica = Clinica::find($request->clinica_id);
+       
+
+         $consultas = Consulta::query();
+
+         if ($request->has('data_inicio') && $data_inicio !== 'Sem filtro') {
+          $consultas->where('horario_agendado', '>=', \Carbon\Carbon::parse($data_inicio)->startOfDay());
+         }
+         if ($request->has('data_fim') && $data_fim !== 'Sem filtro') {
+             $consultas->where('horario_agendado', '<=', \Carbon\Carbon::parse($data_fim)->endOfDay());
+         }
+         if ($request->has('especialista_id') && $especialista !== 'Sem filtro') {
+          $consultas->where('especialista_id', $especialista->id);
+         }
+
+         if ($request->has('clinica_id') && $clinica !== 'Sem filtro') {
+             $consultas->where('clinica_id', $clinica->id);
+         }
+
+         $consultas = $consultas->with('paciente')->get();
+         $preco_f = $consultas->sum('preco');
+         $num_f = $consultas->count();
+
+         $dados = [
+           'clinica' => $clinica,
+           'especialista' => $especialista,
+           'data_inicio' => $data_inicio,
+           'data_fim' => $data_fim,
+           'logo' => $src,
+           'consultas' => $consultas,
+           'preco_f' => $preco_f,
+           'num_f' => $num_f,
+       ];
+
+       $pdf = \Barryvdh\DomPDF\Facade\Pdf::setOptions([
+           'isHtml5ParserEnabled' => true,
+           'isPhpEnabled' => true,
+           'disable_font_subsetting' => true,
+           'image_dpi' => 96,
+           'debug' => true,
+           'isBase64Encoded' => true
+       ])->loadView('user_root.clinicas.relatoriocaixapdf', $dados);
+
+       return $pdf->stream('relatorio_caixa.pdf');
+      }
+      if (Auth::user()->tipo_user == 'C') {
+         $request->validate([
+          'data_inicio' => 'required|date',
+          'data_fim' => 'required|date|after_or_equal:data_inicio',
+      ], [
+          'data_inicio.required' => 'A data de início é obrigatória.',
+          'data_inicio.date' => 'A data de início deve ser uma data válida.',
+          'data_fim.required' => 'A data de término é obrigatória.',
+          'data_fim.date' => 'A data de término deve ser uma data válida.',
+          'data_fim.after_or_equal' => 'A data de término deve ser igual ou posterior à data de início.',
+      ]);
+         $imagePath = public_path('images/logo-01.png');
+         $imageData = base64_encode(file_get_contents($imagePath));
+         $src = 'data:image/png;base64,' . $imageData;
+
+         $data_inicio = $request->data_inicio;
+         $data_fim = $request->data_fim;
+         $especialista = Especialista::find($request->especialista_id);
+         $clinica = Clinica::find($request->clinica_id);
+       
+
+         $consultas = Consulta::query();
+
+         if ($request->has('data_inicio') && $data_inicio !== 'Sem filtro') {
+          $consultas->where('horario_agendado', '>=', \Carbon\Carbon::parse($data_inicio)->startOfDay());
+         }
+         if ($request->has('data_fim') && $data_fim !== 'Sem filtro') {
+             $consultas->where('horario_agendado', '<=', \Carbon\Carbon::parse($data_fim)->endOfDay());
+         }
+         if ($request->has('especialista_id') && $especialista !== 'Sem filtro') {
+          $consultas->where('especialista_id', $especialista->id);
+         }
+
+         if ($request->has('clinica_id') && $clinica !== 'Sem filtro') {
+             $consultas->where('clinica_id', $clinica->id);
+         }
+
+         $consultas = $consultas->with('paciente')->get();
+         $preco_f = $consultas->sum('preco');
+         $num_f = $consultas->count();
+         $clinica = Clinica::find(Auth::user()->id);
+
+         $dados = [
+           'clinica' => $clinica,
+           'especialista' => $especialista,
+           'data_inicio' => $data_inicio,
+           'data_fim' => $data_fim,
+           'logo' => $src,
+           'consultas' => $consultas,
+           'preco_f' => $preco_f,
+           'num_f' => $num_f,
+       ];
+
+       $pdf = \Barryvdh\DomPDF\Facade\Pdf::setOptions([
+           'isHtml5ParserEnabled' => true,
+           'isPhpEnabled' => true,
+           'disable_font_subsetting' => true,
+           'image_dpi' => 96,
+           'debug' => true,
+           'isBase64Encoded' => true
+       ])->loadView('user_root.clinicas.relatoriocaixapdf', $dados);
+
+       return $pdf->stream('relatorio_caixa.pdf');
+      }
    }
 
 
@@ -170,11 +311,15 @@ class ClinicaController extends Controller
 
    public function relatorioView(Request $request)
    {
+      $data_inicio = Carbon::now()->toDateString(); 
+      $data_fim = Carbon::now()->addMonth()->toDateString(); 
        // Salva os parâmetros na sessão, incluindo data_inicio e data_fim
-       session([
+       if (Auth::user()->tipo_user == 'R') {
+         session([
            'especialista_id' => $request->especialista_id ?? session('especialista_id'),
            'clinica_id' => $request->clinica_id ?? session('clinica_id'),
-       ]);
+         ]);
+       }
        
        $especialistaSelecionado = null;
        $clinicaSelecionada = null;
@@ -187,7 +332,7 @@ class ClinicaController extends Controller
            $clinicaSelecionada = Clinica::find($request->clinica_id);
        }
 
-       return view('user_root.clinicas.relatoriocaixa', compact('especialistaSelecionado', 'clinicaSelecionada'));
+       return view('user_root.clinicas.relatoriocaixa', compact('especialistaSelecionado', 'clinicaSelecionada', 'data_inicio', 'data_fim'));
    }
 
 
