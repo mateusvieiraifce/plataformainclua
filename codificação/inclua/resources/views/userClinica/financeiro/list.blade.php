@@ -24,6 +24,7 @@
                                         <th>Descrição da conta</th>
                                         <th>Valor</th>
                                         <th>Situação</th>
+                                        <th>Vencimento</th>
                                         <th>Editar</th>
                                         <th>Excluir</th>
                                     </tr>
@@ -34,6 +35,7 @@
                                         <td>{{ $conta->descricao }}</td>
                                         <td>{{ $conta->valor }}</td>
                                         <td>{{ $conta->status }}</td>
+                                        <td>{{ $conta->vencimento }}</td>
                                         <td>
                                             <a href="{{ route('clinica.financeiro.edit', $conta->id) }}" class="btn btn-primary btn-sm">Editar</a>
                                         </td>

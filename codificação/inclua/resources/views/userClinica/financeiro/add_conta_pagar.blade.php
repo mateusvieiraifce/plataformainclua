@@ -29,9 +29,20 @@
                                 Valor<span class="required">*</span>
                             </label>
                             <div class="input-group {{ $errors->has('valor') ? ' has-danger' : '' }} input-medium">
-                                <input type="month" id="valor" class="form-control border-full {{ $errors->has('valor') ? ' is-invalid' : '' }}"
+                                <input type="text" id="valor" class="form-control border-full {{ $errors->has('valor') ? ' is-invalid' : '' }}"
                                     name="valor" placeholder="R$0,00" value="{{ old('valor') }}" required>
                                 @include('alerts.feedback', ['field' => 'valor'])
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="vencimento">
+                                Vencimento<span class="required">*</span>
+                            </label>
+                            <div class="input-group {{ $errors->has('vencimento') ? ' has-danger' : '' }} input-medium">
+                                <input type="date" id="vencimento" class="form-control border-full {{ $errors->has('vencimento') ? ' is-invalid' : '' }}"
+                                    name="vencimento" value="{{ old('vencimento') }}" required>
+                                @include('alerts.feedback', ['field' => 'vencimento'])
                             </div>
                         </div>
                         
@@ -42,7 +53,7 @@
                             <div class="input-group {{ $errors->has('status') ? ' has-danger' : '' }} input-medium">
                                 <select name="status" id="status" class="form-control border-full {{ $errors->has('status') ? ' is-invalid' : '' }}" required>
                                        <option value="Pago" {{ old('status') == 'Pago' ? 'selected' : '' }}>Pago</option>
-                                       <option value="Pendente" {{ old('status') == 'Pendente' ? 'selected' : '' }}>Pendente</option>
+                                       <option value="Pendente" {{ old('status') == 'Pendente' ? 'selected' : 'selected' }}>Pendente</option>
                                 </select>
                                 @include('alerts.feedback', ['field' => 'status'])
                             </div>

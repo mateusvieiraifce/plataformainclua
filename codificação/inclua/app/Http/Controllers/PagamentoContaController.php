@@ -28,6 +28,7 @@ class PagamentoContaController extends Controller
             'user_id' => 'required',
             'descricao' => 'required|string', 
             'valor' => 'required|string',
+            'vencimento' => 'required',
             'status' => 'required|string',
         ]);
         $conta = PagamentoConta::find($id);
@@ -47,6 +48,7 @@ class PagamentoContaController extends Controller
             'user_id' => 'required',
             'descricao' => 'required|string', 
             'valor' => 'required|string',
+            'vencimento' => 'required',
             'status' => 'required|string',
         ]);
         PagamentoConta::create($input);
