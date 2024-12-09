@@ -53,12 +53,12 @@
             border-collapse: collapse;
         }
         th, td {
-            border: 3px solid black; /* Bordas grossas */
+            border: 3px solid black;
             padding: 8px;
             text-align: center;
         }
         th {
-            background-color: #f2f2f2; /* Cor de fundo para cabeçalhos */
+            background-color: #f2f2f2; 
         }
     </style>
 </head>
@@ -68,8 +68,10 @@
     <div class="header">
         <img src="{{ $logo }}" class="logo" alt="Logo">
         <div class="info">
-            <p><strong>Total das consultas:</strong>R$ {{ $preco_f }}</p>
+
+            <p><strong>Total das consultas:</strong>R$ {{ number_format($preco_f, 2, ',', '.') }}</p>
             <p><strong>Número de consultas:</strong>{{ $num_f }}</p>
+            
             <p><strong>Especialista:</strong>
                 @if($especialista !== 'Sem filtro' && $especialista) 
                     {{ $especialista->nome }} 
@@ -122,7 +124,7 @@
                     <td>{{ \Carbon\Carbon::parse($consulta->horario_agendado)->format('d/m/Y H:i') }}</td>
                     <td>{{ $consulta->paciente->nome }}</td>
                     <td>{{ $consulta->forma_pagamento }}</td>
-                    <td>R$ {{ $consulta->preco }}</td>
+                    <td>R$ {{ number_format($consulta->preco, 2, ',', '.') }}</td>
                 </tr>
             @endforeach
         </tbody>
