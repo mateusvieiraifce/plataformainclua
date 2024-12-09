@@ -10,7 +10,7 @@ class PagamentoConta extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'descricao', 'valor', 'status',
+        'user_id', 'descricao', 'valor', 'vencimento', 'status',
     ];
 
     protected $table = "pagamentos_contas";

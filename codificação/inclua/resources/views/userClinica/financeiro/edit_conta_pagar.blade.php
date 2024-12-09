@@ -35,6 +35,17 @@
                                 @include('alerts.feedback', ['field' => 'valor'])
                             </div>
                         </div>
+
+                        <div class="form-group">
+                            <label for="vencimento">
+                                Vencimento<span class="required">*</span>
+                            </label>
+                            <div class="input-group {{ $errors->has('vencimento') ? ' has-danger' : '' }} input-medium">
+                                <input type="date" id="vencimento" class="form-control border-full {{ $errors->has('vencimento') ? ' is-invalid' : '' }}"
+                                    name="vencimento" value="{{ old('vencimento') ?? $conta->vencimento }}" required>
+                                @include('alerts.feedback', ['field' => 'vencimento'])
+                            </div>
+                        </div>
                         
                         <div class="form-group">
                             <label for="situacao">
