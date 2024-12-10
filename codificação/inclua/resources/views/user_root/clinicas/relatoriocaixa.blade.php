@@ -48,6 +48,7 @@
                                         @enderror
                                     </tr>
                                     @if (Auth::user()->tipo_user == 'C' || Auth::user()->tipo_user == 'R')
+
                                         <!-- Filtro por especialista -->
                                         <tr>
                                             <td><label>Especialista:</label></td>
@@ -64,6 +65,9 @@
                                                     <a href="{{ route('user.relatorio.especialista') }}" class="btn btn-secondary" style="display: inline-block;">Alterar</a>
                                                 @else
                                                     <a href="{{ route('user.relatorio.especialista') }}" class="btn btn-primary" style="display: inline-block;">Selecionar</a>
+                                                    @if (Auth::user()->tipo_user == 'C')
+                                                        <input type="hidden" name="clinica_id" value="{{ Auth::user()->id }}">
+                                                    @endif
                                                 @endif
                                             </td>
                                         </tr>
@@ -86,6 +90,9 @@
                                                     <a href="{{ route('selecionar.clinica.relatorio') }}" class="btn btn-secondary" style="display: inline-block;">Alterar</a>
                                                 @else
                                                     <a href="{{ route('selecionar.clinica.relatorio') }}" class="btn btn-primary" style="display: inline-block;">Selecionar</a>
+                                                    @if (Auth::user()->tipo_user == 'E')
+                                                        <input type="hidden" name="especialista_id" value="{{ Auth::user()->id }}">
+                                                    @endif
                                                 @endif
                                             </td>
                                         </tr>
