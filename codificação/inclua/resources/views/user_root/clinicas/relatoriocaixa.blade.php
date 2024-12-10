@@ -140,66 +140,74 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('limparFormulario').addEventListener('click', function() {
-        // Limpar os campos de data
-        localStorage.removeItem('data_inicio');
-        localStorage.removeItem('data_fim');
-        document.getElementById('data_inicio').value = '';
-        document.getElementById('data_fim').value = '';
+            document.getElementById('limparFormulario').addEventListener('click', function() {
+                // Limpar os campos de data
+                localStorage.removeItem('data_inicio');
+                localStorage.removeItem('data_fim');
 
-        // Limpar especialista
-        let especialistaInput = document.querySelector('input[name="especialista_id"]');
-        if (especialistaInput) {
-            especialistaInput.value = '';
-        }
+                // Definir a data de início como a data de hoje
+                let dataHoje = new Date();
+                let dataInicio = dataHoje.toISOString().split('T')[0]; // Formata como yyyy-mm-dd
+                document.getElementById('data_inicio').value = dataInicio;
 
-        let especialistaSpan = document.querySelector('span[id="especialistaNome"]');
-        if (especialistaSpan) {
-            especialistaSpan.textContent = ''; // Limpar o nome do especialista
-        }
+                // Definir a data de término como 1 mês após a data de hoje
+                dataHoje.setMonth(dataHoje.getMonth() + 1);
+                let dataTermino = dataHoje.toISOString().split('T')[0]; // Formata como yyyy-mm-dd
+                document.getElementById('data_fim').value = dataTermino;
 
-        // Limpar clínica
-        let clinicaInput = document.querySelector('input[name="clinica_id"]');
-        if (clinicaInput) {
-            clinicaInput.value = '';
-        }
+                // Limpar especialista
+                let especialistaInput = document.querySelector('input[name="especialista_id"]');
+                if (especialistaInput) {
+                    especialistaInput.value = '';
+                }
 
-        let clinicaSpan = document.querySelector('span[id="clinicaNome"]');
-        if (clinicaSpan) {
-            clinicaSpan.textContent = ''; // Limpar o nome da clínica
-        }
+                let especialistaSpan = document.querySelector('span[id="especialistaNome"]');
+                if (especialistaSpan) {
+                    especialistaSpan.textContent = ''; // Limpar o nome do especialista
+                }
 
-        // Atualizar os botões de "Alterar" para "Selecionar"
-        let alterarButtons = document.querySelectorAll('.btn-secondary');
-        alterarButtons.forEach(button => {
-            button.classList.remove('btn-secondary');
-            button.classList.add('btn-primary');
-            button.textContent = 'Selecionar';
+                // Limpar clínica
+                let clinicaInput = document.querySelector('input[name="clinica_id"]');
+                if (clinicaInput) {
+                    clinicaInput.value = '';
+                }
+
+                let clinicaSpan = document.querySelector('span[id="clinicaNome"]');
+                if (clinicaSpan) {
+                    clinicaSpan.textContent = ''; // Limpar o nome da clínica
+                }
+
+                // Atualizar os botões de "Alterar" para "Selecionar"
+                let alterarButtons = document.querySelectorAll('.btn-secondary');
+                alterarButtons.forEach(button => {
+                    button.classList.remove('btn-secondary');
+                    button.classList.add('btn-primary');
+                    button.textContent = 'Selecionar';
+                });
+
+                // Enviar uma solicitação para limpar os dados da sessão
+                fetch('{{ route('user.relatorio.limpar') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({
+                        especialista_id: true,
+                        clinica_id: true,
+                        data_inicio: true,
+                        data_fim: true
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    //console.log('Sessão limpa', data);
+                })
+                .catch(error => {
+                    //console.error('Erro ao limpar sessão:', error);
+                });
+            });
         });
-
-        // Enviar uma solicitação para limpar os dados da sessão
-        fetch('{{ route('user.relatorio.limpar') }}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            },
-            body: JSON.stringify({
-                especialista_id: true,
-                clinica_id: true,
-                data_inicio: true,
-                data_fim: true
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Sessão limpa', data);
-        })
-        .catch(error => {
-            console.error('Erro ao limpar sessão:', error);
-        });
-    });
-});
 
     </script>
     
