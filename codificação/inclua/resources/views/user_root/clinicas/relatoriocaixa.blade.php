@@ -17,7 +17,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                <form action="{{ route('user.relatorio.gerar') }}" method="POST">
+                                <form action="{{ route('user.relatorio.gerar') }}" method="POST" target="_blank">
                                     @csrf
                                     <!-- Intervalo de Datas -->
                                     <tr>

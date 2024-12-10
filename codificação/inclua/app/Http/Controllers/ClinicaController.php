@@ -141,7 +141,7 @@ class ClinicaController extends Controller
       $consultas = $consultas
        ->with('paciente')
        ->orderBy('horario_agendado', 'asc')
-       ->get(); // Retorna todos os resultados ordenados
+       ->get();
 
       $preco_f = $consultas->sum('preco');
       $preco_fpix = $consultas->where('forma_pagamento', 'PIX')->sum('preco') ? $consultas->where('forma_pagamento', 'PIX')->sum('preco') : "Sem renda na modalidade";
