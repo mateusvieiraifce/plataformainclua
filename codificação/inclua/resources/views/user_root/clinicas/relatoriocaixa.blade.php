@@ -201,10 +201,10 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    console.log('Sessão limpa', data);
+                    //console.log('Sessão limpa', data);
                 })
                 .catch(error => {
-                    console.error('Erro ao limpar sessão:', error);
+                    //console.error('Erro ao limpar sessão:', error);
                 });
             });
         });
