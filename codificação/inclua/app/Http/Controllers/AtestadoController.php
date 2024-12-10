@@ -24,7 +24,9 @@ class AtestadoController extends Controller
         return Redirect()->back()->with('msg', $msg);
     }
 
-    public function downloadAtestado() {
-        
+    public function downloadAtestado($id) {
+        $atestado = Atestado::find($id);
+        $pdf = Pdf::loadView('userEspecialista.atestado', ['atestado' => $atestado]);
+        return $pdf->download('atestado.pdf');  
     }
 }

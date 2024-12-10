@@ -778,7 +778,7 @@
                                  </div>
                               </div>
                               
-                              <a id="gerarAtestado" rel="tooltip" title="Gerar atestado" class="btn btn-green" data-original-title="Edit" href="{{ route('atestado.download') }}">
+                              <a id="gerarAtestado" rel="tooltip" title="Gerar atestado" class="btn btn-green" data-original-title="Edit" href="{{ route('atestado.download', $consulta->id) }}">
                                  <i class="tim-icons  icon-paper"></i> Gerar atestado
                               </a>
                               
