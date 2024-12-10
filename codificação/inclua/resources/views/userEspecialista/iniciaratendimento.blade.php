@@ -758,7 +758,28 @@
                               <?php echo 'active'; ?>
                             @endif
                            ">
-                              <p>Conteúdo da aba atestados.</p>
+                              <div class="row">
+                                 <div class="col-md-12">
+                                    <div class="form-group">
+                                       <form action="{{ route('atestado.store') }}" method="post">
+                                       @csrf
+                                          <label style="color: #111">&nbsp; &nbsp; Dados do atestado:</label>
+                                          <input style="color: #111" type="area" placeholder="Digite os dados do atestado aqui" name="texto" id="texto" class="form-control" value="">
+                                          <input type="hidden" name="user_id" id="user_id" value="{{ auth()->user()->id }}">
+                                          <input type="hidden" name="consulta_id" id="consulta_id" value="{{ $consulta->id }}">
+                                          <button id="salvarAtestado" type="submit" rel="tooltip" title="Salvar atestado" class="btn btn-success" data-original-title="Edit">
+                                          <i class="tim-icons  icon-components"></i> Salvar atestado
+                                          </button>
+                                       </form>
+                                    </div>
+                                 </div>
+                              </div>
+                              
+                              <a id="gerarAtestado" rel="tooltip" title="Gerar atestado" class="btn btn-green"
+                                 data-original-title="Edit" href="{{ route('atestado.download') }}">
+                                 <i class="tim-icons  icon-paper"></i> Gerar atestado
+                              </a>
+                              
                            </div>
                            <div id="prontuario" class="tab-pane
                              @if($aba == "prontuario")

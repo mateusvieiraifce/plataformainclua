@@ -5,13 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PagamentoConta extends Model
+class Atestado extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'descricao', 'valor', 'vencimento', 'status',
+        'texto'
+        'data',
+        'user_id',
+        'consulta_id',  
     ];
-
-    protected $table = "pagamentos_contas";
 }

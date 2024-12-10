@@ -18,6 +18,7 @@ class CreatePagamentosContasTable extends Migration
             $table->unsignedBigInteger('user_id')->unsigned();
             $table->string('descricao');
             $table->decimal('valor', 8, 2);
+            $table->date('vencimento');
             $table->string('status');
 
             $table->foreign('user_id')

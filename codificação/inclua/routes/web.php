@@ -357,6 +357,10 @@ Route::middleware('auth')->group(function () {
     Route::get("/especialista/pedidomedicamento/delete/{id}/{consulta_id}", [\App\Http\Controllers\PedidoMedicamentoController::class, 'delete'])->name('pedido_medicamento.delete');
     Route::post("/especialista/novoexame/", [\App\Http\Controllers\EspecialistaController::class, 'salvaNovoExame'])->name('especialista.salvaNovoExame');
     Route::post("/especialista/novomedicamento/", [\App\Http\Controllers\EspecialistaController::class, 'salvaNovoMedicamento'])->name('especialista.salvaNovoMedicamento');
+    
+    #ATESTADO
+    Route::post("/especialista/atestado/store", [\App\Http\Controllers\AtestadoController::class, 'store'])->name('atestado.store');
+    Route::get("/especialista/atestado/download", [\App\Http\Controllers\AtestadoController::class, 'downloadAtestado'])->name('atestado.download');
 
     Route::get("/consulta/selecionar-clinica/{rota?}", [\App\Http\Controllers\ConsultaController::class, 'selectClinica'])->name('selecionar.clinica');
     Route::get("/consulta/selecionar-clinica/search/result", [\App\Http\Controllers\ConsultaController::class, 'selectClinicaSearch'])->name('selecionar.clinica.search');
