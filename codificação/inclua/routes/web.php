@@ -27,7 +27,8 @@ Route::get("/teste", function () {
     return view('teste');
 });
 
-Route::get("/", [\App\Http\Controllers\UsuarioController::class, 'index'])->name('index');
+Route::get("/", [\App\Http\Controllers\LandingPageController::class, 'index'])->name('landing.page');
+Route::get("/login", [\App\Http\Controllers\UsuarioController::class, 'index'])->name('index');
 Route::any("/sendmailback", [\App\Http\Controllers\MailController::class, 'sendEmailBack'])->name('sendMailBack');
 
 Route::get('/checkout', [\App\Http\Controllers\CheckoutControler::class, "checkout"])->name('finalizar');

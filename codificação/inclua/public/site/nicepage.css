@@ -43049,7 +43049,9 @@ a.u-link.u-text-hover-grey-90:hover {
   margin-right: 3rem;
 }
 .para-2 {
-  margin-left: 4rem;
+  /* margin-left: 4rem; */  
+  margin-right: 8rem;
+  margin-left: auto;
 }
 
 
@@ -43099,7 +43101,7 @@ a.u-link.u-text-hover-grey-90:hover {
 
 @media only screen and (min-width: 500px) and (max-width: 580px) {
     .para-2 {
-        margin-right: 8rem; 
+        margin-right: 7rem; 
     }
 }
 
@@ -43109,3 +43111,9 @@ a.u-link.u-text-hover-grey-90:hover {
     }
 }
 
+@media only screen and (max-width: 450px) {
+  .para-2 {
+      margin-right: 3rem;
+      margin-left: auto;
+  }
+}
