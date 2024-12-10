@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Relatório de Caixa</title>
     <style>
-
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -13,6 +12,7 @@
         }
 
         .header {
+            position: relative;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -23,18 +23,40 @@
 
         .logo {
             width: 150px;
-            margin-left: 17rem;
             height: auto;
+            margin-left: 17rem;
         }
 
-        .info {
+        .info-1,
+        .info-2 {
+            padding: 0 10px;
+        }
+
+        .info-1 {
+            position: absolute;
+            top: 100px; 
+            left: 0; 
+            width: 100%; 
+        }
+
+        .info-1 {
+            text-align: left;
+        }
+
+        .info-2 {
             text-align: right;
         }
 
-        .info p {
+        .info-1 p {
             margin: 5px 0;
             font-size: 14px;
         }
+
+        .info-2 {
+            text-align: right;
+            width: auto;
+        }
+
 
         .title {
             margin-top: 20px;
@@ -63,15 +85,13 @@
     </style>
 </head>
 <body>
-
-   
     <div class="header">
         <img src="{{ $logo }}" class="logo" alt="Logo">
-        <div class="info">
-
-            <p><strong>Total das consultas:</strong>R$ {{ number_format($preco_f, 2, ',', '.') }}</p>
-            <p><strong>Número de consultas:</strong>{{ $num_f }}</p>
-            
+        
+        <!-- Informações à esquerda -->
+        <div class="info-1">
+            <p><strong>Total das consultas:</strong> R$ {{ number_format($preco_f, 2, ',', '.') }}</p>
+            <p><strong>Número de consultas:</strong> {{ $num_f }}</p>
             <p><strong>Especialista:</strong>
                 @if($especialista !== 'Sem filtro' && $especialista) 
                     {{ $especialista->nome }} 
@@ -85,7 +105,6 @@
                 @else 
                     {{ $clinica }}
                 @endif
-
             </p>
             <p><strong>Período:</strong> 
                 @if($data_inicio !== 'Sem filtro' && $data_inicio)
@@ -100,9 +119,34 @@
                     Sem filtro
                 @endif
             </p>
-
+        </div>
+        
+        <!-- Informações à direita -->
+        <div class="info-2">
+            <p><strong>Total no PIX:</strong>
+                @if($preco_fpix !== 'Sem renda na modalidade' && $preco_fpix) 
+                    R$ {{ number_format($preco_fpix, 2, ',', '.') }} 
+                @else 
+                    {{$preco_fpix}} 
+                @endif
+            </p>
+            <p><strong>Total no dinheiro:</strong>
+                @if($preco_fd !== 'Sem renda na modalidade' && $preco_fd) 
+                    R$ {{ number_format($preco_fd, 2, ',', '.') }} 
+                @else 
+                    {{$preco_fd}} 
+                @endif
+            </p>
+            <p><strong>Total no Cartão:</strong>
+                @if($preco_fcdc !== 'Sem renda na modalidade' && $preco_fcdc) 
+                    R$ {{ number_format($preco_fcdc, 2, ',', '.') }} 
+                @else 
+                    {{$preco_fcdc}} 
+                @endif
+            </p>
         </div>
     </div>
+
 
     <div class="title">
         <p>Relatório de Caixa</p>
@@ -130,6 +174,5 @@
         </tbody>
     </table>
     </div>
-
 </body>
 </html>
