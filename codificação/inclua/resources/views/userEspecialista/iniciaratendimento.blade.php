@@ -236,7 +236,10 @@
   }   
 </script>
 
-
+@php
+    $atestado = DB::table('atestados')
+                    ->where('consulta_id', $consulta->id);
+@endphp
 
 <!-- Modal add EXAME-->
 <div class="modal fade" id="modalPedirExame" tabindex="-1" role="dialog" aria-labelledby="modalPedirExame"
@@ -764,10 +767,10 @@
                                        <form action="{{ route('atestado.store') }}" method="post">
                                        @csrf
                                           <label style="color: #111">&nbsp; &nbsp; Dados do atestado:</label>
-                                          <input style="color: #111" type="area" placeholder="Digite os dados do atestado aqui" name="texto" id="texto" class="form-control" value="">
+                                          <input style="color: #111" type="area" placeholder="Digite os dados do atestado aqui" name="texto" id="texto" class="form-control" value="" required>
                                           <input type="hidden" name="user_id" id="user_id" value="{{ auth()->user()->id }}">
                                           <input type="hidden" name="consulta_id" id="consulta_id" value="{{ $consulta->id }}">
-                                          <button id="salvarAtestado" type="submit" rel="tooltip" title="Salvar atestado" class="btn btn-success" data-original-title="Edit">
+                                          <button id="salvarAtestado" type="submit" rel="tooltip" title="Salvar atestado" class="btn btn-success" data-original-title="Edit" @if ($atestado) disabled style="color: black;"@endif>
                                           <i class="tim-icons  icon-components"></i> Salvar atestado
                                           </button>
                                        </form>
@@ -775,8 +778,7 @@
                                  </div>
                               </div>
                               
-                              <a id="gerarAtestado" rel="tooltip" title="Gerar atestado" class="btn btn-green"
-                                 data-original-title="Edit" href="{{ route('atestado.download') }}">
+                              <a id="gerarAtestado" rel="tooltip" title="Gerar atestado" class="btn btn-green" data-original-title="Edit" href="{{ route('atestado.download', $consulta->id) }}">
                                  <i class="tim-icons  icon-paper"></i> Gerar atestado
                               </a>
                               

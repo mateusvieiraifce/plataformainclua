@@ -10,7 +10,7 @@ class Atestado extends Model
     use HasFactory;
 
     protected $fillable = [
-        'texto'
+        'texto',
         'data',
         'user_id',
         'consulta_id',  

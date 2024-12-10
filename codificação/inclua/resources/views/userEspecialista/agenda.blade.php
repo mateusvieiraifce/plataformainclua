@@ -63,7 +63,6 @@ function validarCheckBoxes() {
             <form method="post" action="{{route('consulta.saveagenda', $especialista->id)}}" onsubmit="return validarCheckBoxes()">
               @csrf
               <div class="row">
-
               <div class="col-md-4 px-8">
                 <div class="form-group">
                   <label id="labelFormulario">Clínica(s) vinculada(s)</label>

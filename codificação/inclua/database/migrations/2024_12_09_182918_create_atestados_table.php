@@ -16,7 +16,7 @@ class CreateAtestadosTable extends Migration
         Schema::create('atestados', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->unsigned();
-            $table->unsignedBigInteger('consulta_id')->unsigned();
+            $table->unsignedBigInteger('consulta_id')->unsigned()->unique();
             $table->string('texto');
             $table->date('data');
             $table->timestamps();
