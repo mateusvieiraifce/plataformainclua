@@ -25,8 +25,31 @@ class AtestadoController extends Controller
     }
 
     public function downloadAtestado($id) {
-        $atestado = Atestado::find($id);
-        $pdf = Pdf::loadView('userEspecialista.atestado', ['atestado' => $atestado]);
-        return $pdf->download('atestado.pdf');  
+        $atestado = Atestado::where('consulta_id', $id)->get();
+        if($atestado->count() == 0) {
+            $msg = ['valor' => trans("Nenhum atestado encontrado!"), 'tipo' => 'danger'];
+            return Redirect()->back()->with('msg', $msg);
+        }
+        
+        $imagePath = public_path('images/logo-01.png');
+        $imageData = base64_encode(file_get_contents($imagePath));
+        $src = 'data:image/png;base64,'.$imageData;
+
+        $dados = [
+            'atestado' => $atestado, 
+            'logo' => $src,
+        ];
+
+        $pdf = Pdf::setOptions([
+            'isHtml5ParserEnabled' => true,
+            'isPhpEnabled' => true,
+            'disable_font_subsetting' => true,
+            'image_dpi' => 96,
+            'debug' => true,
+            'isRemoteEnabled' => true
+        ])
+        ->loadView('userEspecialista.atestado', $dados)
+        ->setPaper('a4');
+        return $pdf->download('Atestado.pdf');  
     }
 }

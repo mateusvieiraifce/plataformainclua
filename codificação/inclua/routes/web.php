@@ -361,7 +361,7 @@ Route::middleware('auth')->group(function () {
     
     #ATESTADO
     Route::post("/especialista/atestado/store", [\App\Http\Controllers\AtestadoController::class, 'store'])->name('atestado.store');
-    Route::get("/especialista/atestado/download", [\App\Http\Controllers\AtestadoController::class, 'downloadAtestado'])->name('atestado.download');
+    Route::get("/especialista/atestado/download/{id}", [\App\Http\Controllers\AtestadoController::class, 'downloadAtestado'])->name('atestado.download');
 
     Route::get("/consulta/selecionar-clinica/{rota?}", [\App\Http\Controllers\ConsultaController::class, 'selectClinica'])->name('selecionar.clinica');
     Route::get("/consulta/selecionar-clinica/search/result", [\App\Http\Controllers\ConsultaController::class, 'selectClinicaSearch'])->name('selecionar.clinica.search');

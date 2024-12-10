@@ -238,7 +238,8 @@
 
 @php
     $atestado = DB::table('atestados')
-                    ->where('consulta_id', $consulta->id);
+                    ->where('consulta_id', $consulta->id)
+                    ->get();
 @endphp
 
 <!-- Modal add EXAME-->
@@ -770,7 +771,7 @@
                                           <input style="color: #111" type="area" placeholder="Digite os dados do atestado aqui" name="texto" id="texto" class="form-control" value="" required>
                                           <input type="hidden" name="user_id" id="user_id" value="{{ auth()->user()->id }}">
                                           <input type="hidden" name="consulta_id" id="consulta_id" value="{{ $consulta->id }}">
-                                          <button id="salvarAtestado" type="submit" rel="tooltip" title="Salvar atestado" class="btn btn-success" data-original-title="Edit" @if ($atestado) disabled style="color: black;"@endif>
+                                          <button id="salvarAtestado" type="submit" rel="tooltip" title="Salvar atestado" class="btn btn-success" data-original-title="Edit" @if ($atestado->count() > 0) disabled style="color: black;"@endif>
                                           <i class="tim-icons  icon-components"></i> Salvar atestado
                                           </button>
                                        </form>
