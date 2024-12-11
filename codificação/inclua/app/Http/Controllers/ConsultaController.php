@@ -859,38 +859,4 @@ class ConsultaController extends Controller
 
       return back()->with('clinicas', $clinicas)->withInput();
    }
-   
-   public function callbackPagamentoConsulta(Request $request)
-   {      
-      $response = Helper::getCheckout($request->checkout_id);
-      
-      $consultaId = session()->get("consulta_id_$request->checkout_id");
-      $abaConsulta = session()->get("aba_$request->checkout_id");
-      
-      session()->forget("consulta_id_$request->checkout_id");
-      session()->forget("aba_$request->checkout_id");
-      //ver a questao financeira
-      $consulta = Consulta::find($consultaId);      
-      $pagamentoController = new PagamentoController();
-
-      if ($response->status == 'FAILED') {
-         $pagamentoController->update($response->transactions[0]->transaction_code, 'Negado');
-         session()->flash('msg', ['valor' => trans("Não foi possível realizar o pagamento da consulta, tente novamente."), 'tipo' => 'danger']);
-
-         return redirect()->route('consulta.listconsultaporespecialista');
-      } elseif ($response->status == 'PAID') {
-         try {
-            $consulta->isPago = true;
-            $consulta->forma_pagamento = 'Cartão';
-            $consulta->save();
-            
-            $pagamentoController->update($response->transactions[0]->transaction_code, 'Aprovado');
-            session()->flash('msg', ['valor' => trans("O pagamento da consulta foi realizado com sucesso!"), 'tipo' => 'success']);
-         } catch (QueryException $e) {
-            session()->flash('msg', ['valor' => trans("Houve um erro ao realizar o pagamento da consulta, tente novamente."), 'tipo' => 'danger']);
-         }
-
-         return redirect()->route('especialista.iniciarAtendimento', ['consulta_id' => $consulta->id, 'aba' => $abaConsulta]);
-      }
-   }
 }

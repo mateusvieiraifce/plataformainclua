@@ -99,7 +99,7 @@
                                                             {{date('H:i', strtotime($ent->hora_entrou))}}
                                                         </td>
                                                         <td style=" white-space: nowrap;">
-                                                            <a href="#" rel="tooltip" title="Iniciar atendimento" class="btn-primary" data-original-title="Edit" data-target="#modal-form" data-toggle="modal" onclick="setModal('{{ route('especialista.iniciarAtendimento', [$ent->consulta_id, 'prontuarioatual']) }}')">
+                                                            <a rel="tooltip" title="Iniciar atendimento" class="btn btn-primary" data-original-title="Edit" href="{{route('especialista.iniciarAtendimento', [$ent->id,"prontuarioatual"])}}">
                                                                 Iniciar atendimento
                                                             </a>
                                                         </td> 
@@ -169,48 +169,6 @@
             </div>
         </div>
     </div>
-
-    {{-- MODAL CANCELAR CONSULTA --}}
-    @component('layouts.modal_form', ["title" => "Favor, informe o método de pagamento", "route" => '', "textButton" => "Prosseguir", 'method' => 'get'])
-        <div class="input-group">
-            <div class="custom-radio">
-                <input type="radio" name="metodo_pagamento" id="pix" value="Pix" required>
-                <label class="form-check-label" for="pix">
-                    <img src="{{ asset('assets/img/pix.png')}}" class="img-icon" width="18px"> Pix
-                </label>
-            </div>
-        </div>
-        <div class="input-group">
-            <div class="custom-radio">
-                <input type="radio" name="metodo_pagamento" id="especie" value="Espécie" required>
-                <label class="form-check-label" for="especie">
-                    <img src="{{ asset('assets/img/money.png')}}" class="img-icon" width="18px"> Espécie
-                </label>
-            </div>
-        </div>
-        <div class="input-group">
-            <div class="custom-radio">
-                <input type="radio" name="metodo_pagamento" id="cartao-dropdown" value="null">
-                <label class="form-check-label" for="cartao-dropdown">
-                    <img src="{{ asset('assets/img/card.png')}}" class="img-icon" width="18px"> Cartão
-                </label>
-            </div>
-        </div>
-        <div class="input-group drop-down" id="drop-down">
-            <div class="custom-radio">
-                <input type="radio" name="metodo_pagamento" id="cartao" value="Cartão" required>
-                <label class="form-check-label" for="cartao">
-                    Cartão Cadastrado
-                </label>
-            </div>
-            <div class="custom-radio">
-                <input type="radio" name="metodo_pagamento" id="maquininha" value="Máquinhinha" required>
-                <label class="form-check-label" for="maquininha">
-                    Máquininha
-                </label>
-            </div>
-        </div>
-   @endcomponent
 
    <script>
         let draggingRow = null;
@@ -293,21 +251,5 @@
             table.addEventListener('dragover', handleDragOver);
             table.addEventListener('drop', handleDrop);
         });
-        
-        function setModal(route) {
-            $('#form-modal').attr('action', route);
-        }
-
-        $(document).ready(function () {
-            $("input[name='metodo_pagamento']").change(function () {
-                if ($("#cartao-dropdown").is(":checked")) {
-                    $('#drop-down').addClass("show")
-                } else if($("#pix").is(":checked")) {
-                    $('#drop-down').removeClass("show")
-                } else if($("#especie").is(":checked")) {
-                    $('#drop-down').removeClass("show")
-                }
-            });
-        });      
     </script>
 @endsection
