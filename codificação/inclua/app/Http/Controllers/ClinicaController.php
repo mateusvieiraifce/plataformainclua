@@ -137,9 +137,7 @@ class ClinicaController extends Controller
 
       if ($request->has('data_fim') && $data_fim !== 'Sem filtro') {
           $consultas->where('horario_agendado', '<=', \Carbon\Carbon::parse($data_fim)->endOfDay());
-      }
-
-      $pagamentos = $request->input('pagamentos', []); // Obter as formas de pagamento selecionadas
+      }  
 
       if (!empty($pagamentos) && is_array($pagamentos)) {
           // Filtrar consultas com base nos valores fornecidos
@@ -149,7 +147,7 @@ class ClinicaController extends Controller
               }
           });
       }
-      
+
       $consultas = $consultas
        ->with('paciente')
        ->orderBy('horario_agendado', 'asc')
