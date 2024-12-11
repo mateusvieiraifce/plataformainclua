@@ -11,25 +11,26 @@
                             <h5 class="card-category">Controle de movimentações (1 ano)</h5>
                             <h2 class="card-title">Consultas</h2>
                         </div>
-                        <div class="col-sm-6">
-                            <div class="btn-group btn-group-toggle float-right" data-toggle="buttons">
-                                <label class="btn btn-sm btn-primary btn-simple active" id="0"
-                                       onclick="geraGrafico(this)">
-                                    <input type="radio" id="venda" name="options" checked>
-                                    <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Valores</span>
-                                    <span class="d-block d-sm-none">
-                                    <i class="tim-icons icon-cart "></i>
-                                </span>
-                                </label>
-                                <label class="btn btn-sm btn-primary btn-simple" id="1" onclick="geraGrafico(this)">
-                                    <input type="radio" id="compra" class="d-none d-sm-none" name="options">
-                                    <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Quantidades de consultas</span>
-                                    <span class="d-block d-sm-none">
-                                    <i class="tim-icons icon-delivery-fast"></i>
-                                </span>
-                                </label>                              
+                            <div class="col-sm-6">
+                                <div class="btn-group btn-group-toggle float-right" data-toggle="buttons">
+                                    <label class="btn btn-sm btn-primary btn-simple active" id="0"
+                                           onclick="geraGrafico(this)">
+                                        <input type="radio" id="venda" name="options" checked>
+                                        <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Valores</span>
+                                        <span class="d-block d-sm-none">
+                                        <i class="tim-icons icon-cart "></i>
+                                    </span>
+                                    </label>
+                                    <label class="btn btn-sm btn-primary btn-simple" id="1" onclick="geraGrafico(this)">
+                                        <input type="radio" id="compra" class="d-none d-sm-none" name="options">
+                                        <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Quantidades de consultas</span>
+                                        <span class="d-block d-sm-none">
+                                        <i class="tim-icons icon-delivery-fast"></i>
+                                    </span>
+                                    </label>                              
+                                </div>
                             </div>
-                        </div>
+
                     </div>
                 </div>
                 <div class="card-body">
@@ -38,12 +39,28 @@
                         <!-- montando grafico geral -->
                         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
                         <script type="text/javascript">
-                            var meses = [
-                                "Janeiro", "Fevereiro", "Março",
-                                "Abril", "Maio", "Junho",
-                                "Julho", "Agosto", "Setembro",
-                                "Outubro", "Novembro", "Dezembro"
+                           var meses = [
+                                "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+                                "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
                             ];
+
+                            // Obtém o mês atual (0-11) e o ano atual
+                            var mesAtual = new Date().getMonth(); // Mês atual (exemplo: Dezembro será 11)
+                            var anoAtual = new Date().getFullYear(); // Ano atual (exemplo: 2024)
+
+                            // A janela de 12 meses começa com Janeiro do ano atual
+                            var mesInicial = 0; // Janeiro
+                            var anoInicial = anoAtual;
+
+                            // Gera a lista de meses com o ano para o gráfico, começando com Janeiro do ano atual
+                            var mesesReorganizados = [];
+
+                            for (var i = 0; i < 12; i++) {
+                                var mesIndex = (mesInicial + i) % 12; // Índice do mês (circular)
+                                var ano = anoInicial + Math.floor((mesInicial + i) / 12); // Ano, incrementa quando passa de Dezembro
+                                mesesReorganizados.push(meses[mesIndex] + '-' + ano); // Adiciona o mês com o ano no formato "Jan-2024"
+                            }
+
                             google.charts.load('current', {'packages': ['corechart']});
                             google.charts.setOnLoadCallback(drawChart);
 
@@ -53,7 +70,7 @@
                                     ['', 'Total no mês'
                                     ],
                                         @foreach($TodasConsultasPorMes as $entidadeMes)
-                                    [meses[{{$entidadeMes->mes}} - 1], {{$entidadeMes->preco_total}}
+                                    [mesesReorganizados[{{$entidadeMes->mes}} - 1], {{$entidadeMes->preco_total}}
                                     ],
                                     @endforeach
                                 ]);
@@ -129,9 +146,6 @@
                                 var chart = new google.visualization.LineChart(document.getElementById('graficoVendasGeral'));
                                 chart.draw(data, options);
                             }
-
-                         
-                          
                         </script>
 
                         <script>
@@ -171,7 +185,6 @@
 
      <!-- graficos por vendedor -->
      <div class="row">
-
 @if(sizeof($lista)>0)
     @foreach($lista as $ent)
             <?php
@@ -196,7 +209,6 @@
                         @php
                             $dataAtual = \Carbon\Carbon::now();
                              $SeisMesesAntes =\Carbon\Carbon::now()->subMonths(6);
-                             $dataAtual = \Carbon\Carbon::now();
 
                              $clinica = \App\Models\Clinica::where('usuario_id', '=', Auth::user()->id)->first();    
                              $TodasConsultasPorMes = \App\Models\Consulta::join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')->
