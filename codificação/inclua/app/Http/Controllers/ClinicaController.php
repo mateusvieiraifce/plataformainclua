@@ -100,6 +100,7 @@ class ClinicaController extends Controller
           'data_fim.date' => 'A data de término deve ser uma data válida.',
           'data_fim.after_or_equal' => 'A data de término deve ser igual ou posterior à data de início.',
       ]);
+       $pagamentos = $request->input('pagamentos', []); // Recebe as opções selecionadas ou um array vazio.
        // Caminho para a imagem
        $imagePath = public_path('images/logo-01.png');
        $imageData = base64_encode(file_get_contents($imagePath));
@@ -138,15 +139,38 @@ class ClinicaController extends Controller
           $consultas->where('horario_agendado', '<=', \Carbon\Carbon::parse($data_fim)->endOfDay());
       }
 
+      if ($request->has('pagamentos') && is_array($request->pagamentos)) {
+          // Filtrar consultas com base nos valores fornecidos
+          $consultas->where(function ($query) use ($pagamentos) {
+              foreach ($pagamentos as $pagamento) {
+                  $query->orWhere('forma_pagamento', $pagamento);
+              }
+          });
+      }
+
       $consultas = $consultas
        ->with('paciente')
        ->orderBy('horario_agendado', 'asc')
        ->get();
 
       $preco_f = $consultas->sum('preco');
-      $preco_fpix = $consultas->where('forma_pagamento', 'PIX')->sum('preco') ? $consultas->where('forma_pagamento', 'PIX')->sum('preco') : "Sem renda na modalidade";
-      $preco_fd = $consultas->where('forma_pagamento', 'Dinheiro')->sum('preco') ? $consultas->where('forma_pagamento', 'Dinheiro')->sum('preco') : "Sem renda na modalidade";
-      $preco_fcdc = $consultas->where('forma_pagamento', 'Cartão de Crédito')->sum('preco') ? $consultas->where('forma_pagamento', 'Cartão de Crédito')->sum('preco') : "Sem renda na modalidade";
+      $preco_fpix = $request->has('pagamentos') && in_array('PIX', $request->pagamentos)
+          ? ($consultas->where('forma_pagamento', 'PIX')->sum('preco') > 0 
+              ? $consultas->where('forma_pagamento', 'PIX')->sum('preco') 
+              : "Sem renda na modalidade")
+          : "Sem filtro";
+
+      $preco_fd = $request->has('pagamentos') && in_array('Dinheiro', $request->pagamentos)
+          ? ($consultas->where('forma_pagamento', 'Dinheiro')->sum('preco') > 0 
+              ? $consultas->where('forma_pagamento', 'Dinheiro')->sum('preco') 
+              : "Sem renda na modalidade")
+          : "Sem filtro";
+
+      $preco_fcdc = $request->has('pagamentos') && in_array('Cartão de Crédito', $request->pagamentos)
+          ? ($consultas->where('forma_pagamento', 'Cartão de Crédito')->sum('preco') > 0 
+              ? $consultas->where('forma_pagamento', 'Cartão de Crédito')->sum('preco') 
+              : "Sem renda na modalidade")
+          : "Sem filtro";
       $num_f = $consultas->count();
 
 

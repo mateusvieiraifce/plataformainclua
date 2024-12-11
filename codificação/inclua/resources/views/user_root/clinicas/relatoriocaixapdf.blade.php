@@ -122,29 +122,35 @@
         </div>
         
         <!-- Informações à direita -->
-        <div class="info-2">
+        <div class="info-2">    
+            <!-- Total no PIX -->
             <p><strong>Total no PIX:</strong>
-                @if($preco_fpix !== 'Sem renda na modalidade' && $preco_fpix) 
+                @if($preco_fpix !== 'Sem renda na modalidade' && $preco_fpix !== 'Sem filtro' && $preco_fpix > 0) 
                     R$ {{ number_format($preco_fpix, 2, ',', '.') }} 
                 @else 
                     {{$preco_fpix}} 
                 @endif
             </p>
-            <p><strong>Total no dinheiro:</strong>
-                @if($preco_fd !== 'Sem renda na modalidade' && $preco_fd) 
+
+            <!-- Total no Dinheiro -->
+            <p><strong>Total no Dinheiro:</strong>
+                @if($preco_fd !== 'Sem renda na modalidade' && $preco_fd !== 'Sem filtro' && $preco_fd > 0) 
                     R$ {{ number_format($preco_fd, 2, ',', '.') }} 
                 @else 
                     {{$preco_fd}} 
                 @endif
             </p>
+
+            <!-- Total no Cartão -->
             <p><strong>Total no Cartão:</strong>
-                @if($preco_fcdc !== 'Sem renda na modalidade' && $preco_fcdc) 
+                @if($preco_fcdc !== 'Sem renda na modalidade' && $preco_fcdc !== 'Sem filtro' && $preco_fcdc > 0) 
                     R$ {{ number_format($preco_fcdc, 2, ',', '.') }} 
                 @else 
                     {{$preco_fcdc}} 
                 @endif
             </p>
         </div>
+
     </div>
 
 

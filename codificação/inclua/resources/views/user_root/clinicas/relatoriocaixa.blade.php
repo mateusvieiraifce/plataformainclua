@@ -37,7 +37,6 @@
                                                         value="{{ old('data_fim', session('data_fim', $data_fim)) }}">
                                                 </div>
                                             </div>
-
                                         </td>
                                         @error('data_inicio')
                                             <p class="text-danger" style="font-size: 12px;">{{ $message }}</p>
@@ -98,6 +97,25 @@
                                         </tr>
                                         @endif
 
+                                        <tr>
+                                            <td><label for="pagamentos">Formas de Pagamento:</label></td>
+                                            <td>
+                                                <div class="d-flex align-items-center" style="gap: 20px;">
+                                                    <div>
+                                                        <input type="checkbox" name="pagamentos[]" value="Pix" id="pix">
+                                                        <label for="pix">Pix</label>
+                                                    </div>
+                                                    <div>
+                                                        <input type="checkbox" name="pagamentos[]" value="Dinheiro" id="dinheiro">
+                                                        <label for="dinheiro">Dinheiro</label>
+                                                    </div>
+                                                    <div>
+                                                        <input type="checkbox" name="pagamentos[]" value="Cartão de Crédito" id="cartao_credito">
+                                                        <label for="cartao_credito">Cartão de Crédito</label>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
                                     <!-- Botões de Submissão e Limpar -->
                                     <tr>
                                         <td>
