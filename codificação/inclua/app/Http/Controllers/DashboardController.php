@@ -150,29 +150,28 @@ class DashboardController extends Controller
 
     function dashboardClinica()
     {
-        $dataAtual = Carbon::now();
-        $umAnoAntes = $dataAtual->subYear();
-        $dataAtual = Carbon::now();
-
-        $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();    
+        $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
         //retornando todos os especialistas vinculados       
         $especialistas = Especialistaclinica::join('especialistas', 'especialistas.id', '=',
         'especialistaclinicas.especialista_id')->
         where('clinica_id', $clinica->id)->     
         orderBy('especialistas.nome', 'asc')->
         select('especialistas.id', 'especialistas.nome')->get();
-      
+
+        $dataAtual = \Carbon\Carbon::now();
+        $mesInicial = $dataAtual->copy()->subMonths(11)->startOfMonth(); // Primeiro mês da janela (12 meses atrás)
+        $mesFinal = $dataAtual->endOfMonth(); // Último mês da janela (mês atual)
+
         // selecionar as consultas na qual o status igual a finalizado
-        $TodasConsultasPorMes = Consulta::join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')->
-        where('consultas.clinica_id', '=', $clinica->id)->
-        where('status', 'Finalizada')->
-        whereBetween('horario_agendado', [$umAnoAntes, $dataAtual])->
-        selectRaw('MONTH(horario_agendado) as mes, sum(preco) as preco_total, 
-                count(*) as quantidade')->
-        groupBy(Consulta::raw('MONTH(horario_agendado)'))->
-        limit(12)->get();
-   
-        return view('userClinica/dashboard', ['lista' => $especialistas, 'TodasConsultasPorMes' => $TodasConsultasPorMes]);
+        $TodasConsultasPorMes = Consulta::join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')
+            ->where('consultas.clinica_id', '=', $clinica->id)
+            ->where('status', 'Finalizada')
+            ->whereBetween('horario_agendado', [$mesInicial, $mesFinal]) // Filtra os últimos 12 meses
+            ->selectRaw('YEAR(horario_agendado) as ano, MONTH(horario_agendado) as mes, sum(preco) as preco_total, count(*) as quantidade')
+            ->groupByRaw('YEAR(horario_agendado), MONTH(horario_agendado)') // Agrupa por ano e mês
+            ->orderByRaw('YEAR(horario_agendado), MONTH(horario_agendado)') // Ordena de forma crescente (de Janeiro a Dezembro)
+            ->get();
+        return view('userClinica/dashboard', ['lista' => $especialistas, 'TodasConsultasPorMes' => $TodasConsultasPorMes]); 
     }
 
 
