@@ -5,6 +5,58 @@
         <div class="col-lg-12 col-md-12">
             <div class="card">
                 <div class="card-header">
+
+                    <div class="col-lg-12 col-md-12">
+                      <form action="{{route('clinica.financeiro')}}" method="get" id="pesquisar">
+                         @csrf
+                         <label style="font-size: 20px"></label>
+                         <fieldset>
+                            <div class="row">
+                                  <div class="col-md-2 ">
+                                     <div class="form-group">
+                                        <label id="labelFormulario" style="color: white">&nbsp;Data início:</label>
+                                        <input style="border-color: #C0C0C0" type="date" name="inicio_data" id="inicio_data" 
+                                        class="form-control" value="{{old('inicio_data', $inicio_data) ?? date('Y-m-d')}}">
+                                     </div>
+                                  </div>
+                                  <div class="col-md-2">
+                                     <div class="form-group">
+                                        <label id="labelFormulario" style="color: white">&nbsp;&nbsp;Data final:</label>
+                                        <input style="border-color: #C0C0C0" type="date" name="final_data" id="final_data" class="form-control" value="{{ old('final_data', $final_data) ??  date('Y-m-d')}}">
+                                     </div>
+                                  </div>
+                                  <div class="col-md-3 px-8">
+                                     <div class="form-group">
+                                        <label style="color: white">&nbsp; &nbsp; Descrição:</label>
+                                        <input style="border-color: #C0C0C0" type="text" placeholder="Descrição da conta" name="descconta" id="descconta" class="form-control" value="{{ old('descconta') ?? $descconta}}">
+                                     </div>
+                                  </div>
+
+                                  <div class="col-md-2 px-8">
+                                    <div class="form-group">
+                                        <label id="labelFormulario" style="color: white">Situação</label>
+                                        <select name="status" id="status" class="form-control" style="border-color: white">
+                                            <option style="color: #2d3748" value="todas" {{ old('status') == 'todas' ? 'selected' : ''
+                                            }} @if ($status_selecionado == "todas")selected 
+                                            @endif>Todas</option>
+                                            <option style="color: #2d3748" value="pendente" {{ old('status') == 'pendente' ? 'selected' : '' }} @if ($status_selecionado == "pendente")selected 
+                                            @endif>Pendente
+                                            </option>
+                                            <option style="color: #2d3748" value="pago" {{ old('status') == 'pago' ? 'selected' : '' }} @if ($status_selecionado == "pago")selected 
+                                            @endif>Pago</option>
+                                        </select>
+                                    </div>
+                                   </div>              
+
+                                  <div class="col-md-1 ">                       
+                                     <button style="max-height: 40px; max-width: 40px;margin-top: 25px" class="btn btn-primary">
+                                     <i  class="tim-icons icon-zoom-split"></i></button>
+                                  </div>
+                            </div>
+                         </fieldset>
+                      </form>
+                   </div>
+
                     <h6 class="title d-inline">Contas a pagar</h6>
                     <div class="dropdown">
                         <button type="button" class="btn btn-link dropdown-toggle btn-icon" data-toggle="dropdown">
