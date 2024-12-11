@@ -75,7 +75,7 @@
                   @endphp
                   <ul class="pagination">
                      <li class="{{ ($paginator->currentPage() == 1) ? ' disabled' : '' }}">
-                        <a href="{{$paginator->url . "?page=1&filtro=" . $filtro . "&cpf=". $cpf }}">&nbsp;<< &nbsp;&nbsp; </a>
+                        <a href="{{$paginator->url . "?page=1&filtro=" . $filtro . "&cpf=". $cpf ?? '' }}">&nbsp;<< &nbsp;&nbsp; </a>
                      </li>
                      @for ($i = 1; $i <= $paginator->lastPage(); $i++)
                         <?php
@@ -91,15 +91,15 @@
                         }    ?>
                         @if ($from < $i && $i < $to) <li class="{{ ($paginator->currentPage() == $i) ? ' active' : '' }}">
                            @if($paginator->currentPage() == $i)
-                           <a href="{{ $paginator->url . "?page=" . $i . "&filtro=" . $filtro . "&cpf=". $cpf }} "> <b>{{ $i }}</b> &nbsp; </a>
+                           <a href="{{ $paginator->url . "?page=" . $i . "&filtro=" . $filtro . "&cpf=". $cpf ?? '' }} "> <b>{{ $i }}</b> &nbsp; </a>
                            @else
-                           <a href="{{ $paginator->url . "?page=" . $i . "&filtro=" . $filtro . "&cpf=". $cpf}} ">{{ $i }} &nbsp; </a>
+                           <a href="{{ $paginator->url . "?page=" . $i . "&filtro=" . $filtro . "&cpf=". $cpf ?? '' }} ">{{ $i }} &nbsp; </a>
                            @endif
                            </li>
                            @endif
                            @endfor
                            <li class="{{ ($paginator->currentPage() == $paginator->lastPage()) ? ' disabled' : '' }}">
-                              <a href="{{ $paginator->url . "?page=" . $paginator->lastPage() . "&filtro=" . $filtro . "&cpf=". $cpf}}"> >></a>
+                              <a href="{{ $paginator->url . "?page=" . $paginator->lastPage() . "&filtro=" . $filtro . "&cpf=". $cpf ?? '' }}"> >></a>
                            </li>
                   </ul>
                   @endif
