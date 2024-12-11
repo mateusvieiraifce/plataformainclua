@@ -78,38 +78,90 @@ class PagamentoController extends Controller
         return view('user_root.pacientes.financeiro', ['pagamentos' => $pagamentos, 'assinaturas' => $assinaturas]);
     }
     
-    public function pagarConsulta($consulta_id, $aba)
+    public function pagarConsulta(Request $request)
     {
-        $consulta = Consulta::find($consulta_id);
+        $consulta = Consulta::find($request->consulta_id);
         $usuario = User::join('pacientes', 'pacientes.usuario_id', 'users.id')
             ->where('pacientes.id', $consulta->paciente_id)
             ->select('users.*')
             ->first();
+
         $cartao = Cartao::join('assinaturas', 'assinaturas.cartao_id', 'cartoes.id')
             ->where('cartoes.user_id', $usuario->id)
             ->select('cartoes.*')
             ->first();
             
-        //CRIAR O CHECKOUT
-        $checkout = Helper::createCheckoutSumupConsulta($consulta->preco);
-        //PASSAR O ID DA CUNSULTA E MOTIVO DE CANCELAMENTO
-        session()->put("consulta_id_$checkout->id", $consulta->id);
-        session()->put("aba_$checkout->id", $aba);
-        //CRIAR O PAGAMENTO
-        $pagamento = Helper::createPagamento($cartao, $checkout);
+            
+        if ($request->metodo_pagamento == "null") {
+            session()->flash('msg',  ['valor' => trans("Selecione a forma de pagamento com o cartão."), 'tipo' => 'danger']);
 
-        if (isset($pagamento->status) && $pagamento->status == "FAILED") {
-            $this->store($cartao->user_id, floatval(Helper::converterMonetario($consulta->preco)), $pagamento->transactions[0]->transaction_code, 'Negado', 'Pagamento da consulta');
+            return back();
+        }
 
-            return redirect()->route('callback.pagamento.consulta', ['checkout_id' => $pagamento->id]);
-        } elseif (isset($pagamento->status) && $pagamento->status == "PAID") {
-            $this->store($cartao->user_id, floatval(Helper::converterMonetario($consulta->preco)), $pagamento->transactions[0]->transaction_code, 'Aprovado', 'Pagamento da consulta');
+        if($request->metodo_pagamento == "Cartão") {
+            //CRIAR O CHECKOUT
+            $checkout = Helper::createCheckoutSumupConsulta($consulta->preco);
+            //PASSAR O ID DA CUNSULTA E MOTIVO DE CANCELAMENTO
+            session()->put("consulta_id_$checkout->id", $consulta->id);
+            //CRIAR O PAGAMENTO
+            $pagamento = Helper::createPagamento($cartao, $checkout);
 
-            return redirect()->route('callback.pagamento.consulta', ['checkout_id' => $pagamento->id]);
-        } elseif (isset($pagamento->next_step)) {
-            $this->store($cartao->user_id, floatval(Helper::converterMonetario($consulta->preco)), $pagamento->next_step->current_transaction->transaction_code, 'Pendente', 'Pagamento da consulta');
+            if (isset($pagamento->status) && $pagamento->status == "FAILED") {
+                $this->store($cartao->user_id, floatval(Helper::converterMonetario($consulta->preco)), $pagamento->transactions[0]->transaction_code, 'Negado', 'Pagamento da consulta');
 
-            return redirect($pagamento->next_step->url);
+                return redirect()->route('callback.pagamento.consulta', ['checkout_id' => $pagamento->id]);
+            } elseif (isset($pagamento->status) && $pagamento->status == "PAID") {
+                $this->store($cartao->user_id, floatval(Helper::converterMonetario($consulta->preco)), $pagamento->transactions[0]->transaction_code, 'Aprovado', 'Pagamento da consulta');
+
+                return redirect()->route('callback.pagamento.consulta', ['checkout_id' => $pagamento->id]);
+            } elseif (isset($pagamento->next_step)) {
+                $this->store($cartao->user_id, floatval(Helper::converterMonetario($consulta->preco)), $pagamento->next_step->current_transaction->transaction_code, 'Pendente', 'Pagamento da consulta');
+
+                return redirect($pagamento->next_step->url);
+            }            
+        } elseif ($request->metodo_pagamento) {
+            try {
+               $consulta->isPago = true;
+               $consulta->forma_pagamento = 'Cartão';
+               $consulta->save();
+               
+               session()->flash('msg', ['valor' => trans("O pagamento da consulta foi realizado com sucesso!"), 'tipo' => 'success']);
+            } catch (QueryException $e) {
+               session()->flash('msg', ['valor' => trans("Houve um erro ao realizar o pagamento da consulta, tente novamente."), 'tipo' => 'danger']);
+            }
+
+            return redirect()->route('consulta.agendaConsultas', ['clinica_id' => $consulta->clinica_id]);
         }
     }
+    
+   public function callbackPagamentoConsulta(Request $request)
+   {      
+      $response = Helper::getCheckout($request->checkout_id);
+      
+      $consultaId = session()->get("consulta_id_$request->checkout_id");
+      
+      session()->forget("consulta_id_$request->checkout_id");
+      //ver a questao financeira
+      $consulta = Consulta::find($consultaId);
+
+      if ($response->status == 'FAILED') {
+         $this->update($response->transactions[0]->transaction_code, 'Negado');
+         session()->flash('msg', ['valor' => trans("Não foi possível realizar o pagamento da consulta, tente novamente."), 'tipo' => 'danger']);
+
+         return redirect()->route('consulta.listconsultaporespecialista');
+      } elseif ($response->status == 'PAID') {
+         try {
+            $consulta->isPago = true;
+            $consulta->forma_pagamento = 'Cartão';
+            $consulta->save();
+            
+            $this->update($response->transactions[0]->transaction_code, 'Aprovado');
+            session()->flash('msg', ['valor' => trans("O pagamento da consulta foi realizado com sucesso!"), 'tipo' => 'success']);
+         } catch (QueryException $e) {
+            session()->flash('msg', ['valor' => trans("Houve um erro ao realizar o pagamento da consulta, tente novamente."), 'tipo' => 'danger']);
+         }
+
+         return redirect()->route('consulta.agendaConsultas', ['clinica_id' => $consulta->clinica_id]);
+      }
+   }
 }

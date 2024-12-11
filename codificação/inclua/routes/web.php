@@ -438,8 +438,8 @@ Route::middleware('auth')->group(function () {
     Route::get("/configuracao/layout", [\App\Http\Controllers\ConfiguracaoController::class, 'index'])->name('configuracao.layout');    
     Route::post("/configuracao/layout/store", [\App\Http\Controllers\ConfiguracaoController::class, 'store'])->name('configuracao.layout.store');
 
-    Route::get("/consulta/pagar/{consulta_id}/{aba}", [\App\Http\Controllers\PagamentoController::class, 'pagarConsulta'])->name('consulta.pagamento');
-    Route::get("/consulta/pagamento/callback", [\App\Http\Controllers\ConsultaController::class, 'callbackPagamentoConsulta'])->name('callback.pagamento.consulta');
+    Route::post("/consulta/pagar", [\App\Http\Controllers\PagamentoController::class, 'pagarConsulta'])->name('consulta.pagamento');
+    Route::get("/consulta/pagamento/callback", [\App\Http\Controllers\PagamentoController::class, 'callbackPagamentoConsulta'])->name('callback.pagamento.consulta');
 });
 
 /* ROTAS PARA SEREM ANALISADAS */
