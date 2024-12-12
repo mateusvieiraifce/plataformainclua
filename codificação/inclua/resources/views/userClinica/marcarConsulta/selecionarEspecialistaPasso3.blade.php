@@ -32,10 +32,11 @@
                      </tbody>
                   </table>
                   {{ $lista->appends(request()->query())->links() }}
+               </div>
+               <a href="{{route('clinica.marcarConsultaSelecionarEspecialidade', [$paciente_id, $clinica])}}" class="btn btn-primary">
+                  <i class="fa fa-reply"></i> Voltar
+               </a>
             </div>
-            <a href="{{route('clinica.marcarConsultaSelecionarEspecialidade', [$paciente_id, $clinica])}}" class="btn btn-primary">
-               <i class="fa fa-reply"></i> Voltar
-            </a>
          </div>
       </div>
    </div>
