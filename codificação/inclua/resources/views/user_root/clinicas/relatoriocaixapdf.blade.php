@@ -122,7 +122,7 @@
         </div>
         
         <!-- Informações à direita -->
-        <div class="info-2">    
+        <div class="info-2">
             <!-- Total no PIX -->
             <p><strong>Total no PIX:</strong>
                 @if($preco_fpix !== 'Sem renda na modalidade' && $preco_fpix !== 'Sem filtro' && $preco_fpix > 0) 
@@ -172,7 +172,7 @@
             @foreach ($consultas as $consulta)
                 <tr>
                     <td>{{ \Carbon\Carbon::parse($consulta->horario_agendado)->format('d/m/Y H:i') }}</td>
-                    <td>{{ $consulta->paciente->nome }}</td>
+                    <td>{{ $consulta->paciente ? $consulta->paciente->nome : 'Paciente não encontrado' }}</td>
                     <td>{{ $consulta->forma_pagamento }}</td>
                     <td>R$ {{ number_format($consulta->preco, 2, ',', '.') }}</td>
                 </tr>
