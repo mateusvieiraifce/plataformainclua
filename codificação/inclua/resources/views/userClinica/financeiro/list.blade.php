@@ -85,6 +85,8 @@
                                 @foreach($contas_a_pagar as $conta)
                                     @php
                                         $conta->vencimento = date('d/m/Y', strtotime($conta->vencimento));
+
+                                        $conta->valor = 'R$ '.number_format($conta->valor, 2, ',', '.');
                                     @endphp
                                     <tr>
                                         <td>{{ $conta->descricao }}</td>
