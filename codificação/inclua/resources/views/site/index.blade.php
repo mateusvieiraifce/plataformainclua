@@ -287,39 +287,25 @@
                 <div class="u-shape-rectangle custom-flex-column-div aoredor-textcenter" style="gap: 50px; flex-wrap: wrap;">
                     <div class="text-center-image" style="position: relative; display: inline-block;">
                         <p style="font-size: 1.5rem;" class="dosis-font">
-                            Dr. Fulana de Tal
+                            Albanisa Maria - Psicopedagoga
                         </p>
                         <p class="p-width-custom mulish-font" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #000000; font-size: 0.875rem;">
-                            "Sempre procurei maneiras de
-                            alcançar mais pacientes e fazer
-                            a diferença na vida deles. Esta
-                            plataforma foi a solução perfeita!
-                            Agora, consigo encontrar novos
-                            pacientes de forma eficiente
-                            e transformar suas vidas com
-                            mais impacto."
+                            "O acompanhamento psico-pedagógico é fundamental para o desenvolvimento de crianças com TEA, promovendo avanços cognitivos, emocionais e sociais, além de orientar famílias e melhorar a qualidade de vida e autonomia das crianças."
                         </p>
                         <img src="{{ url('site/images/Rectangle.png') }}">
                     </div>
                     <div class="text-center-image" style="position: relative; display: inline-block;">
                         <p style="font-size: 1.5rem;" class="dosis-font">
-                            Dra. Fulana de tal
+                            Raiane Darla - Pedagoga
                         </p>
                         <p class="p-width-custom mulish-font" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #000000; font-size: 0.875rem;">
-                            "Sempre procurei maneiras de
-                            alcançar mais pacientes e fazer
-                            a diferença na vida deles. Esta
-                            plataforma foi a solução perfeita!
-                            Agora, consigo encontrar novos
-                            pacientes de forma eficiente
-                            e transformar suas vidas com
-                            mais impacto."
+                            "O acompanhamento psicológico é essencial para crianças com TEA, ajudando nos desafios emocionais, sociais e na comunicação. Psicólogos orientam famílias, fortalecem relações e promovem integração, melhorando a qualidade de vida e o bem-estar geral."
                         </p>
                         <img src="{{ url('site/images/Rectangle.png') }}">
                     </div>
                     <div class="text-center-image" style="position: relative; display: inline-block;">
                         <p style="font-size: 1.5rem;" class="dosis-font">
-                            Dra. Fulana de tal
+                            Ana Cira
                         </p>
                         <p class="p-width-custom mulish-font" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #000000; font-size: 0.875rem;">
                             "Sempre procurei maneiras de
