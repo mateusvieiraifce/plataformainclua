@@ -58,7 +58,8 @@
                             for (var i = 0; i < 12; i++) {
                                 var mesIndex = (mesInicial + i) % 12; // Índice do mês (circular)
                                 var ano = anoInicial + Math.floor((mesInicial + i) / 12); // Ano, incrementa quando passa de Dezembro
-                                mesesReorganizados.push(meses[mesIndex] + '-' + ano); // Adiciona o mês com o ano no formato "Jan-2024"
+                                var mesAnoFormatado = meses[mesIndex].substring(0, 3) + '-' + ano.toString().slice(-2); // Exemplo: Jan-24
+                                mesesReorganizados.push(mesAnoFormatado); // Adiciona o mês com o ano no formato "Jan-24"
                             }
 
                             google.charts.load('current', {'packages': ['corechart']});
@@ -82,7 +83,7 @@
                                     backgroundColor: 'transparent',
                                     hAxis: {
                                         textStyle: {
-                                            color: '#ffffff' // Cor do texto do eixo horizontal
+                                            color: '#ffffff' 
                                         }
                                     },
                                     vAxis: {
@@ -90,12 +91,12 @@
                                             color: '#ffffff'
                                         },
                                         textStyle: {
-                                            color: '#ffffff' // Cor do texto do eixo vertical
+                                            color: '#ffffff' 
                                         }
                                     },
                                     legend: {
                                         textStyle: {
-                                            color: '#ffffff' // Cor do texto da legenda
+                                            color: '#ffffff' 
                                         }
                                     },
                                     pointSize: 5,
