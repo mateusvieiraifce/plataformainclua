@@ -122,39 +122,41 @@
         </div>
     </div>
 
-<div class="row">
-    <div class="col-lg-12 col-md-12">
-        <div class="card card-tasks">
-            <div class="card-header">
-                <div class="navigation">
-                    <button onclick="previousWeek()">
-                        <i class="tim-icons icon-minimal-left"></i>
-                    </button>
-                    <span id="intervalodias">Segunda-feira</span>
-                    <button onclick="nextWeek()">
-                        <i class="tim-icons icon-minimal-right"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="calendar">
-                    <div class="weekdays"></div>
-                    <p>Selecione o dia</p>
-                    <div class="days" id="calendarDays">
-                        <!-- Dias da semana serão gerados dinamicamente pelo JavaScript -->
-                    </div>
-                    <p id="paragrafohora"></p>
-                    <div class="days" id="consultasDisponivel">
-                        <!-- Dias da semana serão gerados dinamicamente pelo JavaScript -->
+    <div class="row">
+        <div class="col-lg-12 col-md-12">
+            <div class="card card-tasks">
+                <div class="card-header">
+                    <div class="navigation">
+                        <button onclick="previousWeek()">
+                            <i class="tim-icons icon-minimal-left"></i>
+                        </button>
+                        <span id="intervalodias">Segunda-feira</span>
+                        <button onclick="nextWeek()">
+                            <i class="tim-icons icon-minimal-right"></i>
+                        </button>
                     </div>
                 </div>
+                <div class="card-body">
+                    <div class="calendar">
+                        <div class="weekdays"></div>
+                        <p>Selecione o dia</p>
+                        <div class="days" id="calendarDays">
+                            <!-- Dias da semana serão gerados dinamicamente pelo JavaScript -->
+                        </div>
+                        <p id="paragrafohora"></p>
+                        <div class="days" id="consultasDisponivel">
+                            <!-- Dias da semana serão gerados dinamicamente pelo JavaScript -->
+                        </div>
+                    </div>
+                </div>
+                <div class="col-2">
+                    <a href="{{route('clinica.marcarConsultaSelecionarEspecialista',[$paciente->id, $especialista->especialidade_id, $clinica->id])}}" class="btn btn-primary">
+                        <i class="fa fa-reply"></i> Voltar
+                    </a>
+                </div>
             </div>
-            <a href="{{route('clinica.marcarConsultaSelecionarEspecialista',[$paciente->id, $especialista->especialidade_id, $clinica->id])}}" class="btn btn-primary">
-                <i class="fa fa-reply"></i> Voltar
-            </a>
         </div>
     </div>
-</div>
 
 <script>
     var currentWeekStart; // Variável global para armazenar o início da semana atual

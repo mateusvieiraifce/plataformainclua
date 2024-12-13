@@ -649,7 +649,7 @@ class ClinicaController extends Controller
 
    function marcarConsultaSelecionarEspecialidade($paciente_id, $clinica_id = null)
    {
-      if ( Auth::user()->tipo_user == "E") {
+      if (Auth::user()->tipo_user == "C") {
          $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
       } else {
          $clinica = Clinica::find($clinica_id);
@@ -685,23 +685,24 @@ class ClinicaController extends Controller
    
    function marcarConsultaSelecionarHoraConsulta($paciente_id, $especialista_id, $clinica_id = null)
    {
-       $especialista = Especialista::find($especialista_id);
+      $especialista = Especialista::find($especialista_id);
 
-       if (Auth::user()->tipo_user == "E") {
+      if (Auth::user()->tipo_user == "C") {
          $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
       } else {
          $clinica = Clinica::find($clinica_id);
       }
-       $especialidade = Especialidade::find($especialista->especialidade_id);
-       $paciente = Paciente::find($paciente_id);
-       //retornar todos a agenda(consultas) do especialista vinculados a clinica
-       $statusConsulta = "Disponível";
+      $especialidade = Especialidade::find($especialista->especialidade_id);
+      $paciente = Paciente::find($paciente_id);
+      //retornar todos a agenda(consultas) do especialista vinculados a clinica
+      $statusConsulta = "Disponível";
 
-       $lista = Consulta::where('especialista_id', '=', $especialista_id)->
-       where('clinica_id', '=', $clinica->id)->
-       where('status', '=', $statusConsulta)->
-       select('consultas.id', 'horario_agendado')->
-       orderBy('horario_agendado', 'asc')->get();
+      $lista = Consulta::where('especialista_id', '=', $especialista_id)
+         ->where('clinica_id', '=', $clinica->id)
+         ->where('status', '=', $statusConsulta)
+         ->select('consultas.id', 'horario_agendado')
+         ->orderBy('horario_agendado', 'asc')
+         ->get();
      // dd($especialista,$lista);
        return view('userClinica/marcarConsulta/selecionarHoraConsultaPasso4', ['lista' => $lista, 'especialista' => $especialista, 'clinica' => $clinica, 'especialidade' => $especialidade, 'paciente' => $paciente]);
    }
