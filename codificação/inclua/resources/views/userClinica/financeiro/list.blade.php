@@ -83,6 +83,9 @@
                                 </thead>
                                 <tbody>
                                 @foreach($contas_a_pagar as $conta)
+                                    @php
+                                        $conta->vencimento = date('d/m/Y', strtotime($conta->vencimento));
+                                    @endphp
                                     <tr>
                                         <td>{{ $conta->descricao }}</td>
                                         <td>{{ $conta->valor }}</td>
