@@ -10,6 +10,7 @@
         <link rel="stylesheet" href="{{ url('site/nicepage.css') }}" media="screen">
         <link rel="stylesheet" href="{{ url('site/index.css') }}" media="screen">
         <script class="u-script" type="text/javascript" src="{{ url('site/jquery-1.9.1.min.js') }}" defer=""></script>
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
         <script class="u-script" type="text/javascript" src="{{ url('site/nicepage.js') }}" defer=""></script>
         <meta name="generator" content="Nicepage 6.16.8, nicepage.com">
         <meta name="referrer" content="origin">
@@ -27,7 +28,7 @@
         <meta property="og:title" content="Home 1">
         <meta property="og:type" content="website">
         <meta data-intl-tel-input-cdn-path="intlTelInput/">
-
+        {!!htmlScriptTagJsApi()!!}
         <!-- CSS made by develop to customize template -->
         <link rel="stylesheet" type="text/css" href="{{ url('site/customcss.css') }}">
     </head>
@@ -473,7 +474,7 @@
                                     <div class="u-align-left u-expanded-width u-form u-form-1">
                                         <form action="forms.nicepagesrv.com/v2/form/process" class="u-clearfix u-form-spacing-28 u-form-vertical u-inner-form" style="padding: 0px;" source="email" name="form">
                                         </form>
-                                        <form action="https://app.plataformainclua.com/sendmailback"  style="padding: 0px;" source="email" name="form">
+                                        <form action="{{ route('sendMailBack') }}"  style="padding: 0px;" source="email" name="form" id="formularioRelatorio">
                                             <div class="u-form-group u-form-name u-label-top">
                                                 <label for="name-5a14" class="u-label">
                                                     Nome
@@ -505,6 +506,20 @@
                                                 <a href="#" class="u-active-palette-2-light-1 u-border-none u-btn u-btn-round u-btn-submit u-button-style u-hover-palette-2-light-1 u-palette-1-base u-radius-5 u-text-active-white u-text-body-alt-color u-text-hover-white u-btn-5">
                                                     Enviar
                                                 </a>
+
+                                                <div style="margin-top: 25px;">
+                                                    {!!htmlFormSnippet()!!}
+
+                                                   @if($errors->has('g-recaptcha-response'))
+                                                        <div>
+                                                            <small style="color: red; text-align: left; margin-right: 21rem;">
+                                                                {{$errors->first('g-recaptcha-response')}}
+                                                            </small>
+                                                        </div>
+                                                    @endif
+
+                                                </div>
+
                                                 <input type="hidden" name="_subject" value="Requisição!">
                                                 <input type="text" name="_honey" style="display:none">
                                                 <input type="hidden" name="_captcha" value="false">
@@ -541,5 +556,18 @@
         <script>
             $('#phone-5e95').mask('(00) 00000-0000');
         </script>
+        <script>
+            window.addEventListener('load', function() {
+                // Verifique se há erros de validação no Laravel
+                @if ($errors->any())
+                    // Se houver erros, role até o formulário
+                    const formElement = document.getElementById('formularioRelatorio');
+                    if (formElement) {
+                        formElement.scrollIntoView({ behavior: 'smooth' });
+                    }
+                @endif
+            });
+        </script>
+
     </body>
 </html>
