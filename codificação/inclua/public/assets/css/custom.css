@@ -362,6 +362,31 @@ a.close {
     color: #ffffff;
 }
 
+.img-icon {
+    margin-right: 5px;
+}
+
+.form-check-label {
+    cursor: pointer;
+}
+
+.drop-down {
+    height: 0;
+    opacity: 0;
+    transition: all 0.3s ease-in-out;
+    padding-left: 5px;
+}
+
+.input-group.drop-down {
+    margin: 0px;
+}
+
+.input-group.drop-down.show {
+    min-height: 28px;
+    opacity: 1;
+    margin: 10px;
+}
+
 @media (max-width: 576px) {
     .card-header > a.header-links {
         width: 100%;

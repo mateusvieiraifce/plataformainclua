@@ -27,7 +27,8 @@ Route::get("/teste", function () {
     return view('teste');
 });
 
-Route::get("/", [\App\Http\Controllers\UsuarioController::class, 'index'])->name('index');
+Route::get("/", [\App\Http\Controllers\LandingPageController::class, 'index'])->name('landing.page');
+Route::get("/login", [\App\Http\Controllers\UsuarioController::class, 'index'])->name('index');
 Route::any("/sendmailback", [\App\Http\Controllers\MailController::class, 'sendEmailBack'])->name('sendMailBack');
 
 Route::get('/checkout', [\App\Http\Controllers\CheckoutControler::class, "checkout"])->name('finalizar');
@@ -249,6 +250,14 @@ Route::middleware('auth')->group(function () {
     Route::get("/paciente/assinatura/cartoes", [\App\Http\Controllers\AssinaturaController::class, 'selecionarCartao'])->name('pagamento.assinatura.cartoes');
     Route::get("/paciente/assinatura/renovar/{cartao}", [\App\Http\Controllers\AssinaturaController::class, 'renovarAssinaturaCartao'])->name('pagamento.assinatura.renovar');
     
+    #FINANCEIRO CONTA A PAGAR CLINICA
+    Route::get("/clinica/financeiro", [\App\Http\Controllers\PagamentoContaController::class, 'list'])->name('clinica.financeiro');
+    Route::get("/clinica/financeiro/create", [\App\Http\Controllers\PagamentoContaController::class, 'create'])->name('clinica.financeiro.create');
+    Route::post("/clinica/financeiro", [\App\Http\Controllers\PagamentoContaController::class, 'store'])->name('clinica.financeiro.store');
+    Route::get("/clinica/financeiro/{conta}/edit", [\App\Http\Controllers\PagamentoContaController::class, 'edit'])->name('clinica.financeiro.edit');
+    Route::put("/clinica/financeiro/{conta}", [\App\Http\Controllers\PagamentoContaController::class, 'update'])->name('clinica.financeiro.update');
+    Route::get("/clinica/financeiro/{conta}/delete", [\App\Http\Controllers\PagamentoContaController::class, 'destroy'])->name('clinica.financeiro.destroy');
+
     #LISTA PACIENTES E CADASTRO
     Route::get("/paciente/editar/{id}", [\App\Http\Controllers\PacienteController::class, 'edit'])->name('paciente.edit');
     Route::post("/paciente/update/", [\App\Http\Controllers\PacienteController::class, 'update'])->name('paciente.update');
@@ -349,6 +358,10 @@ Route::middleware('auth')->group(function () {
     Route::get("/especialista/pedidomedicamento/delete/{id}/{consulta_id}", [\App\Http\Controllers\PedidoMedicamentoController::class, 'delete'])->name('pedido_medicamento.delete');
     Route::post("/especialista/novoexame/", [\App\Http\Controllers\EspecialistaController::class, 'salvaNovoExame'])->name('especialista.salvaNovoExame');
     Route::post("/especialista/novomedicamento/", [\App\Http\Controllers\EspecialistaController::class, 'salvaNovoMedicamento'])->name('especialista.salvaNovoMedicamento');
+    
+    #ATESTADO
+    Route::post("/especialista/atestado/store", [\App\Http\Controllers\AtestadoController::class, 'store'])->name('atestado.store');
+    Route::get("/especialista/atestado/download/{id}", [\App\Http\Controllers\AtestadoController::class, 'downloadAtestado'])->name('atestado.download');
 
     Route::get("/consulta/selecionar-clinica/{rota?}", [\App\Http\Controllers\ConsultaController::class, 'selectClinica'])->name('selecionar.clinica');
     Route::get("/consulta/selecionar-clinica/search/result", [\App\Http\Controllers\ConsultaController::class, 'selectClinicaSearch'])->name('selecionar.clinica.search');
@@ -423,7 +436,10 @@ Route::middleware('auth')->group(function () {
     Route::post("/clinica/reputacao/denunciar", [\App\Http\Controllers\AvaliacaoController::class, 'denuciarUserClinica'])->name('avaliacao.denuciarUserClinica');
     
     Route::get("/configuracao/layout", [\App\Http\Controllers\ConfiguracaoController::class, 'index'])->name('configuracao.layout');    
-    Route::post("/configuracao/layout/store", [\App\Http\Controllers\ConfiguracaoController::class, 'store'])->name('configuracao.layout.store');    
+    Route::post("/configuracao/layout/store", [\App\Http\Controllers\ConfiguracaoController::class, 'store'])->name('configuracao.layout.store');
+
+    Route::get("/consulta/pagar/{consulta_id}/{aba}", [\App\Http\Controllers\PagamentoController::class, 'pagarConsulta'])->name('consulta.pagamento');
+    Route::get("/consulta/pagamento/callback", [\App\Http\Controllers\ConsultaController::class, 'callbackPagamentoConsulta'])->name('callback.pagamento.consulta');
 });
 
 /* ROTAS PARA SEREM ANALISADAS */

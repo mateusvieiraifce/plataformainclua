@@ -17260,9 +17260,9 @@ Copyright (c) 2015 Daniel Eden
     box-shadow: 0 1px 20px 0px rgba(0, 0, 0, 0.1);
 }
 
-.card label {
+/* .card label {
     color: rgba(255, 255, 255, 0.6);
-}
+} */
 
 .card .card-title {
     margin-bottom: .75rem;

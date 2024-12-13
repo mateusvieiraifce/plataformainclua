@@ -599,34 +599,9 @@ class PacienteController extends Controller
 
       return view('userPaciente.home', ['consultas' => $consultas, 'filtro' => $filtro]);
    }
-
-   function s(Request $request)
-   {
-    //ver a questao financeira
-    $consultaCancelada = Consulta::find($request->consulta_idM);
-
-    date_default_timezone_set('America/Sao_Paulo');
-    $dataConsultaCancelada = Carbon::parse($consultaCancelada->horario_agendado);
-    $dataAtual = Carbon::now();
-    // Verifica se a data da consulta é maior que a data atual para poder duplicar
-    if ($dataConsultaCancelada->gt($dataAtual)) {
-      $consultaNova = $consultaCancelada->replicate();
-      $consultaNova->status="Disponível";
-      $consultaNova->paciente_id = null;
-      $consultaNova->save();
-    }
-
-    $consultaCancelada->status="Cancelada";
-    $consultaCancelada->motivocancelamento= $request->motivocancelamento;
-    $consultaCancelada->id_usuario_cancelou =  Auth::user()->id;
-    $consultaCancelada->save();
-
-    $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
-    return  $this->minhasconsultas($msg);
-   }
-
-   public function cancelarConsulta(Request $request)
-   {
+   
+    public function cancelarConsulta(Request $request)
+    {
         $consulta = Consulta::find($request->consulta_id);
         $consultaController = new ConsultaController();
 
@@ -644,7 +619,7 @@ class PacienteController extends Controller
 
            if ($cartao) {
             //CRIAR O CHECKOUT
-            $checkout = Helper::createCheckouSumupTaxa(route('callback.cancelamento.consulta'));
+            $checkout = Helper::createCheckouSumupTaxa();
             //PASSAR O ID DA CUNSULTA E MOTIVO DE CANCELAMENTO
             session()->put("consulta_id_$checkout->id", $consulta->id);
             session()->put("motivo_cancelamento_$checkout->id", $request->motivo_cancelamento);
