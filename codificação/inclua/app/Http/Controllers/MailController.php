@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use PHPMailer\PHPMailer\PHPMailer;
 use App\Models\Clinica;
 use Illuminate\Support\Facades\Auth;
+use Anhskohbo\NoCaptcha\Facades\NoCaptcha;
 
 class MailController extends Controller
 {
@@ -40,10 +41,15 @@ class MailController extends Controller
     }
 
     function sendEmailBack(Request $req)
-    {
+    {   
+        $validated = $req->validate([
+            'g-recaptcha-response' => 'required', // Validação do reCAPTCHA
+        ], [
+            'g-recaptcha-response.required' => 'Preencha o recaptcha', // Mensagem personalizada
+        ]);
 
         $host = $req->getHost();
-       // dd($host);
+        
         if ($host == "localhost" || $host == "plataformainclua.com"|| $host == "app.plataformainclua.com") {
             $email = $req->email;
             $nome = $req->name;
@@ -58,6 +64,7 @@ class MailController extends Controller
                 'message' => 'Acesso Negado'
             );
             echo json_encode($response);
+            
         }
     }
 
