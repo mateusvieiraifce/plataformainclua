@@ -287,7 +287,7 @@
                 <div class="u-shape-rectangle custom-flex-column-div aoredor-textcenter" style="gap: 50px; flex-wrap: wrap;">
                     <div class="text-center-image" style="position: relative; display: inline-block;">
                         <p style="font-size: 1.5rem;" class="dosis-font">
-                            Albanisa Maria - Psicopedagoga
+                            Albanisa Maria
                         </p>
                         <p class="p-width-custom mulish-font" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #000000; font-size: 0.875rem;">
                             "O acompanhamento psico-pedagógico é fundamental para o desenvolvimento de crianças com TEA, promovendo avanços cognitivos, emocionais e sociais, além de orientar famílias e melhorar a qualidade de vida e autonomia das crianças."
@@ -296,7 +296,7 @@
                     </div>
                     <div class="text-center-image" style="position: relative; display: inline-block;">
                         <p style="font-size: 1.5rem;" class="dosis-font">
-                            Raiane Darla - Pedagoga
+                            Raiane Darla
                         </p>
                         <p class="p-width-custom mulish-font" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #000000; font-size: 0.875rem;">
                             "O acompanhamento psicológico é essencial para crianças com TEA, ajudando nos desafios emocionais, sociais e na comunicação. Psicólogos orientam famílias, fortalecem relações e promovem integração, melhorando a qualidade de vida e o bem-estar geral."
