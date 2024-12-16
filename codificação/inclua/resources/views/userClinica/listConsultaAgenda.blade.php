@@ -293,10 +293,19 @@
             </label>
          </div>
          <div class="custom-radio">
-            <input type="radio" name="metodo_pagamento" id="maquininha" value="Máquinhinha" required>
+            <input type="radio" name="metodo_pagamento" id="maquininha" value="Maquininha" required>
             <label class="form-check-label" for="maquininha">
                Máquininha
             </label>
+         </div>
+         <div class="form-group drop-down">
+            <label for="numero_autorizacao">
+               Número de autorização <span class="required">*</span>
+            </label>
+            <div class="input-group">
+               <input type="text" id="numero_autorizacao" class="form-control"
+                  name="numero_autorizacao" placeholder="Número de autorização" value="">
+            </div>
          </div>
       </div>
       <input type="hidden" id="consulta_id" name="consulta_id" value="">
@@ -316,6 +325,14 @@
                $('#drop-down').removeClass("show")
             } else if($("#especie").is(":checked")) {
                $('#drop-down').removeClass("show")
+            }
+
+            if($("#maquininha").is(":checked")) {
+               $(".form-group").addClass("show")
+               $("#numero_autorizacao").prop('required', true);
+            } else {
+               $(".form-group").removeClass("show")
+               $("#numero_autorizacao").prop('required', false);
             }
          });
       });

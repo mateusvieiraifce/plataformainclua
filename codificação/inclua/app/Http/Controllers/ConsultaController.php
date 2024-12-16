@@ -455,17 +455,20 @@ class ConsultaController extends Controller
 
       // selecionar as consultas na qual o status diferente de
       // FINALIZADA, CANCELADA
-      $lista = Consulta::join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')->
-      join('pacientes', 'pacientes.id', '=', 'consultas.paciente_id')->
-      join('especialistas', 'especialistas.id', '=', 'consultas.especialista_id')->
-      join('especialistaclinicas', 'especialistaclinicas.especialista_id', '=', 'consultas.especialista_id')->
-      where('consultas.clinica_id', '=', $clinica->id)->
-      where('status', '!=', 'Finalizada')->
-      where('status', '!=', 'Cancelada')->
-      whereBetween('horario_agendado', [$inicioDoDia, $fimDoDia])->
-      select('consultas.id', 'status', 'horario_agendado', 'especialistas.nome as nome_especialista',
-       'pacientes.cpf as cpf','local_consulta','preco','isPago',
-      'pacientes.nome as nome_paciente')->orderBy('horario_agendado', 'asc')->get();
+      $lista = Consulta::join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')
+         ->join('pacientes', 'pacientes.id', '=', 'consultas.paciente_id')
+         ->join('especialistas', 'especialistas.id', '=', 'consultas.especialista_id')
+         ->join('especialistaclinicas', 'especialistaclinicas.especialista_id', '=', 'consultas.especialista_id')
+         ->where('consultas.clinica_id', '=', $clinica->id)
+         ->where('especialistaclinicas.clinica_id', '=', $clinica->id)
+         ->where('status', '!=', 'Finalizada')
+         ->where('status', '!=', 'Cancelada')
+         ->whereBetween('horario_agendado', [$inicioDoDia, $fimDoDia])
+         ->select(
+            'consultas.id', 'status', 'horario_agendado', 'especialistas.nome as nome_especialista',
+            'pacientes.cpf as cpf', 'local_consulta', 'preco', 'isPago', 'pacientes.nome as nome_paciente')
+         ->orderBy('horario_agendado', 'asc')
+         ->get();
 
 
       return view('userClinica/listConsultaAgenda', [
