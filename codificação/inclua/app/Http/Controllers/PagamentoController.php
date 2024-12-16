@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Auth;
 
 class PagamentoController extends Controller
 {
-    public function store($user_id, $valor, $transaction_code, $status, $servico)
+    public function store($user_id, $valor, $transaction_code, $status, $servico, $cartao_cadastrado = true)
     {
         date_default_timezone_set('America/Sao_Paulo');
         $dataLocal = Carbon::now();
@@ -25,8 +25,8 @@ class PagamentoController extends Controller
 
             $pagamento = new Pagamento();
             $pagamento->user_id = $user_id;
-            $pagamento->cartao_id = $assinatura->cartao_id;
-            $pagamento->assinatura_id = $assinatura->id;
+            $pagamento->cartao_id = ($cartao_cadastrado ? $assinatura->cartao_id : null);
+            $pagamento->assinatura_id = $assinatura->id ?? null;
             $pagamento->valor = Helper::converterMonetario($valor);
             $pagamento->transaction_code = $transaction_code;
             $pagamento->data_pagamento = $dataLocal;
@@ -37,6 +37,8 @@ class PagamentoController extends Controller
             $msg = ['valor' => trans("Erro ao executar a operação!"), 'tipo' => 'danger'];
             session()->flash('msg', $msg);
         }
+
+            return $pagamento->id;
     }
 
     public function update($transaction_code, $status)
@@ -58,7 +60,11 @@ class PagamentoController extends Controller
     public function historicoPagamentosPaciente()
     {
         $user = Auth::user();
-        $pagamentos = Pagamento::where('user_id', $user->id)->orderBy('data_pagamento', 'desc')->paginate(2, ['*'], 'page_payments');
+        $pagamentos = Pagamento::leftJoin('consultas', 'consultas.pagamento_id', 'pagamentos.id')
+            ->where('user_id', $user->id)
+            ->select('pagamentos.*', 'consultas.forma_pagamento')
+            ->orderBy('data_pagamento', 'desc')
+            ->paginate(2, ['*'], 'page_payments');
 
         $assinaturaController = new AssinaturaController();
         $assinatura = $assinaturaController->getAssinatura($user->id);
@@ -91,7 +97,6 @@ class PagamentoController extends Controller
             ->select('cartoes.*')
             ->first();
             
-            
         if ($request->metodo_pagamento == "null") {
             session()->flash('msg',  ['valor' => trans("Selecione a forma de pagamento com o cartão."), 'tipo' => 'danger']);
 
@@ -119,15 +124,18 @@ class PagamentoController extends Controller
 
                 return redirect($pagamento->next_step->url);
             }            
-        } elseif ($request->metodo_pagamento) {
+        } else {
             try {
-               $consulta->isPago = true;
-               $consulta->forma_pagamento = 'Cartão';
-               $consulta->save();
-               
-               session()->flash('msg', ['valor' => trans("O pagamento da consulta foi realizado com sucesso!"), 'tipo' => 'success']);
+                $pagamento_id = $this->store($usuario->id, floatval(Helper::converterMonetario($consulta->preco)), $request->numero_autorizacao, 'Aprovado', 'Pagamento da consulta', false);
+
+                $consulta->isPago = true;
+                $consulta->forma_pagamento = $request->metodo_pagamento;
+                $consulta->pagamento_id = $pagamento_id;
+                $consulta->save();
+                
+                session()->flash('msg', ['valor' => trans("O pagamento da consulta foi realizado com sucesso!"), 'tipo' => 'success']);
             } catch (QueryException $e) {
-               session()->flash('msg', ['valor' => trans("Houve um erro ao realizar o pagamento da consulta, tente novamente."), 'tipo' => 'danger']);
+                session()->flash('msg', ['valor' => trans("Houve um erro ao realizar o pagamento da consulta, tente novamente."), 'tipo' => 'danger']);
             }
 
             return redirect()->route('consulta.agendaConsultas', ['clinica_id' => $consulta->clinica_id]);

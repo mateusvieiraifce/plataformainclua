@@ -14,7 +14,7 @@ class AlterTablePagamentos extends Migration
     public function up()
     {
         Schema::table('pagamentos', function (Blueprint $table) {
-            $table->string('transaction_code', 256);
+            $table->string('transaction_code', 256)->nullable();
             $table->string('status');
             $table->string('servico');
             $table->dateTime('data_pagamento')->change();

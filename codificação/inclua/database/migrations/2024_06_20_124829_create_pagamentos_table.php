@@ -16,8 +16,8 @@ class CreatePagamentosTable extends Migration
         Schema::create('pagamentos', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->unsigned();
-            $table->unsignedBigInteger('cartao_id')->unsigned();
-            $table->unsignedBigInteger('assinatura_id')->unsigned();
+            $table->unsignedBigInteger('cartao_id')->unsigned()->nullable();
+            $table->unsignedBigInteger('assinatura_id')->unsigned()->nullable();
             $table->date('data_pagamento');
             $table->double('valor', 8, 2);
             
