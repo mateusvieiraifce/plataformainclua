@@ -13,7 +13,7 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>Cartão</th>
+                                        <th>Forma de Pagamento</th>
                                         <th>Valor</th>
                                         <th>Data de Pagamento</th>
                                         <th>Status</th>
@@ -24,7 +24,13 @@
                                     @foreach($pagamentos as $pagamento)
                                         <tr>
                                             <td>
-                                                {{ \App\Helper::descryptNumberCard($pagamento->getCard->numero_cartao) }}
+                                                @if ($pagamento->cartao_id)
+                                                    Cartão de crédito 
+                                                    <br>
+                                                    {{ \App\Helper::descryptNumberCard($pagamento->getCard->numero_cartao) }}
+                                                @else
+                                                    {{ $pagamento->forma_pagamento }}
+                                                @endif
                                             </td>
                                             <td>
                                                 R$ {{ \App\Helper::padronizaMonetario($pagamento->valor) }}
