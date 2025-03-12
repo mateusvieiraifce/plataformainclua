@@ -41,7 +41,7 @@ class MailController extends Controller
     }
 
     function sendEmailBack(Request $req)
-    {   
+    {
         $validated = $req->validate([
             'g-recaptcha-response' => 'required', // Validação do reCAPTCHA
         ], [
@@ -49,14 +49,14 @@ class MailController extends Controller
         ]);
 
         $host = $req->getHost();
-        
-        if ($host == "localhost" || $host == "plataformainclua.com"|| $host == "app.plataformainclua.com") {
+
+        if ($host == "plataformainclua.com"|| $host == "app.plataformainclua.com") {
             $email = $req->email;
             $nome = $req->name;
             $tel = $req->phone;
             // $msg = $req->msg;
             $texto = " O Cliente: " . $nome . " Tel:" . $tel . " Email: " . $email . " \n Sugeriu: " . $req->message;
-            Helper::sendEmail("Contato pelo site", $texto, "incluaplataforma@gmail.com", $nome);
+            Helper::sendEmail("Contato pelo site", $texto, "sistema@plataformainclua.com", $nome);
             return view('msg.msg', ['msg_compra' => 'Menssagem enviada com sucesso!']);
         } else {
             $response = array(
@@ -64,37 +64,37 @@ class MailController extends Controller
                 'message' => 'Acesso Negado'
             );
             echo json_encode($response);
-            
+
         }
     }
 
     function enviarConviteEspecialista(Request $request)
     {
         $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
-        
+
         $assunto = "Convite para participar da Plataforma Inclua";
-        $texto = " Prezado(a) ".$request->nome.", <br>          
-          É com grande entusiasmo que a clínica ".$clinica->nome." o(a) convida a se unir à Plataforma Inclua, 
-          uma rede inovadora e inclusiva de clínicas dedicadas a promover a acessibilidade 
+        $texto = " Prezado(a) ".$request->nome.", <br>
+          É com grande entusiasmo que a clínica ".$clinica->nome." o(a) convida a se unir à Plataforma Inclua,
+          uma rede inovadora e inclusiva de clínicas dedicadas a promover a acessibilidade
           e a qualidade nos serviços de saúde.  <br>
           <br>
           ".env('APP_URL')."
            <br>
-           Nossa equipe estará à disposição para fornecer mais informações 
+           Nossa equipe estará à disposição para fornecer mais informações
            e ajudá-lo(a) a integrar-se à nossa rede de forma eficiente.
-          
+
           ";
-       
+
         $emissor = $request->email_destino;//email do destino
         $name="";
-        
+
        // dd($texto);
         Helper::sendEmail($assunto, $texto,  $emissor, $name);
-        
+
         $msg = ['valor' => trans("Convite enviado com sucesso!"), 'tipo' => 'success'];
         $especialistaclinicaController = new EspecialistaclinicaController();
         return $especialistaclinicaController->list($msg);
-    
+
 
     }
 }
