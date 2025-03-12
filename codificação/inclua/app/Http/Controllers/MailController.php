@@ -50,7 +50,7 @@ class MailController extends Controller
 
         $host = $req->getHost();
 
-        if ($host == "plataformainclua.com"|| $host == "app.plataformainclua.com") {
+        if ($host == "localhost" || $host == "plataformainclua.com"|| $host == "app.plataformainclua.com") {
             $email = $req->email;
             $nome = $req->name;
             $tel = $req->phone;
