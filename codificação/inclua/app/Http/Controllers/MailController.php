@@ -56,7 +56,7 @@ class MailController extends Controller
             $tel = $req->phone;
             // $msg = $req->msg;
             $texto = " O Cliente: " . $nome . " Tel:" . $tel . " Email: " . $email . " \n Sugeriu: " . $req->message;
-            Helper::sendEmail("Contato pelo site", $texto, "sistema@plataformainclua.com", $nome);
+            Helper::sendEmail("Contato pelo site", $texto, "atendimento@plataformainclua.com", $nome);
             return view('msg.msg', ['msg_compra' => 'Menssagem enviada com sucesso!']);
         } else {
             $response = array(
