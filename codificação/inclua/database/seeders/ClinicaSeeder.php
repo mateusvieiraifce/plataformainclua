@@ -2,10 +2,13 @@
 
 namespace Database\Seeders;
 
+use App\Helper;
 use App\Models\User;
 use App\Models\Clinica;
+use App\Models\Endereco;
 use Illuminate\Database\Seeder;
 use Faker\Generator as Faker;
+use Faker\Factory as Faker1;
 
 class ClinicaSeeder extends Seeder
 {

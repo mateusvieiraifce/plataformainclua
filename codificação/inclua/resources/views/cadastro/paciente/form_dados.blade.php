@@ -19,11 +19,13 @@
                             </label>
                             <br>
                             <img class="img-avatar" src="{{ asset('assets/img/default-avatar.png') }}" id="preview" alt="Avatar">
-                            <div class="custom-file">
-                                <input class="custom-file-input hidden" type="file" id="image" name="image" onchange="visualizarImagem(event)" accept="image/jpeg,image/jpg,image/png">
-                                <label class="btn custom-file-label input-small {{ $errors->has('image') ? 'is-invalid' : '' }}" for="image"></label>
+                            <div class="input-group input-medium{{ $errors->has('especialidade') ? ' has-danger' : '' }}">
+                                <div class="custom-file">
+                                    <input class="custom-file-input hidden" type="file" id="image" name="image" onchange="visualizarImagem(event)" accept="image/jpeg,image/jpg,image/png">
+                                    <label class="btn custom-file-label input-medium {{ $errors->has('image') ? 'is-invalid' : '' }}" for="image"></label>
+                                </div>
+                                @include('alerts.feedback', ['field' => 'image'])
                             </div>
-                            @include('alerts.feedback', ['field' => 'image'])
                         </div>
 
                         <div class="form-group">

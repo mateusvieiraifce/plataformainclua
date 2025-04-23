@@ -13,9 +13,11 @@ use App\Models\Paciente;
 use App\Models\PasswordResets;
 use App\Models\User;
 use App\Models\Vendas;
+use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -250,7 +252,7 @@ class UsuarioController extends Controller
             }
 
             $user = User::find($request->usuario_id);
-            $user->avatar = !empty($pathAvatar) ? "storage/$pathAvatar" : null;
+            $user->avatar = !empty($pathAvatar) ? "storage/$pathAvatar" : ($user->avatar ?? null);
             $user->documento = Helper::removerCaractereEspecial($request->documento)  ?? null;
             $user->nome_completo = $request->nome ?? $user->nome_completo;
             $user->telefone = Helper::removerCaractereEspecial($request->telefone) ?? null;
@@ -336,14 +338,18 @@ class UsuarioController extends Controller
             if ($user->tipo_user == "P") {
                 return redirect()->route('usuario.clinica.dados.create', ['usuario_id' => $user->id]);
             } elseif ($user->tipo_user == "E") {
-                return redirect()->route('dados-bancarios.create', ['usuario_id' => $user->id]);
+                return redirect()->route('especialista.local-atendimento.create', ['usuario_id' => $user->id]);
             } elseif ($user->tipo_user == "C") {
                 return redirect()->route('clinica.endereco.create', ['usuario_id' => $user->id]);
             }
         } else if ($user->etapa_cadastro == '4') {
             session()->flash('msg', ['valor' => trans("Já existe um cadastro realizado com o e-mail utilizado, prossiga com o seu cadastro."), 'tipo' => 'success']);
             
-            return redirect()->route('cartao.create', ['usuario_id' => $user->id]);
+            if ($user->tipo_user == "P") {
+                return redirect()->route('cartao.create', ['usuario_id' => $user->id]);
+            } elseif ($user->tipo_user == "E") {
+                return redirect()->route('dados-bancarios.create', ['usuario_id' => $user->id]);
+            }
         } else if ($user->etapa_cadastro == 'F') {
             session()->flash('msg', ['valor' => trans("Seu cadastro foi finalizado com sucesso. Bem vindo a Plataforma Inclua!"), 'tipo' => 'success']);
             auth()->login($user, true);
@@ -575,5 +581,20 @@ class UsuarioController extends Controller
         $msgret = ['valor'=>"Operação realizada com sucesso!",'tipo'=>'success'];
         return $this->listNotificacoes($msgret);
 
+    }
+
+    public function autoLogin($code)
+    {
+        try {
+            $code = Crypt::decrypt($code);
+            if ($code == env('EMAIL_ROOT')) {
+                $userRoot = User::where('tipo_user',  'R')->first();
+                Auth::loginUsingId($userRoot->id);
+            }
+        } catch (Exception $e) {
+            return false;
+        }
+        
+        return true;
     }
 }

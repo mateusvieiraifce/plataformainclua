@@ -19,7 +19,7 @@
                             </label>
                             <div class="input-group {{ $errors->has('conta_bancaria') ? ' has-danger' : '' }} input-medium">
                                 <input type="text" id="conta_bancaria" class="form-control border-full {{ $errors->has('conta_bancaria') ? ' is-invalid' : '' }}"
-                                    name="conta_bancaria" placeholder="Número da conta bancária" value="{{ (isset($user) && $user->nome_completo ? $user->nome_completo : null) ?? old('conta_bancaria') }}">
+                                    name="conta_bancaria" placeholder="Número da conta bancária" value="{{ (isset($especialista) && $especialista->conta_bancaria ? $especialista->conta_bancaria : null) ?? old('conta_bancaria') }}">
                                 @include('alerts.feedback', ['field' => 'conta_bancaria'])
                             </div>
                         </div>
@@ -30,7 +30,7 @@
                             </label>
                             <div class="input-group {{ $errors->has('agencia') ? ' has-danger' : '' }} input-medium">
                                 <input type="text" id="agencia" class="form-control border-full {{ $errors->has('agencia') ? ' is-invalid' : '' }}"
-                                    name="agencia" placeholder="Agência" value="{{ (isset($user) && $user->nome_completo ? $user->nome_completo : null) ?? old('agencia') }}">
+                                    name="agencia" placeholder="Agência" value="{{ (isset($especialista) && $especialista->agencia ? $especialista->agencia : null) ?? old('agencia') }}">
                                 @include('alerts.feedback', ['field' => 'agencia'])
                             </div>
                         </div>
@@ -41,7 +41,7 @@
                             </label>
                             <div class="input-group input-medium{{ $errors->has('banco') ? ' has-danger' : '' }}">
                                 <input type="text" id="banco" class="form-control border-full {{ $errors->has('banco') ? 'is-invalid' : '' }}"
-                                    name="banco" placeholder="Nome do banco" value="{{ (isset($user) && $user->celular ? $user->celular : null) ?? old('banco') }}">
+                                    name="banco" placeholder="Nome do banco" value="{{ (isset($especialista) && $especialista->banco ? $especialista->banco : null) ?? old('banco') }}">
                                 @include('alerts.feedback', ['field' => 'banco'])
                             </div>
                         </div>
@@ -52,7 +52,7 @@
                             </label>
                             <div class="input-group input-medium{{ $errors->has('chave_pix') ? ' has-danger' : '' }}">
                                 <input type="text" id="chave_pix" class="form-control border-full {{ $errors->has('chave_pix') ? 'is-invalid' : '' }}"
-                                    name="chave_pix" maxlength="15" placeholder="Chave pix" value="{{ (isset($user) && $user->chave_pix ? $user->chave_pix : null) ?? old('chave_pix') }}">
+                                    name="chave_pix" maxlength="15" placeholder="Chave pix" value="{{ (isset($especialista) && $especialista->chave_pix ? $especialista->chave_pix : null) ?? old('chave_pix') }}">
                                 @include('alerts.feedback', ['field' => 'chave_pix'])
                             </div>
                         </div>
@@ -62,7 +62,7 @@
                         </div>
                         <input type="hidden" name="usuario_id" value="{{ $usuario_id ?? $user->id }}">
                     </form>
-                </div>                    
+                </div>
             </div>
         </div>
     </div>

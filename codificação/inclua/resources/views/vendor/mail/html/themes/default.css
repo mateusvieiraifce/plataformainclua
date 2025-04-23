@@ -39,7 +39,7 @@ a img {
 
 h1 {
     color: #3d4852;
-    font-size: 18px;
+    font-size: 24px;
     font-weight: bold;
     margin-top: 0;
     text-align: left;
@@ -287,4 +287,8 @@ img {
 
 .break-all {
     word-break: break-all;
+}
+
+.text-center {
+    text-align: center;
 }

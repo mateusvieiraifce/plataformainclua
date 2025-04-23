@@ -499,10 +499,13 @@ class PacienteController extends Controller
     {
         //retornar todos os especialista vinculados a clinica e com a especiladade selecionada
         $lista = Especialistaclinica::join('especialistas', 'especialistas.id', '=', 'especialistaclinicas.especialista_id')
-            ->where('clinica_id', $clinica_id)
+            ->join('consultas', 'consultas.especialista_id', 'especialistas.id')
+            ->where('especialistaclinicas.clinica_id', $clinica_id)
             ->where('especialidade_id', $especialidade_id)
+            ->where('consultas.status', 'Disponível')
             ->orderBy('especialistas.nome', 'asc')
             ->select('especialistas.id', 'especialistas.nome')
+            ->groupBy('id')
             ->paginate(8);
 
         return view('userPaciente/marcarConsultaViaClinicaPasso3', ['lista' => $lista, 'clinica_id' => $clinica_id]);

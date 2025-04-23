@@ -130,6 +130,7 @@ label.link {
     width: 200px;
     max-height: 200px;
     object-fit: cover;
+    margin-bottom: 5px;
 }
 
 .form-control.border-full input#cardNumber {
@@ -397,6 +398,17 @@ a.close {
 
 .modal input[type="text"] {
     color: #000;
+<<<<<<< Updated upstream
+=======
+}
+    
+.img-avatar ~ .input-group.input-medium {
+    width: 44%;
+}
+
+.column-gap-10 {
+    column-gap: 10px;
+>>>>>>> Stashed changes
 }
 
 @media (max-width: 576px) {
@@ -408,6 +420,10 @@ a.close {
 @media (max-width: 768px) {
     .input-medium {
         width: 100%;
+    }
+
+    .img-avatar ~ .input-group.input-medium {
+        width: 60%;
     }
 }
 

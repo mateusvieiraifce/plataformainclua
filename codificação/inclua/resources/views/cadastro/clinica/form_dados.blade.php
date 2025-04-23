@@ -19,11 +19,13 @@
                             </label>
                             <br>
                             <img class="img-avatar" src="{{ isset($clinica) ? asset($clinica->logotipo) : asset('assets/img/default-avatar.png') }}" id="preview" alt="Avatar">
-                            <div class="custom-file">
-                                <input class="custom-file-input hidden" type="file" id="image" name="logo" onchange="visualizarImagem(event)" accept="image/jpeg,image/jpg,image/png" value>
-                                <label class="btn custom-file-label input-small {{ $errors->has('logo') ? 'is-invalid' : '' }}" for="image"></label>
+                            <div class="input-group input-medium{{ $errors->has('especialidade') ? ' has-danger' : '' }}">
+                                <div class="custom-file">
+                                    <input class="custom-file-input hidden" type="file" id="image" name="logo" onchange="visualizarImagem(event)" accept="image/jpeg,image/jpg,image/png">
+                                    <label class="btn custom-file-label input-medium {{ $errors->has('logo') ? 'is-invalid' : '' }}" for="image"></label>
+                                </div>
+                                @include('alerts.feedback', ['field' => 'logo'])
                             </div>
-                            @include('alerts.feedback', ['field' => 'logo'])
                         </div>
 
                         <div class="form-group">
@@ -90,7 +92,7 @@
                             </label>
                             <div class="input-group input-medium{{ $errors->has('numero_atendimento_social_mensal') ? ' has-danger' : '' }}">
                                 <input type="number" id="numero_atendimento_social_mensal" class="form-control border-full {{ $errors->has('numero_atendimento_social_mensal') ? 'is-invalid' : '' }}"
-                                    name="numero_atendimento_social_mensal" maxlength="15" placeholder="" value="{{ (isset($clinica) && $clinica->numero_atendimento_social_mensal ? $clinica->numero_atendimento_social_mensal : null) ?? old('numero_atendimento_social_mensal') }}" required min="0">
+                                    name="numero_atendimento_social_mensal" maxlength="15" placeholder="N° de atendimentos sociais mensais" value="{{ (isset($clinica) && $clinica->numero_atendimento_social_mensal ? $clinica->numero_atendimento_social_mensal : null) ?? old('numero_atendimento_social_mensal') }}" required min="0">
                                 @include('alerts.feedback', ['field' => 'numero_atendimento_social_mensal'])
                             </div>
                         </div>

@@ -18,6 +18,7 @@
         <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
         <!-- Icons -->
         <link href="/assets/css/nucleo-icons.css" rel="stylesheet" />
+        <link href="{{ asset('fonts/iconic/css/material-design-iconic-font.css')}}" rel="stylesheet" />
         <!-- CSS -->
         <link href="/assets/css/black-dashboard.css" rel="stylesheet" />
         <link href="/assets/css/theme.css" rel="stylesheet" />

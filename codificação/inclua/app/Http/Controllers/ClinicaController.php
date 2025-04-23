@@ -541,7 +541,6 @@ class ClinicaController extends Controller
          $msg = ['valor' => trans("Cadastro de dados realizado com sucesso!"), 'tipo' => 'success'];
          session()->flash('msg', $msg);
      } catch (QueryException $e) {
-      dd($e);
          session()->flash('msg', ['valor' => trans("Erro ao realizar o cadastro da clínica!"), 'tipo' => 'danger']);
 
          return back();
@@ -831,5 +830,15 @@ class ClinicaController extends Controller
       
    }
    
+   public function getClinicas(Request $request)
+   {
+      $clinicas = Clinica::join('enderecos', 'enderecos.user_id', 'clinicas.usuario_id')
+         ->where('enderecos.cep', $request->cep)
+         ->selectRaw('clinicas.id as id, clinicas.nome as nome')
+         ->orderBy('clinicas.created_at')
+         ->get();
+
+      return response()->json(['data' => $clinicas], 200);
+   }
 }
    

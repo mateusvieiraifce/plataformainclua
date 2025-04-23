@@ -5,19 +5,21 @@ use App\Helper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Clinica;
-use App\Models\Especialista;
 
-    class Especialista extends Model
+class Especialista extends Model
     {
     use HasFactory;
     protected $fillable = [
         'nome',
         'usuario_id',
         'especialidade_id',
+        'path_certificado',
         'conta_bancaria',
         'agencia',
         'banco',
-        'chave_pix'
+        'chave_pix',
+        'data_validacao',
+        'data_invalidacao'
     ];
 
     public function getTelefone($user_id)
@@ -55,5 +57,14 @@ use App\Models\Especialista;
             'especialista_id'       // Chave estrangeira na tabela de ligação (do especialista)
         )->withPivot('is_vinculado') // Inclui dados adicionais da tabela de ligação, se necessário
          ->wherePivot('is_vinculado', 1); // Filtra apenas vínculos ativos
+    }
+
+    public function getClinica()
+    {
+        $clinica = Especialistaclinica::join('clinicas', 'clinicas.id', 'especialistaclinicas.clinica_id')
+            ->where('especialista_id', $this->id)
+            ->first();
+
+        return $clinica->nome;
     }
 }

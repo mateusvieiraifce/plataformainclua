@@ -165,6 +165,27 @@ class Helper
         return preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $cnpj);
     }
 
+    public static function mascaraDocumento($documento)
+    {
+        $size = strlen($documento);
+        
+        if ($size == 11) {
+            $documento = Helper::mascaraCPF($documento);
+        } else if ($size == 14) {
+            $documento = Helper::mascaraCnpj($documento);
+        }
+
+        return $documento;
+    }
+
+    public static function mascaraCEP($cep)
+    {
+        // Remove qualquer caractere que não seja número
+        $cep = preg_replace('/[^0-9]/', '', $cep);
+
+        // Aplica a máscara
+        return preg_replace('/(\d{5})(\d{3})/', '$1-$2', $cep);
+    }
 
     public static function pagamentoMercadoPago($descricao,$qnt,$preco,$ref)
     {

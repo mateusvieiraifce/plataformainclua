@@ -94,7 +94,7 @@ class PedidoExameController extends Controller
 
    public function checkExame(Request $request)
    {
-      $pedido_exame = PedidoExame::find(id: $request->pedido_exame_id);
+      $pedido_exame = PedidoExame::find($request->pedido_exame_id);
       $pedido_exame->exame_efetuado = $request->efetuado;
       $pedido_exame->save();
 
