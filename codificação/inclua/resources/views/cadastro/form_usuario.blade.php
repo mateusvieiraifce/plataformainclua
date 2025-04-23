@@ -86,14 +86,6 @@
     <script>
     $(document).ready(function () {
         $("#type-user").change(function () {
-            //ESCONDER FORM
-            //$('#formPaciente').hide();
-            //$('#formEspecialista').hide();
-            //$('#formClinica').hide();
-            /* $(this).find(":selected").each(function () {
-                //EXIBIR FORM SELECIONADO
-                $("#"+$(this).val()).show();
-            }); */
             $('#formUser').show();
             $('.user-name').hide();
             $("#nome").prop("required", false);

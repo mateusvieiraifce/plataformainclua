@@ -35,6 +35,7 @@ class EspecialistasSeeder extends Seeder
                 'agencia' => null,
                 'banco' => null,
                 'chave_pix' => null,
+                'data_validacao' => now(),
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

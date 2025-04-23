@@ -2,12 +2,14 @@
 namespace App\Http\Controllers;
 
 use App\Helper;
-use App\Models\Cartao;
+use App\Mail\aprovarEspecialista;
+use App\Models\Clinica;
 use App\Models\Especialista;
 use App\Models\PedidoMedicamento;
 use App\Models\Consulta;
 use App\Models\Paciente;
 use App\Models\Especialidade;
+use App\Models\Especialistaclinica;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -20,6 +22,9 @@ use App\Models\PedidoExame;
 use App\Models\TipoMedicamento;
 use Carbon\Carbon;
 use App\Models\Fila;
+use Exception;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 class EspecialistaController extends Controller
@@ -47,13 +52,16 @@ class EspecialistaController extends Controller
 
    public function storeDadosUserEspecialista(Request $request)
    {
-      //REMOÇÃO DA MASCARA DO CELULAR COMPARAR COM O BD
+      //REMOÇÃO DA MASCARA DO CELULAR E DOCUMENTO PARA COMPARAR COM O BD
       $request->request->set('celular', Helper::removerCaractereEspecial($request->celular));
+      $request->request->set('documento', Helper::removerCaractereEspecial($request->documento));
       $rules = [
          "nome" => "required|min:5",
+         "documento" => "required|unique:users,documento,{$request->usuario_id}|unique:pacientes,cpf,{$request->usuario_id}",
          "celular" => "required|unique:users,celular,{$request->usuario_id}",
          "especialidade" => "required",
-         'consentimento' => 'required'
+         "arquivo" => Especialista::find($request->especialista_id) ? "" : "required",
+         "consentimento" => "required"
       ];
       $feedbacks = [
          "nome.required" => "O campo nome é obrigatório.",
@@ -72,14 +80,35 @@ class EspecialistaController extends Controller
             $especialista = new Especialista();
          }
 
+         //SALVANDO O CERFICADO DO ESPECIALISTA
+         if ($request->hasFile('arquivo') && $request->file('arquivo')->isValid()) {
+            //VERIFICANDO SE EXISTE ALGUM AVATAR JA CADASTRADO PARA DELETAR
+            $certificado = Especialista::find($request->especialista_id);
+            if(!empty($certificado->path_certificado)) {
+               //REMOÇÃO DE 'storage/' PARA DELETAR O ARQUIVO NA RAIZ
+               $linkStorage = explode('/', $certificado);
+               $linkStorage = "$linkStorage[1]/$linkStorage[2]";
+               Storage::delete([$linkStorage]);
+            }
+
+            // Nome do Arquivo
+            $requestArquivo = $request->arquivo;
+            // Recupera a extensão do arquivo
+            $extension = $requestArquivo->extension();
+            // Define o nome
+            $imageName = md5($requestArquivo->getClientOriginalName() . strtotime("now")) . "." . $extension;
+            // Faz o upload:
+            $pathCertificado = $request->file('arquivo')->storeAs('cerficado-especialista', $imageName);
+         }
+
          $especialista->nome = $request->nome;
          $especialista->especialidade_id = $request->especialidade;
          $especialista->usuario_id = $request->usuario_id;
+         $especialista->path_certificado = !empty($pathCertificado) ? "storage/$pathCertificado" : ($especialista->path_certificado ?? null);
          $especialista->save();
 
          $userController = new UsuarioController();
          $userController->storeDados($request);
-
          $msg = ['valor' => trans("Cadastro de dados realizado com sucesso!"), 'tipo' => 'success'];
          session()->flash('msg', $msg);
       } catch (QueryException $e) {
@@ -95,10 +124,100 @@ class EspecialistaController extends Controller
    public function editDadosUserEspecialista($usuario_id)
    {
       $user = User::find($usuario_id);
+      $user->documento = $user->documento != null ? Helper::mascaraDocumento($user->documento) : '';
       $user->celular = $user->celular != null ? Helper::mascaraCelular($user->celular) : '';
       $especialidades = Especialidade::all();
 
       return view('cadastro.especialista.form_dados', ['user' => $user, 'especialidades' => $especialidades]);
+   }
+
+   public function createLocalAtendimento($usuario_id)
+   {
+      $user = User::find($usuario_id);
+      $user->documento = $user->documento != null ? Helper::mascaraDocumento($user->documento) : '';
+      $user->celular = $user->celular != null ? Helper::mascaraCelular($user->celular) : '';
+      $especialidades = Especialidade::all();
+
+      return view('cadastro.especialista.form_local_atendimento', ['user' => $user, 'especialidades' => $especialidades]);
+   }
+
+   public function storeLocalAtendimento(Request $request)
+   {
+      $rules = [
+         "nome_fantasia" => "required",
+         "razao_social" => "required",
+         "documento" => $request->clinica == null ? "required" : '',
+         "celular" => $request->clinica == null ? "required" : '',
+         "numero_atendimento_social_mensal" => $request->clinica == null ? "required" : '',
+         "anamnese_obrigatoria" => $request->clinica == null ? "required" : '',
+         "cep" => $request->clinica == null ? "required" : '',
+         "cidade" => $request->clinica == null ? "required" : '',
+         "estado" => $request->clinica == null ? "required" : '',
+         "endereco" => $request->clinica == null ? "required" : '',
+         "numero" => $request->clinica == null ? "required" : '',
+         "bairro" => $request->clinica == null ? "required" : '',
+         "longitude" => $request->clinica == null ? "required" : '',
+         "latitude" => $request->clinica == null ? "required" : ''
+      ];
+      $feedbacks = [
+         'nome_fantasia.required' => 'O campo Nome Fantasia é obrigatório.',
+         'razao_social.required' => 'O campo Razão Social é obrigatório.',
+         'documento.required' => 'O campo CNPJ é obrigatório.',
+         "documento.unique" => "Este CNPJ já foi utilizado.",
+         'celular.required' => 'O campo Celular é obrigatório.',
+         'numero_atendimento_social_mensal.required' => "O campo N° de atendimentos sociais mensais é obrigatório.",
+         'anamnese_obrigatoria.required' => "O campo Anamnese é obrigatório.",
+         "cep.required" => "O campo CEP é obrigatório.",
+         "cidade.required" => "O campo Cidade é obrigatório.",
+         "estado.required" => "O campo Estado é obrigatório.",
+         "endereco.required" => "O campo Endereço é obrigatório.",
+         "numero.required" => "O campo Número é obrigatório.",
+         "bairro.required" => "O campo Bairro é obrigatório.",
+         "longitude.required" => "O campo Longitude é obrigatório.",
+         "latitude.required" => "O campo Latitude é obrigatório."
+      ];
+      $request->validate($rules, $feedbacks);
+      
+      try {
+         DB::beginTransaction();
+         if ($request->clinica == null) {
+            $clinica = new Clinica();
+            $clinica->nome = $request->nome_fantasia;
+            $clinica->razaosocial = $request->razao_social;
+            $clinica->cnpj = Helper::removerCaractereEspecial($request->documento);
+            $clinica->ativo = 1;
+            $clinica->numero_atendimento_social_mensal = $request->numero_atendimento_social_mensal;
+            $clinica->anamnese_obrigatoria = $request->anamnese_obrigatoria;
+            $clinica->save();
+
+            $enderecoController = new EnderecoController();
+            $enderecoController->storeEndereco($request);
+         } else {
+            $clinica = Clinica::find($request->clinica);
+         }
+         $especialistaClinica = new Especialistaclinica();
+         $especialistaClinica->especialista_id = $request->especialista_id;
+         $especialistaClinica->clinica_id = $clinica->id;
+         $especialistaClinica->is_vinculado = true;
+         $especialistaClinica->save();
+         
+         $user = User::find($request->usuario_id);
+         $user->telefone = $request->telefone;
+         $user->etapa_cadastro = '4';
+         $user->save();
+
+         DB::commit();
+         $msg = ['valor' => trans("Cadastro do local de atendimento realizado com sucesso!"), 'tipo' => 'success'];
+         session()->flash('msg', $msg);
+      } catch (QueryException $e) {
+         DB::rollback();
+         $msg = ['valor' => trans("Erro ao realizar o cadastro do local de atendimento!"), 'tipo' => 'danger'];
+         session()->flash('msg', $msg);
+
+         return back();
+      }
+
+      return redirect()->route('dados-bancarios.create', ['usuario_id' => $request->usuario_id]);
    }
 
    public function createDadosBancarios($usuario_id)
@@ -123,8 +242,9 @@ class EspecialistaController extends Controller
       $request->validate($rules, $feedbacks);
 
       try {
+         DB::beginTransaction();
          $especialista = Especialista::where("usuario_id", $request->usuario_id)->first();
-         $especialista->conta_bancaria = $request->contaconta_bancaria;
+         $especialista->conta_bancaria = $request->conta_bancaria;
          $especialista->agencia = $request->agencia;
          $especialista->banco = $request->banco;
          $especialista->chave_pix = $request->chave_pix;
@@ -134,9 +254,12 @@ class EspecialistaController extends Controller
          $user->etapa_cadastro = "F";
          $user->save();
 
+         DB::commit();
+         $codigo = Crypt::encrypt(env('EMAIL_ROOT'));
+         Mail::to(env('EMAIL_ROOT'))->send(new aprovarEspecialista($especialista->id, $codigo));
          Auth::loginUsingId($user->id);
          session()->flash('msg', ['valor' => trans("Seu cadastro foi realizado com sucesso!"), 'tipo' => 'success']);
-      } catch (QueryException $e) {
+      } catch (Exception $e) {
          $msg = ['valor' => trans("Erro ao executar a operação!"), 'tipo' => 'danger'];
          session()->flash('msg', $msg);
 
@@ -246,7 +369,6 @@ class EspecialistaController extends Controller
          
          session()->flash('msg', ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success']);
       } catch (QueryException $e) {
-         dd($e);
          session()->flash('msg', ['valor' => trans("Houve um erro ao realizar o cadastro, tente novamente!"), 'tipo' => 'danger']);
 
          return back()->withInput();

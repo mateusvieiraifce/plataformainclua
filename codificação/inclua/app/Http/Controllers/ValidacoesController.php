@@ -3,9 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Helper;
+use App\Models\Clinica;
+use App\Models\Endereco;
+use App\Models\Especialista;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ValidacoesController extends Controller
 {
@@ -125,9 +130,66 @@ class ValidacoesController extends Controller
         if ($user->tipo_user == 'P') {
             return redirect()->route('paciente.endereco.create', ['usuario_id' => $user->id]);
         } elseif ($user->tipo_user == 'E') {
-            return redirect()->route('dados-bancarios.create', ['usuario_id' => $user->id]); 
+            return redirect()->route('especialista.local-atendimento.create', ['usuario_id' => $user->id]); 
         } elseif ($user->tipo_user == 'C') {
             return redirect()->route('clinica.endereco.create', ['usuario_id' => $user->id]);
         }
+    }
+
+    public function visualizarDocumentacaoEspecialista($especialistaId)
+    {
+        $usuarioController = new UsuarioController();
+        $auth = $usuarioController->autoLogin(request()->get('idCode'));
+        
+        if ($auth) {
+            $especialista = Especialista::find($especialistaId);
+            $user = User::find($especialista->usuario_id);
+            $user->documento = Helper::mascaraCPF($user->documento);
+            $user->celular = Helper::mascaraCelular($user->celular);
+            $clinica = Clinica::join('especialistaclinicas', 'especialistaclinicas.clinica_id', 'clinicas.id')
+                ->where('especialistaclinicas.especialista_id', $especialista->id)
+                ->select('clinicas.*')
+                ->first();
+            $clinica->cnpj = Helper::mascaraDocumento($clinica->cnpj);
+            $endereco = Endereco::where('enderecos.user_id', $user->id)->first();
+            $endereco->cep = Helper::mascaraCEP($endereco->cep);
+
+            return view('cadastro.especialista.aprovar_especialista', ['especialista' => $especialista, 'user' => $user, 'clinica' => $clinica, 'endereco' => $endereco]);
+        } else {
+            $msg = ['valor' => trans("Não foi possivel realizar seu login para validar o especialista, o link utilizado está incorreto."), 'tipo' => 'danger'];
+            session()->flash('msg', $msg);
+
+            return redirect()->route('index');
+        }
+    }
+
+    public function aprovarEspecialista(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            $user = User::find($request->usuario_id);
+            $user->ativo = $request->aprovado == "true" ? true : false;
+            $user->save();
+
+            date_default_timezone_set('America/Sao_Paulo');
+            $especialista = Especialista::where('usuario_id', $user->id)->first();
+            if ($request->aprovado == "true") {
+                $especialista->data_validacao = Carbon::now();
+            } else {
+                $especialista->data_invalidacao = Carbon::now();
+            }
+            $especialista->save();
+            
+            DB::commit();
+
+            $msg = ['valor' => trans("Operação salva com sucesso!"), 'tipo' => 'success'];
+        } catch (QueryException $e) {
+            DB::rollBack();
+
+            $msg = ['valor' => trans("Não foi possivel realizar seu login para validar o especialista!"), 'tipo' => 'danger'];
+        }
+        session()->flash('msg', $msg);
+        
+        return redirect()->route('home');
     }
 }

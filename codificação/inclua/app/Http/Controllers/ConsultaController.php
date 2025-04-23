@@ -320,7 +320,7 @@ class ConsultaController extends Controller
       //todoas as clinicas que o especialista eh vinculado
       $clinicas = Especialistaclinica::join('clinicas', 'clinicas.id', '=', 'especialistaclinicas.clinica_id');
 
-      if (auth()->user()->tipo_user == "P") {
+      if (auth()->user()->tipo_user == "P" || auth()->user()->tipo_user == "E") {
          $clinicas = $clinicas->where('especialista_id', $especialista->id);
       }
 
@@ -343,7 +343,7 @@ class ConsultaController extends Controller
          ->join('pacientes', 'pacientes.id', 'consultas.paciente_id')
          ->join('especialistas', 'especialistas.id', 'consultas.especialista_id');
 
-      if (auth()->user()->tipo_user == "P") {
+      if (auth()->user()->tipo_user == "P" || auth()->user()->tipo_user == "E") {
          $lista = $lista->where('especialista_id', $especialista->id);
       }
 
@@ -378,7 +378,7 @@ class ConsultaController extends Controller
       //todoas as clinicas que o especialista eh vinculado
       $clinicas = Especialistaclinica::join('clinicas', 'clinicas.id', '=', 'especialistaclinicas.clinica_id');
 
-      if (auth()->user()->tipo_user == "P") {
+      if (auth()->user()->tipo_user == "P" || auth()->user()->tipo_user == "E") {
          $clinicas = $clinicas->where('especialista_id', $especialista->id);
       }
 
@@ -400,7 +400,7 @@ class ConsultaController extends Controller
          ->join('pacientes', 'pacientes.id', '=', 'consultas.paciente_id')
          ->join('especialistas', 'especialistas.id', 'consultas.especialista_id');
 
-      if (auth()->user()->tipo_user == "P") {
+      if (auth()->user()->tipo_user == "P" || auth()->user()->tipo_user == "E") {
          $lista = $lista->where('especialista_id', '=', $especialista->id);
       }
 

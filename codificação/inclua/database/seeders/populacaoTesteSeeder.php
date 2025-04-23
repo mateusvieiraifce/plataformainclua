@@ -22,18 +22,6 @@ class populacaoTesteSeeder extends Seeder
      */
     public function run()
     {
-        //usuario root
-        DB::table('users')->insert([
-            'nome_completo'=>"Usuario Root - Teste",
-            'password'=>bcrypt("1"),
-            'email'=>"r@r",
-            'created_at'=>now(),
-            'updated_at'=>now(),
-            'telefone'=>"88888888",
-            'tipo_user' => 'R',
-            'etapa_cadastro' => 'F',
-        ]);
-
         //usuario paciente 01
         $userPaciente01 = User::create([ 
             'nome_completo' => "Paciente 01",
@@ -88,7 +76,8 @@ class populacaoTesteSeeder extends Seeder
         $especialista01 = Especialista::create([
             'nome' => "Especialista 01",
             'usuario_id' => $userEspecialista01->id, 
-            'especialidade_id' => $especialidade01->id,          
+            'especialidade_id' => $especialidade01->id,
+            'data_validacao' => now(),
         ]);
 
         //usuario especialista 02
@@ -111,7 +100,8 @@ class populacaoTesteSeeder extends Seeder
         $especialista02 = Especialista::create([
             'nome' => "Especialista 02",
             'usuario_id' => $userEspecialista02->id, 
-            'especialidade_id' => $especialidade02->id,          
+            'especialidade_id' => $especialidade02->id,
+            'data_validacao' => now(),
         ]);
 
         //usuario clinica 01

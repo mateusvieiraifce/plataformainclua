@@ -93,4 +93,29 @@ class User extends Authenticatable
             return null;
         }
     }
+    
+    public function getCertificadoEspecialista()
+    {
+        $especialista = Especialista::where('usuario_id', $this->id)->first();
+        
+        if ($especialista) {
+            return $especialista->path_certificado;
+        } else {
+            return null;
+        }
+    }
+    
+    public function getEspecialidadeEspecialista()
+    {
+        $especialista = Especialista::join('especialidades', 'especialidades.id', 'especialistas.especialidade_id')
+            ->where('especialistas.usuario_id', $this->id)
+            ->select('especialidades.descricao')
+            ->first();
+
+        if ($especialista) {
+            return $especialista->descricao;
+        } else {
+            return null;
+        }
+    }
 }

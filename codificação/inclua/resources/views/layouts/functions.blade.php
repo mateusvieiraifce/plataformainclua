@@ -23,11 +23,23 @@
     }
 
     function mascaraCpf(campo) {
-        $("#"+campo.id).mask("000.000.000-00");
+        campo.value = campo.value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/g,"\$1.\$2.\$3-\$4");
     }
 
     function mascaraCnpj(campo) {
-        $("#"+campo.id).mask("00.000.000/0000-00");
+        campo.value = campo.value.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/g,"\$1.\$2.\$3/\$4-\$5");
+    }
+
+    function mascaraDocumento(campo) {
+        let documento = campo.value.replace(/(\.|\/|\-)/g,"")
+        
+        if (documento.length >= 14 && documento.length <= 18) {
+            mascaraCnpj(campo)
+            consultarCNPJ(campo)
+        } else if (documento.length >= 11 && documento.length <= 13) {
+            mascaraCpf(campo)
+            validarCPF(campo)
+        }
     }
 
     //FUNÇÃO PARA VALIDAÇÃO DO DOCUMENTO
@@ -87,10 +99,10 @@
                     document.getElementById('cidade').value = response.localidade
                     document.getElementById('endereco').value = response.logradouro
                     document.getElementById('bairro').value = response.bairro
-                    
+
                     $('#estados > option').each(function() {
-                        if ($(this).attr("value") == "CE" ) {
-                            $("#estado").val("CE"); 
+                        if ($(this).attr("value") == response.uf) {
+                            $("#estado").val(response.uf); 
                         }
                     });
                 }
@@ -153,5 +165,10 @@
                 event.target.value = event.target.value.replace(/\D/g, '');
             });
         }
+    }
+    
+    function showname(id, ret) {
+        var name = document.getElementById(id);
+        document.getElementById(ret).value = name.files.item(0).name;
     }
 </script>

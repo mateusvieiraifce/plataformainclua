@@ -37,7 +37,7 @@ class CreatePagamentosContasTable extends Migration
      */
     public function down()
     {
-        Schema::table('pagamentos', function(Blueprint $table){
+        Schema::table('pagamentos_contas', function(Blueprint $table){
             $table->dropForeign('pagamentos_contas_user_id_foreign');
             $table->dropColumn('user_id');
         });
