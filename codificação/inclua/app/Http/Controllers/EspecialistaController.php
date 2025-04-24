@@ -173,7 +173,7 @@ class EspecialistaController extends Controller
          "bairro.required" => "O campo Bairro é obrigatório."
       ];
       $request->validate($rules, $feedbacks);
-      
+
       try {
          DB::beginTransaction();
          if ($request->clinica == null) {
@@ -196,7 +196,7 @@ class EspecialistaController extends Controller
          $especialistaClinica->clinica_id = $clinica->id;
          $especialistaClinica->is_vinculado = true;
          $especialistaClinica->save();
-         
+
          $user = User::find($request->usuario_id);
          $user->telefone = $request->telefone;
          $user->etapa_cadastro = '4';
@@ -258,6 +258,7 @@ class EspecialistaController extends Controller
          session()->flash('wellcome', true);
       } catch (Exception $e) {
          $msg = ['valor' => trans("Erro ao executar a operação!"), 'tipo' => 'danger'];
+         dd($e);
          session()->flash('msg', $msg);
 
          return back();
@@ -282,14 +283,14 @@ class EspecialistaController extends Controller
       if ($request->hasFile('image') && $request->file('image')->isValid()) {
          //VERIFICANDO SE EXISTE ALGUM AVATAR JA CADASTRADO PARA DELETAR
          $usuario = User::find($request->usuario_id);
-         
+
          if(!empty($usuario->avatar)) {
             //REMOÇÃO DE 'storage/' PARA DELETAR O ARQUIVO NA RAIZ
             $linkStorage = explode('/', $usuario->avatar);
             $linkStorage = "$linkStorage[1]/$linkStorage[2]";
             Storage::delete([$linkStorage]);
          }
-         
+
          // Nome do Arquivo
          $requestImage = $request->image;
          // Recupera a extensão do arquivo
@@ -349,7 +350,7 @@ class EspecialistaController extends Controller
          $usuario->tipo_user = "E";
          $usuario->etapa_cadastro = "F";
          $usuario->save();
-         
+
          if($request->especialista_id) {
             $especialista = Especialista::find($request->especialista_id);
          } else {
@@ -363,14 +364,14 @@ class EspecialistaController extends Controller
          $especialista->banco = $request->banco;
          $especialista->chave_pix = $request->chave_pix;
          $especialista->save();
-         
+
          session()->flash('msg', ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success']);
       } catch (QueryException $e) {
          session()->flash('msg', ['valor' => trans("Houve um erro ao realizar o cadastro, tente novamente!"), 'tipo' => 'danger']);
 
          return back()->withInput();
       }
-      
+
       return redirect()->route('especialista.list');
    }
    function delete($id)
@@ -388,7 +389,7 @@ class EspecialistaController extends Controller
 
          return back();
       }
-      
+
       return redirect()->route('especialista.list');
    }
    function edit($id)
@@ -404,9 +405,9 @@ class EspecialistaController extends Controller
       if (!($this->consultaPertenceEspecialistaLogado($consulta_id))) {
          return redirect()->route('consulta.listconsultaporespecialista');
       }
-      
+
       $consulta = Consulta::find($consulta_id);
-      
+
       $paciente = Paciente::find($consulta->paciente_id);
       $usuarioPaciente = User::find($paciente->usuario_id);
       $primeiraConsulta = Consulta::where('status', '=', 'Finalizada')->
@@ -417,7 +418,7 @@ class EspecialistaController extends Controller
          where('paciente_id', '=', $consulta->paciente_id)->
          where('especialista_id', '=', $consulta->especialista_id)->
          orderBy('horario_iniciado', 'asc')->count();
-     
+
       $tipoexames = Tipoexame::orderBy('descricao', 'asc')->get();
       $exames = Exame::orderBy('nome', 'asc')->get();
 
@@ -428,23 +429,23 @@ class EspecialistaController extends Controller
          ->where('consulta_id',$consulta->id)
          ->orderBy('pedido_exames.created_at', 'desc')
          ->select('pedido_exames.id as id', 'nome','laudo')
-         ->get(); 
+         ->get();
 
       //lista de pedidos de medicamentos
       $listaPedidosMedicamentos = PedidoMedicamento::
       join('medicamentos', 'medicamentos.id', '=', 'pedido_medicamentos.medicamento_id')->
       where('consulta_id',$consulta->id)->
       orderBy('pedido_medicamentos.created_at', 'desc')->
-      select('pedido_medicamentos.id as id', 'nome_comercial','prescricao_indicada')->get(); 
-    
+      select('pedido_medicamentos.id as id', 'nome_comercial','prescricao_indicada')->get();
+
       //modificando o statu da consulta para Consulta Em Atendimento
       // e removendo da fila de espera
       $ent = Consulta::find($consulta->id);
       $ent->status = "Em Atendimento";
       $dataAtual = Carbon::now('America/Fortaleza');
-      $ent->horario_iniciado = $dataAtual->format('Y-m-d H:i:s');     
+      $ent->horario_iniciado = $dataAtual->format('Y-m-d H:i:s');
       $ent->save();
-      
+
       //deletando o item da fila
       $entidadeFila = Fila::
          where('especialista_id', $consulta->especialista_id)->
@@ -453,8 +454,8 @@ class EspecialistaController extends Controller
       if ($entidadeFila) {
          $entidadeFila->delete();
       }
-       
-   
+
+
 
 
       return view('userEspecialista/iniciaratendimento', [
@@ -505,11 +506,11 @@ class EspecialistaController extends Controller
    //lista dos pacientes que fez alguma consulta com o especialista logado
    function listaPacientes($msg = null)
    {
-      $especialista = Especialista::where('usuario_id', '=', Auth::user()->id)->first();     
-      
+      $especialista = Especialista::where('usuario_id', '=', Auth::user()->id)->first();
+
       // Obter pacientes e o número de consultas que cada um teve
       $lista = Paciente::select('pacientes.id', 'pacientes.nome as nome_paciente',
-      'pacientes.cpf', 'pacientes.data_nascimento', 
+      'pacientes.cpf', 'pacientes.data_nascimento',
       DB::raw('COUNT(consultas.id) as total_consultas'))
          ->leftJoin('consultas', 'pacientes.id', '=', 'consultas.paciente_id')
       //   ->where('status', '=', $statusConsulta)
@@ -518,8 +519,8 @@ class EspecialistaController extends Controller
          ->paginate(8);
 
       return view('userEspecialista/listTodosPacientes', [
-         'lista' => $lista,       
-         'especialista' => $especialista,       
+         'lista' => $lista,
+         'especialista' => $especialista,
       ]);
 
    }
@@ -527,7 +528,7 @@ class EspecialistaController extends Controller
    //lista dos pacientes que fez alguma consulta com o especialista logado
    function listaPacientesPesquisar($msg = null)
    {
-      $especialista = Especialista::where('usuario_id', '=', Auth::user()->id)->first();     
+      $especialista = Especialista::where('usuario_id', '=', Auth::user()->id)->first();
       //retonando a lista de pacientes
       $filtro = "";
       if (isset($_GET['filtro'])) {
@@ -541,7 +542,7 @@ class EspecialistaController extends Controller
 
       // Obter pacientes e o número de consultas que cada um teve
       $lista = Paciente::select('pacientes.id', 'pacientes.nome as nome_paciente',
-      'pacientes.cpf', 'pacientes.data_nascimento', 
+      'pacientes.cpf', 'pacientes.data_nascimento',
       DB::raw('COUNT(consultas.id) as total_consultas'))
          ->leftJoin('consultas', 'pacientes.id', '=', 'consultas.paciente_id')
       //   ->where('status', '=', $statusConsulta)
@@ -557,16 +558,16 @@ class EspecialistaController extends Controller
          }
 
       return view('userEspecialista/listTodosPacientes', [
-         'lista' => $lista,       
-         'especialista' => $especialista, 
-         'filtro' => $filtro, 
-         'cpf' => $cpf,       
-         'msg' => $msg      
+         'lista' => $lista,
+         'especialista' => $especialista,
+         'filtro' => $filtro,
+         'cpf' => $cpf,
+         'msg' => $msg
       ]);
 
    }
 
-   function salvaNovoExame(Request $request){    
+   function salvaNovoExame(Request $request){
       $entidade = Exame::create([
          'nome' => $request->nome,
          'descricao' => $request->descricao,
@@ -577,7 +578,7 @@ class EspecialistaController extends Controller
     //  return redirect()->route('especialista.iniciarAtendimento', [$request->consulta_id,"exames"]);
    }
 
-   function salvaNovoMedicamento(Request $request){    
+   function salvaNovoMedicamento(Request $request){
       $entidade = Medicamento::create([
          'nome_comercial' => $request->nome_comercial,
          'nome_generico' => $request->nome_generico,
@@ -599,7 +600,7 @@ class EspecialistaController extends Controller
      return $this->inicarAtendimento($request->consulta_id,"prescricoes",$mostrarModalMedicamento);
    }
 
-   
+
 
 
 }

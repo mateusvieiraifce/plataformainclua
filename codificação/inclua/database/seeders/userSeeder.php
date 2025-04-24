@@ -20,7 +20,7 @@ class userSeeder extends Seeder
         DB::table('users')->insert([
             'nome_completo'=>"Gerente master",
             'password'=>bcrypt("12345"),
-            'email'=>"admin@inclua.com.br",
+            'email'=>"mentrixmax@gmail.com",
             'created_at'=>now(),
             'updated_at'=>now(),
             'telefone'=>"88888888",

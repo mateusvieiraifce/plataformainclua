@@ -15,10 +15,10 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(userSeeder::class);
         $this->call(populacaoTesteSeeder::class);
-        $this->call([PacienteSeeder::class]);
-        $this->call([ClinicaSeeder::class]);
-        $this->call([EspecialistasSeeder::class]);
-        $this->call([EspecialistaClinicaSeeder::class]);
-        $this->call([ConsultasSeeder::class]);   
+       // $this->call([PacienteSeeder::class]);
+        //$this->call([ClinicaSeeder::class]);
+        //$this->call([EspecialistasSeeder::class]);
+       // $this->call([EspecialistaClinicaSeeder::class]);
+        //$this->call([ConsultasSeeder::class]);
     }
 }
