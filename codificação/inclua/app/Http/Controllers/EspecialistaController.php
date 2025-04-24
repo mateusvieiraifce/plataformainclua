@@ -156,8 +156,6 @@ class EspecialistaController extends Controller
          "endereco" => $request->clinica == null ? "required" : '',
          "numero" => $request->clinica == null ? "required" : '',
          "bairro" => $request->clinica == null ? "required" : '',
-         "longitude" => $request->clinica == null ? "required" : '',
-         "latitude" => $request->clinica == null ? "required" : ''
       ];
       $feedbacks = [
          'nome_fantasia.required' => 'O campo Nome Fantasia é obrigatório.',
@@ -172,9 +170,7 @@ class EspecialistaController extends Controller
          "estado.required" => "O campo Estado é obrigatório.",
          "endereco.required" => "O campo Endereço é obrigatório.",
          "numero.required" => "O campo Número é obrigatório.",
-         "bairro.required" => "O campo Bairro é obrigatório.",
-         "longitude.required" => "O campo Longitude é obrigatório.",
-         "latitude.required" => "O campo Latitude é obrigatório."
+         "bairro.required" => "O campo Bairro é obrigatório."
       ];
       $request->validate($rules, $feedbacks);
       
@@ -259,6 +255,7 @@ class EspecialistaController extends Controller
          Mail::to(env('EMAIL_ROOT'))->send(new aprovarEspecialista($especialista->id, $codigo));
          Auth::loginUsingId($user->id);
          session()->flash('msg', ['valor' => trans("Seu cadastro foi realizado com sucesso!"), 'tipo' => 'success']);
+         session()->flash('wellcome', true);
       } catch (Exception $e) {
          $msg = ['valor' => trans("Erro ao executar a operação!"), 'tipo' => 'danger'];
          session()->flash('msg', $msg);

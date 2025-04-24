@@ -15,10 +15,11 @@ class DashboardController extends Controller
     public function home()
     {
         $user = Auth::user();
-        
+
+        $wellcome = session()->get('wellcome');
         $uri = parse_url(request()->header('referer'), PHP_URL_PATH);
         //SE O REDIRECIONAMENTO FOR ORIGINADO DO LOGIN, SERÁ EXIBIDO UMA MENSAGEM DE BOAS VINDAS
-        if ($uri == "/login") {
+        if ($uri == "/login" || $wellcome) {
             session()->flash('msg', ['valor' => trans("Bem vindo a Plataforma Inclua!"), 'tipo' => 'success']);
         }
         

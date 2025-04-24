@@ -111,6 +111,7 @@ class AssinaturaController extends Controller
             } else {
                 session()->flash('msg', ['valor' => trans("Seu cadastro e assinatura da plataforma foram realizados com sucesso! Bem vindo a plataforma Inclua"), 'tipo' => 'success']);
                 Auth::loginUsingId($user->id);
+                session()->flash('wellcome', true);
 
                 return redirect()->route('home');
             }
@@ -293,6 +294,7 @@ class AssinaturaController extends Controller
                 return redirect()->route('paciente.financeiro');
             } else {
                 Auth::loginUsingId($user->id);
+                session()->flash('wellcome', true);
 
                 return redirect()->route('home');
             }
