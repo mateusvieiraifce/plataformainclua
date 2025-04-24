@@ -73,12 +73,7 @@ class populacaoTesteSeeder extends Seeder
             'created_at' => now(),
             'updated_at' => now(),
         ]);
-        $especialidade02 = Especialidade::create([
-            'descricao' => "Psicologia",
-            'valorpadrao' => "50",
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+
 
         $especialidade03 = Especialidade::create([
             'descricao' => "Psicopedagogia",
