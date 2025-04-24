@@ -219,14 +219,14 @@
 
                             <div class="form-group">
                                 <label >
-                                    Localização <span class="required">*</span>
+                                    Localização
                                 </label>
                                 <div class="mapa" id="map"></div>
                             </div>
                             
                             <div class="form-group">
                                 <label for="longitude">
-                                    Longitude <span class="required">*</span>
+                                    Longitude
                                 </label>
                                 <div class="input-group {{ $errors->has('longitude') ? ' has-danger' : '' }} input-medium">
                                     <input type="text" id="longitude" class="form-control border-full only-numbers {{ $errors->has('longitude') ? ' is-invalid' : '' }}"
@@ -237,7 +237,7 @@
                             
                             <div class="form-group">
                                 <label for="latitude">
-                                    Latitude <span class="required">*</span>
+                                    Latitude
                                 </label>
                                 <div class="input-group {{ $errors->has('latitude') ? ' has-danger' : '' }} input-medium">
                                     <input type="text" id="latitude" class="form-control border-full only-numbers {{ $errors->has('latitude') ? ' is-invalid' : '' }}"
@@ -319,8 +319,6 @@
                     $('#endereco').prop('required', true);
                     $('#numero').prop('required', true);
                     $('#bairro').prop('required', true);
-                    $('#longitude').prop('required', true);
-                    $('#latitude').prop('required', true);
                 } else {
                     $('#endereco-especialista').hide();
                     $('#documento').prop('required', false);
@@ -334,8 +332,6 @@
                     $('#endereco').prop('required', false);
                     $('#numero').prop('required', false);
                     $('#bairro').prop('required', false);
-                    $('#longitude').prop('required', false);
-                    $('#latitude').prop('required', false);
                 }
             });            
         });

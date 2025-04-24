@@ -264,6 +264,7 @@ class PacienteController extends Controller
         if (env('ASSINATURA_OBRIGATORIA')) {
             return redirect()->route('cartao.create', ['usuario_id' => $request->usuario_id]);
         } else {
+            session()->flash('wellcome', true);
             return redirect()->route('home');
         }
     }

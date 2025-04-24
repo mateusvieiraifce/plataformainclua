@@ -67,8 +67,8 @@ Route::get("/clinica/endereco/create/{usuario_id}", [\App\Http\Controllers\Clini
 Route::post("/clinica/endereco/store", [\App\Http\Controllers\ClinicaController::class, 'storeEnderecoClinica'])->name('clinica.endereco.store');
 
 #DADOS BANCARIOS
-Route::get("/cadastrar/dados-bancários/create/{usuario_id}", [\App\Http\Controllers\EspecialistaController::class, 'createDadosBancarios'])->name('dados-bancarios.create');
-Route::post("/cadastrar/dados-bancários/store", [\App\Http\Controllers\EspecialistaController::class, 'storeDadosBancarios'])->name('dados-bancarios.store');
+Route::get("/cadastrar/dados-bancarios/create/{usuario_id}", [\App\Http\Controllers\EspecialistaController::class, 'createDadosBancarios'])->name('dados-bancarios.create');
+Route::post("/cadastrar/dados-bancarios/store", [\App\Http\Controllers\EspecialistaController::class, 'storeDadosBancarios'])->name('dados-bancarios.store');
 
 #ASSINATURA
 Route::post("/pagamento/assinatura", [\App\Http\Controllers\AssinaturaController::class, 'lancarAssinatura'])->name('pagamento.assinatura');
