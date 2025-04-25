@@ -9,6 +9,7 @@ use App\Models\PedidoMedicamento;
 use App\Models\Consulta;
 use App\Models\Paciente;
 use App\Models\Especialidade;
+use App\Models\Especialidadeclinica;
 use App\Models\Especialistaclinica;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -184,6 +185,7 @@ class EspecialistaController extends Controller
             $clinica->ativo = 1;
             $clinica->numero_atendimento_social_mensal = $request->numero_atendimento_social_mensal;
             $clinica->anamnese_obrigatoria = $request->anamnese_obrigatoria;
+            $clinica->usuario_id = $request->usuario_id;
             $clinica->save();
 
             $enderecoController = new EnderecoController();
@@ -191,12 +193,22 @@ class EspecialistaController extends Controller
          } else {
             $clinica = Clinica::find($request->clinica);
          }
+         $especialista = Especialista::find($request->especialista_id);
+         $especialidade = Especialidade::find($especialista->especialidade_id);
+
          $especialistaClinica = new Especialistaclinica();
-         $especialistaClinica->especialista_id = $request->especialista_id;
+         $especialistaClinica->especialista_id = $especialista->id;
          $especialistaClinica->clinica_id = $clinica->id;
          $especialistaClinica->is_vinculado = true;
          $especialistaClinica->save();
 
+         $especialidadeClinica = new Especialidadeclinica();
+         $especialidadeClinica->valor = $especialidade->valorpadrao;
+         $especialidadeClinica->clinica_id = $clinica->id;
+         $especialidadeClinica->especialidade_id = $especialidade->id;
+         $especialidadeClinica->is_vinculado = true;
+         $especialidadeClinica->save();
+         
          $user = User::find($request->usuario_id);
          $user->telefone = $request->telefone;
          $user->etapa_cadastro = '4';
@@ -258,7 +270,6 @@ class EspecialistaController extends Controller
          session()->flash('wellcome', true);
       } catch (Exception $e) {
          $msg = ['valor' => trans("Erro ao executar a operação!"), 'tipo' => 'danger'];
-         dd($e);
          session()->flash('msg', $msg);
 
          return back();
