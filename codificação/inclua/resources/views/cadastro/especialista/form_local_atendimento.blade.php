@@ -99,7 +99,7 @@
                                 </label>
                                 <div class="input-group input-medium{{ $errors->has('numero_atendimento_social_mensal') ? ' has-danger' : '' }}">
                                     <input type="number" id="numero_atendimento_social_mensal" class="form-control border-full {{ $errors->has('numero_atendimento_social_mensal') ? 'is-invalid' : '' }}"
-                                        name="numero_atendimento_social_mensal" maxlength="15" placeholder="N° de atendimentos sociais mensais" value="{{ old('numero_atendimento_social_mensal') }}" min="0">
+                                        name="numero_atendimento_social_mensal" maxlength="15" placeholder="N° de atendimentos sociais mensais" value="{{ old('numero_atendimento_social_mensal') ?? 0 }}" min="0">
                                     @include('alerts.feedback', ['field' => 'numero_atendimento_social_mensal'])
                                 </div>
                             </div>
