@@ -83,6 +83,8 @@ class Helper
         );
         try {
             $response = $sendgrid->send($email);
+            print $response->statusCode();
+           // dd($response->statusCode() );
           /*   print $response->statusCode() . "\n";
              print_r($response->headers());
              print $response->body() . "\n";
@@ -168,7 +170,7 @@ class Helper
     public static function mascaraDocumento($documento)
     {
         $size = strlen($documento);
-        
+
         if ($size == 11) {
             $documento = Helper::mascaraCPF($documento);
         } else if ($size == 14) {
@@ -348,14 +350,14 @@ class Helper
 
         $diferencaMinutos = $now->diffInMinutes($dataConsulta);
         $diferencaHoras = $diferencaMinutos / 60;
-        
+
         if ($now <= $dataConsulta && $diferencaHoras >= env('PRAZO_CANCELAMENTO_GRATUITO')) {
             return true;
         }
-        
+
         return false;
     }
-    
+
     public static function createCheckouSumupTaxa()
     {
         //CODIGO CREATE CHECKOUT

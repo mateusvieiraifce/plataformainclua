@@ -73,7 +73,7 @@ class ValidacoesController extends Controller
             return redirect()->route('usuario.especialista.dados.create', ['usuario_id' => $user->id]);
         } elseif ($user->tipo_user == "C") {
             return redirect()->route('usuario.clinica.dados.create', ['usuario_id' => $user->id]);
-        } 
+        }
     }
 
     public function verificarCelular($usuario_id)
@@ -130,7 +130,7 @@ class ValidacoesController extends Controller
         if ($user->tipo_user == 'P') {
             return redirect()->route('paciente.endereco.create', ['usuario_id' => $user->id]);
         } elseif ($user->tipo_user == 'E') {
-            return redirect()->route('especialista.local-atendimento.create', ['usuario_id' => $user->id]); 
+            return redirect()->route('especialista.local-atendimento.create', ['usuario_id' => $user->id]);
         } elseif ($user->tipo_user == 'C') {
             return redirect()->route('clinica.endereco.create', ['usuario_id' => $user->id]);
         }
@@ -140,7 +140,7 @@ class ValidacoesController extends Controller
     {
         $usuarioController = new UsuarioController();
         $auth = $usuarioController->autoLogin(request()->get('idCode'));
-        
+
         if ($auth) {
             $especialista = Especialista::find($especialistaId);
             $user = User::find($especialista->usuario_id);
@@ -150,8 +150,9 @@ class ValidacoesController extends Controller
                 ->where('especialistaclinicas.especialista_id', $especialista->id)
                 ->select('clinicas.*')
                 ->first();
+
             $clinica->cnpj = Helper::mascaraDocumento($clinica->cnpj);
-            $endereco = Endereco::where('enderecos.user_id', $user->id)->first();
+            $endereco = Endereco::where('enderecos.user_id', $clinica->usuario_id)->first();
             $endereco->cep = Helper::mascaraCEP($endereco->cep);
 
             return view('cadastro.especialista.aprovar_especialista', ['especialista' => $especialista, 'user' => $user, 'clinica' => $clinica, 'endereco' => $endereco]);
@@ -179,7 +180,7 @@ class ValidacoesController extends Controller
                 $especialista->data_invalidacao = Carbon::now();
             }
             $especialista->save();
-            
+
             DB::commit();
 
             $msg = ['valor' => trans("Operação salva com sucesso!"), 'tipo' => 'success'];
@@ -189,7 +190,7 @@ class ValidacoesController extends Controller
             $msg = ['valor' => trans("Não foi possivel realizar seu login para validar o especialista!"), 'tipo' => 'danger'];
         }
         session()->flash('msg', $msg);
-        
+
         return redirect()->route('home');
     }
 }
