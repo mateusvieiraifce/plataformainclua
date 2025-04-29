@@ -25,14 +25,14 @@ class MailController extends Controller
         $mail->IsHTML(true);
         $mail->CharSet = 'utf-8';
         $mail->SetFrom(env('MAIL_USERNAME'));
-        $mail->AddAddress('mentrixmax@gmail.com');
+        $mail->AddAddress('mateus.vieira@ifce.edu.br');
         $msga = "O Cliente: " . $req->email . ", enviou a seguinte msg: <br/> " . $req->msg;
         $mail->msgHTML($msga);
         $mail->Port = 465;
         $mail->SMTPDebug  = 1;
        // $msg = $mail->Send();
         $msgret = ['valor' => "Operação realizada com sucesso!)", 'tipo' => 'success'];
-        Helper::sendEmail("testes","teste","mentrixmax@gmail.com","Mateus");
+        Helper::sendEmail("testes","teste","mateus.vieira@ifce.edu.br","Mateus");
         return "Ok";
     }
 

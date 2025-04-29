@@ -88,7 +88,7 @@ class Helper
                 ';
 
         $msga=$imagem_topo;
-        $msga = $msga.$text;
+        $msga = $text;
         //$msga = $msga. $rodape;
         //$mail->msgHTML($msga);
         //$mail->Port = 465;
