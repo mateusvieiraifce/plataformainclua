@@ -73,7 +73,8 @@ class Helper
         );*/
     //    $sendgrid = new \SendGrid(env('SENDGRID_API_KEY'));
 
-        $mail->addEmbeddedImage(env('URL').'assets/img/logo-01.png', 'logo', 'logo.png');
+        $imagePath = public_path('assets/img/logo-01.png');
+        $mail->addEmbeddedImage($imagePath, 'logo', 'logo.png');
 
         $imagem_topo = '<img src="'.env('URL').'assets/img/logo-01.png" alt="topo" border="0" style="max-width:800px; max-height:150px; width: auto;
     height: auto;"/> <br/>';
