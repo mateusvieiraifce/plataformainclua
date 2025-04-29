@@ -122,6 +122,7 @@ class Helper
         $sendgrid = new \SendGrid(env('SENDGRID_API_KEY'));
         try {
             $response = $sendgrid->send($email);
+            dd($response->statusCode());
            /* print $response->statusCode() . "\n";
             print_r($response->headers());
             print $response->body() . "\n";*/

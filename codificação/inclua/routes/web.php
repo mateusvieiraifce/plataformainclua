@@ -106,7 +106,7 @@ Route::middleware('auth')->group(function () {
     Route::post("/profile/update/dados", [\App\Http\Controllers\UsuarioController::class, 'updateDadosUser'])->name('user.update.dados');
     Route::post("/profile/delete", [\App\Http\Controllers\UsuarioController::class, 'delete'])->name('user.delete');
     Route::post("/profile/update/avatar", [\App\Http\Controllers\UsuarioController::class, 'updateAvatar'])->name('user.update.avatar');
-    
+
     #ENDEREÇO
     Route::get("/profile/endereco/create/{usuario_id?}", [\App\Http\Controllers\EnderecoController::class, 'create'])->name('user.endereco.create');
     Route::post("/profile/endereco/store", [\App\Http\Controllers\EnderecoController::class, 'store'])->name('user.endereco.store');
@@ -114,7 +114,7 @@ Route::middleware('auth')->group(function () {
     Route::get("/profile/endereco/edit/{id}", [\App\Http\Controllers\EnderecoController::class, 'edit'])->name('user.endereco.edit');
     Route::get("/profile/endereco/principal/{id}", [\App\Http\Controllers\EnderecoController::class, 'setEnderecoPrincipal'])->name('user.endereco.principal');
 
-    Route::get("/send/mail", [\App\Http\Controllers\MailController::class, 'sendMenssagem'])->name('sales.send.do.email');
+    Route::get("/send/mail", [\App\Http\Controllers\MailController::class, 'sendMail'])->name('sales.send.do.email');
 
     #ESPECIALIDADES
     Route::get("/especialidade/list", [\App\Http\Controllers\EspecialidadeController::class, 'list'])->name('especialidade.list');
@@ -147,7 +147,7 @@ Route::middleware('auth')->group(function () {
     Route::post("/especialidadeclinica/save/{clinica_id}", [\App\Http\Controllers\EspecialidadeclinicaController::class, 'save'])->name('especialidadeclinica.save');
     Route::get("/especialidadeclinica/delete/{id}", [\App\Http\Controllers\EspecialidadeclinicaController::class, 'delete'])->name('especialidadeclinica.delete');
     Route::get("/especialidadeclinica/edit/{id}", [\App\Http\Controllers\EspecialidadeclinicaController::class, 'edit'])->name('especialidadeclinica.edit');
-    
+
     #ESPECIALISTA
     Route::get("/especialista/list", [\App\Http\Controllers\EspecialistaController::class, 'list'])->name('especialista.list');
     Route::get("/especialista/new", [\App\Http\Controllers\EspecialistaController::class, 'new'])->name('especialista.new');
@@ -186,12 +186,12 @@ Route::middleware('auth')->group(function () {
     #CONSULTAS_USER_PACIENTE
     Route::get("/paciente/minhas-consultas", [\App\Http\Controllers\PacienteController::class, 'minhasconsultas'])->name('paciente.minhasconsultas');
     Route::get("/paciente/historico-consultas", [\App\Http\Controllers\PacienteController::class, 'historicoConsultas'])->name('paciente.historicoconsultas');
-    
+
     #FINANCEIRO PACIENTE
     Route::get("/paciente/financeiro", [\App\Http\Controllers\PagamentoController::class, 'historicoPagamentosPaciente'])->name('paciente.financeiro');
     Route::get("/paciente/assinatura/cartoes", [\App\Http\Controllers\AssinaturaController::class, 'selecionarCartao'])->name('pagamento.assinatura.cartoes');
     Route::get("/paciente/assinatura/renovar/{cartao}", [\App\Http\Controllers\AssinaturaController::class, 'renovarAssinaturaCartao'])->name('pagamento.assinatura.renovar');
-    
+
     #FINANCEIRO CONTA A PAGAR CLINICA
     Route::get("/clinica/financeiro", [\App\Http\Controllers\PagamentoContaController::class, 'list'])->name('clinica.financeiro');
     Route::get("/clinica/financeiro/create", [\App\Http\Controllers\PagamentoContaController::class, 'create'])->name('clinica.financeiro.create');
@@ -204,13 +204,13 @@ Route::middleware('auth')->group(function () {
     Route::get("/paciente/editar/{id}", [\App\Http\Controllers\PacienteController::class, 'edit'])->name('paciente.edit');
     Route::post("/paciente/update/", [\App\Http\Controllers\PacienteController::class, 'update'])->name('paciente.update');
     Route::get("/paciente/lista", [\App\Http\Controllers\PacienteController::class, 'index'])->name('paciente.index');
-    
+
     #LISTA DE PEDIDOS DE EXAMES DO PACIENTE
     Route::get("/paciente/exames", [\App\Http\Controllers\PedidoExameController::class, 'pedidoExamesPaciente'])->name('paciente.pedido_exames.lista');
-    
+
     #AVALIACAO PACIENTE
     Route::get("/paciente/reputacao", [\App\Http\Controllers\AvaliacaoController::class, 'reputacaoPaciente'])->name('paciente.avaliacao.lista');
-    
+
     #AVALIACAO PACIENTE - USUÁRIO ROOT
     Route::get("/pacientes/reputacao", [\App\Http\Controllers\AvaliacaoController::class, 'reputacaoPacientes'])->name('pacientes.avaliacao.lista');
     #HISTORICO PAGAMENTOS PACIENTES - USUÁRIO ROOT
@@ -239,7 +239,7 @@ Route::middleware('auth')->group(function () {
         #ANAMNESE
         Route::get("/paciente/anamnese/{paciente_id}", [\App\Http\Controllers\AnamneseController::class, 'create'])->name('anamnese.create');
         Route::post("/paciente/anamnese/store", [\App\Http\Controllers\AnamneseController::class, 'store'])->name('anamnese.store');
-        
+
         #CANCELAR CONSULTA
         Route::post("/paciente/consulta/cancelar", [\App\Http\Controllers\PacienteController::class, 'cancelarConsulta'])->name('paciente.consulta.cancelar');
         Route::get("/paciente/consulta/cancelar/callback", [\App\Http\Controllers\ConsultaController::class, 'callbackCancelarConsultaComTaxa'])->name('callback.cancelamento.consulta');
@@ -247,7 +247,7 @@ Route::middleware('auth')->group(function () {
         #LISTA CADASTRO DE PACIENTES
         Route::get("/paciente/create", [\App\Http\Controllers\PacienteController::class, 'create'])->name('paciente.create');
         Route::post("/paciente/store", [\App\Http\Controllers\PacienteController::class, 'store'])->name('paciente.store');
-        
+
         #LISTA DE PEDIDOS DE EXAMES DO PACIENTE
         Route::post("/paciente/exames/arquivo/store", [\App\Http\Controllers\PedidoExameController::class, 'storeArquivoExame'])->name('paciente.pedido_exames.file_store');
         Route::get("/paciente/exames/check", [\App\Http\Controllers\PedidoExameController::class, 'checkExame'])->name('paciente.pedido_exames.check');
@@ -313,14 +313,14 @@ Route::middleware('auth')->group(function () {
     Route::get("/especialista/pedidomedicamento/delete/{id}/{consulta_id}", [\App\Http\Controllers\PedidoMedicamentoController::class, 'delete'])->name('pedido_medicamento.delete');
     Route::post("/especialista/novoexame/", [\App\Http\Controllers\EspecialistaController::class, 'salvaNovoExame'])->name('especialista.salvaNovoExame');
     Route::post("/especialista/novomedicamento/", [\App\Http\Controllers\EspecialistaController::class, 'salvaNovoMedicamento'])->name('especialista.salvaNovoMedicamento');
-    
+
     #ATESTADO
     Route::post("/especialista/atestado/store", [\App\Http\Controllers\AtestadoController::class, 'store'])->name('atestado.store');
     Route::get("/especialista/atestado/download/{id}", [\App\Http\Controllers\AtestadoController::class, 'downloadAtestado'])->name('atestado.download');
 
     Route::get("/consulta/selecionar-clinica/{rota?}", [\App\Http\Controllers\ConsultaController::class, 'selectClinica'])->name('selecionar.clinica');
     Route::get("/consulta/selecionar-clinica/search/result", [\App\Http\Controllers\ConsultaController::class, 'selectClinicaSearch'])->name('selecionar.clinica.search');
-    
+
     Route::post("/especialista/selecionar-especialista/search/result", [\App\Http\Controllers\ClinicaController::class, 'selectEspecialistaSearch'])->name('selecionar.especialista.search');
     Route::get("/clinica/selecionar-clinica/", [\App\Http\Controllers\ClinicaController::class, 'listarClinicaRelatorio'])->name('selecionar.clinica.relatorio');
     Route::get('/remover-filtro/{tipo}', [\App\Http\Controllers\ClinicaController::class, 'removerFiltro'])->name('remover.filtro');
@@ -356,7 +356,7 @@ Route::middleware('auth')->group(function () {
     Route::get("/clinica/especialidade/edit/{id}/{clinica_id?}", [\App\Http\Controllers\EspecialidadeclinicaController::class, 'editUserClinica'])->name('especialidadeclinica.editUserClinica');
     Route::get("/clinica/especialidade/alterarvinculo/{especialidadeclinica_id}", [\App\Http\Controllers\EspecialidadeclinicaController::class, 'alterarvinculo'])->name('especialidadeclinica.alterarvinculo');
     Route::post("/clinica/especialidade/save", [\App\Http\Controllers\EspecialidadeclinicaController::class, 'saveUserClinica'])->name('especialidadeclinica.saveUserClinica');
-    
+
    #CAD_FILA_USER_CLINICA
     Route::any("/clinica/fila/especialista", [\App\Http\Controllers\FilaController::class, 'listEspecialistaDaClinica'])->name('fila.listEspecialistaDaClinica');
     Route::any("/clinica/fila/list", [\App\Http\Controllers\FilaController::class, 'list'])->name('fila.list');
@@ -366,7 +366,7 @@ Route::middleware('auth')->group(function () {
     Route::any("/especialista/fila/clinicas", [\App\Http\Controllers\FilaController::class, 'listClinicaDoEspecialista'])->name('fila.listClinicaDoEspecialista');
     Route::any("/especialista/fila/list", [\App\Http\Controllers\FilaController::class, 'listUserEspecialista'])->name('fila.listUserEspecialista');
     Route::post("/especialista/fila/novaordem", [\App\Http\Controllers\FilaController::class, 'salvarOrdemFilasUserEspecialista'])->name('fila.salvarOrdemFilasUserEspecialista');
-    
+
     Route::get("/especialistas/reputacao", [\App\Http\Controllers\AvaliacaoController::class, 'reputacaoEspecialistas'])->name('especialistas.avaliacao.lista');
 
     Route::get("/especialista/reputacao", [\App\Http\Controllers\AvaliacaoController::class, 'reputacaoEspecialista'])->name('avaliacao.reputacaoEspecialista');
@@ -389,8 +389,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get("/clinica/reputacao", [\App\Http\Controllers\AvaliacaoController::class, 'reputacaoClinica'])->name('avaliacao.reputacaoClinica');
     Route::post("/clinica/reputacao/denunciar", [\App\Http\Controllers\AvaliacaoController::class, 'denuciarUserClinica'])->name('avaliacao.denuciarUserClinica');
-    
-    Route::get("/configuracao/layout", [\App\Http\Controllers\ConfiguracaoController::class, 'index'])->name('configuracao.layout');    
+
+    Route::get("/configuracao/layout", [\App\Http\Controllers\ConfiguracaoController::class, 'index'])->name('configuracao.layout');
     Route::post("/configuracao/layout/store", [\App\Http\Controllers\ConfiguracaoController::class, 'store'])->name('configuracao.layout.store');
 
     Route::post("/consulta/pagar", [\App\Http\Controllers\PagamentoController::class, 'pagarConsulta'])->name('consulta.pagamento');
