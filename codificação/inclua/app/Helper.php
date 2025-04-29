@@ -47,6 +47,7 @@ class Helper
     {
 
         $mail = new PHPMailer();
+        $mail->ContentType = 'text/html; charset=utf-8\r\n';
         $mail->IsSMTP();
         $mail->Host = env('MAIL_HOST');
         $mail->Subject = $assunto;
@@ -69,7 +70,7 @@ class Helper
         $email->addContent(
             "text/html", "<strong>and easy to do anywhere, even with PHP</strong>"
         );*/
-        $sendgrid = new \SendGrid(env('SENDGRID_API_KEY'));
+    //    $sendgrid = new \SendGrid(env('SENDGRID_API_KEY'));
 
 
 
@@ -87,8 +88,8 @@ class Helper
                 ';
 
         $msga=$imagem_topo;
-        $msga =$msga . $text;
-        $msga = $msga. $rodape;
+        $msga = $msga.$text;
+        //$msga = $msga. $rodape;
         //$mail->msgHTML($msga);
         //$mail->Port = 465;
         //  $mail->SMTPDebug  = 1;
@@ -98,8 +99,11 @@ class Helper
        // );
 
         $mail->msgHTML($msga);
+        $mail->MsgHTML = $msga;
+        $mail->AltBody = $msga;
+
         $mail->Port = 465;
-       # $mail->SMTPDebug  = 1;
+        $mail->SMTPDebug  = 1;
 
 
         try {
