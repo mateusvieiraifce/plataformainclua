@@ -114,7 +114,7 @@ Route::middleware('auth')->group(function () {
     Route::get("/profile/endereco/edit/{id}", [\App\Http\Controllers\EnderecoController::class, 'edit'])->name('user.endereco.edit');
     Route::get("/profile/endereco/principal/{id}", [\App\Http\Controllers\EnderecoController::class, 'setEnderecoPrincipal'])->name('user.endereco.principal');
 
-    Route::get("/send/mail", [\App\Http\Controllers\MailController::class, 'sendMenssagem'])->name('sales.send.do.email');
+    Route::get("/send/mail", [\App\Http\Controllers\MailController::class, 'sendMail'])->name('sales.send.do.email');
 
     #ESPECIALIDADES
     Route::get("/especialidade/list", [\App\Http\Controllers\EspecialidadeController::class, 'list'])->name('especialidade.list');

@@ -16,16 +16,16 @@ class MailController extends Controller
 
         $mail = new PHPMailer();
         $mail->IsSMTP();
-        $mail->Host = "smtp.titan.email";
+        $mail->Host = env('MAIL_HOST');
         $mail->Subject = 'Contato pelo site: ';
         $mail->SMTPAuth = true;
-        $mail->Username = 'atendimento@plataformainclua.com';
-        $mail->Password = 'Jesus0804#';
+        $mail->Username = env('MAIL_USERNAME');
+        $mail->Password = env('MAIL_PASSWORD');
         $mail->SMTPSecure = 'ssl';
         $mail->IsHTML(true);
         $mail->CharSet = 'utf-8';
-        $mail->SetFrom($req->email, "cliente", 0);
-        $mail->AddAddress('atendimento@plataformainclua.com');
+        $mail->SetFrom(env('MAIL_USERNAME'), "cliente", 0);
+        $mail->AddAddress('mentrixmax@gmail.com');
         $msga = "O Cliente: " . $req->email . ", enviou a seguinte msg: <br/> " . $req->msg;
         $mail->msgHTML($msga);
         $mail->Port = 465;

@@ -46,10 +46,25 @@ class Helper
     public  static function sendEmail($assunto, $text, $emissor, $name=null)
     {
 
-        $email = new \SendGrid\Mail\Mail();
-        $email->setFrom(env("MAIL_SAND"), env("MAIL_OWNER"));
-        $email->setSubject($assunto);
-        $email->addTo($emissor, $name);
+        $mail = new PHPMailer();
+        $mail->IsSMTP();
+        $mail->Host = env('MAIL_HOST');
+        $mail->Subject = $assunto;
+        $mail->SMTPAuth = true;
+        $mail->Username = env('MAIL_USERNAME');
+        $mail->Password = env('MAIL_PASSWORD');
+        $mail->SMTPSecure = 'ssl';
+        $mail->IsHTML(true);
+        $mail->CharSet = 'utf-8';
+        $mail->SetFrom(env('MAIL_USERNAME'), env("MAIL_OWNER"), 0);
+        $mail->AddAddress($emissor);
+       # $msga = "O Cliente: " . $req->email . ", enviou a seguinte msg: <br/> " . $req->msg;
+
+
+        //$email = new \SendGrid\Mail\Mail();
+        //$email->setFrom(env("MAIL_SAND"), env("MAIL_OWNER"));
+        //$email->setSubject($assunto);
+        //$email->addTo($emissor, $name);
       /*  $email->addContent("text/plain", "and easy to do anywhere, even with PHP");
         $email->addContent(
             "text/html", "<strong>and easy to do anywhere, even with PHP</strong>"
@@ -78,12 +93,19 @@ class Helper
         //$mail->Port = 465;
         //  $mail->SMTPDebug  = 1;
         //$msg = $mail->Send();
-        $email->addContent(
-            "text/html", $msga
-        );
+        //$email->addContent(
+       //     "text/html", $msga
+       // );
+
+        $mail->msgHTML($msga);
+        $mail->Port = 465;
+       # $mail->SMTPDebug  = 1;
+
+
         try {
-            $response = $sendgrid->send($email);
-            print $response->statusCode();
+           // $response = $sendgrid->send($email);
+            $msg = $mail->Send();
+            //print $response->statusCode();
            // dd($response->statusCode() );
           /*   print $response->statusCode() . "\n";
              print_r($response->headers());
