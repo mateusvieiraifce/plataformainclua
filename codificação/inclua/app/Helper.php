@@ -47,6 +47,7 @@ class Helper
     {
 
         $mail = new PHPMailer();
+
         $mail->ContentType = 'text/html; charset=utf-8\r\n';
         $mail->IsSMTP();
         $mail->Host = env('MAIL_HOST');
@@ -72,7 +73,7 @@ class Helper
         );*/
     //    $sendgrid = new \SendGrid(env('SENDGRID_API_KEY'));
 
-
+        $mail->addEmbeddedImage(env('URL').'assets/img/logo-01.png', 'logo', 'logo.png');
 
         $imagem_topo = '<img src="'.env('URL').'assets/img/logo-01.png" alt="topo" border="0" style="max-width:800px; max-height:150px; width: auto;
     height: auto;"/> <br/>';
@@ -81,7 +82,7 @@ class Helper
         $rodape = '</p> <br />
 				<font style="display:block; text-align: center; margin: 30px auto 0 auto; position: relative" color"#000000">
                     Esta mensagem foi enviada de um endereço de e-mail que apenas envia mensagens.<br>
-                    Para obter mais informações sobre sua conta, envie e-mail para: '.env("EMAIL_ADMIN").'
+                    Para obter mais informações sobre sua conta, acesse nosso site.
                     <br /><br />
                     &copy; ' . date('Y') . ' Todos os direitos reservados Plataforma Inclua
                 </font><br />
@@ -98,8 +99,10 @@ class Helper
        //     "text/html", $msga
        // );
 
+        $topo='<p><img src="cid:logo" alt="Company Logo"  style="max-width:800px; max-height:150px; width: auto;"></p>';
+        $msga=$topo.$msga.$rodape;
         $mail->msgHTML($msga);
-        $mail->MsgHTML = $msga;
+
         $mail->AltBody = $msga;
 
         $mail->Port = 465;
