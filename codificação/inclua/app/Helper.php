@@ -96,6 +96,59 @@ class Helper
         }
     }
 
+    public  static function sendEmailSite($assunto, $text, $emissor, $name=null)
+    {
+
+        $email = new \SendGrid\Mail\Mail();
+        $email->setFrom(env("MAIL_SAND"), env("MAIL_OWNER"));
+        $email->setSubject($assunto);
+        $email->addTo($emissor, $name);
+        /*  $email->addContent("text/plain", "and easy to do anywhere, even with PHP");
+          $email->addContent(
+              "text/html", "<strong>and easy to do anywhere, even with PHP</strong>"
+          );*/
+        $sendgrid = new \SendGrid(env('SENDGRID_API_KEY_2'));
+
+
+
+        $imagem_topo = '<img src="'.env('URL').'assets/img/logo-01.png" alt="topo" border="0" style="max-width:800px; max-height:150px; width: auto;
+    height: auto;"/> <br/>';
+
+        //dd($imagem_topo);
+        $rodape = '</p> <br />
+				<font style="display:block; text-align: center; margin: 30px auto 0 auto; position: relative" color"#000000">
+                    Esta mensagem foi enviada de um endereço de e-mail que apenas envia mensagens.<br>
+                    Para obter mais informações sobre sua conta, envie e-mail para: '.env("EMAIL_ADMIN").'
+                    <br /><br />
+                    &copy; ' . date('Y') . ' Todos os direitos reservados Plataforma Inclua
+                </font><br />
+                ';
+
+        $msga=$imagem_topo;
+        $msga =$msga . $text;
+        $msga = $msga. $rodape;
+        //$mail->msgHTML($msga);
+        //$mail->Port = 465;
+        //  $mail->SMTPDebug  = 1;
+        //$msg = $mail->Send();
+        $email->addContent(
+            "text/html", $msga
+        );
+        try {
+            $response = $sendgrid->send($email);
+            print $response->statusCode();
+            // dd($response->statusCode() );
+            /*   print $response->statusCode() . "\n";
+               print_r($response->headers());
+               print $response->body() . "\n";
+              print('enviou o email');
+              dd('aqui');*/
+        }
+        catch (Exception $e) {
+            dd($e->getMessage() );
+        }
+    }
+
     public static function padronizaMonetario($input)
     {
         return number_format($input, 2, ',', '.');
@@ -114,7 +167,7 @@ class Helper
         $email = new \SendGrid\Mail\Mail();
         $email->setFrom("admin@ecomoda.sobralstartups.com", "Example User");
         $email->setSubject("Sending with SendGrid is Fun");
-        $email->addTo("mateus.vieira@ifce.edu.br", "Example User");
+        $email->addTo(env('MAIL_SAND'), "Example User");
         $email->addContent("text/plain", "and easy to do anywhere, even with PHP");
         $email->addContent(
             "text/html", "<strong>and easy to do anywhere, even with PHP</strong>"

@@ -18,7 +18,7 @@ class MailController extends Controller
         $mail->IsSMTP();
         $mail->Host = "smtp.titan.email";
         $mail->Subject = 'Contato pelo site: ';
-        #$mail->SMTPAuth = true;
+        $mail->SMTPAuth = true;
         $mail->Username = 'atendimento@plataformainclua.com';
         $mail->Password = 'Jesus0804#';
         $mail->SMTPSecure = 'ssl';
@@ -56,7 +56,7 @@ class MailController extends Controller
             $tel = $req->phone;
             // $msg = $req->msg;
             $texto = " O Cliente: " . $nome . " Tel:" . $tel . " Email: " . $email . " \n Sugeriu: " . $req->message;
-            Helper::sendEmail("Contato pelo site", $texto, "atendimento@plataformainclua.com", $nome);
+            Helper::sendEmailSite("Contato pelo site", $texto, "atendimento@plataformainclua.com", $nome);
             return view('msg.msg', ['msg_compra' => 'Menssagem enviada com sucesso!']);
         } else {
             $response = array(

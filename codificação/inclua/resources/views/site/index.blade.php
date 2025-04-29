@@ -93,7 +93,7 @@
                 <div class="dividendo" style="padding-top: 0px; margin-top: 20px;">
                     <h1 style="font-size: 3.75rem; max-width: 375px; max-height: 131px;">
                         Transforme vidas com o Inclua:
-                    </h1>  
+                    </h1>
                     <p class="informativo dosis-font" style="font-size: 1.75rem; font-weight: 600; max-width: 349px; max-height: 87px; margin-top: 70px;">
                         Junte-se à Rede de Profissionais Dedicados ao Apoio de Crianças com Autismo
                     </p>
@@ -155,7 +155,7 @@
                         <div class="u-container-style u-list-item u-radius-10 u-repeater-item u-shape-round u-white" style="background-color: transparent;">
                             <div class="u-container-layout u-similar-container u-container-layout-1">
                                 <div class="images-container">
-                                    <img class="img1" src="{{ url('site/images/Ellipse.png') }}"> 
+                                    <img class="img1" src="{{ url('site/images/Ellipse.png') }}">
                                     <img class="img2" src="{{ url('site/images/icon _ interface _ profile.png') }}">
                                     <div class="text-centralized" style="padding-bottom: 215px;">
                                         <p style="font-size: 1.125rem;" class="para mulish-font">
@@ -460,7 +460,7 @@
                                     <div class="u-align-left u-expanded-width u-form u-form-1">
                                         <form action="forms.nicepagesrv.com/v2/form/process" class="u-clearfix u-form-spacing-28 u-form-vertical u-inner-form" style="padding: 0px;" source="email" name="form">
                                         </form>
-                                        <form action="{{ route('sendMailBack') }}"  style="padding: 0px;" source="email" name="form" id="formularioRelatorio">
+                                        <form action="{{ route('sendMailBack') }}"  style="padding: 0px;" source="email" name="form" id="formularioRelatorio" method="post">
                                             <div class="u-form-group u-form-name u-label-top">
                                                 <label for="name-5a14" class="u-label">
                                                     Nome
@@ -536,7 +536,7 @@
                 </p>
             </div>
         </footer>
-        
+
         <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js"></script>
         <script>
