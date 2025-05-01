@@ -13,7 +13,7 @@
             <label>
                 Esta mensagem foi enviada de um endereço de e-mail que apenas envia<br>
                 mensagens. Para obter mais informações sobre sua conta, envie e-mail para o<br>
-                nosso suporte: <a class="active" href="mailto:{{env('EMAIL_SUPPORT')}}">{{env('EMAIL_SUPPORT')}}</a>
+                nosso suporte:
             </label>
         @endcomponent
     </table>
