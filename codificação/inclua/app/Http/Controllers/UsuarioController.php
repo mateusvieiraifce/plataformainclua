@@ -60,7 +60,7 @@ class UsuarioController extends Controller
             $msgemail = " <br>Para recuperar sua conta, acesse o link, ".
                 ", acessse  ".env('URL_RECOVER').$token.
                 " Atenciosamente, Ecomoda. ";
-            Helper::sendEmail("Recuperação de senha da  Plataforma Ecomoda",$msgemail,$request->email);
+            Helper::sendEmail("Recuperação de senha ".env('APP_NAME'),$msgemail,$request->email);
 
         }else{
             //$msg = ['valor'=>trans('messport.pass_conf'),'tipo'=>'primary'];
