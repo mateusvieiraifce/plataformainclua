@@ -57,8 +57,10 @@ class UsuarioController extends Controller
             }else{
                 $token =  $this->createToken($request,$today);
             }
+            $url = route('recover.mail')."/".$token;
+            #dd($url);
             $msgemail = " <br>Para recuperar sua conta, acesse o link: ".
-                " ".env('URL_RECOVER').$token.
+                " ".$url.
                 " <br/> Atenciosamente,<br/> ".env('APP_NAME').".";
             Helper::sendEmail("Recuperação de senha ".env('APP_NAME'),$msgemail,$request->email);
 

@@ -47,6 +47,10 @@ class Helper
     {
 
         $mail = new PHPMailer();
+        $mail->addCustomHeader('MIME-Version', '1.0');
+        $mail->addCustomHeader('X-Mailer', 'PHP/' . phpversion());
+        $mail->addCustomHeader('X-Priority', '1');
+        $mail->addCustomHeader('List-Unsubscribe', '<mailto:atendimento@plataformainclua.com>');
 
         $mail->ContentType = 'text/html; charset=utf-8\r\n';
         $mail->IsSMTP();
