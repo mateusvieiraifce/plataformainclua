@@ -132,15 +132,15 @@ class UsuarioController extends Controller
 
             Auth::loginUsingId($usuario->id);
             $request->session()->regenerate();
-            
+
             if (session()->has('nextview')) {
                 return redirect(session('nextview'));
-            }            
+            }
 
             return redirect()->route('home');
         } else {
             session()->flash('msg', ['valor' => trans("Usuário/Senha inválido"), 'tipo' => 'danger']);
-            
+
             return redirect()->route('index');
         }
     }
@@ -156,8 +156,14 @@ class UsuarioController extends Controller
         return redirect()->route('index');
     }
 
-    public function createUser()
+    public function createUser(Request $request)
     {
+        Auth::logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
         return view('cadastro.form_usuario');
     }
 
@@ -166,7 +172,7 @@ class UsuarioController extends Controller
     // QUANDO O USUÁRIO INSERIR UM EMAIL JÁ CADASTRADO
     if ($request->usuario_id == null) {
         $user = User::where('email', $request->email)->first();
-        
+
         if ($user) {
             return $this->verifyCadastro($user->id);
         }
@@ -298,7 +304,7 @@ class UsuarioController extends Controller
             'avatar' => $providerUser->getAvatar(),
             'etapa_cadastro' => "1"
         ]);
-        
+
         $user_id = $user->id;
         $this->logout(request());
 
@@ -324,7 +330,7 @@ class UsuarioController extends Controller
             return redirect()->route('usuario.edit', ['usuario_id' => $user->id]);
         } else if ($user->etapa_cadastro == '2') {
             session()->flash('msg', ['valor' => trans("Já existe um cadastro realizado com o e-mail utilizado, prossiga com o seu cadastro."), 'tipo' => 'success']);
-            
+
             if ($user->tipo_user == "P") {
                 return redirect()->route('usuario.paciente.dados.edit', ['usuario_id' => $user->id]);
             } elseif ($user->tipo_user == "E") {
@@ -334,7 +340,7 @@ class UsuarioController extends Controller
             }
         } else if ($user->etapa_cadastro == '3') {
             session()->flash('msg', ['valor' => trans("Já existe um cadastro realizado com o e-mail utilizado, prossiga com o seu cadastro."), 'tipo' => 'success']);
-            
+
             if ($user->tipo_user == "P") {
                 return redirect()->route('usuario.clinica.dados.create', ['usuario_id' => $user->id]);
             } elseif ($user->tipo_user == "E") {
@@ -344,7 +350,7 @@ class UsuarioController extends Controller
             }
         } else if ($user->etapa_cadastro == '4') {
             session()->flash('msg', ['valor' => trans("Já existe um cadastro realizado com o e-mail utilizado, prossiga com o seu cadastro."), 'tipo' => 'success']);
-            
+
             if ($user->tipo_user == "P") {
                 return redirect()->route('cartao.create', ['usuario_id' => $user->id]);
             } elseif ($user->tipo_user == "E") {
@@ -362,7 +368,7 @@ class UsuarioController extends Controller
             return redirect()->route('home');
         } else {
             session()->flash('msg', ['valor' => trans("Realize o seu cadastro"), 'tipo' => 'danger']);
-            
+
             return redirect()->route('index');
         }
     }
@@ -391,13 +397,13 @@ class UsuarioController extends Controller
             "email.unique" => "O email utilizado já foi cadastrado.",
         ];
         $request->validate($rules, $feedbacks);
-        
+
         try {
             $usuario = User::find($request->usuario_id);
             $usuario->nome_completo = $request->nome;
             $usuario->email = $request->email;
             $usuario->save();
-            
+
             if ($request->tipo_user == "P") {
                 $paciente = Paciente::where('usuario_id', $usuario->id)->first();
                 $paciente->nome = $request->nome;
@@ -411,7 +417,7 @@ class UsuarioController extends Controller
                 $clinica->nome = $request->nome;
                 $clinica->save();
             }
-            
+
             session()->flash('msg', ['valor' => "Operação realizada com sucesso!", 'tipo' => 'success']);
         } catch (QueryException $exp) {
             session()->flash('msg', ['valor' => "Erro ao executar a operação", 'tipo' => 'danger']);
@@ -461,7 +467,7 @@ class UsuarioController extends Controller
             $usuario->celular = $request->celular;
             $usuario->sexo = $request->sexo;
             $usuario->save();
-            
+
             session()->flash('msg', ['valor' => "Operação realizada com sucesso!", 'tipo' => 'success']);
         } catch (QueryException $exp) {
             session()->flash('msg', ['valor' => "Erro ao executar a operação", 'tipo' => 'danger']);
@@ -484,7 +490,7 @@ class UsuarioController extends Controller
         }
         return view('auth/login',['msg'=>$msgret] );
     }
-    
+
     public function updateAvatar(Request $request)
     {
         try {
@@ -508,7 +514,7 @@ class UsuarioController extends Controller
                 // Faz o upload:
                 $pathAvatar = $request->file('image')->storeAs('avatar-user', $imageName);
             }
-            
+
             $user = User::find($request->usuario_id);
             $user->avatar = !empty($pathAvatar) ? "storage/$pathAvatar" : null;
             $user->save();
@@ -594,7 +600,7 @@ class UsuarioController extends Controller
         } catch (Exception $e) {
             return false;
         }
-        
+
         return true;
     }
 }
