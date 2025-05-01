@@ -50,15 +50,15 @@ class Helper
 
         $mail->ContentType = 'text/html; charset=utf-8\r\n';
         $mail->IsSMTP();
-        $mail->Host = env('MAIL_HOST');
+        $mail->Host = env('MAIL_HOST_TITAN');
         $mail->Subject = $assunto;
         $mail->SMTPAuth = true;
-        $mail->Username = env('MAIL_USERNAME');
-        $mail->Password = env('MAIL_PASSWORD');
+        $mail->Username = env('MAIL_USERNAME_TITAN');
+        $mail->Password = env('MAIL_PASSWORD_TITAN');
         $mail->SMTPSecure = 'ssl';
         $mail->IsHTML(true);
         $mail->CharSet = 'utf-8';
-        $mail->SetFrom(env('MAIL_USERNAME'), env("MAIL_OWNER"), 0);
+        $mail->SetFrom(env('MAIL_USERNAME_TITAN'), env("MAIL_OWNER"), 0);
         $mail->AddAddress($emissor);
        # $msga = "O Cliente: " . $req->email . ", enviou a seguinte msg: <br/> " . $req->msg;
 

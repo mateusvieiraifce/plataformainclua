@@ -57,9 +57,9 @@ class UsuarioController extends Controller
             }else{
                 $token =  $this->createToken($request,$today);
             }
-            $msgemail = " <br>Para recuperar sua conta, acesse o link, ".
-                ", acessse  ".env('URL_RECOVER').$token.
-                " Atenciosamente, Ecomoda. ";
+            $msgemail = " <br>Para recuperar sua conta, acesse o link: ".
+                " ".env('URL_RECOVER').$token.
+                " <br/> Atenciosamente,<br/> ".env('APP_NAME').".";
             Helper::sendEmail("Recuperação de senha ".env('APP_NAME'),$msgemail,$request->email);
 
         }else{
