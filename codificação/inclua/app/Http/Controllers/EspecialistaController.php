@@ -208,7 +208,7 @@ class EspecialistaController extends Controller
          $especialidadeClinica->especialidade_id = $especialidade->id;
          $especialidadeClinica->is_vinculado = true;
          $especialidadeClinica->save();
-         
+
          $user = User::find($request->usuario_id);
          $user->telefone = $request->telefone;
          $user->etapa_cadastro = '4';
@@ -269,7 +269,8 @@ class EspecialistaController extends Controller
          session()->flash('msg', ['valor' => trans("Seu cadastro foi realizado com sucesso!"), 'tipo' => 'success']);
          session()->flash('wellcome', true);
       } catch (Exception $e) {
-         $msg = ['valor' => trans("Erro ao executar a operação!"), 'tipo' => 'danger'];
+          dd($e->getMessage());
+         $msg = ['valor' => trans("Erro ao executar a operação!".$e->getMessage()), 'tipo' => 'danger'];
          session()->flash('msg', $msg);
 
          return back();
