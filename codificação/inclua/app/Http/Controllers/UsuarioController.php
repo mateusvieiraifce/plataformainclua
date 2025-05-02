@@ -76,6 +76,7 @@ class UsuarioController extends Controller
         $voucher = PasswordResets::where('token','=',$id)->first();
         $msgret =null;
         $user = null;
+
         if ($voucher){
             $user = User::where('email','=',$voucher->email)->first();
 

@@ -1,5 +1,44 @@
 @extends('layouts.app', ['class' => 'login-page', 'page' => __('Reset password'), 'contentClass' => 'login-page'])
 
+<style>
+    /* Estilos do Card e Responsividade */
+    .card-header img {
+        width: 50%;
+        margin: 3rem 0 0 9.2rem;
+        display: block;
+    }
+
+    .input-group {
+        position: relative;
+        top: 3rem;
+    }
+    .content{
+        margin-left: -200px;
+        margin-right: auto;
+    }
+
+    /* Responsividade: ajuste para que o card não ultrapasse a largura da tela */
+    @media (max-width: 600px) {
+        .card {
+            overflow: hidden;
+            width: 38.4rem;
+            max-width: 100%;
+            height: 29.7rem;
+            margin: 0 auto;
+        }
+        .content{
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .card-header img {
+            width: 50%;
+            margin: 5rem 0 0 6.2rem;
+            display: block;
+        }
+
+    }
+</style>
 @section('content')
     <div class="col-lg-5 col-md-7 ml-auto mr-auto">
         <form class="form" method="post" action="{{route('update.password')}}">
@@ -21,7 +60,7 @@
                                 <i class="tim-icons icon-email-85"></i>
                             </div>
                         </div>
-                        <input type="email" name="email" value="{{$usuario->email}}" disabled class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" placeholder="{{ __('Email') }}">
+                        <input type="email" name="email" value="{{$usuario->email}}" readonly class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" placeholder="{{ __('Email') }}">
                         @include('alerts.feedback', ['field' => 'email'])
                         <input type="hidden" name="id" value="{{$usuario->id}}">
                     </div>
