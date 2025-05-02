@@ -15,20 +15,35 @@
         position: relative;
         top: 13rem;
     }
+   .content{
+       margin-left: -200px;
+       margin-right: auto;
+   }
 
     /* Responsividade: ajuste para que o card não ultrapasse a largura da tela */
     @media (max-width: 600px) {
         .card {
-            overflow: hidden; 
-            width: 38.4rem; 
+            overflow: hidden;
+            width: 38.4rem;
             max-width: 100%;
             height: 29.7rem;
-            margin: 0 auto; 
+            margin: 0 auto;
         }
+        .content{
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .card-header img {
+            width: 50%;
+            margin: 10rem 0 0 6.2rem;
+            display: block;
+        }
+
     }
 </style>
 
-<div class="col-lg-5 col-md-7 ml-auto mr-auto" style="margin-top: 7.5rem;">
+<div class="col-lg-5 col-md-7 ml-auto mr-auto" style="margin-top: 7.5rem; margin-left: auto; margin-right: auto">
     <form class="form" method="post" action="{{ route('recover.do') }}">
         @csrf
         <div class="card card-login card-white" style="width: 38.4rem; height: 29.7rem;">
