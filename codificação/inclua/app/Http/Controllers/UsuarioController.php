@@ -81,6 +81,7 @@ class UsuarioController extends Controller
             $user = User::where('email','=',$voucher->email)->first();
 
         }else{
+            $user = new User();
             $msgret = ['valor'=>"Usuário não existe",'tipo'=>'danger'];
         }
 
