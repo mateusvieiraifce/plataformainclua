@@ -111,7 +111,7 @@ class Helper
         $mail->AltBody = $msga;
 
         $mail->Port = 465;
-        $mail->SMTPDebug  = 1;
+        $mail->SMTPDebug  = 0;
 
 
         try {
