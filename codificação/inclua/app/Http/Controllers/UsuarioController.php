@@ -61,7 +61,7 @@ class UsuarioController extends Controller
             #dd($url);
             $msgemail = " <br>Para recuperar sua conta, acesse: ".
                 " ".$url.
-                " <br/> Atenciosamente,<br/> ".env('APP_NAME').".";
+                " <br/> Remova os espaçoes em branco do link, <br/>Atenciosamente,<br/> ".env('APP_NAME').".";
             Helper::sendEmail("Recuperação de senha ".env('APP_NAME'),$msgemail,$request->email);
 
         }else{
