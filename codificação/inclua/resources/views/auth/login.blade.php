@@ -85,9 +85,7 @@
                         <h6>
                             <a href="{{route('usuario.create')}}" class="link footer-link">{{ __('Criar uma conta') }}</a>
                         </h6>
-                        <h6>
-                            <a href="{{route('google.redirect')}}" class="link footer-link">{{ __('Entrar com google') }}</a>
-                        </h6>
+
                     </div>
                     <div class="pull-right">
                         <h6>
