@@ -57,7 +57,7 @@ class UsuarioController extends Controller
             }else{
                 $token =  $this->createToken($request,$today);
             }
-            $url = route('recover.mail')."/".$token;
+            $url = route('recover.mail')."/  ".$token;
             #dd($url);
             $msgemail = " <br>Para recuperar sua conta, acesse: ".
                 " ".$url.
