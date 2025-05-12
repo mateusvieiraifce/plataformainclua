@@ -91,25 +91,34 @@ class PagamentoController extends Controller
             ->where('pacientes.id', $consulta->paciente_id)
             ->select('users.*')
             ->first();
+        $userLogged = Auth::user();
 
         $cartao = Cartao::join('assinaturas', 'assinaturas.cartao_id', 'cartoes.id')
             ->where('cartoes.user_id', $usuario->id)
             ->select('cartoes.*')
             ->first();
-            
+
         if ($request->metodo_pagamento == "null") {
             session()->flash('msg',  ['valor' => trans("Selecione a forma de pagamento com o cartão."), 'tipo' => 'danger']);
-
+            
             return back();
         }
 
         if($request->metodo_pagamento == "Cartão") {
+            //VERIFICAR SE O PACIENTE DA CONSULTA POSSUI UM CARTÃO CADASTRADO
+            if (!$cartao) {
+                session()->flash('msg',  ['valor' => trans("O paciente não possui um cartão cadastrado na plataforma."), 'tipo' => 'danger']);
+
+                return back();
+            }
+            
             //CRIAR O CHECKOUT
             $checkout = Helper::createCheckoutSumupConsulta($consulta->preco);
             //PASSAR O ID DA CUNSULTA E MOTIVO DE CANCELAMENTO
             session()->put("consulta_id_$checkout->id", $consulta->id);
             //CRIAR O PAGAMENTO
             $pagamento = Helper::createPagamento($cartao, $checkout);
+            
 
             if (isset($pagamento->status) && $pagamento->status == "FAILED") {
                 $this->store($cartao->user_id, floatval(Helper::converterMonetario($consulta->preco)), $pagamento->transactions[0]->transaction_code, 'Negado', 'Pagamento da consulta');
@@ -138,38 +147,51 @@ class PagamentoController extends Controller
                 session()->flash('msg', ['valor' => trans("Houve um erro ao realizar o pagamento da consulta, tente novamente."), 'tipo' => 'danger']);
             }
 
-            return redirect()->route('consulta.agendaConsultas', ['clinica_id' => $consulta->clinica_id]);
+            if ($userLogged->tipo_user == "C") {
+                return redirect()->route('consulta.agendaConsultas', ['clinica_id' => $consulta->clinica_id]);
+            } elseif ($userLogged->tipo_user == "E") {
+                return redirect()->route('consulta.listconsultaporespecialista');
+            }
         }
     }
     
-   public function callbackPagamentoConsulta(Request $request)
-   {      
-      $response = Helper::getCheckout($request->checkout_id);
+    public function callbackPagamentoConsulta(Request $request)
+    {      
+        $response = Helper::getCheckout($request->checkout_id);
       
-      $consultaId = session()->get("consulta_id_$request->checkout_id");
-      
-      session()->forget("consulta_id_$request->checkout_id");
-      //ver a questao financeira
-      $consulta = Consulta::find($consultaId);
+        $consultaId = session()->get("consulta_id_$request->checkout_id");
+        
+        session()->forget("consulta_id_$request->checkout_id");
+        //ver a questao financeira
+        $consulta = Consulta::find($consultaId);
+        $userLogged = Auth::user();
 
-      if ($response->status == 'FAILED') {
-         $this->update($response->transactions[0]->transaction_code, 'Negado');
-         session()->flash('msg', ['valor' => trans("Não foi possível realizar o pagamento da consulta, tente novamente."), 'tipo' => 'danger']);
+        if ($response->status == 'FAILED') {
+            $this->update($response->transactions[0]->transaction_code, 'Negado');
+            session()->flash('msg', ['valor' => trans("Não foi possível realizar o pagamento da consulta, tente novamente."), 'tipo' => 'danger']);
 
-         return redirect()->route('consulta.listconsultaporespecialista');
-      } elseif ($response->status == 'PAID') {
-         try {
-            $consulta->isPago = true;
-            $consulta->forma_pagamento = 'Cartão';
-            $consulta->save();
+            if ($userLogged->tipo_user == "C") {
+                return redirect()->route('consulta.listconsultaporespecialista');
+            } elseif ($userLogged->tipo_user == "E") {
+                return redirect()->route('consulta.listconsultaporespecialista');
+            }
+        } elseif ($response->status == 'PAID') {
+            try {
+                $consulta->isPago = true;
+                $consulta->forma_pagamento = 'Cartão';
+                $consulta->save();
+                
+                $this->update($response->transactions[0]->transaction_code, 'Aprovado');
+                session()->flash('msg', ['valor' => trans("O pagamento da consulta foi realizado com sucesso!"), 'tipo' => 'success']);
+            } catch (QueryException $e) {
+                session()->flash('msg', ['valor' => trans("Houve um erro ao realizar o pagamento da consulta, tente novamente."), 'tipo' => 'danger']);
+            }
             
-            $this->update($response->transactions[0]->transaction_code, 'Aprovado');
-            session()->flash('msg', ['valor' => trans("O pagamento da consulta foi realizado com sucesso!"), 'tipo' => 'success']);
-         } catch (QueryException $e) {
-            session()->flash('msg', ['valor' => trans("Houve um erro ao realizar o pagamento da consulta, tente novamente."), 'tipo' => 'danger']);
-         }
-
-         return redirect()->route('consulta.agendaConsultas', ['clinica_id' => $consulta->clinica_id]);
-      }
-   }
+            if ($userLogged->tipo_user == "C") {
+                return redirect()->route('consulta.agendaConsultas', ['clinica_id' => $consulta->clinica_id]);
+            } elseif ($userLogged->tipo_user == "E") {
+                return redirect()->route('consulta.listconsultaporespecialista');
+            }
+        }
+    }
 }
