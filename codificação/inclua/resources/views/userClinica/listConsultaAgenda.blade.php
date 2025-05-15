@@ -1,6 +1,7 @@
 @extends('layouts.app', ['page' => __('Consultas'), 'exibirPesquisa' => false, 'pageSlug' => 'listaAgenda', 'class' => 'agenda'])
 @section('content')
 @section('title', 'Agenda')
+   @include("layouts.modal_aviso")
    @php
       $lista = Session::get('lista') ?? $lista;
    @endphp
@@ -105,31 +106,34 @@
                                     <td>
                                        {{ $ent->nome_especialista }}
                                     </td>
-                                 <td>
-                                    @if($ent->status != 'Sala de espera' && $ent->status != 'Em Atendimento')
-                                       <a style="width: 160px; height: 30px; text-align: center; padding: 7px; margin: 2px; font-size: 12px;" rel="tooltip"
-                                          href="#" target="_blank" class="btn btn-primary" data-original-title="Fazer Encaminhamento" title="Fazer Encaminhamento"
-                                          data-target="#modalLocal{{$ent->id}}" data-toggle="modal" onclick="mandaDadosFormPrincipalParaModal({{$ent->id}},'l')" >                        
-                                          Fazer Encaminhamento
-                                       </a>    
-                                       <br>
-                                    @else
-                                       <label>Encaminhamento realizado</label>
-                                       <br>
-                                    @endif   
-                                    @if(!$ent->isPago)
-                                       <a href="#" rel="tooltip" title="Iniciar atendimento" class="btn btn-secundary" data-target="#modal-form"
-                                          data-toggle="modal" onclick="setModal('{{ $ent->id }}', '{{ number_format($ent->preco, 2, ',', '.') }}')"
-                                          style="width:160px; height:30px; text-align: center;padding:7px;margin: 2px; font-size: 12px;">
-                                          Efetuar Pagamento
-                                       </a>
-                                       <br>
-                                    @else
-                                       <label>Consulta Paga</label>
-                                       <br>
-                                    @endif
-                                       <a style="width: 160px; height: 30px; text-align: center; padding: 7px; margin: 2px; margin-bottom: 10px; font-size: 12px;"
-                                          rel="tooltip" title="Cancelar" class="btn btn-warning" data-original-title="Edit" href="#" id="btnCanelarConsulta"
+                                    <td>
+                                       @if($ent->status != 'Sala de espera' && $ent->status != 'Em Atendimento')
+                                          <a href="#" target="_blank" class="btn btn-primary button-small-table" data-original-title="Fazer Encaminhamento" title="Fazer Encaminhamento"
+                                             data-target="#modalLocal{{$ent->id}}" data-toggle="modal" onclick="mandaDadosFormPrincipalParaModal({{$ent->id}},'l')" >                        
+                                             Fazer Encaminhamento
+                                          </a>    
+                                          <br>
+                                       @else
+                                          <button id="encaminhado" type="button" class="btn btn-info button-small-table">
+                                             Encaminhamento
+                                             <br>
+                                             realizado
+                                          </button>
+                                          <br>
+                                       @endif   
+                                       @if(!$ent->isPago)
+                                          <a href="#" rel="tooltip" title="Iniciar atendimento" class="btn btn-secundary button-small-table" data-target="#modal-form-pagar-consulta"
+                                             data-toggle="modal" onclick="setModalPagamentoConsulta('{{ $ent->id }}', '{{ number_format($ent->preco, 2, ',', '.') }}')">
+                                             Efetuar Pagamento
+                                          </a>
+                                          <br>
+                                       @else
+                                          <button id="consulta-paga" type="button" class="btn btn-success button-small-table">
+                                             Consulta paga
+                                          </button>
+                                          <br>
+                                       @endif
+                                       <a rel="tooltip" title="Cancelar" class="btn btn-warning button-small-table" data-original-title="Edit" href="#" id="btnCanelarConsulta"
                                           data-target="#modalCancelar{{$ent->id}}" data-toggle="modal" onclick="mandaDadosFormPrincipalParaModal({{$ent->id}},'c')">
                                           Cancelar
                                        </a>
@@ -257,7 +261,7 @@
    </div>
    
    {{-- MODAL PAGAMENTO DE CONSULTA --}}
-   @component('layouts.modal_form', ["title" => "Favor, informe o método de pagamento", "route" => route('consulta.pagamento'), "textButton" => "Prosseguir"])
+   @component('layouts.modal_form', ["title" => "Favor, informe o método de pagamento", "route" => route('consulta.pagamento'), "textButton" => "Prosseguir", "id" => "modal-form-pagar-consulta"])
       <div class="form-group">
          <label id="subTitle" class="title td-inline"></label>
       </div>
@@ -311,45 +315,65 @@
       <input type="hidden" id="consulta_id" name="consulta_id" value="">
    @endcomponent
 
-   <script>
-      function setModal(consulta_id, valorConsulta) {
-         $("#consulta_id").val(consulta_id);
-         $('#subTitle').html('Valor da consulta: R$ ' + valorConsulta);
-      }
+   @push('js')
+      <script>
+         function setModalPagamentoConsulta(consulta_id, valorConsulta) {
+            $("#modal-form-pagar-consulta #consulta_id").val(consulta_id);
+            $('#subTitle').html('Valor da consulta: R$ ' + valorConsulta);
+         }
 
-      $(document).ready(function () {
-         $("input[name='metodo_pagamento']").change(function () {
-            if ($("#cartao-dropdown").is(":checked")) {
-               $('#drop-down').addClass("show")
-            } else if($("#pix").is(":checked")) {
-               $('#drop-down').removeClass("show")
-            } else if($("#especie").is(":checked")) {
-               $('#drop-down').removeClass("show")
-            }
+         $(document).ready(function () {
+            $("input[name='metodo_pagamento']").change(function () {
+               if ($("#cartao-dropdown").is(":checked")) {
+                  $('#drop-down').addClass("show")
+               } else if($("#pix").is(":checked")) {
+                  $('#drop-down').removeClass("show")
+               } else if($("#especie").is(":checked")) {
+                  $('#drop-down').removeClass("show")
+               }
 
-            if($("#maquininha").is(":checked")) {
-               $(".form-group").addClass("show")
-               $("#numero_autorizacao").prop('required', true);
-            } else {
-               $(".form-group").removeClass("show")
-               $("#numero_autorizacao").prop('required', false);
-            }
-         });
-      });
-      
-      function mandaDadosFormPrincipalParaModal(consulta_id, tipoModal) {    
-         //pega valores para inviar para os modais e assim apos retorno do modal realizar a pesquisa
-         var inicio_data = document.getElementById("inicio_data").value;
-         var final_data = document.getElementById("final_data").value;
-         var nomepaciente = document.getElementById("nomepaciente").value;
-         var cpf = document.getElementById("cpf").value;
-         var especialista_id = document.querySelector("#especialista_id").value;
+               if($("#maquininha").is(":checked")) {
+                  $(".form-group").addClass("show")
+                  $("#numero_autorizacao").prop('required', true);
+               } else {
+                  $(".form-group").removeClass("show")
+                  $("#numero_autorizacao").prop('required', false);
+               }
+            });
+
+            $('#consulta-paga').on('click', function () {
+               $("#modal-aviso-title").text("Consulta Paga")
+               $("#modal-aviso-message").text("Esta consulta já foi paga, não é necessário realizar nenhuma ação.")
+               $("#modal-aviso").modal()
+            })
+
+            $('#encaminhado').on('click', function () {
+               $("#modal-aviso-title").text("Encaminhamento Realizado")
+               $("#modal-aviso-message").text("O encaminhamento já foi realizado, não é necessário realizar nenhuma ação.")
+               $("#modal-aviso").modal()
+            })
                
-         document.getElementById('inicio_dataM'+consulta_id+tipoModal).value = inicio_data;
-         document.getElementById('final_dataM'+consulta_id+tipoModal).value = final_data;
-         document.getElementById('nomepacienteM'+consulta_id+tipoModal).value = nomepaciente;
-         document.getElementById('cpfM'+consulta_id+tipoModal).value = cpf;
-         document.getElementById('especialista_idM'+consulta_id+tipoModal).value = especialista_id;
-      }
-   </script>
+            $('#consulta-paga').on('click', function () {
+               $("#modal-aviso-title").text("Consulta Paga")
+               $("#modal-aviso-message").text("Esta consulta já foi paga, não é necessário realizar nenhuma ação.")
+               $("#modal-aviso").modal()
+            })
+         });
+         
+         function mandaDadosFormPrincipalParaModal(consulta_id, tipoModal) {    
+            //pega valores para inviar para os modais e assim apos retorno do modal realizar a pesquisa
+            var inicio_data = document.getElementById("inicio_data").value;
+            var final_data = document.getElementById("final_data").value;
+            var nomepaciente = document.getElementById("nomepaciente").value;
+            var cpf = document.getElementById("cpf").value;
+            var especialista_id = document.querySelector("#especialista_id").value;
+                  
+            document.getElementById('inicio_dataM'+consulta_id+tipoModal).value = inicio_data;
+            document.getElementById('final_dataM'+consulta_id+tipoModal).value = final_data;
+            document.getElementById('nomepacienteM'+consulta_id+tipoModal).value = nomepaciente;
+            document.getElementById('cpfM'+consulta_id+tipoModal).value = cpf;
+            document.getElementById('especialista_idM'+consulta_id+tipoModal).value = especialista_id;
+         }
+      </script>
+   @endpush
 @endsection

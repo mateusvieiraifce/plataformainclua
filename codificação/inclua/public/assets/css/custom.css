@@ -398,8 +398,6 @@ a.close {
 
 .modal input[type="text"] {
     color: #000;
-<<<<<<< Updated upstream
-=======
 }
     
 .img-avatar ~ .input-group.input-medium {
@@ -408,7 +406,23 @@ a.close {
 
 .column-gap-10 {
     column-gap: 10px;
->>>>>>> Stashed changes
+}
+
+.form-group label {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.modal .form-group label {
+    color: #525f7f;
+}
+
+.button-small-table {
+    width: 160px;
+    min-height: 30px;
+    text-align: center;
+    padding: 7px;
+    margin: 2px 2px 4px !important;
+    font-size: 12px;
 }
 
 @media (max-width: 576px) {

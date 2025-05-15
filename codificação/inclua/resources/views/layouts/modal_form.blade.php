@@ -1,5 +1,5 @@
 {{-- MODAL DE FORM --}}
-<div class="modal fade" role="dialog" aria-hidden="true" id="modal-form">
+<div class="modal fade" role="dialog" aria-hidden="true" id="{{ $id ?? "modal-form"}}">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -21,7 +21,7 @@
                 <button class="btn btn-secundary label-medium" type="button" data-dismiss="modal">
                     Fechar
                 </button>
-                <button id="submit-modal" class="btn btn-primary label-medium" type="button" onclick="$('#send').click();">
+                <button id="submit-modal" class="btn btn-primary label-medium" type="button" onclick="this.closest('.modal.fade.show').querySelector('form').submit();">
                     {{ $textButton }}
                 </button>
             </div>

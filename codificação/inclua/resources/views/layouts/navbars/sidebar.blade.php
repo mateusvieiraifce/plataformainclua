@@ -510,6 +510,13 @@
                             </a>
                         </li>
 
+                        <li @if ($pageSlug == 'disponibilizar-consultas') class="active" @endif>
+                            <a href="{{ route('consulta.agenda') }}">
+                                <i class="tim-icons icon-calendar-60"></i>
+                                <p>{{ __('Disponibilizar consultas') }}</p>
+                            </a>
+                        </li>
+                        
                         <li @if ($pageSlug == 'agendaespecialista') class="active" @endif>
                             <a href="{{route('consulta.list')}}">
                                 <i class="tim-icons icon-calendar-60"></i>

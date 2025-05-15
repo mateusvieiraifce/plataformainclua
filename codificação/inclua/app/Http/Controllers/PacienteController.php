@@ -608,7 +608,7 @@ class PacienteController extends Controller
     {
         $consulta = Consulta::find($request->consulta_id);
         $consultaController = new ConsultaController();
-
+        $userLogged = Auth::user();
 
         if (Helper::verificarPrazoCancelamentoGratuito($consulta->horario_agendado)) {
             $retornoConsultaCancelada = $consultaController->cancelarConsultaSemTaxa($request);
@@ -621,64 +621,62 @@ class PacienteController extends Controller
                 ->select('cartoes.*', 'assinaturas.id as assinatura_id')
                 ->first();
 
-           if ($cartao) {
-            //CRIAR O CHECKOUT
-            $checkout = Helper::createCheckouSumupTaxa();
-            //PASSAR O ID DA CUNSULTA E MOTIVO DE CANCELAMENTO
-            session()->put("consulta_id_$checkout->id", $consulta->id);
-            session()->put("motivo_cancelamento_$checkout->id", $request->motivo_cancelamento);
-            //CRIAR O PAGAMENTO
-            $pagamento = Helper::createPagamento($cartao, $checkout);
-            $pagamentoController = new PagamentoController();
+            if ($cartao) {
+                //CRIAR O CHECKOUT
+                $checkout = Helper::createCheckouSumupTaxa();
+                //PASSAR O ID DA CUNSULTA E MOTIVO DE CANCELAMENTO
+                session()->put("consulta_id_$checkout->id", $consulta->id);
+                session()->put("motivo_cancelamento_$checkout->id", $request->motivo_cancelamento);
+                //CRIAR O PAGAMENTO
+                $pagamento = Helper::createPagamento($cartao, $checkout);
+                $pagamentoController = new PagamentoController();
 
-            if (isset($pagamento->status) && $pagamento->status == "FAILED") {
-                $pagamentoController->store($cartao->user_id, floatval(Helper::converterMonetario(env('TAXA_CANCELAMENTO_CONSULTA'))), $pagamento->transactions[0]->transaction_code, 'Negado', 'Taxa de cancelamento da consulta');
+                if (isset($pagamento->status) && $pagamento->status == "FAILED") {
+                    $pagamentoController->store($cartao->user_id, floatval(Helper::converterMonetario(env('TAXA_CANCELAMENTO_CONSULTA'))), $pagamento->transactions[0]->transaction_code, 'Negado', 'Taxa de cancelamento da consulta');
 
-                return redirect()->route('callback.cancelamento.consulta', ['checkout_id' => $pagamento->id]);
-            } elseif (isset($pagamento->status) && $pagamento->status == "PAID") {
-                $pagamentoController->store($cartao->user_id, floatval(Helper::converterMonetario(env('TAXA_CANCELAMENTO_CONSULTA'))), $pagamento->transactions[0]->transaction_code, 'Aprovado', 'Taxa de cancelamento da consulta');
+                    return redirect()->route('callback.cancelamento.consulta', ['checkout_id' => $pagamento->id]);
+                } elseif (isset($pagamento->status) && $pagamento->status == "PAID") {
+                    $pagamentoController->store($cartao->user_id, floatval(Helper::converterMonetario(env('TAXA_CANCELAMENTO_CONSULTA'))), $pagamento->transactions[0]->transaction_code, 'Aprovado', 'Taxa de cancelamento da consulta');
 
-                return redirect()->route('callback.cancelamento.consulta', ['checkout_id' => $pagamento->id]);
-            } elseif (isset($pagamento->next_step)) {
-                $pagamentoController->store($cartao->user_id, floatval(Helper::converterMonetario(env('TAXA_CANCELAMENTO_CONSULTA'))), $pagamento->next_step->current_transaction->transaction_code, 'Pendente', 'Taxa de cancelamento da consulta');
+                    return redirect()->route('callback.cancelamento.consulta', ['checkout_id' => $pagamento->id]);
+                } elseif (isset($pagamento->next_step)) {
+                    $pagamentoController->store($cartao->user_id, floatval(Helper::converterMonetario(env('TAXA_CANCELAMENTO_CONSULTA'))), $pagamento->next_step->current_transaction->transaction_code, 'Pendente', 'Taxa de cancelamento da consulta');
 
-                return redirect($pagamento->next_step->url);
-            }} else{
-               if (env('ASSINATURA_OBRIGATORIA')) {
+                    return redirect($pagamento->next_step->url);
+                }
+            } else {
+                if (env('ASSINATURA_OBRIGATORIA')) {
                     $msg = ['valor' => trans("Nenhum cartão associado!"), 'tipo' => 'danger'];
-                     return  $this->minhasconsultas($msg);
-               } else{
+                } else {
+                    $consulta = Consulta::find($consulta->id);
+                    $consulta->status="Cancelada";
+                    $consulta->motivocancelamento = $request->motivo_cancelamento;
+                    $consulta->id_usuario_cancelou = Auth::user()->id;
+                    $consulta->save();
 
-                   $consulta = Consulta::find($consulta->id);
-                   $consulta->status="Cancelada";
-                   $consulta->motivocancelamento=$request->motivo_cancelamento;
-                   $consulta->id_usuario_cancelou = Auth::user()->id;
-                   $consulta->save();
-
-                   date_default_timezone_set('America/Sao_Paulo');
-                   $dataConsultaCancelada = Carbon::parse($consulta->horario_agendado);
-                   $dataAtual = Carbon::now();
+                    date_default_timezone_set('America/Sao_Paulo');
+                    $dataConsultaCancelada = Carbon::parse($consulta->horario_agendado);
+                    $dataAtual = Carbon::now();
 
 
-                   if ($dataConsultaCancelada->gt($dataAtual)) {
-                       $consultaNova = $consulta->replicate();
+                    if ($dataConsultaCancelada->gt($dataAtual)) {
+                        $consultaNova = $consulta->replicate();
+                        $consultaNova->status = "Disponível";
+                        $consultaNova->paciente_id = null;
+                        $consultaNova->save();
+                    }
 
-                       $consultaNova->status="Disponível";
-                       $consultaNova->paciente_id = null;
-                       $consultaNova->save();
-                   }
-
-
-                   $msg = ['valor' => trans("Operação Realizada com sucesso!!"), 'tipo' => 'success'];
-                   return  $this->minhasconsultas($msg);
-                 //  dd($consulta);
-                  // dd("Fazer o cancelamento");
-               }
-             //  return redirect()->route('paciente.minhasconsultas',);
+                    $msg = ['valor' => trans("Operação Realizada com sucesso!"), 'tipo' => 'success'];
+                }
            }
         }
-
-        return redirect()->route('paciente.minhasconsultas');
+        session()->flash('msg', $msg);
+            
+        if ($userLogged->tipo_user == "E") {
+            return redirect()->route('consulta.listconsultaporespecialista');
+        } elseif ($userLogged->tipo_user == "P") {
+            return redirect()->route('paciente.minhasconsultas');
+        }
     }
 
 
