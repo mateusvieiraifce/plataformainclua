@@ -9,7 +9,7 @@ class LicencaController extends Controller
 {
     function getLicence()
     {
-        $data = new DateTime('2025-05-14'); // Define uma data específica (ano-mês-dia)
+        $data = new DateTime('2025-05-22'); // Define uma data específica (ano-mês-dia)
         return $data->format('d/m/Y');
     }
 }
