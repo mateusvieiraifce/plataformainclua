@@ -19,6 +19,8 @@ Route::get('/sobre', function () {
     return view('frente/about');
 })->name('home.sobre');
 
+
+
 Route::get('/contato', function () {
     return view('frente/contato');
 })->name('contato');
@@ -26,6 +28,8 @@ Route::get('/contato', function () {
 Route::get("/teste", function () {
     return view('teste');
 });
+
+Route::get("/inclua/licenca", [\App\Http\Controllers\LicencaController::class, 'getLicence'])->name('inclua.licenca');
 
 Route::get("/", [\App\Http\Controllers\LandingPageController::class, 'index'])->name('landing.page');
 Route::get("/login", [\App\Http\Controllers\UsuarioController::class, 'index'])->name('index');
