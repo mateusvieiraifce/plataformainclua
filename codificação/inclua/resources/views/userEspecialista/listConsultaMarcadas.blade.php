@@ -117,20 +117,23 @@
                                                 data-toggle="modal" onclick="setModalPagamentoConsulta('{{ $consulta->id }}', '{{ number_format($consulta->preco, 2, ',', '.') }}')">
                                                 Efetuar pagamento
                                              </a>
-                                             <br>
                                           @else
-                                             <button id="consulta-paga" type="button" class="btn btn-success button-small-table">
+                                             <button type="button" class="btn btn-success button-small-table consulta-paga">
                                                 Consulta paga
                                              </button>
-                                             <br>
                                           @endif
                                        @endif
-                                       @if (!$consulta->id_usuario_cancelou)
-                                          <a rel="tooltip" title="Iniciar atendimento" class="btn btn-primary button-small-table" data-original-title="Edit" href="{{route('especialista.iniciarAtendimento', [$consulta->id,"prontuarioatual"])}}">
+                                       <br>
+                                       @if (!$consulta->id_usuario_cancelou && !($consulta->status == "Finalizada"))
+                                          <a rel="tooltip" title="Iniciar atendimento" class="btn btn-primary button-small-table" data-original-title="Edit" href="{{route('especialista.iniciarAtendimento', [$consulta->id, "prontuarioatual"])}}">
                                              Iniciar atendimento
                                           </a>
-                                          <br>
+                                       @else
+                                          <a rel="tooltip" title="Consulta finalizada" class="btn btn-success button-small-table" data-original-title="Edit" href="#">
+                                             Consulta finalizada
+                                          </a>
                                        @endif
+                                       <br>
                                        <a rel="tooltip" title="Cancelar" class="btn btn-default button-small-table" data-original-title="Edit" href="#">
                                           Prontuário
                                        </a>
@@ -141,7 +144,7 @@
                                              Cancelar
                                           </a>
                                        @else
-                                          <button id="consulta-cancelada" type="button" class="btn btn-warning button-small-table">
+                                          <button type="button" class="btn btn-warning button-small-table consulta-cancelada">
                                              Consulta cancelada
                                           </button>
                                        @endif
@@ -256,13 +259,13 @@
                }
             });
             
-            $('#consulta-paga').on('click', function () {
+            $('.consulta-paga').on('click', function () {
                $("#modal-aviso-title").text("Consulta Paga")
                $("#modal-aviso-message").text("Esta consulta já foi paga, não é necessário realizar nenhuma ação.")
                $("#modal-aviso").modal()
             })
 
-            $('#consulta-cancelada').on('click', function () {
+            $('.consulta-cancelada').on('click', function () {
                $("#modal-aviso-title").text("Consulta Cancelada")
                $("#modal-aviso-message").text("Esta consulta foi cancelada, não é necessário realizar nenhuma ação.")
                $("#modal-aviso").modal()

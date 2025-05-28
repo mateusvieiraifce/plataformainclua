@@ -1,5 +1,5 @@
 {{-- MODAL DE FORM --}}
-<div class="modal fade" role="dialog" aria-hidden="true" id="{{ $id ?? "modal-form"}}">
+<div class="modal fade" role="dialog" aria-hidden="true" id="{{ $id ?? "modal-form" }}" aria-labelledby="{{ $id ?? "modal-form" }}">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
