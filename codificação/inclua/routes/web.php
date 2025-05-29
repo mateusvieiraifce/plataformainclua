@@ -305,18 +305,22 @@ Route::middleware('auth')->group(function () {
     Route::get("/medicamento/delete/{id}", [\App\Http\Controllers\MedicamentoController::class, 'delete'])->name('medicamento.delete')->middleware('auth');
     Route::get("/medicamento/edit/{id}", [\App\Http\Controllers\MedicamentoController::class, 'edit'])->name('medicamento.edit')->middleware('auth');
 
-
+    
     #ESPECIALISTA
     Route::get("/especialista/atendimentos/finalizar/{consulta_id}", [\App\Http\Controllers\EspecialistaController::class, 'finalizarAtendimento'])->name('especialista.finalizarAtendimento')->middleware('auth');
+    Route::post("/especialista/prontuario", [\App\Http\Controllers\ProntuarioController::class, 'store'])->name('prontuario.store');
     Route::get("/especialista/pacientes/", [\App\Http\Controllers\EspecialistaController::class, 'listaPacientes'])->name('especialista.listaPacientes')->middleware('auth');
     Route::get("/especialista/pacientes/search", [\App\Http\Controllers\EspecialistaController::class, 'listaPacientesPesquisar'])->name('especialista.listaPacientesPesquisar');
     Route::get("/especialista/pedidoexame/list", [\App\Http\Controllers\PedidoExameController::class, 'list'])->name('pedido_exame.list')->middleware('auth');
     Route::post("/especialista/pedidoexame/save", [\App\Http\Controllers\PedidoExameController::class, 'salveVarios'])->name('pedido_exame.salveVarios');
     Route::get("/especialista/pedidoexame/delete/{id}/{consulta_id}", [\App\Http\Controllers\PedidoExameController::class, 'delete'])->name('pedido_exame.delete');
     Route::post("/especialista/pedidomedicamento/save", [\App\Http\Controllers\PedidoMedicamentoController::class, 'salveVarios'])->name('pedido_medicamento.salveVarios');
+    Route::post("/especialista/pedidomedicamento/store", [\App\Http\Controllers\PedidoMedicamentoController::class, 'store'])->name('pedido_medicamento.store');
     Route::get("/especialista/pedidomedicamento/delete/{id}/{consulta_id}", [\App\Http\Controllers\PedidoMedicamentoController::class, 'delete'])->name('pedido_medicamento.delete');
     Route::post("/especialista/novoexame/", [\App\Http\Controllers\EspecialistaController::class, 'salvaNovoExame'])->name('especialista.salvaNovoExame');
     Route::post("/especialista/novomedicamento/", [\App\Http\Controllers\EspecialistaController::class, 'salvaNovoMedicamento'])->name('especialista.salvaNovoMedicamento');
+    Route::post("/especialista/prontuario-completo/filter", [\App\Http\Controllers\ProntuarioController::class, 'filter'])->name('prontuario_completo.filter');
+    Route::get("/anamnese/relatorio/{id}", [\App\Http\Controllers\PacienteController::class, 'relatorioAnamnese'])->name('relatorio.anamnese');
 
     #ATESTADO
     Route::post("/especialista/atestado/store", [\App\Http\Controllers\AtestadoController::class, 'store'])->name('atestado.store');

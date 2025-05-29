@@ -416,6 +416,10 @@ a.close {
     color: #525f7f;
 }
 
+.modal select, .modal select:focus, .modal select:active {
+    color: #525f7f;
+}
+
 .button-small-table {
     width: 160px;
     min-height: 30px;
@@ -425,6 +429,148 @@ a.close {
     font-size: 12px;
 }
 
+textarea.form-control {
+    color: #525f7f;
+    max-width: 100%;
+    padding: 10px 10px 0 0;
+    border-radius: 0;
+    line-height: 2;
+    
+    &:focus {
+        color: #525f7f;
+    }
+}
+
+.tab-content .form-group {
+    & label {
+        color: #525f7f;
+    }
+}
+
+.tab-content label, .tab-content textarea {
+    font-size: 16px;
+}
+
+.tab-pane .table>thead tr th, .tab-pane .table>tbody tr td {
+    color: #525f7f !important;
+    border-top: 0.0625rem solid #e3e3e3;
+}
+
+.tab-pane table .btn.btn-link:hover {
+    color: #ba54f5 !important;
+}
+
+.input-group>.select2 {
+    position: relative;
+    flex: 1 1 auto;
+    width: 1%;
+    margin-bottom: 0;
+}
+
+select.form-control {
+    height: calc(2.25rem + 3px);
+}
+
+.select2-container .select2-results__option {
+    color: #525f7f; 
+}
+
+.select2-container .select2-selection--multiple .select2-selection__choice {
+    color: #525f7f !important;
+}
+
+.paragraph {
+    margin-left: 20px;
+}
+
+#chronometer {
+    font-size: 1.5rem;
+    color: #033;
+    background: #fff;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 70px;
+}
+
+.tab-container {
+    width: 100%;
+    margin: auto;
+}
+
+.tabs {
+    display: flex;
+    cursor: pointer;
+}
+
+.tab-button {
+    flex: 1;
+    padding: 10px;
+    background-color: #f1f1f1;
+    border: 1px solid #ddd;
+    border-bottom: none;
+    text-align: center;
+    outline: none;
+    cursor: pointer;
+}
+
+.tab-button.active {
+    background-color: #fff;
+    border-top: 2px solid #007bff;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.tab-content {
+    border: 1px solid #ddd;
+    padding: 15px 0 15px 0;
+    background-color: #fff;
+}
+
+.tab-pane {
+    display: none;
+}
+
+.tab-pane.active {
+    display: flex;
+}
+/* 
+.modal-dialog {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: 10vh;
+    margin-left: 20%;
+}
+
+.modal-content {
+    border-radius: 0;
+    height: auto;
+}
+
+.modal-dialog-cad-exame {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: 10vh;
+    margin-left: 20%;
+    margin-top: 5%;
+    margin-right: 20%;
+}
+
+.modal-dialog-cad-medicamento {
+    justify-content: center;
+    align-items: flex-start;
+    height: 10vh;
+    margin-left: 20%;
+    margin-top: 5%;
+    margin-right: 20%;
+}
+ */
 @media (max-width: 576px) {
     .card-header > a.header-links {
         width: 100%;
@@ -438,6 +584,18 @@ a.close {
 
     .img-avatar ~ .input-group.input-medium {
         width: 60%;
+    }
+    
+    .tabs {
+        flex-direction: column;
+    }
+
+    .tab-button {
+        border-bottom: 1px solid #ddd;
+    }
+
+    .tab-button:last-child {
+        border-bottom: none;
     }
 }
 

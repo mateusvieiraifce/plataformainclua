@@ -114,7 +114,7 @@
                                           </a>    
                                           <br>
                                        @else
-                                          <button id="encaminhado" type="button" class="btn btn-info button-small-table">
+                                          <button type="button" class="btn btn-info button-small-table encaminhado">
                                              Encaminhamento
                                              <br>
                                              realizado
@@ -122,13 +122,13 @@
                                           <br>
                                        @endif   
                                        @if(!$ent->isPago)
-                                          <a href="#" rel="tooltip" title="Iniciar atendimento" class="btn btn-secundary button-small-table" data-target="#modal-form-pagar-consulta"
+                                          <a href="#" rel="tooltip" title="Efetuar pagamento" class="btn btn-secundary button-small-table" data-target="#modal-form-pagar-consulta"
                                              data-toggle="modal" onclick="setModalPagamentoConsulta('{{ $ent->id }}', '{{ number_format($ent->preco, 2, ',', '.') }}')">
                                              Efetuar Pagamento
                                           </a>
                                           <br>
                                        @else
-                                          <button id="consulta-paga" type="button" class="btn btn-success button-small-table">
+                                          <button type="button" class="btn btn-success button-small-table consulta-paga">
                                              Consulta paga
                                           </button>
                                           <br>
@@ -341,21 +341,15 @@
                }
             });
 
-            $('#consulta-paga').on('click', function () {
+            $('.consulta-paga').on('click', function () {
                $("#modal-aviso-title").text("Consulta Paga")
                $("#modal-aviso-message").text("Esta consulta já foi paga, não é necessário realizar nenhuma ação.")
                $("#modal-aviso").modal()
             })
 
-            $('#encaminhado').on('click', function () {
+            $('.encaminhado').on('click', function () {
                $("#modal-aviso-title").text("Encaminhamento Realizado")
                $("#modal-aviso-message").text("O encaminhamento já foi realizado, não é necessário realizar nenhuma ação.")
-               $("#modal-aviso").modal()
-            })
-               
-            $('#consulta-paga').on('click', function () {
-               $("#modal-aviso-title").text("Consulta Paga")
-               $("#modal-aviso-message").text("Esta consulta já foi paga, não é necessário realizar nenhuma ação.")
                $("#modal-aviso").modal()
             })
          });

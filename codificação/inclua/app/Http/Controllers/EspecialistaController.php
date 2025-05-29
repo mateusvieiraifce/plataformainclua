@@ -3,6 +3,8 @@ namespace App\Http\Controllers;
 
 use App\Helper;
 use App\Mail\aprovarEspecialista;
+use App\Models\Anamnese;
+use App\Models\Atestado;
 use App\Models\Clinica;
 use App\Models\Especialista;
 use App\Models\PedidoMedicamento;
@@ -23,6 +25,7 @@ use App\Models\PedidoExame;
 use App\Models\TipoMedicamento;
 use Carbon\Carbon;
 use App\Models\Fila;
+use App\Models\Prontuario;
 use Exception;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Mail;
@@ -421,15 +424,21 @@ class EspecialistaController extends Controller
       $consulta = Consulta::find($consulta_id);
 
       $paciente = Paciente::find($consulta->paciente_id);
+      $idadePaciente = Carbon::now();
+
+      $idadePaciente = $idadePaciente->diffInYears($paciente->data_nascimento);
       $usuarioPaciente = User::find($paciente->usuario_id);
-      $primeiraConsulta = Consulta::where('status', '=', 'Finalizada')->
-         where('paciente_id', '=', $consulta->paciente_id)->
-         where('especialista_id', '=', $consulta->especialista_id)->
-         orderBy('horario_iniciado', 'asc')->first();
-      $qtdConsultasRealizadas = Consulta::where('status', '=', 'Finalizada')->
-         where('paciente_id', '=', $consulta->paciente_id)->
-         where('especialista_id', '=', $consulta->especialista_id)->
-         orderBy('horario_iniciado', 'asc')->count();
+      $primeiraConsulta = Consulta::where('status', '=', 'Finalizada')
+         ->where('paciente_id', '=', $consulta->paciente_id)
+         ->where('especialista_id', '=', $consulta->especialista_id)
+         ->orderBy('horario_iniciado', 'asc')
+         ->first();
+         
+      $qtdConsultasRealizadas = Consulta::where('status', '=', 'Finalizada')
+         ->where('paciente_id', '=', $consulta->paciente_id)
+         ->where('especialista_id', '=', $consulta->especialista_id)
+         ->orderBy('horario_iniciado', 'asc')
+         ->count();
 
       $tipoexames = Tipoexame::orderBy('descricao', 'asc')->get();
       $exames = Exame::orderBy('nome', 'asc')->get();
@@ -440,15 +449,15 @@ class EspecialistaController extends Controller
       $listaPedidosExames = PedidoExame::join('exames', 'exames.id', '=', 'pedido_exames.exame_id')
          ->where('consulta_id',$consulta->id)
          ->orderBy('pedido_exames.created_at', 'desc')
-         ->select('pedido_exames.id as id', 'nome','laudo')
-         ->get();
+         ->select('pedido_exames.id as id', 'nome', 'laudo')
+         ->paginate(6, ['*'], 'page_exames');
 
       //lista de pedidos de medicamentos
-      $listaPedidosMedicamentos = PedidoMedicamento::
-      join('medicamentos', 'medicamentos.id', '=', 'pedido_medicamentos.medicamento_id')->
-      where('consulta_id',$consulta->id)->
-      orderBy('pedido_medicamentos.created_at', 'desc')->
-      select('pedido_medicamentos.id as id', 'nome_comercial','prescricao_indicada')->get();
+      $listaPedidosMedicamentos = PedidoMedicamento::join('medicamentos', 'medicamentos.id', '=', 'pedido_medicamentos.medicamento_id')
+         ->where('consulta_id',$consulta->id)
+         ->orderBy('pedido_medicamentos.created_at', 'desc')
+         ->select('pedido_medicamentos.id as id', 'nome_comercial','prescricao_indicada')
+         ->paginate(6,['*'], 'page_medicamentos');
 
       //modificando o statu da consulta para Consulta Em Atendimento
       // e removendo da fila de espera
@@ -459,20 +468,49 @@ class EspecialistaController extends Controller
       $ent->save();
 
       //deletando o item da fila
-      $entidadeFila = Fila::
-         where('especialista_id', $consulta->especialista_id)->
-         where('clinica_id', $consulta->clinica_id)->
-         where('paciente_id', $consulta->paciente_id)->first();
+      $entidadeFila = Fila::where('especialista_id', $consulta->especialista_id)
+         ->where('clinica_id', $consulta->clinica_id)
+         ->where('paciente_id', $consulta->paciente_id)
+         ->first();
       if ($entidadeFila) {
          $entidadeFila->delete();
       }
 
+      $prontuario = Prontuario::where('consulta_id', $consulta->id)->first();
 
+      $prontuarioCompleto = Consulta::join('especialistas', 'especialistas.id', 'consultas.especialista_id')
+         ->join('especialidades', 'especialidades.id', 'especialistas.especialidade_id')
+         ->join('prontuarios', 'prontuarios.consulta_id', 'consultas.id')
+         ->where('consultas.paciente_id', $paciente->id)
+         ->where('consultas.status', 'Finalizada')
+         ->select(
+            'consultas.id', 'consultas.horario_finalizado', 'especialistas.nome as especialista',
+            'especialidades.descricao as especialidade', 'prontuarios.dados_consulta as prontuario'
+         )
+         ->orderBy('consultas.horario_finalizado', 'DESC')
+         ->paginate(4,['*'], 'page_prontuario');
 
+      foreach ($prontuarioCompleto as $prontuario) {
+         $prontuario->pedido_medicamentos = PedidoMedicamento::join('consultas', 'consultas.id', 'pedido_medicamentos.consulta_id')
+            ->join('medicamentos', 'medicamentos.id', 'pedido_medicamentos.medicamento_id')
+            ->where('consultas.id', $prontuario->id)
+            ->select('medicamentos.nome_comercial', 'pedido_medicamentos.prescricao_indicada')
+            ->get();
+
+         $prontuario->pedido_exames = PedidoExame::join('consultas', 'consultas.id', 'pedido_exames.consulta_id')
+            ->join('exames', 'exames.id', 'pedido_exames.exame_id')
+            ->where('consultas.id', $prontuario->id)
+            ->select('exames.nome')
+            ->get();
+      }
+
+      $especialidades = Especialidade::all();
+      $atestado = Atestado::where('consulta_id', $consulta->id)->get();
 
       return view('userEspecialista/iniciaratendimento', [
          'consulta' => $consulta,
          'paciente' => $paciente,
+         'idadePaciente' => $idadePaciente,
          'usuarioPaciente' => $usuarioPaciente,
          'primeiraConsulta' => $primeiraConsulta,
          'qtdConsultasRealizadas' => $qtdConsultasRealizadas,
@@ -482,8 +520,12 @@ class EspecialistaController extends Controller
          'medicamentos' => $medicamentos ,
          'listaPedidosMedicamentos' =>  $listaPedidosMedicamentos,
          'tipo_medicamentos' => TipoMedicamento::all(),
-         'aba'=>$aba,
-         'mostrarModal' =>$mostrarModal
+         'aba' => $aba,
+         'mostrarModal' => $mostrarModal,
+         'atestado' => $atestado,
+         'prontuario' => $prontuario,
+         'prontuarioCompleto' => $prontuarioCompleto,
+         'especialidades' => $especialidades
       ]);
 
    }
@@ -491,8 +533,11 @@ class EspecialistaController extends Controller
 
    function finalizarAtendimento($consulta_id)
    {
+      date_default_timezone_set('America/Sao_Paulo');
+      $dataConsulta = Carbon::now();
       $ent = Consulta::find($consulta_id);
       $ent->status = "Finalizada";
+      $ent->horario_finalizado = $dataConsulta;
       //  $ent->horario_iniciado = $request->horario_iniciado;
       //  $ent->horario_finalizado = $request->horario_finalizado;
       $ent->save();

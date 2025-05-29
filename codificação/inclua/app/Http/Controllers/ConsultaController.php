@@ -351,7 +351,7 @@ class ConsultaController extends Controller
          ->whereBetween('horario_agendado', [$inicioDoDia, $fimDoDia])
          ->select(
             'consultas.id', 'status', 'horario_agendado', 'clinicas.nome as nome_clinica', 'id_usuario_cancelou',
-            'pacientes.nome as nome_paciente', 'especialistas.nome as nome_especialista', 'isPago', 'consultas.preco'
+            'pacientes.nome as nome_paciente', 'especialistas.nome as nome_especialista', 'isPago', 'consultas.preco', 'status'
          )
          ->orderBy('horario_agendado', 'asc')
          ->get();
@@ -410,7 +410,7 @@ class ConsultaController extends Controller
          ->whereBetween('horario_agendado', [$inicioDoDiaFiltro, $fimDoDiaFiltro])
          ->select(
             'consultas.id', 'status', 'horario_agendado', 'clinicas.nome as nome_clinica', 'id_usuario_cancelou',
-            'pacientes.nome as nome_paciente', 'especialistas.nome as nome_especialista', 'isPago', 'consultas.preco'
+            'pacientes.nome as nome_paciente', 'especialistas.nome as nome_especialista', 'isPago', 'consultas.preco', 'status'
          )
          ->orderBy('horario_agendado', 'asc')
          ->get();

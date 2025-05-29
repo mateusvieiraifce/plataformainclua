@@ -19,6 +19,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PacienteController extends Controller
 {
@@ -753,6 +754,19 @@ class PacienteController extends Controller
         'listaPedidosMedicamentos' =>  $listaPedidosMedicamentos,
     ]);
 
+    }
+
+    public function relatorioAnamnese($id)
+    {
+        $paciente = Paciente::find($id);
+        $paciente->cpf = Helper::mascaraCPF($paciente->cpf);
+        $anamnese = Anamnese::where('paciente_id', $paciente->id)->first();
+
+        $pdf = Pdf::loadView('pdf.anamnese', ['anamnese' => $anamnese, 'paciente' => $paciente]);
+        $pdf->add_info('Title', 'Relatório anamnese');
+
+        return $pdf->stream();
+        dd($anamnese);
     }
 }
 
