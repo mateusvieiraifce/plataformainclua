@@ -22,8 +22,38 @@ class populacaoTesteSeeder extends Seeder
      */
     public function run()
     {
+
+        $especialidade02 = Especialidade::create([
+            'descricao' => "Psicologia",
+            'valorpadrao' => "120",
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $especialidade01 = Especialidade::create([
+            'descricao' => "Neurologia",
+            'valorpadrao' => "100",
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+
+        $especialidade03 = Especialidade::create([
+            'descricao' => "Psicopedagogia",
+            'valorpadrao' => "50",
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $especialidade04 = Especialidade::create([
+            'descricao' => "Fonoaudiologia",
+            'valorpadrao' => "50",
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
         //usuario paciente 01
-        $userPaciente01 = User::create([
+       /* $userPaciente01 = User::create([
             'nome_completo' => "Paciente 01",
             'password' => bcrypt("1"),
             'email' => "p@p",
@@ -67,27 +97,7 @@ class populacaoTesteSeeder extends Seeder
             'tipo_user' => 'E',
             'etapa_cadastro' => 'F',
         ]);
-        $especialidade01 = Especialidade::create([
-            'descricao' => "Neurologia",
-            'valorpadrao' => "100",
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
 
-
-        $especialidade03 = Especialidade::create([
-            'descricao' => "Psicopedagogia",
-            'valorpadrao' => "50",
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-
-        $especialidade04 = Especialidade::create([
-            'descricao' => "Fonoaudiologia",
-            'valorpadrao' => "50",
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
 
         $especialista01 = Especialista::create([
             'nome' => "Especialista 01",
@@ -97,7 +107,7 @@ class populacaoTesteSeeder extends Seeder
         ]);
 
         //usuario especialista 02
-        $userEspecialista02 = User::create([
+      /*  $userEspecialista02 = User::create([
             'nome_completo' => "Especialista 02",
             'password' => bcrypt("1"),
             'email' => "e2@e",
@@ -106,81 +116,77 @@ class populacaoTesteSeeder extends Seeder
             'telefone' => "88981544865",
             'tipo_user' => 'E',
             'etapa_cadastro' => 'F',
-        ]);
-        $especialidade02 = Especialidade::create([
-            'descricao' => "Psicologia",
-            'valorpadrao' => "120",
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-        $especialista02 = Especialista::create([
-            'nome' => "Especialista 02",
-            'usuario_id' => $userEspecialista02->id,
-            'especialidade_id' => $especialidade02->id,
-            'data_validacao' => now(),
-        ]);
+        ]);*/
 
-        //usuario clinica 01
-        $userClinica01 = User::create([
-            'nome_completo' => "Usuario da Clinica 01",
-            'password' => bcrypt("1"),
-            'email' => "c@c",
-            'created_at'=> now(),
-            'updated_at' => now(),
-            'telefone' => "88981548659",
-            'tipo_user' => 'C',
-            'etapa_cadastro' => 'F',
-        ]);
-        $clinica01 =  Clinica::create([
-            'nome' => "Clinica 01",
-            'usuario_id' => $userClinica01->id,
-            'ativo' => "1",
-            'anamnese_obrigatoria' => "S",
-        ]);
 
-        DB::table('especialidadeclinicas')->insert([
-            'valor' => 200,
-            'clinica_id' => $clinica01->id,
-            'especialidade_id' => $especialidade01->id,
-            'is_vinculado' => true,
-        ]);
+        /* $especialista02 = Especialista::create([
+             'nome' => "Especialista 02",
+             'usuario_id' => $userEspecialista02->id,
+             'especialidade_id' => $especialidade02->id,
+             'data_validacao' => now(),
+         ]);
 
-        DB::table('especialistaclinicas')->insert([
-            'clinica_id' => $clinica01->id,
-            'especialista_id' => $especialista01->id,
-            'is_vinculado'  => true
-        ]);
+         //usuario clinica 01
+         $userClinica01 = User::create([
+             'nome_completo' => "Usuario da Clinica 01",
+             'password' => bcrypt("1"),
+             'email' => "c@c",
+             'created_at'=> now(),
+             'updated_at' => now(),
+             'telefone' => "88981548659",
+             'tipo_user' => 'C',
+             'etapa_cadastro' => 'F',
+         ]);
+         $clinica01 =  Clinica::create([
+             'nome' => "Clinica 01",
+             'usuario_id' => $userClinica01->id,
+             'ativo' => "1",
+             'anamnese_obrigatoria' => "S",
+         ]);
 
-        //usuario clinica 02
-        $userClinica02 = User::create([
-            'nome_completo' => "Usuario da Clinica 02",
-            'password' => bcrypt("1"),
-            'email' => "c2@c",
-            'created_at'=> now(),
-            'updated_at' => now(),
-            'telefone' => "88981231659",
-            'tipo_user' => 'C',
-            'etapa_cadastro' => 'F',
-        ]);
-        $clinica02 =  Clinica::create([
-            'nome' => "Clinica 02",
-            'usuario_id' => $userClinica02->id,
-            'ativo' => "1",
-            'anamnese_obrigatoria' => "N",
-        ]);
+         DB::table('especialidadeclinicas')->insert([
+             'valor' => 200,
+             'clinica_id' => $clinica01->id,
+             'especialidade_id' => $especialidade01->id,
+             'is_vinculado' => true,
+         ]);
 
-        DB::table('especialidadeclinicas')->insert([
-            'valor' => 200,
-            'clinica_id' => $clinica02->id,
-            'especialidade_id' => $especialidade02->id,
-            'is_vinculado'  => true
-        ]);
+         DB::table('especialistaclinicas')->insert([
+             'clinica_id' => $clinica01->id,
+             'especialista_id' => $especialista01->id,
+             'is_vinculado'  => true
+         ]);
 
-        DB::table('especialistaclinicas')->insert([
-            'clinica_id' => $clinica02->id,
-            'especialista_id' => $especialista02->id,
-            'is_vinculado' => true,
-        ]);
+         //usuario clinica 02
+         $userClinica02 = User::create([
+             'nome_completo' => "Usuario da Clinica 02",
+             'password' => bcrypt("1"),
+             'email' => "c2@c",
+             'created_at'=> now(),
+             'updated_at' => now(),
+             'telefone' => "88981231659",
+             'tipo_user' => 'C',
+             'etapa_cadastro' => 'F',
+         ]);
+         $clinica02 =  Clinica::create([
+             'nome' => "Clinica 02",
+             'usuario_id' => $userClinica02->id,
+             'ativo' => "1",
+             'anamnese_obrigatoria' => "N",
+         ]);
+
+         DB::table('especialidadeclinicas')->insert([
+             'valor' => 200,
+             'clinica_id' => $clinica02->id,
+             'especialidade_id' => $especialidade02->id,
+             'is_vinculado'  => true
+         ]);
+
+         DB::table('especialistaclinicas')->insert([
+             'clinica_id' => $clinica02->id,
+             'especialista_id' => $especialista02->id,
+             'is_vinculado' => true,
+         ]);*/
 
         //cad medicamentos
          $tipoMedicamento = TipoMedicamento::create([

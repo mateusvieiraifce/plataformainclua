@@ -507,7 +507,7 @@ class PacienteController extends Controller
             ->where('consultas.status', 'Disponível')
             ->orderBy('especialistas.nome', 'asc')
             ->select('especialistas.id', 'especialistas.nome')
-            ->groupBy('id')
+            ->groupBy('id','nome')
             ->paginate(8);
 
         return view('userPaciente/marcarConsultaViaClinicaPasso3', ['lista' => $lista, 'clinica_id' => $clinica_id]);
@@ -604,7 +604,7 @@ class PacienteController extends Controller
 
       return view('userPaciente.home', ['consultas' => $consultas, 'filtro' => $filtro]);
    }
-   
+
     public function cancelarConsulta(Request $request)
     {
         $consulta = Consulta::find($request->consulta_id);
@@ -672,7 +672,7 @@ class PacienteController extends Controller
            }
         }
         session()->flash('msg', $msg);
-            
+
         if ($userLogged->tipo_user == "E") {
             return redirect()->route('consulta.listconsultaporespecialista');
         } elseif ($userLogged->tipo_user == "P") {

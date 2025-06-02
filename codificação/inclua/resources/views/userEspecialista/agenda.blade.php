@@ -7,31 +7,31 @@
         function validarCheckBoxes() {
             var checkboxes = document.querySelectorAll('input[type="checkbox"]');
             var peloMenosUmSelecionado = false;
-            
+
             checkboxes.forEach(function(checkbox) {
                 if (checkbox.checked) {
                     peloMenosUmSelecionado = true;
                 }
             });
-            
+
             if (!peloMenosUmSelecionado) {
                 alert("Por favor, selecione pelo menos um dia da semana.");
                 return false;
             }
-            
+
             return true;
         }
-    
-        document.addEventListener('DOMContentLoaded', function() {      
+
+        document.addEventListener('DOMContentLoaded', function() {
             var precosConsultas =  JSON.parse('{!! $relacaoEspecialidadeClinica !!}');
                 const clinicaSelecionada = document.getElementById('clinica_id');
                 preco = document.getElementById("preco");
                 clinicaSelecionada.addEventListener('change', function() {
-                precosConsultas.some(function(item) {              
-                    if(item.clinica_id == clinicaSelecionada.value){                 
+                precosConsultas.some(function(item) {
+                    if(item.clinica_id == clinicaSelecionada.value){
                         preco.value = item.valor;
                     }
-                });             
+                });
                 });
                 clinicaSelecionada.dispatchEvent(new Event('change'));
             });
@@ -80,27 +80,27 @@
                             </div>
                             <div class="col-md-2 px-8">
                                 <div class="form-group">
-                                    <label id="labelFormulario">Intervalo entre as consultas (min)</label>
+                                    <label id="labelFormulario">Intervalo  consultas (min)</label>
                                     <input type="number" min="0" step="1" class="form-control" name="intervalo_consulta" value="" required>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-2 px-8">
+                            <div class="col-md-3 px-8">
                                 <div class="form-group">
-                                    <label id="labelFormulario">Horário de início dos atendimentos</label>
+                                    <label id="labelFormulario">Horário do Início dos atendimentos</label>
                                     <input type="time" class="form-control" name="hora_inicio" value="" required>
                                 </div>
                             </div>
-                            <div class="col-md-2 px-8">
+                            <div class="col-md-3 px-8">
                                 <div class="form-group">
-                                    <label id="labelFormulario">Horário de fim dos atendimentos</label>
+                                    <label id="labelFormulario">Horário do Fim dos atendimentos</label>
                                     <input type="time" class="form-control" name="hora_fim" value="" required>
                                 </div>
                             </div>
-                            <div class="col-md-1 px-8">
+                            <div class="col-md-2 px-8">
                                 <div class="form-group">
-                                    <label id="labelFormulario">Preço</label>
+                                    <label id="labelFormulario">Preço em R$</label>
                                     <input type="number" step="0.01" class="form-control" name="preco" id="preco" value="" required>
                                 </div>
                             </div>
