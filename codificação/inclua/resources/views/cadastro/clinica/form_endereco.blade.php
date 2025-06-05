@@ -23,7 +23,7 @@
                                 @include('alerts.feedback', ['field' => 'cep'])
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="cidade">
                                 Cidade <span class="required">*</span>
@@ -34,7 +34,7 @@
                                 @include('alerts.feedback', ['field' => 'cidade'])
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="estado">
                                 Estado <span class="required">*</span>
@@ -74,7 +74,7 @@
                                 @include('alerts.feedback', ['field' => 'estado'])
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="endereco">
                                 Endereço <span class="required">*</span>
@@ -96,7 +96,7 @@
                                 @include('alerts.feedback', ['field' => 'numero'])
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="bairro">
                                 Bairro <span class="required">*</span>
@@ -107,7 +107,7 @@
                                 @include('alerts.feedback', ['field' => 'bairro'])
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="complemento">
                                 Complemento
@@ -125,7 +125,7 @@
                             </label>
                             <div class="mapa" id="map"></div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="longitude">
                                 Longitude <span class="required">*</span>
@@ -136,7 +136,7 @@
                                 @include('alerts.feedback', ['field' => 'longitude'])
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="latitude">
                                 Latitude <span class="required">*</span>
@@ -154,37 +154,40 @@
                         <input type="hidden" name="usuario_id" value="{{ $clinica->usuario_id }}">
                         <input type="hidden" name="clinica_id" value="{{ $clinica->id }}">
                     </form>
-                </div>                    
+                </div>
             </div>
         </div>
     </div>
-    
+
     <script src="{{env('MAP_APP_URL_KEY')}}" async defer></script>
     <script>
         var map;
-        function initMap() {
+         function initMap() {
+             var latitude= document.getElementById('latitude').value;
+             var longitude =document.getElementById('longitude').value;
+
             map = new google.maps.Map(document.getElementById('map'), {
-                center: {lat: -3.68274, lng: -40.3512}, // Posição inicial do mapa
-                zoom: 12 // Zoom inicial do mapa
+                center: {lat: latitude, lng: longitude}, // Posição inicial do mapa
+                zoom: 24 // Zoom inicial do mapa
             });
 
             @if(isset($entidade->latitude))
-                var latitude = {{ $entidade->latitude }};                
-                var longitude = {{ $entidade->longitude }};                       
+                var latitude = {{ $entidade->latitude }};
+                var longitude = {{ $entidade->longitude }};
                 var myLatLng = {lat: latitude, lng: longitude};
                 placeMarker(myLatLng, map);
             @endif
 
             // Adicionar um event listener para capturar o clique no mapa
             google.maps.event.addListener(map, 'click', function(event) {
-                // Obter latitude e longitude do evento de clique              
+                // Obter latitude e longitude do evento de clique
                 var latitude = event.latLng.lat();
-                var longitude = event.latLng.lng();           
+                var longitude = event.latLng.lng();
 
                 // Atualizar os campos de entrada com a latitude e a longitude
                 document.getElementById('latitude').value = latitude;
-                document.getElementById('longitude').value = longitude;  
-                placeMarker(event.latLng, map);             
+                document.getElementById('longitude').value = longitude;
+                placeMarker(event.latLng, map);
             });
         }
 
@@ -198,7 +201,7 @@
             window.marker = new google.maps.Marker({
                 position: location,
                 map: map
-            });                    
+            });
         }
     </script>
 @endsection

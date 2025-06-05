@@ -32,7 +32,7 @@
 
     function mascaraDocumento(campo) {
         let documento = campo.value.replace(/(\.|\/|\-)/g,"")
-        
+
         if (documento.length >= 14 && documento.length <= 18) {
             mascaraCnpj(campo)
             consultarCNPJ(campo)
@@ -90,7 +90,7 @@
         $.ajax({
             url: "https://viacep.com.br/ws/"+campo.value+"/json/",
             type: "GET",
-            dataType: "json", 
+            dataType: "json",
             success: function(response) {
                 if (response.erro) {
                     nowuiDashboard.showNotification('top', 'right', 'CEP inválido! Verifique se o seu CEP foi digitado corretamente.', 'danger');
@@ -99,18 +99,75 @@
                     document.getElementById('cidade').value = response.localidade
                     document.getElementById('endereco').value = response.logradouro
                     document.getElementById('bairro').value = response.bairro
+                    console.log(campo.value)
+
+
 
                     $('#estados > option').each(function() {
                         if ($(this).attr("value") == response.uf) {
-                            $("#estado").val(response.uf); 
+                            $("#estado").val(response.uf);
                         }
                     });
                 }
+
+                const url2 = "https://maps.googleapis.com/maps/api/geocode/json?address="+campo.value+"&key={{env('MAP_KEY')}}"
+                console.log(url2);
+                $.ajax({
+                    url: url2,
+                    type: "GET",
+                    dataType: "json",
+                    success: function(geoResponse) {
+                        if (geoResponse.status === "OK" && geoResponse.results.length > 0) {
+                            const location = geoResponse.results[0].geometry.location;
+                            const latitude = location.lat;
+                            const longitude = location.lng;
+                            document.getElementById('longitude').value = longitude
+                            document.getElementById('latitude').value = latitude
+                            console.log("Latitude:", latitude);
+                            console.log("Longitude:", longitude);
+                            mapPoint(latitude,longitude);
+
+
+                            // Aqui você pode fazer algo com as coordenadas, como armazenar em campos hidden
+                            // document.getElementById('latitude').value = latitude;
+                            // document.getElementById('longitude').value = longitude;
+                        } else {
+                            console.log("Não foi possível obter as coordenadas para este CEP");
+                        }}});
             },
             error: function(error) {
                 nowuiDashboard.showNotification('top', 'right', 'CEP inválido! Verifique se o seu CEP foi digitado corretamente.', 'danger');
                 document.getElementById(campo.id).focus()
             }
+        });
+    }
+
+    function mapPoint(latitude, longitude) {
+        // Check if map is already initialized
+        if (window.map) {
+            window.map.setZoom(15);
+            window.map.setCenter({lat: latitude, lng: longitude});
+            if (window.marker) {
+                window.marker.setPosition({lat: latitude, lng: longitude});
+            } else {
+                window.marker = new google.maps.Marker({
+                    position: {lat: latitude, lng: longitude},
+                    map: window.map
+                });
+            }
+            return;
+        }
+
+        // Initialize new map
+        const mapOptions = {
+            center: {lat: latitude, lng: longitude},
+            zoom: 100
+        };
+
+        window.map = new google.maps.Map(document.getElementById('map'), mapOptions);
+        window.marker = new google.maps.Marker({
+            position: {lat: latitude, lng: longitude},
+            map: window.map
         });
     }
 
@@ -143,7 +200,7 @@
                     document.getElementById(campo.id).value = ''
                     document.getElementById(campo.id).focus();
                 }
-                
+
                 if(document.getElementById('instituicao')) {
                     document.getElementById('instituicao').value = response.BIN.issuer.name
                 }
@@ -166,7 +223,7 @@
             });
         }
     }
-    
+
     function showname(id, ret) {
         var name = document.getElementById(id);
         document.getElementById(ret).value = name.files.item(0).name;
