@@ -14,6 +14,7 @@ use App\Models\Especialidade;
 use App\Models\Paciente;
 use App\Models\PedidoExame;
 use App\Models\PedidoMedicamento;
+use App\Models\Prontuario;
 use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -688,11 +689,12 @@ class PacienteController extends Controller
 
     $paciente = Paciente::find($paciente_id);
     $usuarioPaciente = User::find($paciente->usuario_id);
-    $qtdConsultasRealizadas = Consulta::where('status', '=', 'Finalizada')->
+    $ConsultasRealizadas =
+    Consulta::where('status', '=', 'Finalizada')->
         where('paciente_id', '=', $paciente_id)->
      //   where('especialista_id', '=', $especialista->id)->
-        orderBy('horario_iniciado', 'asc')->count();
-
+        orderBy('horario_iniciado', 'asc')->get();
+     $qtdConsultasRealizadas = $ConsultasRealizadas->count();
     $page_exames = 1;
     if(isset(request()->query()['page_exames'])){
         $page_exames = request()->query()['page_exames'];
@@ -743,6 +745,9 @@ class PacienteController extends Controller
         ['path' => request()->url(), 'pageName' => 'page_medicamentos'] // Define o path e o pageName
     );
 
+
+     $prontuario = Prontuario::join("consultas","prontuarios.consulta_id","consultas.id")->where('especialista_id','=',$especialista->id )->paginate(15);
+     #dd($prontuario);
     //na tabela de exames fazer a parte de arquivos feito pelo antony
 
     //  dd($listaPedidosExames);
@@ -752,6 +757,7 @@ class PacienteController extends Controller
         'qtdConsultasRealizadas' => $qtdConsultasRealizadas,
         'listaPedidosExames' => $listaPedidosExames,
         'listaPedidosMedicamentos' =>  $listaPedidosMedicamentos,
+        'prontuarios'=>$prontuario
     ]);
 
     }

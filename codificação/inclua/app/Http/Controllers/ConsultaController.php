@@ -338,7 +338,7 @@ class ConsultaController extends Controller
       $inicioDoDia = Carbon::today()->startOfDay();
       $fimDoDia = Carbon::today()->endOfDay();
 
-      $statusConsulta = "Sala de espera";
+      $statusConsulta = "Todos";
       $consultas = Consulta::join('clinicas', 'clinicas.id', 'consultas.clinica_id')
          ->join('pacientes', 'pacientes.id', 'consultas.paciente_id')
          ->join('especialistas', 'especialistas.id', 'consultas.especialista_id');
@@ -346,6 +346,7 @@ class ConsultaController extends Controller
       if (auth()->user()->tipo_user == "P" || auth()->user()->tipo_user == "E") {
          $consultas = $consultas->where('especialista_id', $especialista->id);
       }
+
 
       $consultas = $consultas->where('status', $statusConsulta)
          ->whereBetween('horario_agendado', [$inicioDoDia, $fimDoDia])
@@ -355,6 +356,8 @@ class ConsultaController extends Controller
          )
          ->orderBy('horario_agendado', 'asc')
          ->get();
+
+
 
       return view('userEspecialista/listConsultaMarcadas', [
          'consultas' => $consultas,
@@ -409,12 +412,14 @@ class ConsultaController extends Controller
          ->where('clinicas.id', $request->clinica_id)
          ->whereBetween('horario_agendado', [$inicioDoDiaFiltro, $fimDoDiaFiltro])
          ->select(
+             'consultas.paciente_id',
             'consultas.id', 'status', 'horario_agendado', 'clinicas.nome as nome_clinica', 'id_usuario_cancelou',
             'pacientes.nome as nome_paciente', 'especialistas.nome as nome_especialista', 'isPago', 'consultas.preco', 'status'
          )
          ->orderBy('horario_agendado', 'asc')
          ->get();
 
+     // dd($consultas);
       return view('userEspecialista/listConsultaMarcadas', [
          'consultas' => $consultas,
          'clinicas' => $clinicas,

@@ -30,7 +30,7 @@ class AvaliacaoController extends Controller
             $comentarioEspecialista->comentario = $request->comentario_especialista;
             $comentarioEspecialista->tipo_avaliado = "E";
             $comentarioEspecialista->status = "Liberado";
-            $comentarioEspecialista->save();   
+            $comentarioEspecialista->save();
 
             $avaliacaoEspecialista = new Avaliacao();
             $avaliacaoEspecialista->comentario_id = $comentarioEspecialista->id;
@@ -46,7 +46,7 @@ class AvaliacaoController extends Controller
             $avaliacaoEspecialista->consulta_id = $consulta->id;
             $avaliacaoEspecialista->save();
 
-           
+
             //cadastro avaliacao clinica
             if ($request->comentario_clinica == null) {
                $request->comentario_clinica = 'SEM COMENTÁRIO';
@@ -57,8 +57,8 @@ class AvaliacaoController extends Controller
             $comentarioClinica->tipo_avaliado = "C";
             $comentarioClinica->status = "Liberado";
             $comentarioClinica->save();
-       
-           
+
+
             $avaliacaoClinica = new Avaliacao();
             $avaliacaoClinica->categoria = "Localização";
             $avaliacaoClinica->nota = $request->clinica_localizacao;
@@ -86,8 +86,9 @@ class AvaliacaoController extends Controller
             $avaliacaoClinica->consulta_id = $consulta->id;
             $avaliacaoClinica->comentario_id = $comentarioClinica->id;
             $avaliacaoClinica->save();
-           
+
             $response = true;
+            
         } catch (QueryException $e) {
             $response = false;
         }
@@ -129,7 +130,7 @@ class AvaliacaoController extends Controller
             ->join('pacientes', 'pacientes.id', 'consultas.clinica_id')
             ->where('pacientes.usuario_id', $user->id)
             ->where('avaliacoes_comentarios.tipo_avaliado', 'P')
-            ->where('avaliacoes_comentarios.status', 'Liberado') 
+            ->where('avaliacoes_comentarios.status', 'Liberado')
             ->where('avaliacoes.categoria', 'Pontualidade')
             ->select(DB::raw('(AVG(avaliacoes.nota)) as total'))
             ->first()
@@ -140,7 +141,7 @@ class AvaliacaoController extends Controller
             ->join('pacientes', 'pacientes.id', 'consultas.clinica_id')
             ->where('pacientes.usuario_id', $user->id)
             ->where('avaliacoes_comentarios.tipo_avaliado', 'P')
-            ->where('avaliacoes_comentarios.status', 'Liberado') 
+            ->where('avaliacoes_comentarios.status', 'Liberado')
             ->where('avaliacoes.categoria', 'Assiduidade')
             ->select(DB::raw('(AVG(avaliacoes.nota)) as total'))
             ->first()
@@ -163,7 +164,7 @@ class AvaliacaoController extends Controller
             ->join('clinicas', 'clinicas.id', 'consultas.clinica_id')
             ->where('clinicas.usuario_id', $user->id)
             ->where('avaliacoes_comentarios.tipo_avaliado', 'C')
-            ->where('avaliacoes_comentarios.status', 'Liberado')      
+            ->where('avaliacoes_comentarios.status', 'Liberado')
             ->select(
                 'avaliacoes.categoria',
                 'avaliacoes.nota',
@@ -174,13 +175,13 @@ class AvaliacaoController extends Controller
             ->orderBy('avaliacoes_comentarios.id','desc')
             ->orderBy('avaliacoes.categoria','asc')
             ->paginate(32);//32 pois estou agrupando em 4 em 4
-            
+
         $mediaNotas = AvaliacaoComentario::join('avaliacoes', 'avaliacoes.comentario_id', 'avaliacoes_comentarios.id')
             ->join('consultas', 'consultas.id', 'avaliacoes.consulta_id')
             ->join('clinicas', 'clinicas.id', 'consultas.clinica_id')
             ->where('clinicas.usuario_id', $user->id)
             ->where('avaliacoes_comentarios.tipo_avaliado', 'C')
-            ->where('avaliacoes_comentarios.status', 'Liberado') 
+            ->where('avaliacoes_comentarios.status', 'Liberado')
             ->select(DB::raw('(AVG(avaliacoes.nota)) as total'))
             ->first()
             ->total;
@@ -190,7 +191,7 @@ class AvaliacaoController extends Controller
             ->join('clinicas', 'clinicas.id', 'consultas.clinica_id')
             ->where('clinicas.usuario_id', $user->id)
             ->where('avaliacoes_comentarios.tipo_avaliado', 'C')
-            ->where('avaliacoes_comentarios.status', 'Liberado') 
+            ->where('avaliacoes_comentarios.status', 'Liberado')
             ->where('avaliacoes.categoria', 'Localização')
             ->select(DB::raw('(AVG(avaliacoes.nota)) as total'))
             ->first()
@@ -201,7 +202,7 @@ class AvaliacaoController extends Controller
             ->join('clinicas', 'clinicas.id', 'consultas.clinica_id')
             ->where('clinicas.usuario_id', $user->id)
             ->where('avaliacoes_comentarios.tipo_avaliado', 'C')
-            ->where('avaliacoes_comentarios.status', 'Liberado') 
+            ->where('avaliacoes_comentarios.status', 'Liberado')
             ->where('avaliacoes.categoria', 'Limpeza')
             ->select(DB::raw('(AVG(avaliacoes.nota)) as total'))
             ->first()
@@ -212,7 +213,7 @@ class AvaliacaoController extends Controller
             ->join('clinicas', 'clinicas.id', 'consultas.clinica_id')
             ->where('clinicas.usuario_id', $user->id)
             ->where('avaliacoes_comentarios.tipo_avaliado', 'C')
-            ->where('avaliacoes_comentarios.status', 'Liberado') 
+            ->where('avaliacoes_comentarios.status', 'Liberado')
             ->where('avaliacoes.categoria', 'Organização')
             ->select(DB::raw('(AVG(avaliacoes.nota)) as total'))
             ->first()
@@ -223,15 +224,15 @@ class AvaliacaoController extends Controller
             ->join('clinicas', 'clinicas.id', 'consultas.clinica_id')
             ->where('clinicas.usuario_id', $user->id)
             ->where('avaliacoes_comentarios.tipo_avaliado', 'C')
-            ->where('avaliacoes_comentarios.status', 'Liberado') 
+            ->where('avaliacoes_comentarios.status', 'Liberado')
             ->where('avaliacoes.categoria', 'Tempo de espera')
             ->select(DB::raw('(AVG(avaliacoes.nota)) as total'))
             ->first()
             ->total;
-        
+
         return view('userClinica.reputacao.lista', [
-            'avaliacoes' => $avaliacoes, 
-            'mediaNotas' => $mediaNotas, 
+            'avaliacoes' => $avaliacoes,
+            'mediaNotas' => $mediaNotas,
             'mediaNotasCategoriaLocalizacao' => $mediaNotasCategoriaLocalizacao,
             'mediaNotasCategoriaLimpeza' => $mediaNotasCategoriaLimpeza,
             'mediaNotasCategoriaOrganizacao' => $mediaNotasCategoriaOrganizacao,
@@ -240,14 +241,14 @@ class AvaliacaoController extends Controller
     }
 
     public function reputacaoEspecialista()
-    {       
+    {
         $user = Auth::user();
         $avaliacoes = AvaliacaoComentario::join('avaliacoes', 'avaliacoes.comentario_id', 'avaliacoes_comentarios.id')
             ->join('consultas', 'consultas.id', 'avaliacoes.consulta_id')
             ->join('especialistas', 'especialistas.id', 'consultas.especialista_id')
             ->where('especialistas.usuario_id', $user->id)
             ->where('avaliacoes_comentarios.tipo_avaliado', 'E')
-            ->where('avaliacoes_comentarios.status', 'Liberado')      
+            ->where('avaliacoes_comentarios.status', 'Liberado')
             ->select(
                 'avaliacoes.categoria',
                 'avaliacoes.nota',
@@ -264,7 +265,7 @@ class AvaliacaoController extends Controller
             ->join('especialistas', 'especialistas.id', 'consultas.especialista_id')
             ->where('especialistas.usuario_id', $user->id)
            ->where('avaliacoes_comentarios.tipo_avaliado', 'E')
-            ->where('avaliacoes_comentarios.status', 'Liberado') 
+            ->where('avaliacoes_comentarios.status', 'Liberado')
             ->select(DB::raw('(AVG(avaliacoes.nota)) as total'))
             ->first()
             ->total;
@@ -274,26 +275,26 @@ class AvaliacaoController extends Controller
             ->join('especialistas', 'especialistas.id', 'consultas.especialista_id')
             ->where('especialistas.usuario_id', $user->id)
             ->where('avaliacoes_comentarios.tipo_avaliado', 'E')
-            ->where('avaliacoes_comentarios.status', 'Liberado') 
+            ->where('avaliacoes_comentarios.status', 'Liberado')
             ->where('avaliacoes.categoria', 'Atendimento')
             ->select(DB::raw('(AVG(avaliacoes.nota)) as total'))
             ->first()
             ->total;
-           
+
         $mediaNotasCategoriaTempo = AvaliacaoComentario::join('avaliacoes', 'avaliacoes.comentario_id', 'avaliacoes_comentarios.id')
             ->join('consultas', 'consultas.id', 'avaliacoes.consulta_id')
             ->join('especialistas', 'especialistas.id', 'consultas.especialista_id')
             ->where('especialistas.usuario_id', $user->id)
             ->where('avaliacoes_comentarios.tipo_avaliado', 'E')
-            ->where('avaliacoes_comentarios.status', 'Liberado') 
+            ->where('avaliacoes_comentarios.status', 'Liberado')
             ->where('avaliacoes.categoria', 'Tempo de espera')
             ->select(DB::raw('(AVG(avaliacoes.nota)) as total'))
             ->first()
             ->total;
-        
+
         return view('userEspecialista.reputacao.lista', [
-            'avaliacoes' => $avaliacoes, 
-            'mediaNotas' => $mediaNotas, 
+            'avaliacoes' => $avaliacoes,
+            'mediaNotas' => $mediaNotas,
             'mediaNotasCategoriaAtendimento' => $mediaNotasCategoriaAtendimento,
             'mediaNotasCategoriaTempo' => $mediaNotasCategoriaTempo
         ]);
@@ -307,7 +308,7 @@ class AvaliacaoController extends Controller
             $comentarioClinica->motivo_denuncia = $request->motivo_denuncia;
             $comentarioClinica->save();
             session()->flash('msg', ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success']);
-        } 
+        }
         return redirect()->route('avaliacao.reputacaoClinica');
     }
 
@@ -319,7 +320,7 @@ class AvaliacaoController extends Controller
              $comentarioClinica->motivo_denuncia = $request->motivo_denuncia;
              $comentarioClinica->save();
              session()->flash('msg', ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success']);
-         } 
+         }
          return redirect()->route('avaliacao.reputacaoEspecialista');
     }
 
@@ -352,12 +353,12 @@ class AvaliacaoController extends Controller
                     DB::raw('(AVG(avaliacoes.nota)) as media')
                 )
                 ->groupBy('avaliacoes.categoria')
-                ->get();                
+                ->get();
         }
 
         return view('user_root.pacientes.reputacao', ['pacientes' => $pacientes]);
     }
-    
+
     public function reputacaoEspecialistas()
     {
         $especialistas = User::join('especialistas', 'especialistas.usuario_id', 'users.id')
@@ -389,7 +390,7 @@ class AvaliacaoController extends Controller
 
         return view('user_root.especialistas.reputacao', ['especialistas' => $especialistas]);
     }
-    
+
     public function reputacaoClinicas()
     {
         $clinicas = User::join('clinicas', 'clinicas.usuario_id', 'users.id')
@@ -418,7 +419,7 @@ class AvaliacaoController extends Controller
                 ->groupBy('avaliacoes.categoria')
                 ->get();
         }
-        
+
         return view('user_root.clinicas.reputacao', ['clinicas' => $clinicas]);
     }
 }

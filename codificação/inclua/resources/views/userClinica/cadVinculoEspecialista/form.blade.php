@@ -10,9 +10,9 @@
         var renderSelect = function() {
             $('#especialista_id').each(function() {
                 $(this).select2({
-                   // dropdownParent: $('#modalPedirMedicamento')                   
-                });               
-            })            
+                   // dropdownParent: $('#modalPedirMedicamento')
+                });
+            })
         };
 
         // create select2 HTML elements
@@ -40,15 +40,15 @@
             // Inicializar o select2
             initSelect2();
             select2Inicializado = true;
-        }         
+        }
     });
 </script>
 <!-- formatacao css do select2-->
-<style>  
+<style>
    /* Estiliza o texto das opções no dropdown */
    .select2-container .select2-results__option {
-      color: #111; 
-   }    
+      color: #111;
+   }
    .select2-container .select2-selection--multiple .select2-selection__choice {
       color: black !important; /* Substitua "blue" pela cor desejada */
    }
@@ -61,7 +61,7 @@
         <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="emailModalLabel">Enviar e-mail de convite</h5>
-          <button type="button" class="close" id="close-modal1" 
+          <button type="button" class="close" id="close-modal1"
              data-dismiss="modal" aria-label="Fechar">
                <span aria-hidden="true">&times;</span>
             </button>
@@ -71,17 +71,17 @@
              @csrf
                 <div class="mb-3">
                   <label for="recipientEmail" class="form-label">Nome do especialista</label>
-                  <input style="color:black" type="text" class="form-control" id="nome" name="nome" 
+                  <input style="color:black" type="text" class="form-control" id="nome" name="nome"
                   placeholder="Digite o nome do especialista aqui" required>
                 </div>
 
                 <div class="mb-3">
                   <label for="recipientEmail" class="form-label">E-mail</label>
-                  <input style="color:black" type="email" class="form-control" id="email_destino" name="email_destino" 
+                  <input style="color:black" type="email" class="form-control" id="email_destino" name="email_destino"
                   placeholder="Digite o e-mail do especialista aqui" required>
                 </div>
-              
-            
+
+
             </div>
             <div class="modal-footer">
             <button type="button"  class="btn btn-secondary" data-dismiss="modal">
@@ -106,27 +106,28 @@
           @csrf
           <div class="col-md-10 px-8">
             <div class="form-group">
-              <label id="labelFormulario">Especialista</label>             
+              <label id="labelFormulario">Especialista</label>
               <select name="especialista_id" id="especialista_id" class="select2 form-control"
                title="Por favor selecionar ..."
                 required style="border-color: white;">
+
                 @foreach($especialistas as $iten)
                   <option value="{{old('especialista_id', $iten->id)}}"
                     @if($iten->id == $entidade->especialista_id) <?php    echo 'selected'; ?> @endif> {{$iten->nome}}</option>
                 @endforeach
-              </select>           
-            
+              </select>
+
             </div>
           </div>
 
-          <div class="row" style="padding-top:10%; width: 100%;">               
+          <div class="row" style="padding-top:10%; width: 100%;">
                 <div class="col-12">
-                  <p> Não encontrou o especialista? 
-                      <a href="#" id="enviarConvite"  rel="tooltip" title="Convidar novo especialista" >                                       
-                      Click aqui para enviar um convite.</a>   
+                  <p> Não encontrou o especialista?
+                      <a href="#" id="enviarConvite"  rel="tooltip" title="Convidar novo especialista" >
+                      Click aqui para enviar um convite.</a>
                       </p>
                 </div>
-          </div>     
+          </div>
 
 
           </div>
@@ -145,7 +146,7 @@
   </div>
 </div>
 <script>
-document.getElementById('enviarConvite').addEventListener('click', function() {       
+document.getElementById('enviarConvite').addEventListener('click', function() {
         // Abra o modal
         $('#modalEnviarConvite').modal('show');
     });

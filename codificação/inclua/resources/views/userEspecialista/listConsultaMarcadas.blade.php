@@ -9,7 +9,7 @@
             <div class="card">
                <div class="card-header">
                   <h4 class="title">Lista de Consultas</h4>
-                  <form action="{{route('consulta.listConsultaPorEspecialistaPesquisar')}}" method="get" id="pesquisar">
+                  <form action="{{route('consulta.listConsultaPorEspecialistaPesquisar')}}" method="post" id="pesquisar">
                      @csrf
                      <div class="row search">
                         <div class="col-md-2 px-8">
@@ -17,7 +17,7 @@
                               <label for="inicio_data">
                                  Data início:
                               </label>
-                              <input type="date" name="inicio_data" id="inicio_data" 
+                              <input type="date" name="inicio_data" id="inicio_data"
                                  class="form-control" value="{{ (isset($inicio_data)) ? $inicio_data : date('Y-m-d') }}">
                            </div>
                         </div>
@@ -69,7 +69,7 @@
                                  </select>
                                  <button class="btn btn-primary">
                                     <i class="tim-icons icon-zoom-split"></i>
-                                 </button> 
+                                 </button>
                               </div>
                            </div>
                         </div>
@@ -80,7 +80,7 @@
                   <div class="table-full-width table-responsive">
                      <table class="table">
                         <thead>
-                           <th>Status</th>                       
+                           <th>Status</th>
                            <th>Horário agendado</th>
                            @if (auth()->user()->tipo_user == "R")
                               <th>Especialista </th>
@@ -134,7 +134,7 @@
                                           </a>
                                        @endif
                                        <br>
-                                       <a rel="tooltip" title="Cancelar" class="btn btn-default button-small-table" data-original-title="Edit" href="#">
+                                       <a rel="tooltip" title="Cancelar" class="btn btn-default button-small-table" data-original-title="Edit" href="{{route('paciente.prontuario',['id_paciente'=>$consulta->paciente_id])}}">
                                           Prontuário
                                        </a>
                                        <br>
@@ -150,7 +150,7 @@
                                        @endif
                                     </td>
                                  </tr>
-                              @endforeach 
+                              @endforeach
                            @endif
                         </tbody>
                      </table>
@@ -160,7 +160,7 @@
          </div>
       </div>
    </div>
-   
+
    {{-- MODAL PAGAMENTO DE CONSULTA --}}
    @component('layouts.modal_form', ["title" => "Favor, informe o método de pagamento", "route" => route('consulta.pagamento'), "textButton" => "Prosseguir", "id" => "modal-form-pagar-consulta"])
       <div class="form-group">
@@ -215,7 +215,7 @@
       </div>
       <input type="hidden" id="consulta_id" name="consulta_id" value="">
    @endcomponent
-   
+
    {{-- MODAL CANCELAR CONSULTA --}}
    @component('layouts.modal_form', ["title" => "Favor inserir o motivo do cancelamento!", "route" => route('paciente.consulta.cancelar'), "textButton" => "Cancelar consulta", "id" => "modal-form-cancelar-consulta"])
       <div class="form-group">
@@ -258,7 +258,7 @@
                   $("#numero_autorizacao").prop('required', false);
                }
             });
-            
+
             $('.consulta-paga').on('click', function () {
                $("#modal-aviso-title").text("Consulta Paga")
                $("#modal-aviso-message").text("Esta consulta já foi paga, não é necessário realizar nenhuma ação.")

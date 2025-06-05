@@ -184,9 +184,14 @@
                 var latitude = event.latLng.lat();
                 var longitude = event.latLng.lng();
 
+                if (document.getElementById('latitude')){
                 // Atualizar os campos de entrada com a latitude e a longitude
                 document.getElementById('latitude').value = latitude;
-                document.getElementById('longitude').value = longitude;
+
+                }
+                if (document.getElementById('longitude')) {
+                    document.getElementById('longitude').value = longitude;
+                }
                 placeMarker(event.latLng, map);
             });
         }

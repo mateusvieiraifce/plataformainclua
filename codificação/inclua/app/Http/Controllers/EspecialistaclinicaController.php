@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Clinica;
 use App\Models\Consulta;
-use Carbon\Carbon;     
+use Carbon\Carbon;
 
 class EspecialistaclinicaController extends Controller
 {
@@ -35,7 +35,7 @@ class EspecialistaclinicaController extends Controller
             'especialidades.descricao as especialidade','is_vinculado as isVinculado'
          )
          ->paginate(8);
-      
+
       return view('userClinica/cadVinculoEspecialista/list', ['lista' => $lista, 'filtro' => $filter, 'clinica' => $clinica, 'msg' => $msg]);
    }
    function new($clinica_id = null)
@@ -67,7 +67,7 @@ class EspecialistaclinicaController extends Controller
          $entidade = Especialistaclinica::create([
             'especialista_id' => $request->especialista_id,
             'clinica_id' => $clinica_id,
-            'is_vinculado' => true       
+            'is_vinculado' => true
 
          ]);
       }
@@ -78,15 +78,15 @@ class EspecialistaclinicaController extends Controller
    //funcao para cancelar vículo - user Clinica
    function delete($id, $clinica_id = null)
    {
-      $especialista = Especialista::find($id);      
-      $clinica = Clinica::find($clinica_id);      
+      $especialista = Especialista::find($id);
+      $clinica = Clinica::find($clinica_id);
       $relacaoEspecialistaClinica = Especialistaclinica::
       where('clinica_id', $clinica->id)->
       where('especialista_id', $especialista->id)->first();
-     
+
       try {
          if ($relacaoEspecialistaClinica) {
-            $relacaoEspecialistaClinica->is_vinculado = !$relacaoEspecialistaClinica->is_vinculado; 
+            $relacaoEspecialistaClinica->is_vinculado = !$relacaoEspecialistaClinica->is_vinculado;
             $relacaoEspecialistaClinica->save();
             $msg = ['valor' => trans("Vínculo alterado com sucesso!"), 'tipo' => 'success'];
      }
@@ -98,7 +98,7 @@ class EspecialistaclinicaController extends Controller
 
  //funcao para cancelar vículo - user Especialista
  function cancelarVinculo($clinica_id, $especialista_id)
- {  
+ {
    $clinica = Clinica::find($clinica_id);
    if (Auth::user()->tipo_user == "E") {
       $especialista = Especialista::where('usuario_id', '=', Auth::user()->id)->first();
@@ -109,11 +109,11 @@ class EspecialistaclinicaController extends Controller
    $relacaoEspecialistaClinica = Especialistaclinica::
     where('clinica_id', $clinica->id)->
     where('especialista_id', $especialista->id)->first();
-   
-   
+
+
     try {
        if ($relacaoEspecialistaClinica) {
-          $relacaoEspecialistaClinica->is_vinculado = !$relacaoEspecialistaClinica->is_vinculado; 
+          $relacaoEspecialistaClinica->is_vinculado = !$relacaoEspecialistaClinica->is_vinculado;
           $relacaoEspecialistaClinica->save();
           $msg = ['valor' => trans("Vínculo alterado com sucesso!"), 'tipo' => 'success'];
    }
@@ -126,6 +126,7 @@ class EspecialistaclinicaController extends Controller
 
    function edit($id)
    {
+
       $entidade = Especialistaclinica::find($id);
       $clinica_id = $entidade->clinica_id;
       $clinica = Clinica::find($clinica_id);
@@ -133,6 +134,7 @@ class EspecialistaclinicaController extends Controller
    }
 
    function clinicasdoespecilista($especialista_id = null, $msg = null)
+
    {
       if (Auth::user()->tipo_user == "E") {
          $especialista = Especialista::where('usuario_id', '=', Auth::user()->id)->first();
@@ -162,7 +164,7 @@ class EspecialistaclinicaController extends Controller
       } else {
          $clinica = Clinica::find($clinica_id);
       }
-       
+
       $inicioDoDia = Carbon::today()->startOfDay();
       $statusConsulta = "Disponível";
 
@@ -172,7 +174,7 @@ class EspecialistaclinicaController extends Controller
          ->select('consultas.id', 'horario_agendado')
          ->orderBy('horario_agendado', 'asc')
          ->get();
-      
+
       // dd($especialista,$lista);
       return view('userClinica/cadVinculoEspecialista/agendaEspecialista',['lista' => $lista, 'especialista' => $especialista, 'clinica' => $clinica]);
    }

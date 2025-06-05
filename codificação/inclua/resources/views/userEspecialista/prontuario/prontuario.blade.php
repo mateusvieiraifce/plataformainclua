@@ -11,8 +11,15 @@
                     <div class="row">
                         <div class="col-4 col-lg-2">
                             <div class="photo">
-                                <img src="/assets/img/anime3.png" alt="{{ __('Profile Photo') }}"
-                                    style="height: 100px; width: 100px;">
+                                @if($usuarioPaciente->avatar)
+                                    {!! Html::image($usuarioPaciente->avatar) !!}
+
+                                @else
+                                    <img src="/assets/img/anime3.png" alt="{{ __('Profile Photo') }}"
+                                         style="height: 100px; width: 100px;">
+                                @endif
+
+
                             </div>
                         </div>
                         <div class="col-4 col-lg-3">
@@ -22,7 +29,7 @@
                                 {{date('d/m/Y', strtotime($usuarioPaciente->data_nascimento))}}
                             </h6>
                         </div>
-                        <div class="col-4 col-lg-4">                           
+                        <div class="col-4 col-lg-4">
                             <h6 class="title d-inline">Total de consultas realizadas: {{$qtdConsultasRealizadas}}</h6>
                         </div>
                     </div>
@@ -50,13 +57,35 @@
 
             <div class="card-body">
                 <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th> Consultas </th>
+                            <th> </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @if(sizeof($prontuarios) > 0)
+                            @foreach($prontuarios as $prontuario)
+                                <tr>
+                                    <td> {{$prontuario->dados_consulta}} </td>
+                                    <td>
+                                        {{date( 'd/m/Y' , strtotime($prontuario->horario_agendado))}}
 
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @endif
+                        </tbody>
+                    </table>
+                    {{ $prontuarios->links() }}
+                </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="col-lg-4 col-md-12">
+    <div class="col-lg-8 col-md-12">
         <div class="card">
             <div class="card-header">
                 <h6 class="title d-inline">Exames solicitados</h6>
@@ -75,13 +104,13 @@
                                        @foreach($listaPedidosExames as $pedidoexame)
                                           <tr>
                                              <td> {{$pedidoexame->nome}} </td>
-                                             <td>                                                                                           
-                                             {{date( 'd/m/Y' , strtotime($pedidoexame->data_pedido))}}                                                                                          
-                                       
+                                             <td>
+                                             {{date( 'd/m/Y' , strtotime($pedidoexame->data_pedido))}}
+
                                              </td>
                                           </tr>
-                                          @endforeach 
-                                          @endif   
+                                          @endforeach
+                                          @endif
                                        </tbody>
                                     </table>
                                     {{ $listaPedidosExames->appends(request()->query())->links() }}
@@ -108,11 +137,11 @@
                                           <tr>
                                              <td> {{$pedidoMedicamento->nome_comercial}} </td>
                                              <td>
-                                             {{date( 'd/m/Y' , strtotime($pedidoMedicamento->data_pedido))}}                                                                                          
+                                             {{date( 'd/m/Y' , strtotime($pedidoMedicamento->data_pedido))}}
                                              </td>
                                           </tr>
-                                          @endforeach 
-                                          @endif   
+                                          @endforeach
+                                          @endif
                                        </tbody>
                                     </table>
                                     {{ $listaPedidosMedicamentos->appends(request()->query())->links() }}
