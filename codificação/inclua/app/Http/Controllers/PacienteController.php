@@ -691,7 +691,7 @@ class PacienteController extends Controller
     $usuarioPaciente = User::find($paciente->usuario_id);
     $ConsultasRealizadas =
     Consulta::where('status', '=', 'Finalizada')->
-        where('paciente_id', '=', $paciente_id)->
+        where('paciente_id', '=', $paciente_id)->where('especialista_id',$especialista->id)->
      //   where('especialista_id', '=', $especialista->id)->
         orderBy('horario_iniciado', 'asc')->get();
      $qtdConsultasRealizadas = $ConsultasRealizadas->count();
@@ -702,7 +702,7 @@ class PacienteController extends Controller
     //lista de pedidos de exames
     $listaPedidosExames = PedidoExame::join('exames', 'exames.id', '=', 'pedido_exames.exame_id')
     ->join('consultas', 'consultas.id', '=', 'pedido_exames.consulta_id')
-    ->where('paciente_id',$paciente->id)
+    ->where('paciente_id',$paciente->id)->where('especialista_id',$especialista->id)
     ->orderBy('pedido_exames.created_at', 'desc')
     ->select('pedido_exames.id as id', 'nome','laudo', 'pedido_exames.created_at as data_pedido')
   //  ->paginate(5)
@@ -730,7 +730,7 @@ class PacienteController extends Controller
     $listaPedidosMedicamentos = PedidoMedicamento::
     join('medicamentos', 'medicamentos.id', '=', 'pedido_medicamentos.medicamento_id')
     ->join('consultas', 'consultas.id', '=', 'pedido_medicamentos.consulta_id')
-    ->where('paciente_id',$paciente->id)
+    ->where('paciente_id',$paciente->id)->where('especialista_id',$especialista->id)
     ->orderBy('pedido_medicamentos.created_at', 'desc')
     ->select('pedido_medicamentos.id as id', 'nome_comercial','prescricao_indicada','pedido_medicamentos.created_at as data_pedido' )
    ->paginate(5, ['*'], 'page_medicamentos',$page_medicamentos )
