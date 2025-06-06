@@ -10,7 +10,7 @@
                 <div class="card-header">
                     <h2 class="title">Cadastro de Dados</h2>
                 </div>
-                <div class="card-body">                    
+                <div class="card-body">
                     <form class="form" method="post" action="{{ route('usuario.especialista.dados.store') }}" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group">
@@ -50,7 +50,7 @@
                                 @include('alerts.feedback', ['field' => 'documento'])
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="celular">
                                 Celular <span class="required">*</span>
@@ -62,7 +62,7 @@
                                 @include('alerts.feedback', ['field' => 'celular'])
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="especialidade">
                                 Especialidade <span class="required">*</span>
@@ -85,7 +85,7 @@
                                 Certificado de Graduação/Especialização <span class="required">*</span>
                             </label>
                             <div class="input-group input-medium column-gap-10{{ $errors->has('arquivo') ? ' has-danger' : '' }}">
-                                <input class="form-control border-full disabled {{ $errors->has('arquivo') ? 'is-invalid' : '' }}" type="text" name="fileName" id="fileName" value="{{ isset($user) ? explode('/', $user->getCertificadoEspecialista())[2] : null }}" disabled required>
+                                <input class="form-control border-full disabled {{ $errors->has('arquivo') ? 'is-invalid' : '' }}" type="text" name="fileName" id="fileName" value="" disabled required>
                                 @if (isset($user) && $user->getCertificadoEspecialista())
                                     <a href="{{ asset($user->getCertificadoEspecialista()) }}" title="Baixar arquivo" download>
                                         <i class="zmdi zmdi-download zmdi-hc-3x"></i>
@@ -117,12 +117,12 @@
                         <input type="hidden" name="usuario_id" value="{{ $usuario_id ?? $user->id }}">
                         <input type="hidden" name="especialista_id" value="{{ isset($user) ? $user->getIdEspecialista($user->id) : '' }}">
                     </form>
-                </div>                    
+                </div>
             </div>
         </div>
     </div>
     <script>
-        
+
         document.getElementById('image').addEventListener('change', function() {
             var fileName = $(this).val().split('\\').pop();
         });
