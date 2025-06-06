@@ -22,13 +22,13 @@ class DashboardController extends Controller
         if ($uri == "/login" || $wellcome) {
             session()->flash('msg', ['valor' => trans("Bem vindo a Plataforma Inclua!"), 'tipo' => 'success']);
         }
-        
+
         if ($user->tipo_user == 'P') {
             //home user Paciente
             return redirect()->route('paciente.home');
         } elseif ($user->tipo_user ==='E') {
             //home user Especialista
-            return redirect()->route('consulta.listconsultaporespecialista');
+            return redirect()->route('consulta.listConsultaPorEspecialistaPesquisar');
          }
          elseif ($user->tipo_user ==='C') {
           //home user Clinica
@@ -46,7 +46,7 @@ class DashboardController extends Controller
             ->pluck('total', 'month');
         $totalUsers = DB::table('users')->where('tipo_user', 'P')->count();
         $monthlyCountsUsers = array_fill(1, 12, 0);
-        
+
         foreach ($usersByMonth as $month => $count) {
             $monthlyCountsUsers[$month] = $count;
         }
@@ -61,7 +61,7 @@ class DashboardController extends Controller
             ->pluck('total', 'month');
         $totalEspecialistas = DB::table('users')->where('tipo_user', 'E')->count();
         $monthlyCountsEspecialistas = array_fill(1, 12, 0);
-        
+
         foreach ($especialistasByMonth as $month => $count) {
             $monthlyCountsEspecialistas[$month] = $count;
         }
@@ -76,7 +76,7 @@ class DashboardController extends Controller
             ->pluck('total', 'month');
         $totalClinicas = DB::table('users')->where('tipo_user', 'C')->count();
         $monthlyCountsClinicas = array_fill(1, 12, 0);
-        
+
         foreach ($clinicasByMonth as $month => $count) {
             $monthlyCountsClinicas[$month] = $count;
         }
@@ -93,7 +93,7 @@ class DashboardController extends Controller
         $totalQueries = DB::table('consultas')->count();
 
         $monthlyCountsQueries = array_fill(7, 6, 0);
-        
+
         foreach ($queriesByMonth as $month => $count) {
             $monthlyCountsQueries[$month] = $count;
         }
@@ -101,18 +101,18 @@ class DashboardController extends Controller
         // Consulta que conta as o total de reais das consultas criadas por mês
         $queriesSaleByMonth = DB::table('consultas')
             ->selectRaw('MONTH(created_at) as month, SUM(preco) as total')
-            ->whereYear('created_at', $year) 
+            ->whereYear('created_at', $year)
             ->groupByRaw('MONTH(created_at)')
-            ->orderByRaw('MONTH(created_at) DESC') 
-            ->take(6) 
+            ->orderByRaw('MONTH(created_at) DESC')
+            ->take(6)
             ->pluck('total', 'month');
         $queriesSaleByMonth = $queriesByMonth->sortKeys();
         $totalSale = DB::table('consultas')
-            ->whereYear('created_at', $year) 
+            ->whereYear('created_at', $year)
             ->sum('preco');
 
         $monthlyCountsQueriesSale = array_fill(7, 6, 0);
-        
+
         foreach ($queriesSaleByMonth as $month => $count) {
             $monthlyCountsQueriesSale[$month] = $count;
         }
@@ -158,10 +158,10 @@ class DashboardController extends Controller
     function dashboardClinica()
     {
         $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
-        //retornando todos os especialistas vinculados       
+        //retornando todos os especialistas vinculados
         $especialistas = Especialistaclinica::join('especialistas', 'especialistas.id', '=',
         'especialistaclinicas.especialista_id')->
-        where('clinica_id', $clinica->id)->     
+        where('clinica_id', $clinica->id)->
         orderBy('especialistas.nome', 'asc')->
         select('especialistas.id', 'especialistas.nome')->get();
 
@@ -178,7 +178,7 @@ class DashboardController extends Controller
             ->groupByRaw('YEAR(horario_agendado), MONTH(horario_agendado)') // Agrupa por ano e mês
             ->orderByRaw('YEAR(horario_agendado), MONTH(horario_agendado)') // Ordena de forma crescente (de Janeiro a Dezembro)
             ->get();
-        return view('userClinica/dashboard', ['lista' => $especialistas, 'TodasConsultasPorMes' => $TodasConsultasPorMes]); 
+        return view('userClinica/dashboard', ['lista' => $especialistas, 'TodasConsultasPorMes' => $TodasConsultasPorMes]);
     }
 
 
