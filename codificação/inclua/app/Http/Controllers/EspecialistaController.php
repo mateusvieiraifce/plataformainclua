@@ -433,7 +433,7 @@ class EspecialistaController extends Controller
          ->where('especialista_id', '=', $consulta->especialista_id)
          ->orderBy('horario_iniciado', 'asc')
          ->first();
-         
+
       $qtdConsultasRealizadas = Consulta::where('status', '=', 'Finalizada')
          ->where('paciente_id', '=', $consulta->paciente_id)
          ->where('especialista_id', '=', $consulta->especialista_id)
@@ -476,7 +476,8 @@ class EspecialistaController extends Controller
          $entidadeFila->delete();
       }
 
-      $prontuario = Prontuario::where('consulta_id', $consulta->id)->first();
+      $prontuarioCorrente = Prontuario::where('consulta_id', $consulta->id)->first();
+      //dd($prontuario);
 
       $prontuarioCompleto = Consulta::join('especialistas', 'especialistas.id', 'consultas.especialista_id')
          ->join('especialidades', 'especialidades.id', 'especialistas.especialidade_id')
@@ -506,7 +507,10 @@ class EspecialistaController extends Controller
 
       $especialidades = Especialidade::all();
       $atestado = Atestado::where('consulta_id', $consulta->id)->get();
-
+      if ($prontuarioCorrente){
+        $prontuario->dados_consulta = $prontuarioCorrente->dados_consulta;
+      }
+     //   dd($prontuario);
       return view('userEspecialista/iniciaratendimento', [
          'consulta' => $consulta,
          'paciente' => $paciente,
@@ -541,10 +545,12 @@ class EspecialistaController extends Controller
       //  $ent->horario_iniciado = $request->horario_iniciado;
       //  $ent->horario_finalizado = $request->horario_finalizado;
       $ent->save();
-      $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
+     # $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
 
-      $consultaController = new ConsultaController();
-      return $consultaController->listconsultaporespecialista($msg);
+      #$consultaController = new ConsultaController();
+       session()->flash('msg', ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success']);
+
+       return redirect(route("consulta.listConsultaPorEspecialistaPesquisar"));
    }
 
    function consultaPertenceEspecialistaLogado($consulta_id)

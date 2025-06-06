@@ -181,7 +181,7 @@
 
                             <div class="collapse" id="especilistas">
                                 <ul class="nav pl-4"><li @if ($pageSlug == 'listconsultaporespecialista') class="active" @endif>
-                                        <a href="{{ route('consulta.listconsultaporespecialista') }}">
+                                        <a href="{{ route('consulta.listConsultaPorEspecialistaPesquisar') }}">
                                             <i class="tim-icons icon-notes"></i>
                                             <p>{{ __('Consultas') }}</p>
                                         </a>
@@ -415,7 +415,7 @@
                             <a href="{{  route("user.relatorio")  }}">
                                 <i class="tim-icons icon-paper"></i>
                                 <p>{{ __('Relatório de Caixa') }}</p>
-                            </a>    
+                            </a>
                         </li>
                     @endif
 
@@ -504,7 +504,7 @@
                             </li>
 
                         <li @if ($pageSlug == 'listconsultaporespecialista') class="active" @endif>
-                            <a href="{{route('consulta.listconsultaporespecialista')}}">
+                            <a href="{{route('consulta.listConsultaPorEspecialistaPesquisar')}}">
                                 <i class="tim-icons icon-notes"></i>
                                 <p>{{ __('Consultas') }}</p>
                             </a>
@@ -516,7 +516,7 @@
                                 <p>{{ __('Disponibilizar consultas') }}</p>
                             </a>
                         </li>
-                        
+
                         <li @if ($pageSlug == 'agendaespecialista') class="active" @endif>
                             <a href="{{route('consulta.list')}}">
                                 <i class="tim-icons icon-calendar-60"></i>
@@ -555,7 +555,7 @@
                             <a href="{{  route("user.relatorio")  }}">
                                 <i class="tim-icons icon-paper"></i>
                                 <p>{{ __('Relatório de Caixa') }}</p>
-                            </a>    
+                            </a>
                         </li>
                     @endif
                 </ul>

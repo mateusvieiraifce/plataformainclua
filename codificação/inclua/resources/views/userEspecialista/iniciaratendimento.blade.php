@@ -4,14 +4,18 @@
     @php
         $prontuarioCompleto = session('prontuarioCompleto') ?? $prontuarioCompleto;
     @endphp
-    
+
     <div class="card" style="min-height: 90vh;">
         <div class="card-header">
             <div class="row">
                 <div class="col-6 col-lg-2">
-                    <div class="photo">
-                        <img src="/assets/img/anime3.png" alt="{{ __('Profile Photo') }}" style="height: 100px; width: 100px;">
-                    </div>
+                    @if($usuarioPaciente->avatar)
+                        {!! Html::image($usuarioPaciente->avatar) !!}
+
+                    @else
+                        <img src="/assets/img/anime3.png" alt="{{ __('Profile Photo') }}"
+                             style="height: 100px; width: 100px;">
+                    @endif
                 </div>
                 <div class="col-6 col-lg-3">
                     <h6 class="title d-inline">Paciente: {{$paciente->nome}}</h6>
@@ -75,10 +79,8 @@
                                             <textarea class="form-control{{ $errors->has('dados_consulta') ? ' is-invalid' : '' }}" id="dados_consulta" name="dados_consulta" rows="15" placeholder="Digite os dados da consulta aqui" required>{{ isset($prontuario->dados_consulta) ? $prontuario->dados_consulta : '' }}</textarea>
                                             @include('alerts.feedback', ['field' => 'dados_consulta'])
                                         </div>
-                                        <button type="submit" rel="tooltip" title="Salvar prontuario" class="btn btn-default">
-                                            Salvar
-                                        </button>
-                                        <input type="hidden" name="consulta_id" value="{{ $consulta->id }}">
+
+                                        <input type="hidden" id="consulta_id" name="consulta_id" value="{{ $consulta->id }}">
                                     </form>
                                 </div>
                             </div>
@@ -121,7 +123,7 @@
                                                             <td>
                                                                 {{ date("d/m/Y", $pedidoMedicamento->created_at) }}
                                                             </td>
-                                                            <td>                                                                                           
+                                                            <td>
                                                                 <a href="{{ route('pedido_medicamento.delete', [$pedidoMedicamento->id,$consulta->id]) }}" rel="tooltip" title="Excluir" class="btn btn-link" data-original-title="Remove">
                                                                     <i class="fa fa-trash"></i>
                                                                 </a>
@@ -168,7 +170,7 @@
                                                             <td>
                                                                 {{ date("d/m/Y", $pedidoexame->created_at) }}
                                                             </td>
-                                                            <td>                                                                                           
+                                                            <td>
                                                                 <a href="{{ route('pedido_exame.delete', [$pedidoexame->id,$consulta->id]) }}" rel="tooltip" title="Excluir" class="btn btn-link" data-original-title="Remove">
                                                                     <i class="fa fa-trash"></i>
                                                                 </a>
@@ -275,10 +277,11 @@
                         <i class="fa fa-reply"></i>
                         Voltar
                     </a>
-                    <a rel="tooltip" title="Finalizar" id="btnFinalizar" class="btn btn-primary" data-original-title="Edit" href="{{route('especialista.finalizarAtendimento', $consulta->id)}}">
+                    <button name="finalizar" class="btn btn-primary"  onclick="saveProntuario('finaliza')">
                         Finalizar
                         <i class="fa fa-save"></i>
-                    </a>
+                    </button>
+
                 </div>
             </div>
         </div>
@@ -312,7 +315,7 @@
         <div class="form-group">
             <label>
                 Não encontrou o medicamento?
-                <a href="#" rel="tooltip" title="Adicionar novo exame" data-target="#modal-form-cadastro-medicamento" data-toggle="modal">                       
+                <a href="#" rel="tooltip" title="Adicionar novo exame" data-target="#modal-form-cadastro-medicamento" data-toggle="modal">
                     Click aqui para cadastrar.
                 </a>
             </label>
@@ -442,19 +445,19 @@
                 Selecionar exame:
             </label>
             <div class="input-group">
-                <select class="select2" name="exames[]" class="form-control" multiple="multiple" id="exame_id" title="Por favor selecionar o exame..." required>                                       
+                <select class="select2" name="exames[]" class="form-control" multiple="multiple" id="exame_id" title="Por favor selecionar o exame..." required>
                     @foreach($exames as $exame)
                         <option data-color="red" value="{{ old('exames', $exame->id) }}">
                             {{ $exame->nome }}
                         </option>
                     @endforeach
-                </select>                         
+                </select>
             </div>
         </div>
         <div class="form-group">
             <label>
-                Não encontrou o exame? 
-                <a href="#" rel="tooltip" title="Adicionar novo exame" data-target="#modal-form-cadastro-exame" data-toggle="modal">                       
+                Não encontrou o exame?
+                <a href="#" rel="tooltip" title="Adicionar novo exame" data-target="#modal-form-cadastro-exame" data-toggle="modal">
                     Click aqui para cadastrar.
                 </a>
             </label>
@@ -496,7 +499,7 @@
         </div>
         <input type="hidden" name="consulta_id" value="{{ $consulta->id }}">
     @endcomponent
-    
+
     {{-- MODAL FILTRO PRONTUARIO COMPLETO --}}
     @component('layouts.modal_form', ["title" => "Favor, selecionar a especialidade para filtrar", "route" => route('prontuario_completo.filter'), "textButton" => "Filtrar", "id" => "modal-form-filtro-prontuario"])
         <div class="form-group">
@@ -504,13 +507,13 @@
                 Selecionar especialidade:
             </label>
             <div class="input-group">
-                <select class="select2" name="especialidade_id" class="form-control" title="Por favor selecionar a especialidade..." required>                                       
+                <select class="select2" name="especialidade_id" class="form-control" title="Por favor selecionar a especialidade..." required>
                     @foreach($especialidades as $especialidade)
                         <option data-color="red" value="{{ $especialidade->id }}">
                             {{ $especialidade->descricao }}
                         </option>
                     @endforeach
-                </select>                         
+                </select>
             </div>
         </div>
         <input type="hidden" name="consulta_id" value="{{ $consulta->id }}">
@@ -524,9 +527,9 @@
         let timerInterval;
 
         let tempo = localStorage.getItem('tempo') ? parseInt(localStorage.getItem('tempo')) : 0;
-    
 
-        function updateChronometer() {         
+
+        function updateChronometer() {
             tempo++;
             localStorage.setItem('tempo', tempo);
             const hours = String(Math.floor(tempo / 3600)).padStart(2, '0');
@@ -541,18 +544,64 @@
         }
 
         function startTimer() {
-            timerInterval = setInterval(updateChronometer, 1000);     
+            timerInterval = setInterval(updateChronometer, 1000);
         }
 
         startTimer();
 
-        document.getElementById('btnFinalizar').onclick = () => {
+       /* document.getElementById('btnFinalizar').onclick = () => {
             tempo = 0;
-            localStorage.removeItem('tempo'); // Remove o tempo do localStorage
-            document.getElementById('chronometer').innerText = '00:00:00'; 
-        };
-        
+
+        };*/
+
+        function  saveProntuario(finaliza){
+
+            var produtarioAtual = document.getElementById("dados_consulta").value;
+            if (produtarioAtual.trim()==""){
+                alert("Os dados da consulta são obrigatórios")
+                return;
+
+            }
+            const cosId = document.getElementById("consulta_id").value;
+
+
+            $.ajax({
+                url: '{{ route("prontuario.store") }}', // Usando a helper do Laravel para gerar a URL
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}', // Token CSRF para segurança
+                    dados_consulta: produtarioAtual,  // Dados que você quer enviar
+                    consulta_id:  cosId      // Outros dados que podem ser úteis
+                },
+                success: function(response) {
+                    if (finaliza){
+                        window.location.href = '{{ route("especialista.finalizarAtendimento",$consulta->id) }}';
+                        localStorage.removeItem('tempo'); // Remove o tempo do localStorage
+                        document.getElementById('chronometer').innerText = '00:00:00';
+                    }
+
+                    console.log('Sucesso:', finaliza);
+                    // Aqui você pode adicionar lógica para tratar a resposta
+                },
+                error: function(xhr, status, error) {
+                    console.error('Erro:', error);
+                    // Tratamento de erros
+                }
+            });
+
+        }
         function openTab(event, tabId) {
+
+           //alert(tabId);
+            if (tabId!="prontuarioatual"){
+                saveProntuario();
+            }
+
+
+
+
+           // alert(produtarioAtual);
+            //alert('aqui'+tabId)
             // Hide all tab panes
             var tabPanes = document.querySelectorAll('.tab-pane');
             tabPanes.forEach(pane => {

@@ -61,12 +61,12 @@ class PedidoMedicamentoController extends Controller
          $pedidoMedicamento->medicamento_id = $request->medicamento_id;
          $pedidoMedicamento->prescricao_indicada = $request->posologia;
          $pedidoMedicamento->save();
-         
+
          $msg = ['valor' => trans("A prescrição do medicamento foi salva com sucesso!"), 'tipo' => 'success'];
          DB::commit();
       } catch (QueryException $e) {
          DB::rollBack();
-         
+
          $msg = ['valor' => trans("Não foi possivel realizar prescrição do medicamento, tente novamente."), 'tipo' => 'danger'];
       }
       session()->flash('msg', $msg);

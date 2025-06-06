@@ -11,7 +11,7 @@
                     <h4 class="title">Escolha onde consultar</h4>
                     <form action="{{ route('paciente.pesquisarclinicamarcarconsulta') }}" method="post" id="pesquisar">
                         @csrf
-                        <div class="row search">                        
+                        <div class="row search">
                             <div class="col-lg-3 col-md-3">
                                 <div class="form-group">
                                     <label for="estado">
@@ -69,7 +69,7 @@
                                             placeholder="Nome da clínica" value="{{ old('nome') }}">
                                         <button class="btn btn-primary">
                                             <i class="tim-icons icon-zoom-split"></i>
-                                        </button> 
+                                        </button>
                                     </div>
                                 </div>
                             </div>

@@ -84,8 +84,10 @@
             </div>
         </div>
     </div>
-
+<div class="row">
     <div class="col-lg-8 col-md-12">
+<div class="card">
+    <div class="col-lg-12 col-md-12">
         <div class="card">
             <div class="card-header">
                 <h6 class="title d-inline">Exames solicitados</h6>
@@ -149,5 +151,7 @@
             </div>
         </div>
     </div>
+</div>
+</div>
 </div>
 @endsection

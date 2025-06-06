@@ -463,7 +463,7 @@ class PacienteController extends Controller
             ->select('clinicas.id', 'nome')
             ->groupBy('clinicas.id','nome')
             ->paginate(8);
-
+       // dd($clinicas);
         return view('userPaciente/marcarConsultaViaClinicaPasso1', ['clinicas' => $clinicas, 'filtro' => $filter]);
     }
 
@@ -482,7 +482,9 @@ class PacienteController extends Controller
             $msg = ['valor' => trans("Não foi encontrado nenhuma clínica com os dados informados!"), 'tipo' => 'danger'];
             session()->flash('msg', $msg);
         }
-
+        session()->put('clinicas',$lista);
+        //Session::get('clinicas')
+        //dd($lista);
         return back()->with('lista', $lista)->withInput();
     }
 

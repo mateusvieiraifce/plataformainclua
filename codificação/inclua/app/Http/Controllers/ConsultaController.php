@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Especialista;
 use Carbon\Carbon;
+use function PHPUnit\Framework\isNull;
 
 class ConsultaController extends Controller
 {
@@ -378,6 +379,7 @@ class ConsultaController extends Controller
          $filter = $_GET['filtro'];
       }
 
+
       //todoas as clinicas que o especialista eh vinculado
       $clinicas = Especialistaclinica::join('clinicas', 'clinicas.id', '=', 'especialistaclinicas.clinica_id');
 
@@ -389,8 +391,19 @@ class ConsultaController extends Controller
          ->select('clinicas.id', 'clinicas.nome')
          ->get();
 
-      $inicioDoDiaFiltro = Carbon::parse($request->inicio_data)->startOfDay();
-      $fimDoDiaFiltro = Carbon::parse($request->final_data)->endOfDay();
+      if ($request->inicio_data) {
+          $inicioDoDiaFiltro = Carbon::parse($request->inicio_data)->startOfDay();
+      } else{
+          $inicioDoDiaFiltro = Carbon::now()->startOfDay();
+      }
+
+      if ($request->final_data) {
+          $fimDoDiaFiltro = Carbon::parse($request->final_data)->endOfDay();
+      } else{
+          $fimDoDiaFiltro = Carbon::now()->endOfDay();
+      }
+
+
 
       // dd($inicioDoDiaFiltro,$fimDoDiaFiltro);
       if ($request->status == "todos") {
@@ -399,6 +412,7 @@ class ConsultaController extends Controller
          $statusConsulta = $request->status;
       }
 
+
       $consultas = Consulta::join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')
          ->join('pacientes', 'pacientes.id', '=', 'consultas.paciente_id')
          ->join('especialistas', 'especialistas.id', 'consultas.especialista_id');
@@ -406,11 +420,24 @@ class ConsultaController extends Controller
       if (auth()->user()->tipo_user == "P" || auth()->user()->tipo_user == "E") {
          $consultas = $consultas->where('especialista_id', '=', $especialista->id);
       }
+     // dd($request);
+      if (isNull($statusConsulta)){
+          $statusConsulta="%%";
+      }
+      $paciente = "%%";
+      if (!isNull( $request->nomepaciente)){
+          $paciente=$request->nomepaciente;
+      }
 
+       //dd($inicioDoDiaFiltro,$fimDoDiaFiltro, $statusConsulta, $paciente, $request->clinica_id);
+     // dd($statusConsulta);
       $consultas = $consultas->where('status', 'like', $statusConsulta)
-         ->where('pacientes.nome', 'like', '%' . $request->nomepaciente . "%")
-         ->where('clinicas.id', $request->clinica_id)
-         ->whereBetween('horario_agendado', [$inicioDoDiaFiltro, $fimDoDiaFiltro])
+         ->where('pacientes.nome', 'like', '%' . $paciente . "%");
+
+      if ($request->clinica_id) {
+          $consultas=$consultas->where('clinicas.id', $request->clinica_id);
+      }
+       $consultas=$consultas ->whereBetween('horario_agendado', [$inicioDoDiaFiltro, $fimDoDiaFiltro])
          ->select(
              'consultas.paciente_id',
             'consultas.id', 'status', 'horario_agendado', 'clinicas.nome as nome_clinica', 'id_usuario_cancelou',
@@ -418,7 +445,7 @@ class ConsultaController extends Controller
          )
          ->orderBy('horario_agendado', 'asc')
          ->get();
-
+   //  dd($inicioDoDiaFiltro,$fimDoDiaFiltro,$statusConsulta);
      // dd($consultas);
       return view('userEspecialista/listConsultaMarcadas', [
          'consultas' => $consultas,

@@ -123,7 +123,9 @@
                                              </button>
                                           @endif
                                        @endif
-                                       <br>
+
+                                           @if ($consulta->isPago)
+                                           <br>
                                        @if (!$consulta->id_usuario_cancelou && !($consulta->status == "Finalizada"))
                                           <a rel="tooltip" title="Iniciar atendimento" class="btn btn-primary button-small-table" data-original-title="Edit" href="{{route('especialista.iniciarAtendimento', [$consulta->id, "prontuarioatual"])}}">
                                              Iniciar atendimento
@@ -133,12 +135,14 @@
                                              Consulta finalizada
                                           </a>
                                        @endif
+                                           @endif
                                        <br>
                                        <a rel="tooltip" title="Cancelar" class="btn btn-default button-small-table" data-original-title="Edit" href="{{route('paciente.prontuario',['id_paciente'=>$consulta->paciente_id])}}">
                                           Prontuário
                                        </a>
                                        <br>
-                                       @if (!$consulta->id_usuario_cancelou)
+                                        @if ($consulta->status!="Finalizada")
+                                       @if (!$consulta->id_usuario_cancelou )
                                           <a rel="tooltip" title="Cancelar" class="btn btn-warning button-small-table" data-original-title="Edit" href="#" id="btnCanelarConsulta"
                                              data-target="#modal-form-cancelar-consulta" data-toggle="modal"  onclick="setModalCancelarConsulta({{ $consulta->id }}, {{ $helper::verificarPrazoCancelamentoGratuito($consulta->horario_agendado) }})">
                                              Cancelar
@@ -148,6 +152,7 @@
                                              Consulta cancelada
                                           </button>
                                        @endif
+                                           @endif
                                     </td>
                                  </tr>
                               @endforeach
@@ -168,7 +173,7 @@
       </div>
       <div class="input-group">
          <div class="custom-radio">
-            <input type="radio" name="metodo_pagamento" id="pix" value="Pix" required>
+            <input type="radio" name="metodo_pagamento" id="pix" value="Pix" required checked>
             <label class="form-check-label" for="pix">
                <img src="{{ asset('assets/img/pix.png')}}" class="img-icon" width="18px"> Pix
             </label>
@@ -209,7 +214,7 @@
             </label>
             <div class="input-group">
                <input type="text" id="numero_autorizacao" class="form-control"
-                  name="numero_autorizacao" placeholder="Número de autorização" value="">
+                  name="numero_autorizacao" placeholder="Número de autorização" >
             </div>
          </div>
       </div>
