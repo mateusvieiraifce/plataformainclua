@@ -85,7 +85,7 @@
                                 Certificado de Graduação/Especialização <span class="required">*</span>
                             </label>
                             <div class="input-group input-medium column-gap-10{{ $errors->has('arquivo') ? ' has-danger' : '' }}">
-                                <input class="form-control border-full disabled {{ $errors->has('arquivo') ? 'is-invalid' : '' }}" type="text" name="fileName" id="fileName" value="" disabled required>
+                                <input class="form-control border-full disabled {{ $errors->has('arquivo') ? 'is-invalid' : '' }}" type="text" name="fileName" id="fileName" value="{{ isset($user) ? explode('/', $user->getCertificadoEspecialista())[2] : null }}" disabled required>
                                 @if (isset($user) && $user->getCertificadoEspecialista())
                                     <a href="{{ asset($user->getCertificadoEspecialista()) }}" title="Baixar arquivo" download>
                                         <i class="zmdi zmdi-download zmdi-hc-3x"></i>
