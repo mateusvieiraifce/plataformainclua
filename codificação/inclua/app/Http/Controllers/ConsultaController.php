@@ -312,6 +312,7 @@ class ConsultaController extends Controller
 
    function listconsultaporespecialista($msg = null)
    {
+
       $especialista = Especialista::where('usuario_id', '=', Auth::user()->id)->first();
       $filter = "";
       if (isset($_GET['filtro'])) {
@@ -373,6 +374,8 @@ class ConsultaController extends Controller
 
    function listConsultaPorEspecialistaPesquisar(Request $request, $msg = null)
    {
+
+
       $especialista = Especialista::where('usuario_id', '=', Auth::user()->id)->first();
       $filter = "";
       if (isset($_GET['filtro'])) {
@@ -421,9 +424,10 @@ class ConsultaController extends Controller
          $consultas = $consultas->where('especialista_id', '=', $especialista->id);
       }
      // dd($request);
-      if (isNull($statusConsulta)){
+      if ($statusConsulta==null){
           $statusConsulta="%%";
       }
+      // dd($statusConsulta);
       $paciente = "%%";
       if (!isNull( $request->nomepaciente)){
           $paciente=$request->nomepaciente;
