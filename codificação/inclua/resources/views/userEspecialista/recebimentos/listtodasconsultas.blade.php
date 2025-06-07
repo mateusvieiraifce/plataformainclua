@@ -152,10 +152,16 @@
                         <div class="table-responsive">
                             <table class="table">
                                 <thead>
-                                <th> Data de Solicitacao </th>
+                                <th>Solicitação </th>
                                 <th> Status </th>
+                                <th> Consultas </th>
                                 <th> Saldo </th>
-                                <th> Total de consultas </th>
+                                <th> Situação </th>
+                                <th> Pix (R$)</th>
+                                <th> Dinheiro(R$) </th>
+                                <th> Cart. Inclua(R$) </th>
+                                <th> Cart. Maquineta(R$) </th>
+
                                 <th>  </th>
                                 </thead>
                                 <tbody>
@@ -165,12 +171,21 @@
                                         <tr>
                                             <td>{{date( 'd/m/Y' , strtotime($ent->created_at))}}
                                             <td>{{$ent->status}}</td>
-                                            <td>{{\App\Helper::padronizaMonetario($ent->saldo) }}
                                             <td>{{$ent->numero_consultas}}</td>
+                                            <td>{{\App\Helper::padronizaMonetario($ent->saldo) }}
+                                            <td>{{$ent->pagamento?"Creditado":"Em Aberto"}}</td>
+                                            <td>{{\App\Helper::padronizaMonetario($ent->total_consultas_pix) }}
+                                            <td>{{\App\Helper::padronizaMonetario($ent->total_consultas_pix) }}
+                                            <td>{{\App\Helper::padronizaMonetario($ent->total_consultas_pix) }}
+                                            <td>{{\App\Helper::padronizaMonetario($ent->total_consultas_pix) }}
                                             <td><a style="max-width:160px; text-align: left;padding:10px " rel="tooltip"
                                                    title="Prontuário" class="btn btn-secondary" data-original-title="Edit"
-                                                   href="{{route('paciente.prontuario', $ent->id)}}">
-                                                    Incluir Comprovante
+                                                   href="#">
+                                                    @if ($ent->saldo>0)
+                                                    Ver Comprovante
+                                                    @else
+                                                        Ver Incluir
+                                                    @endif
                                                 </a>   </td>
                                         </tr>
                                     @endforeach

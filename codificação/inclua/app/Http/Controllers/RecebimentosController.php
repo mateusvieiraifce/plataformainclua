@@ -12,11 +12,20 @@ use Illuminate\Support\Facades\Auth;
 
 class RecebimentosController extends Controller
 {
-    public function home()
+    public function home($id_especialista=null)
     {
 
-        $especialista = Especialista::where('usuario_id', '=', Auth::user()->id)->first();
+        if ($id_especialista) {
+            $especialista = Especialista::where('id', '=',$id_especialista)->first();
+        }else {
+            $especialista = Especialista::where('usuario_id', '=', Auth::user()->id)->first();
+        }
      //   dd($especialista);
+
+        if (!$especialista){
+            session()->flash('msg', ['valor' => trans("Especialista não encontrado!"), 'tipo' => 'danger']);
+          return redirect(route('home'));
+        }
 
         $lastRecep = Recebimento::where('especialista_id', '=', $especialista->id)->whereNotNull('pagamento')->orderBy('fim','DESC')->first();
 
