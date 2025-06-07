@@ -556,6 +556,8 @@ class PacienteController extends Controller
         $consulta = Consulta::find($request->consulta_id);
         $consulta->status = "Aguardando atendimento";
         $consulta->paciente_id = $paciente->id;
+        $consulta->id_usuario_cancelou=null;
+        $consulta->motivocancelamento="";
         $consulta->save();
 
 

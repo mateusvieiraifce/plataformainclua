@@ -124,7 +124,7 @@
                                           @endif
                                        @endif
 
-                                           @if ($consulta->isPago)
+
                                            <br>
                                        @if (!$consulta->id_usuario_cancelou && !($consulta->status == "Finalizada"))
                                           <a rel="tooltip" title="Iniciar atendimento" class="btn btn-primary button-small-table" data-original-title="Edit" href="{{route('especialista.iniciarAtendimento', [$consulta->id, "prontuarioatual"])}}">
@@ -135,7 +135,7 @@
                                              Consulta finalizada
                                           </a>
                                        @endif
-                                           @endif
+
                                        <br>
                                        <a rel="tooltip" title="Cancelar" class="btn btn-default button-small-table" data-original-title="Edit" href="{{route('paciente.prontuario',['id_paciente'=>$consulta->paciente_id])}}">
                                           Prontuário

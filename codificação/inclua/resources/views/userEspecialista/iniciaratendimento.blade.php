@@ -273,7 +273,7 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <a href="{{ route('consulta.listconsultaporespecialista') }}" class="btn btn-primary">
+                    <a href="{{ route('consulta.listConsultaPorEspecialistaPesquisar') }}" class="btn btn-primary">
                         <i class="fa fa-reply"></i>
                         Voltar
                     </a>

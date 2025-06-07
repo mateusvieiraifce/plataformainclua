@@ -427,11 +427,13 @@ class ConsultaController extends Controller
       if ($statusConsulta==null){
           $statusConsulta="%%";
       }
+
       // dd($statusConsulta);
       $paciente = "%%";
-      if (!isNull( $request->nomepaciente)){
+      if ($request->nomepaciente!=null){
           $paciente=$request->nomepaciente;
       }
+     // dd($paciente);
 
        //dd($inicioDoDiaFiltro,$fimDoDiaFiltro, $statusConsulta, $paciente, $request->clinica_id);
      // dd($statusConsulta);
@@ -770,6 +772,7 @@ class ConsultaController extends Controller
 
    public function cancelarConsultaSemTaxa(Request $request)
    {
+       dd("aqui");
       //ver a questao financeira
       $consulta = Consulta::find($request->consulta_id);
 
