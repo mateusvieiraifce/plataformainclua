@@ -1875,7 +1875,7 @@ pre code {
 
 .form-control:disabled,
 .form-control[readonly] {
-    background-color: #e9ecef;
+    background-color: #ffffff;
     opacity: 1;
 }
 
@@ -3768,7 +3768,7 @@ input[type="button"].btn-block {
 .input-group>.custom-file .custom-file-input:focus {
     z-index: 4;
 }
-/* 
+/*
 .input-group>.form-control:not(:last-child),
 .input-group>.custom-select:not(:last-child) {
     border-top-right-radius: 0;
@@ -3791,7 +3791,7 @@ input[type="button"].btn-block {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
 }
-/* 
+/*
 .input-group>.custom-file:not(:first-child) .custom-file-label {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
@@ -4097,7 +4097,7 @@ input[type="button"].btn-block {
 .custom-file-input:disabled~.custom-file-label {
     background-color: #e9ecef;
 }
-/* 
+/*
 .custom-file-input:lang(en)~.custom-file-label::after {
     content: "Browse";
 } */
@@ -16386,7 +16386,7 @@ code {
 .form-control[readonly],
 fieldset[disabled] .form-control {
     background-color: #1d253b;
-    color: #344675;
+    color: #ffffff;
     cursor: not-allowed;
 }
 
@@ -16402,7 +16402,7 @@ fieldset[disabled] .form-control {
 .input-group-btn:last-child>.btn {
     margin-left: 0;
 }
-/* 
+/*
 textarea.form-control {
     max-width: 100%;
     max-height: 80px;

@@ -408,6 +408,22 @@ class Helper
         return $response;
     }
 
+    public static function getDataDiasUteis($dataInicio = null, $dias=5)
+    {
+        $data = $dataInicio ? Carbon::parse($dataInicio) : Carbon::now();
+        $diasUteisAdicionados = 0;
+
+        while ($diasUteisAdicionados < $dias) {
+            $data->addDay();
+            // Verifica se não é sábado (6) nem domingo (0)
+            if ($data->dayOfWeek !== Carbon::SATURDAY && $data->dayOfWeek !== Carbon::SUNDAY) {
+                $diasUteisAdicionados++;
+            }
+        }
+
+        return $data;
+    }
+
     public static function converterMonetario($input)
     {
         $output = strlen(trim($input)) == 0 ? 0 : $input;

@@ -159,6 +159,9 @@ Route::middleware('auth')->group(function () {
     Route::post("/especialista/save", [\App\Http\Controllers\EspecialistaController::class, 'save'])->name('especialista.save');
     Route::get("/especialista/delete/{id}", [\App\Http\Controllers\EspecialistaController::class, 'delete'])->name('especialista.delete');
     Route::get("/especialista/edit/{id}", [\App\Http\Controllers\EspecialistaController::class, 'edit'])->name('especialista.edit');
+    Route::get("/especialista/recebebimentos/list", [\App\Http\Controllers\RecebimentosController::class, 'home'])->name('especialista.recebeimentos.list');
+    Route::post("/especialista/recebebimentos/solicitar", [\App\Http\Controllers\RecebimentosController::class, 'criar_solicitacao'])->name('especialista.recebeimentos.create');
+
 
     #ESPECIALISTA_POR_CLINICA
     Route::get("/especialistaclinica/list/{clinica_id?}", [\App\Http\Controllers\EspecialistaclinicaController::class, 'list'])->name( 'especialistaclinica.list');

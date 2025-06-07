@@ -538,8 +538,8 @@
                             </a>
                         </li>
 
-                        <li @if ($pageSlug == 'favoritos') class="active" @endif>
-                            <a href="#">
+                        <li @if ($pageSlug == 'recebimentos') class="active" @endif>
+                            <a href="{{route('especialista.recebeimentos.list')}}">
                                 <i class="tim-icons icon-coins"></i>
                                 <p>{{ __('Histórico de Recebimentos') }}</p>
                             </a>
