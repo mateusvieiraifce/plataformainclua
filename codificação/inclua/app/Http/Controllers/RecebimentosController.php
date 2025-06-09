@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helper;
+use App\Models\Clinica;
 use App\Models\Consulta;
 use App\Models\Especialista;
 use App\Models\Recebimento;
@@ -13,9 +14,10 @@ use Illuminate\Support\Facades\Auth;
 class RecebimentosController extends Controller
 {
 
-    public function calculaRecebimento($especialista)
+    public function calculaRecebimento($especialista, $clinicaId=null)
     {
-        $lastRecep = Recebimento::where('especialista_id', '=', $especialista->id)->whereNotNull('pagamento')->orderBy('fim','DESC')->first();
+
+        $lastRecep = Recebimento::where('especialista_id', '=', $especialista->id)->where("clinica_id","=",$clinicaId)->whereNotNull('pagamento')->orderBy('fim','DESC')->first();
 
         $inicio = Carbon::now()->subYear(2)->startOfDay();
 
@@ -28,28 +30,29 @@ class RecebimentosController extends Controller
 
         // dd($inicio, $fimDoDiaFiltro);
         $consultasBase = Consulta::whereBetween('horario_agendado', [$inicio, $fimDoDiaFiltro])
-            ->where('isPago',true)->where('especialista_id',$especialista->id)->where('status','Finalizada');
+            ->where('isPago',true)->where('especialista_id',$especialista->id)->where("clinica_id","=",$clinicaId)->where('status','Finalizada');
 
         //dd($consultasBase->toSql());
 
         $Numero = $consultasBase->count();
 
+
         $consultasPIX  = Consulta::whereBetween('horario_agendado', [$inicio, $fimDoDiaFiltro])
-            ->where('isPago',true)->where('especialista_id',$especialista->id)->where('status','Finalizada')->where('forma_pagamento', "Pix");
+            ->where('isPago',true)->where('especialista_id',$especialista->id)->where("clinica_id","=",$clinicaId)->where('status','Finalizada')->where('forma_pagamento', "Pix");
         $totalPix = $consultasPIX->sum("preco");
 
 
         $consultasEspecie  = Consulta::whereBetween('horario_agendado', [$inicio, $fimDoDiaFiltro])
-            ->where('isPago',true)->where('especialista_id',$especialista->id)->where('status','Finalizada')->where('forma_pagamento', "Éspecie");
+            ->where('isPago',true)->where('especialista_id',$especialista->id)->where("clinica_id","=",$clinicaId)->where('status','Finalizada')->where('forma_pagamento', "Éspecie");
         $totalEspecie = $consultasEspecie->sum("preco");
 
         $consultasCartao  = Consulta::whereBetween('horario_agendado', [$inicio, $fimDoDiaFiltro])
-            ->where('isPago',true)->where('especialista_id',$especialista->id)->where('status','Finalizada')->where('forma_pagamento', "Cartão");
+            ->where('isPago',true)->where('especialista_id',$especialista->id)->where("clinica_id","=",$clinicaId)->where('status','Finalizada')->where('forma_pagamento', "Cartão");
         $totalCartao = $consultasCartao->sum("preco");
 
 
         //$totalCartao = $consultasBase->whereRaw('LOWER(forma_pagamento) = ?', ["Cartão"])->sum('preco');
-        $totalMaquininha = $consultasBase->whereRaw('LOWER(forma_pagamento) = ?', ["Maquininha"])->sum('preco');
+        $totalMaquininha = $consultasBase->where("clinica_id","=",$clinicaId)->whereRaw('LOWER(forma_pagamento) = ?', ["Maquininha"])->sum('preco');
 
         $porcentagemClinica = env("COMICAO_CLINICA");
         $porcentagemInclua = env("COMICAO_INCLUA");
@@ -89,23 +92,35 @@ class RecebimentosController extends Controller
         return $recebimento;
     }
 
-    public function home($id_especialista=null)
+    public function home($id_especialista=null, $clinicaId=null)
     {
+
 
         if ($id_especialista) {
             $especialista = Especialista::where('id', '=',$id_especialista)->first();
         }else {
             $especialista = Especialista::where('usuario_id', '=', Auth::user()->id)->first();
         }
+
+        $selecionado = null;
+        $clinicasAssociado = Clinica::join("especialistaclinicas","clinicas.id","=","clinica_id")->where("especialistaclinicas.especialista_id","=",$especialista->id)
+            ->OrderBy("clinicas.id","asc")->get();
+        if ($clinicasAssociado->count() > 0) {
+            $selecionado = $clinicasAssociado[0]->id;
+        }
+        if ($clinicaId){
+            $selecionado = $clinicaId;
+        }
+       // dd($clinicasAssociado);
      //   dd($especialista);
 
         if (!$especialista){
             session()->flash('msg', ['valor' => trans("Especialista não encontrado!"), 'tipo' => 'danger']);
           return redirect(route('home'));
         }
-        $recebimentos =  $this->calculaRecebimento($especialista);
+        $recebimentos =  $this->calculaRecebimento($especialista, $selecionado);
 
-        $recebimentosList = Recebimento::join("especialistas","especialistas.id","=","especialista_id")-> where("especialista_id",$especialista->id)->paginate(12);
+        $recebimentosList = Recebimento::join("especialistas","especialistas.id","=","especialista_id")->where("clinica_id","=",$selecionado)-> where("especialista_id",$especialista->id)->paginate(12);
 
 
         return view('userEspecialista.recebimentos.listtodasconsultas', ['pageSlug' => 'recebimentos',
@@ -120,7 +135,10 @@ class RecebimentosController extends Controller
             "comissaoClinica"=>$recebimentos->taxa_clinica,
             "comissaoInclua"=>$recebimentos->taxa_inclua,
             "saldo"=>$recebimentos->saldo,
-            "lista"=>$recebimentosList
+            "lista"=>$recebimentosList,
+            "clinicas"=>$clinicasAssociado,
+            "clinicaselecionada_id"=>$selecionado,
+            "especialista_id"=>$especialista->id
             ]);
     }
 
@@ -128,25 +146,28 @@ class RecebimentosController extends Controller
 
         try{
 
+            $clinica_id = $request->clinica_id;
+           // dd();
             $especialista = Especialista::where('usuario_id', '=', Auth::user()->id)->first();
-            $lastRecep = Recebimento::where('especialista_id', '=', $especialista->id)->orderBy('fim','DESC')->first();
+            $lastRecep = Recebimento::where('especialista_id', '=', $especialista->id)->where("clinica_id","=",$clinica_id)->orderBy('fim','DESC')->first();
             if ($lastRecep != null) {
                 session()->flash('msg', ['valor' => trans("Há uma solicitação em aberto, aguarda a finalização!"), 'tipo' => 'danger']);
                 return redirect(route('especialista.recebeimentos.list'));
             }
 
-            $solicitacao = $this->calculaRecebimento($especialista);
+            $solicitacao = $this->calculaRecebimento($especialista,$clinica_id);
 
             $solicitacao->vencimento = Helper::getDataDiasUteis();
             $solicitacao->especialista_id= $especialista->id;
+            $solicitacao->clinica_id = $clinica_id;
 
             if ($solicitacao->total_consultas_credito>$solicitacao->taxa_inclua){
                 $incluaSaldo  =  $solicitacao->total_consultas_credito-$solicitacao->taxa_inclua;
                 $solicitacao->status = "A Receber do Inclua ". (Helper::padronizaMonetario( $incluaSaldo ));
             } else{
 
-                $solicitacao->saldo = $solicitacao->taxa_inclua-$solicitacao->total_consultas_credito;
-                $solicitacao->status = "A Pagar do Inclua ". ($solicitacao->saldo );
+                $solicitacao->saldo = $solicitacao->total_consultas_credito-$solicitacao->taxa_inclua;
+                $solicitacao->status = "A Pagar ao Inclua ". Helper::padronizaMonetario($solicitacao->saldo*-1 );
             }
             $solicitacao->save();
             session()->flash('msg', ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success']);
@@ -155,7 +176,9 @@ class RecebimentosController extends Controller
                # dd($e->getMessage());
                 session()->flash('msg', ['valor' => trans("Houve um erro ao realizar o cadastro, tente novamente!"), 'tipo' => 'danger']);
             }
-        return redirect(route('especialista.recebeimentos.list'));
+            $urlRoute = route('especialista.recebeimentos.list') ."/".$especialista->id."/".$clinica_id;
+           // dd($urlRoute);
+            return redirect($urlRoute);
 
     }
     //

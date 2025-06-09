@@ -20,8 +20,31 @@
                         <div class="col-lg-12 col-md-12">
                             <form action="{{route('especialista.recebeimentos.create')}}" method="post" id="pesquisar">
                                 @csrf
+
+                                <input type="hidden" value="{{$especialista_id}}" id="especialista_id">
                                 <fieldset>
                                     <div class="row">
+
+                                        <div class="col-md-3 px-8">
+                                            <div class="form-group">
+                                                <label id="labelFormulario">
+                                                    Clínica(s) vinculada(s)
+                                                </label>
+                                                <div class="input-button-inline">
+                                                    <select name="clinica_id" id="clinica_id" class="form-control">
+                                                        @foreach($clinicas as $iten)
+                                                            <option value="{{$iten->id}}"
+                                                                    @if(isset($clinicaselecionada_id))
+                                                                    @if($iten->id == $clinicaselecionada_id) selected @endif
+                                                                @endif
+                                                            >
+                                                                {{$iten->nome}}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="col-md-2 px-8">
                                             <div class="form-group">
                                                 <label for="inicio_data">
@@ -52,7 +75,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-md-2 px-8">
+                                        <div class="col-md-3 px-8">
                                             <div class="form-group">
                                                 <label for="inicio_data">
                                                     Número de Consultas
@@ -83,7 +106,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-md-2 px-8">
+                                        <div class="col-md-4 px-8">
                                             <div class="form-group">
                                                 <label for="inicio_data">
                                                     Total Cartão  -  Inclua
@@ -93,7 +116,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-md-2 px-8">
+                                        <div class="col-md-3 px-8">
                                             <div class="form-group">
                                                 <label for="inicio_data">
                                                     Total Cartão  - Maquineta
@@ -123,7 +146,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-md-2 px-8">
+                                        <div class="col-md-4 px-8">
                                             <div class="form-group">
                                                 <label for="inicio_data">
                                                     Saldo
@@ -132,9 +155,14 @@
                                                        class="form-control" @if(isset($saldo)) value="{{number_format($saldo, 2, ',', '.')}}" @endif>
                                             </div>
                                         </div>
+                                        <div class="col-md-4 px-8">
+                                            <div class="form-group">
+                                                <button type="submit" class="btn btn-fill btn-primary">{{ __('Solicitar') }} <i class="tim-icons icon-money-coins"> </i></button>
+
+                                            </div>
+                                        </div>
 
                                         <div class="col-sm-1">
-                                            <button type="submit" class="btn btn-fill btn-primary">{{ __('Solicitar') }} <i class="tim-icons icon-money-coins"> </i></button>
                                         </div>
 
 
@@ -187,7 +215,7 @@
                                                     @if ($ent->saldo>0)
                                                     Ver Comprovante
                                                     @else
-                                                        Ver Incluir
+                                                     Ver Boleto
                                                     @endif
                                                 </a>   </td>
                                         </tr>
@@ -206,4 +234,23 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.getElementById('clinica_id').addEventListener('change', function() {
+            const selectedValue = this.value;
+            const id = document.getElementById("especialista_id").value
+            if (selectedValue) {
+
+                const baseRoute = "{{ route('especialista.recebeimentos.list', ['clinicaId' => '']) }}";
+
+                // Remove any trailing slash if present
+                const cleanRoute = baseRoute.endsWith('/')
+                    ? baseRoute.slice(0, -1)
+                    : baseRoute;
+                // Or for a named parameter route like '/items/{id}'
+                 window.location.href = `${cleanRoute}/${id}/${selectedValue}`;
+
+            }
+        });
+    </script>
 @endsection

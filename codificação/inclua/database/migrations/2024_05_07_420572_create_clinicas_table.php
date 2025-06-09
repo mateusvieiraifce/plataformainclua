@@ -11,12 +11,13 @@ class CreateClinicasTable extends Migration
       $table->id();
       $table->string('nome')->nullable();
       $table->string('razaosocial')->nullable();
-      $table->string('cnpj')->nullable();    
-         
+      $table->string('cnpj')->nullable();
+
       $table->string('logotipo')->nullable();
       $table->boolean('ativo')->nullable();
       $table->integer('numero_atendimento_social_mensal')->nullable();
       $table->unsignedBigInteger('usuario_id')->nullable();
+      $table->decimal("porcentagem_clinica",8,2)->nullable();
       $table->timestamps();
     });
 

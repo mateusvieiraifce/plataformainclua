@@ -32,7 +32,9 @@ class CreateUserRecebimentos extends Migration
             $table->date('pagamento')->nullable();
             $table->string('status');
             $table->unsignedBigInteger('especialista_id');
+            $table->unsignedBigInteger('clinica_id');
             $table->foreign('especialista_id')->references('id')->on('especialistas')->onUpdate('cascade')->onDelete('restrict');
+            $table->foreign('clinica_id')->references('id')->on('clinicas')->onUpdate('cascade')->onDelete('restrict');
         });
     }
 
