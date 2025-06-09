@@ -12,21 +12,9 @@ use Illuminate\Support\Facades\Auth;
 
 class RecebimentosController extends Controller
 {
-    public function home($id_especialista=null)
+
+    public function calculaRecebimento($especialista)
     {
-
-        if ($id_especialista) {
-            $especialista = Especialista::where('id', '=',$id_especialista)->first();
-        }else {
-            $especialista = Especialista::where('usuario_id', '=', Auth::user()->id)->first();
-        }
-     //   dd($especialista);
-
-        if (!$especialista){
-            session()->flash('msg', ['valor' => trans("Especialista não encontrado!"), 'tipo' => 'danger']);
-          return redirect(route('home'));
-        }
-
         $lastRecep = Recebimento::where('especialista_id', '=', $especialista->id)->whereNotNull('pagamento')->orderBy('fim','DESC')->first();
 
         $inicio = Carbon::now()->subYear(2)->startOfDay();
@@ -38,7 +26,7 @@ class RecebimentosController extends Controller
 
         $fimDoDiaFiltro = Carbon::now()->subDays(1)->endOfDay();
 
-       // dd($inicio, $fimDoDiaFiltro);
+        // dd($inicio, $fimDoDiaFiltro);
         $consultasBase = Consulta::whereBetween('horario_agendado', [$inicio, $fimDoDiaFiltro])
             ->where('isPago',true)->where('especialista_id',$especialista->id)->where('status','Finalizada');
 
@@ -73,7 +61,7 @@ class RecebimentosController extends Controller
         $commissaoIncluaEspecie = $totalEspecie*$porcentagemInclua;
         $commissaoIncluaMaquineta = $liquidoMaquina * $porcentagemInclua;
         $comissaoSistema = $liquidoCartao * $porcentagemInclua;
-       // dd($commissaoIncluaPix, $commissaoIncluaEspecie, $commissaoIncluaMaquineta, $comissaoSistema  );
+        // dd($commissaoIncluaPix, $commissaoIncluaEspecie, $commissaoIncluaMaquineta, $comissaoSistema  );
         $comissaoInclua = $commissaoIncluaMaquineta + $commissaoIncluaPix + $commissaoIncluaEspecie+$comissaoSistema;
 
         $comissaoClinicaPix = $totalPix*$porcentagemClinica;
@@ -83,22 +71,56 @@ class RecebimentosController extends Controller
 
         $commissaoClinica = $comissaoClinicaEspecie+$comissaoClinicaMaquineta+$comissaoClinicaPix+$comissaoClinicaSistema;
 
-        $saldo=  $totalPix +$totalCartao + $totalMaquininha + $totalEspecie - $commissaoClinica - $comissaoInclua;
-        $recebimentos = Recebimento::where("especialista_id",$especialista->id)->paginate(12);
+        $saldo=  $totalPix +$liquidoCartao + $liquidoMaquina + $totalEspecie - $commissaoClinica - $comissaoInclua;
+
+        $recebimento = new Recebimento();
+        $recebimento->inicio =  $inicio;
+        $recebimento->fim = $fimDoDiaFiltro;
+        $recebimento->numero_consultas = $Numero;
+        $recebimento->total_consultas_pix = $totalPix;
+        $recebimento->total_consultas_especie = $totalEspecie;
+        $recebimento->total_consultas_maquininha=$totalMaquininha;
+        $recebimento->total_consultas_credito=$totalCartao;
+        $recebimento->especialista_id = $especialista->id;
+        $recebimento->taxa_inclua = $comissaoInclua;
+        $recebimento->taxa_cartao = $taxaMaquina;
+        $recebimento->taxa_clinica = $commissaoClinica;
+        $recebimento->saldo = $saldo;
+        return $recebimento;
+    }
+
+    public function home($id_especialista=null)
+    {
+
+        if ($id_especialista) {
+            $especialista = Especialista::where('id', '=',$id_especialista)->first();
+        }else {
+            $especialista = Especialista::where('usuario_id', '=', Auth::user()->id)->first();
+        }
+     //   dd($especialista);
+
+        if (!$especialista){
+            session()->flash('msg', ['valor' => trans("Especialista não encontrado!"), 'tipo' => 'danger']);
+          return redirect(route('home'));
+        }
+        $recebimentos =  $this->calculaRecebimento($especialista);
+
+        $recebimentosList = Recebimento::join("especialistas","especialistas.id","=","especialista_id")-> where("especialista_id",$especialista->id)->paginate(12);
+
 
         return view('userEspecialista.recebimentos.listtodasconsultas', ['pageSlug' => 'recebimentos',
-            'numero'=>$Numero,
-            'pix'=>$totalPix,
-            'especie'=>$totalEspecie,
-            'cartao'=>$totalCartao,
-            'maquina'=>$totalMaquininha,
-            'inicio'=>$inicio,
-            "fim"=>$fimDoDiaFiltro,
+            'numero'=>$recebimentos->numero_consultas,
+            'pix'=>$recebimentos->total_consultas_pix,
+            'especie'=>$recebimentos->total_consultas_especie,
+            'cartao'=>$recebimentos->total_consultas_credito,
+            'maquina'=>$recebimentos->total_consultas_maquininha,
+            'inicio'=>$recebimentos->inicio,
+            "fim"=>$recebimentos->fim,
             "filtro"=>$especialista->nome,
-            "comissaoClinica"=>$commissaoClinica,
-            "comissaoInclua"=>$comissaoInclua,
-            "saldo"=>$saldo,
-            "lista"=>$recebimentos
+            "comissaoClinica"=>$recebimentos->taxa_clinica,
+            "comissaoInclua"=>$recebimentos->taxa_inclua,
+            "saldo"=>$recebimentos->saldo,
+            "lista"=>$recebimentosList
             ]);
     }
 
@@ -113,23 +135,14 @@ class RecebimentosController extends Controller
                 return redirect(route('especialista.recebeimentos.list'));
             }
 
-            $solicitacao =  new Recebimento();
-            $solicitacao->inicio = $request->inicio_data;
-            $solicitacao->fim = $request->final_data;
-            $solicitacao->total_consultas_pix = Helper::converterMonetario($request->pix);
-            $solicitacao->total_consultas_especie = Helper::converterMonetario($request->especie);
-            $solicitacao->total_consultas_maquininha = Helper::converterMonetario($request->maquina);
-            $solicitacao->numero_consultas = Helper::converterMonetario($request->numero);
-            $solicitacao->total_consultas_credito = Helper::converterMonetario($request->cartao);
-            $solicitacao->taxa_clinica = Helper::converterMonetario($request->comissao_clinica);
-            $solicitacao->taxa_inclua = Helper::converterMonetario($request->comissao_inclua);
-            $solicitacao->taxa_cartao = env("TAXA_MAQUINETA");
+            $solicitacao = $this->calculaRecebimento($especialista);
+
             $solicitacao->vencimento = Helper::getDataDiasUteis();
             $solicitacao->especialista_id= $especialista->id;
 
             if ($solicitacao->total_consultas_credito>$solicitacao->taxa_inclua){
-                $solicitacao->saldo = $solicitacao->total_consultas_credito-$solicitacao->taxa_inclua;
-                $solicitacao->status = "A Receber do Inclua ". ($solicitacao->saldo );
+                $incluaSaldo  =  $solicitacao->total_consultas_credito-$solicitacao->taxa_inclua;
+                $solicitacao->status = "A Receber do Inclua ". (Helper::padronizaMonetario( $incluaSaldo ));
             } else{
 
                 $solicitacao->saldo = $solicitacao->taxa_inclua-$solicitacao->total_consultas_credito;

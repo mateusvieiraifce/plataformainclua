@@ -1,6 +1,6 @@
-@extends('layouts.app', ['page' => __('Pacientes'), 'exibirPesquisa' => false, 'pageSlug' => 'recebimentos', 'class' => 'agenda'])
+@extends('layouts.app', ['page' => __('Recebimentos'), 'exibirPesquisa' => false, 'pageSlug' => 'recebimentos', 'class' => 'agenda'])
 @section('content')
-    @section('title', 'Pacientes')
+    @section('title', 'Recebimentos')
 
 <style type="text/css">
     input:read-only {
@@ -134,10 +134,9 @@
                                         </div>
 
                                         <div class="col-sm-1">
-                                            <button style="max-height: 40px; max-width: 40px;margin-top: 25px" class="btn btn-primary">
-                                                <i class="tim-icons icon-zoom-split">
-                                                </i></button>
+                                            <button type="submit" class="btn btn-fill btn-primary">{{ __('Solicitar') }} <i class="tim-icons icon-money-coins"> </i></button>
                                         </div>
+
 
                                     </div>
 
@@ -161,6 +160,8 @@
                                 <th> Dinheiro(R$) </th>
                                 <th> Cart. Inclua(R$) </th>
                                 <th> Cart. Maquineta(R$) </th>
+                                <th> Comissão Inclua(R$) </th>
+                                <th> Especialista </th>
 
                                 <th>  </th>
                                 </thead>
@@ -175,9 +176,11 @@
                                             <td>{{\App\Helper::padronizaMonetario($ent->saldo) }}
                                             <td>{{$ent->pagamento?"Creditado":"Em Aberto"}}</td>
                                             <td>{{\App\Helper::padronizaMonetario($ent->total_consultas_pix) }}
-                                            <td>{{\App\Helper::padronizaMonetario($ent->total_consultas_pix) }}
-                                            <td>{{\App\Helper::padronizaMonetario($ent->total_consultas_pix) }}
-                                            <td>{{\App\Helper::padronizaMonetario($ent->total_consultas_pix) }}
+                                            <td>{{\App\Helper::padronizaMonetario($ent->total_consultas_especie) }}
+                                            <td>{{\App\Helper::padronizaMonetario($ent->total_consultas_credito) }}
+                                            <td>{{\App\Helper::padronizaMonetario($ent->total_consultas_maquininha) }}
+                                            <td>{{\App\Helper::padronizaMonetario($ent->taxa_inclua) }}
+                                            <td>{{$ent->nome}}</td>
                                             <td><a style="max-width:160px; text-align: left;padding:10px " rel="tooltip"
                                                    title="Prontuário" class="btn btn-secondary" data-original-title="Edit"
                                                    href="#">
