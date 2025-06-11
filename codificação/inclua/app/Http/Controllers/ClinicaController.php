@@ -285,8 +285,8 @@ class ClinicaController extends Controller
 
    public function relatorioView(Request $request)
    {
-      $data_inicio = Carbon::now()->toDateString();
-      $data_fim = Carbon::now()->addMonth()->toDateString();
+      $data_inicio = Carbon::now()->subMonth()->startOfDay()->toDateString();
+      $data_fim = Carbon::now()->endOfDay()->toDateString();
        // Salva os parâmetros na sessão, incluindo data_inicio e data_fim
        if (Auth::user()->tipo_user == 'R') {
          session([
