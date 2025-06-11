@@ -2,6 +2,7 @@
 @section('content')
 @section('title', 'DASHBOARD')
 
+@if(sizeof($TodasConsultasPorMes)>0)
     <div class="row">
         <div class="col-12">
             <div class="card card-chart">
@@ -27,7 +28,7 @@
                                         <span class="d-block d-sm-none">
                                         <i class="tim-icons icon-delivery-fast"></i>
                                     </span>
-                                    </label>                              
+                                    </label>
                                 </div>
                             </div>
 
@@ -83,7 +84,7 @@
                                     backgroundColor: 'transparent',
                                     hAxis: {
                                         textStyle: {
-                                            color: '#ffffff' 
+                                            color: '#ffffff'
                                         }
                                     },
                                     vAxis: {
@@ -91,12 +92,12 @@
                                             color: '#ffffff'
                                         },
                                         textStyle: {
-                                            color: '#ffffff' 
+                                            color: '#ffffff'
                                         }
                                     },
                                     legend: {
                                         textStyle: {
-                                            color: '#ffffff' 
+                                            color: '#ffffff'
                                         }
                                     },
                                     pointSize: 5,
@@ -160,7 +161,7 @@
                                     google.charts.load('current', {'packages': ['corechart']});
                                     google.charts.setOnLoadCallback(drawChartQuantidade);
 
-                                }                              
+                                }
 
                             }
                         </script>
@@ -182,6 +183,11 @@
             </div>
         </div>
     </div>
+@else
+    <div class="row">
+
+    </div>
+@endif
 
 
      <!-- graficos por vendedor -->
@@ -211,17 +217,17 @@
                             $dataAtual = \Carbon\Carbon::now();
                              $SeisMesesAntes =\Carbon\Carbon::now()->subMonths(6);
 
-                             $clinica = \App\Models\Clinica::where('usuario_id', '=', Auth::user()->id)->first();    
+                             $clinica = \App\Models\Clinica::where('usuario_id', '=', Auth::user()->id)->first();
                              $TodasConsultasPorMes = \App\Models\Consulta::join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')->
                             where('consultas.clinica_id', '=', $clinica->id)->
                             where('status', 'Finalizada')->
                             //selecinar por especialista
                             where('especialista_id', $ent->id)->
                             whereBetween('horario_agendado', [$SeisMesesAntes, $dataAtual])->
-                            selectRaw('MONTH(horario_agendado) as mes, sum(preco) as preco_total, 
+                            selectRaw('MONTH(horario_agendado) as mes, sum(preco) as preco_total,
                                     count(*) as quantidade')->
                             groupBy(\App\Models\Consulta::raw('MONTH(horario_agendado)'))->
-                            limit(6)->get();                           
+                            limit(6)->get();
                         @endphp
 
                         @if(sizeof($TodasConsultasPorMes)>0)
@@ -276,7 +282,7 @@
                <div class="card-header">
                    <h4 class="card-title">
                    @php
-                       $especialista = \App\Models\Especialista::find($ent->id);                        
+                       $especialista = \App\Models\Especialista::find($ent->id);
                    @endphp
                    {{$especialista->nome}}
 
@@ -303,7 +309,7 @@
 
 
 </div>
-   
+
 
 @endsection
 

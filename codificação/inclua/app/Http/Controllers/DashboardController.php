@@ -178,6 +178,7 @@ class DashboardController extends Controller
             ->groupByRaw('YEAR(horario_agendado), MONTH(horario_agendado)') // Agrupa por ano e mês
             ->orderByRaw('YEAR(horario_agendado), MONTH(horario_agendado)') // Ordena de forma crescente (de Janeiro a Dezembro)
             ->get();
+      // dd($TodasConsultasPorMes);
         return view('userClinica/dashboard', ['lista' => $especialistas, 'TodasConsultasPorMes' => $TodasConsultasPorMes]);
     }
 

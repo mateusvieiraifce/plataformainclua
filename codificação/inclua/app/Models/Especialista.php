@@ -67,4 +67,8 @@ class Especialista extends Model
 
         return $clinica->nome;
     }
+    public function especialidade()
+    {
+        return $this->belongsTo(Especialidade::class, 'especialidade_id');
+    }
 }

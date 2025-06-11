@@ -16,18 +16,18 @@
 function validarCheckBoxes() {
     var checkboxes = document.querySelectorAll('input[type="checkbox"]');
     var peloMenosUmSelecionado = false;
-    
+
     checkboxes.forEach(function(checkbox) {
         if (checkbox.checked) {
             peloMenosUmSelecionado = true;
         }
     });
-    
+
     if (!peloMenosUmSelecionado) {
         alert("Por favor, selecione pelo menos um dia da semana.");
         return false;
     }
-    
+
     return true;
 }
 </script>
@@ -44,7 +44,7 @@ function validarCheckBoxes() {
               @csrf
               <div class="row">
 
-             
+
               @php
                 use Carbon\Carbon;
                 $data = Carbon::now()->addMonths(1);
@@ -79,7 +79,7 @@ function validarCheckBoxes() {
 
               </div>
               <div class="row">
-               
+
                 <div class="col-md-4 px-8">
                   <div class="form-group">
                     <label id="labelFormulario">Intervalo entre as consultas (min)</label>
@@ -105,7 +105,7 @@ function validarCheckBoxes() {
 
               </div>
 
-              <div class="row">           
+              <div class="row">
                 <div class="col-md-4 px-8">
                   <div class="form-group">
                     <label id="labelFormulario">Preço</label>
@@ -113,6 +113,7 @@ function validarCheckBoxes() {
                       value="{{$precoConsulta}}" maxlength="150">
                   </div>
                 </div>
+                  <div class="row" style="visibility: hidden">
                 <div class="col-md-4 px-8">
                   <div class="form-group">
                     <label id="labelFormulario">Porcetagem de repasse para clínica</label>
@@ -129,6 +130,7 @@ function validarCheckBoxes() {
                       maxlength="150">
                   </div>
                 </div>
+                  </div>
               </div>
 
               <label id="labelFormulario">Dias na semana de atemdimento</label>

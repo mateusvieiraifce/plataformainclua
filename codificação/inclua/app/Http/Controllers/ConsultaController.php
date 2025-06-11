@@ -199,10 +199,20 @@ class ConsultaController extends Controller
          ->where('especialidade_id', $especialista->especialidade_id)
          ->first();
 
-      $precoConsulta = $relacaoEspecialidadeClinica->valor;
+      if ($relacaoEspecialidadeClinica==null){
 
+          session()->flash('msg', ['valor' => trans("Essa clínica ainda não possui valores padrões para essa especialista, configure em Menu Lateral/Configurações/Especialidades" ), 'tipo' => 'danger']);
+          return  redirect()->back();
+
+      }
+
+      $precoConsulta = $relacaoEspecialidadeClinica->valor;
+      //dd("aqui");
+      $consulta = new Consulta();
+      $consulta->porcetagem_repasse_clinica = env("COMICAO_CLINICA");
+      $consulta->porcetagem_repasse_plataforma = env("COMICAO_INCLUA");
       return view('userClinica/cadVinculoEspecialista/cadAgenda', [
-         'entidade' => new Consulta(), 'especialista' => $especialista,
+         'entidade' => $consulta, 'especialista' => $especialista,
          'precoConsulta' => $precoConsulta, 'clinica' => $clinica
       ]);
    }

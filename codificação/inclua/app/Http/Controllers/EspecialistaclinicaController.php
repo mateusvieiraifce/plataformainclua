@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\Especialidadeclinica;
 use App\Models\Especialistaclinica;
 use App\Models\Especialista;
 use Illuminate\Database\QueryException;
@@ -46,7 +47,10 @@ class EspecialistaclinicaController extends Controller
          $clinica = Clinica::find($clinica_id);
       }
 
-      return view('userClinica/cadVinculoEspecialista/form', ['entidade' => new Especialistaclinica(), 'clinica' => $clinica, 'especialistas'=>Especialista::all()]);
+       $especialistas = Especialista::with('especialidade')->get();
+
+     //  dd($especialistas[0]->especialidade->descricao);
+      return view('userClinica/cadVinculoEspecialista/form', ['entidade' => new Especialistaclinica(), 'clinica' => $clinica, 'especialistas'=>$especialistas]);
    }
    function search(Request $request, $clinica_id)
    {
@@ -57,6 +61,22 @@ class EspecialistaclinicaController extends Controller
    }
    function save(Request $request)
    {
+       #verificar se na clinica está associado a especialidade do especialista, se nao incluir.
+
+       $especialista = Especialista::find($request->especialista_id);
+       $espcialidadeClinica = Especialidadeclinica::where("especialidade_id","=",$especialista->especialidade_id)->first();
+       if (!$espcialidadeClinica) {
+         //  dd("aqui");
+           $associaEspecilidade = new Especialidadeclinica();
+           $associaEspecilidade->especialidade_id=$especialista->especialidade_id;
+           $associaEspecilidade->clinica_id= $request->clinica_id;
+           $associaEspecilidade->valor=60;
+           $associaEspecilidade->is_vinculado=true;
+           $associaEspecilidade->save();
+       }
+
+
+
       $clinica_id = $request->clinica_id;
       if ($request->id) {
          $ent = Especialistaclinica::find($request->id);
@@ -64,6 +84,7 @@ class EspecialistaclinicaController extends Controller
          $ent->clinica_id = $clinica_id;
          $ent->save();
       } else {
+
          $entidade = Especialistaclinica::create([
             'especialista_id' => $request->especialista_id,
             'clinica_id' => $clinica_id,
