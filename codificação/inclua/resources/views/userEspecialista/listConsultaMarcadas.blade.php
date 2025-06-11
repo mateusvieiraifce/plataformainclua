@@ -140,6 +140,12 @@
                                        <a rel="tooltip" title="Cancelar" class="btn btn-default button-small-table" data-original-title="Edit" href="{{route('paciente.prontuario',['id_paciente'=>$consulta->paciente_id])}}">
                                           Prontuário
                                        </a>
+
+                                           <br>
+                                           <a rel="tooltip" title="Cancelar" class="btn btn-default button-small-table" data-original-title="Edit" href="{{route('paciente.prontuario',['id_paciente'=>$consulta->paciente_id])}}">
+                                               Avaliar Paciente
+                                           </a>
+
                                        <br>
                                         @if ($consulta->status!="Finalizada")
                                        @if (!$consulta->id_usuario_cancelou )

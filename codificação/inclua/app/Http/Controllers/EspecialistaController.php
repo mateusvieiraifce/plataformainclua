@@ -421,6 +421,7 @@ class EspecialistaController extends Controller
          return redirect()->route('consulta.listconsultaporespecialista');
       }
 
+
       $consulta = Consulta::find($consulta_id);
 
       $paciente = Paciente::find($consulta->paciente_id);
@@ -476,8 +477,9 @@ class EspecialistaController extends Controller
          $entidadeFila->delete();
       }
 
+
       $prontuarioCorrente = Prontuario::where('consulta_id', $consulta->id)->first();
-      //dd($prontuario);
+
 
       $prontuarioCompleto = Consulta::join('especialistas', 'especialistas.id', 'consultas.especialista_id')
          ->join('especialidades', 'especialidades.id', 'especialistas.especialidade_id')
@@ -508,7 +510,11 @@ class EspecialistaController extends Controller
       $especialidades = Especialidade::all();
       $atestado = Atestado::where('consulta_id', $consulta->id)->get();
       if ($prontuarioCorrente){
-        $prontuario->dados_consulta = $prontuarioCorrente->dados_consulta;
+          $prontuario= new Prontuario();
+          $prontuario->dados_consulta = $prontuarioCorrente->dados_consulta;
+      } else{
+          $prontuario= new Prontuario();
+          $prontuario->dados_consulta = "";
       }
      //   dd($prontuario);
       return view('userEspecialista/iniciaratendimento', [
