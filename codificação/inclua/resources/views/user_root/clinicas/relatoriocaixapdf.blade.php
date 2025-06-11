@@ -148,7 +148,7 @@
                 @if($preco_fcdc !== 'Sem renda na modalidade' && $preco_fcdc !== 'Sem filtro' && $preco_fcdc > 0)
                     R$ {{ number_format($preco_fcdc, 2, ',', '.') }}
                 @else
-                    R$ {{ number_format($preco_fcdc, 2, ',', '.') }}
+                    R$ {{ number_format(0, 2, ',', '.') }}
                 @endif
             </p>
 
@@ -156,13 +156,14 @@
                 @if($preco_inclua !== 'Sem renda na modalidade' && $preco_inclua!== 'Sem filtro' && $preco_inclua > 0)
                     R$ {{ number_format($preco_inclua, 2, ',', '.') }}
                 @else
-                    R$ {{ number_format($preco_inclua, 2, ',', '.') }}
+                    R$ {{ number_format(0, 2, ',', '.') }}
                 @endif
             </p>
         </div>
 
     </div>
 
+    @if ($num_f>0)
 
     <div class="title">
         <p>Relatório de Caixa</p>
@@ -201,5 +202,6 @@
         </tbody>
     </table>
     </div>
+    @endif
 </body>
 </html>

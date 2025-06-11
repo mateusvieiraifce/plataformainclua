@@ -121,7 +121,7 @@
                                     <tr>
                                         <td>
                                             <button type="submit" class="btn btn-fill btn-primary">{{ __('Gerar') }}</button>
-                                            <button type="button" id="limparFormulario" class="btn btn-danger ms-2">Limpar</button>
+                                            <a href="{{route('user.relatorio')}}" id="limparFormulario" class="btn btn-danger ms-2">Limpar</a>
                                         </td>
                                     </tr>
                                 </form>

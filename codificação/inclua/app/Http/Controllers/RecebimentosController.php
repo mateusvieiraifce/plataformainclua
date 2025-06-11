@@ -17,7 +17,9 @@ class RecebimentosController extends Controller
     public function calculaRecebimento($especialista, $clinicaId=null)
     {
 
+
         $lastRecep = Recebimento::where('especialista_id', '=', $especialista->id)->where("clinica_id","=",$clinicaId)->whereNotNull('pagamento')->orderBy('fim','DESC')->first();
+
 
         $inicio = Carbon::now()->subYear(2)->startOfDay();
 
@@ -28,17 +30,17 @@ class RecebimentosController extends Controller
 
         $fimDoDiaFiltro = Carbon::now()->subDays(1)->endOfDay();
 
-        // dd($inicio, $fimDoDiaFiltro);
+        // dd("especialista".$especialista->id, "clinica".$clinicaId);
         $consultasBase = Consulta::whereBetween('horario_agendado', [$inicio, $fimDoDiaFiltro])
-            ->where('isPago',true)->where('especialista_id',$especialista->id)->where("clinica_id","=",$clinicaId)->where('status','Finalizada');
+            ->where('isPago',true)->where('especialista_id',$especialista->id)->whereNull("id_usuario_cancelou")->where("clinica_id","=",$clinicaId)->where('status','Finalizada');
 
-        //dd($consultasBase->toSql());
+       // dd($consultasBase->toSql());
 
         $Numero = $consultasBase->count();
-
+      //  dd($Numero);
 
         $consultasPIX  = Consulta::whereBetween('horario_agendado', [$inicio, $fimDoDiaFiltro])
-            ->where('isPago',true)->where('especialista_id',$especialista->id)->where("clinica_id","=",$clinicaId)->where('status','Finalizada')->where('forma_pagamento', "Pix");
+            ->where('isPago',true)->whereNull("id_usuario_cancelou")->where('especialista_id',$especialista->id)->where("clinica_id","=",$clinicaId)->where('status','Finalizada')->where('forma_pagamento', "Pix");
         $totalPix = $consultasPIX->sum("preco");
 
 
@@ -98,11 +100,14 @@ class RecebimentosController extends Controller
     {
 
 
+
         if ($id_especialista) {
             $especialista = Especialista::where('id', '=',$id_especialista)->first();
         }else {
             $especialista = Especialista::where('usuario_id', '=', Auth::user()->id)->first();
         }
+
+       // dd($especialista);
 
         $selecionado = null;
         $clinicasAssociado = Clinica::join("especialistaclinicas","clinicas.id","=","clinica_id")->where("especialistaclinicas.especialista_id","=",$especialista->id)
@@ -114,6 +119,7 @@ class RecebimentosController extends Controller
         if ($clinicaId){
             $selecionado = $clinicaId;
         }
+
        // dd($clinicasAssociado);
      //   dd($especialista);
 
@@ -121,6 +127,7 @@ class RecebimentosController extends Controller
             session()->flash('msg', ['valor' => trans("Especialista não encontrado!"), 'tipo' => 'danger']);
           return redirect(route('home'));
         }
+       // dd($especialista,$selecionado);
         $recebimentos =  $this->calculaRecebimento($especialista, $selecionado);
 
         $recebimentosList = Recebimento::join("especialistas","especialistas.id","=","especialista_id")->where("clinica_id","=",$selecionado)-> where("especialista_id",$especialista->id)->paginate(12);

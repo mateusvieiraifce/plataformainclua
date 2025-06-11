@@ -135,7 +135,7 @@ class ClinicaController extends Controller
 
        // Iniciando a consulta para filtrar
 
-      $consultas = Consulta::where("status","=","Finalizada")->whereNull("id_usuario_cancelou");
+      $consultas = Consulta::where("status","=","Finalizada")->whereNull("id_usuario_cancelou")->where("isPago",true);
       if ($request->has('especialista_id') && $especialista !== 'Sem filtro') {
           $consultas->where('especialista_id', $especialista->id);
       }
