@@ -172,6 +172,7 @@
         <table style="font-size: 8pt">
         <thead>
             <tr>
+                <th>Clinica</th>
                 <th>Data</th>
                 <th>Paciente</th>
                 <th>Forma de pagamento</th>
@@ -183,6 +184,7 @@
         <tbody>
             @foreach ($consultas as $consulta)
                 <tr>
+                    <td>{{ $consulta->clinica ? $consulta->clinica->nome : 'Paciente não encontrado' }}</td>
                     <td>{{ \Carbon\Carbon::parse($consulta->horario_agendado)->format('d/m/Y H:i') }}</td>
                     <td>{{ $consulta->paciente ? $consulta->paciente->nome : 'Paciente não encontrado' }}</td>
                     <td>{{ $consulta->forma_pagamento=="Cartão"?"Cartão Inclua": $consulta->forma_pagamento}}</td>

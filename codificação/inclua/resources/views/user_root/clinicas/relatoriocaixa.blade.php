@@ -98,9 +98,10 @@
                                         @endif
 
                                         <tr>
-                                            <td><label for="pagamentos">Formas de Pagamento:</label></td>
+                                            <div style="visibility: hidden">
+                                            <td></td>
                                             <td>
-                                                <div class="d-flex align-items-center" style="gap: 20px;">
+                                                <div class="d-flex align-items-center" style="gap: 20px; visibility: hidden">
                                                     <div>
                                                         <input type="checkbox" name="pagamentos[]" value="Pix" id="pix">
                                                         <label for="pix">Pix</label>

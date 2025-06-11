@@ -164,7 +164,7 @@ class ClinicaController extends Controller
       }
 
       $consultas = $consultas
-       ->with('paciente')
+       ->with('paciente')->with('clinica')
        ->orderBy('horario_agendado', 'asc')
        ->get();
 

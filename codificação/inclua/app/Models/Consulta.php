@@ -21,18 +21,22 @@ class Consulta extends Model
         $query->orWhere('tipo_avaliado', 'E')->orWhere('tipo_avaliado', 'C');
       })
       ->count();
-    
+
     if (empty($avaliacao)) {
       return true;
     } else {
       return false;
     }
-    
+
   }
   // No modelo Consulta (Consulta.php)
   public function paciente()
   {
       return $this->belongsTo(Paciente::class);
   }
+    public function clinica()
+    {
+        return $this->belongsTo(Clinica::class);
+    }
 
 }
