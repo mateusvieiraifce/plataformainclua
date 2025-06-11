@@ -258,6 +258,8 @@ class ClinicaController extends Controller
            'total_liquido' => $preco_f-$totalDescontos,
        ];
 
+
+     //  return view('user_root.clinicas.relatoriocaixapdf', $dados);
        $pdf = \Barryvdh\DomPDF\Facade\Pdf::setOptions([
            'isHtml5ParserEnabled' => true,
            'isPhpEnabled' => true,

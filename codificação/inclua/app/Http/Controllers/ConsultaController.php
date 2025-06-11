@@ -470,6 +470,8 @@ class ConsultaController extends Controller
 
    function listConsultaAgendadaUserClinica($clinica_id = null, $msg = null)
    {
+
+
       if (Auth::user()->tipo_user == "C") {
          $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
       } else {
@@ -504,7 +506,7 @@ class ConsultaController extends Controller
          ->whereBetween('horario_agendado', [$inicioDoDia, $fimDoDia])
          ->select(
             'consultas.id', 'status', 'horario_agendado', 'especialistas.nome as nome_especialista',
-            'pacientes.cpf as cpf', 'local_consulta', 'preco', 'isPago', 'pacientes.nome as nome_paciente')
+            'pacientes.cpf as cpf', 'preco', 'isPago', 'pacientes.nome as nome_paciente')->distinct()
          ->orderBy('horario_agendado', 'asc')
          ->get();
 
@@ -553,8 +555,8 @@ class ConsultaController extends Controller
          where('pacientes.cpf', 'like', '%' . $request->cpf . "%")->
          whereBetween('horario_agendado', [$inicioDoDiaFiltro, $fimDoDiaFiltro])->
          select('consultas.id', 'status', 'horario_agendado', 'especialistas.nome as nome_especialista',
-         'pacientes.cpf as cpf', 'local_consulta','preco','isPago',
-         'pacientes.nome as nome_paciente')->orderBy('horario_agendado', 'asc')->get();
+         'pacientes.cpf as cpf','preco','isPago',
+         'pacientes.nome as nome_paciente')->distinct()->orderBy('horario_agendado', 'asc')->get();
       } else {
          $lista = Consulta::join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')->
          join('pacientes', 'pacientes.id', '=', 'consultas.paciente_id')->
@@ -568,8 +570,8 @@ class ConsultaController extends Controller
          where('consultas.especialista_id', $request->especialista_id)->
          whereBetween('horario_agendado', [$inicioDoDiaFiltro, $fimDoDiaFiltro])->
          select('consultas.id', 'status', 'horario_agendado', 'especialistas.nome as nome_especialista',
-          'pacientes.cpf as cpf','local_consulta','preco','isPago',
-         'pacientes.nome as nome_paciente')->orderBy('horario_agendado', 'asc')->get();
+          'pacientes.cpf as cpf','preco','isPago',
+         'pacientes.nome as nome_paciente')->distinct()->orderBy('horario_agendado', 'asc')->get();
       }
 
       return back()->with('lista', $lista)->withInput();

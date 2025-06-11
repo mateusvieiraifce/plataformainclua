@@ -272,8 +272,9 @@
         <textarea id="comentario-especialista" name="comentario_especialista" rows="2" cols="50" maxlength="200" placeholder="Deixe algum comentário para o especialista (opcional)..."></textarea>
     </div>
 
-
-    <input type="hidden" id="consulta_id" name="consulta_id" value="{{$consulta->id}}">
+    @if (isset($consulta))
+     <input type="hidden" id="consulta_id" name="consulta_id" value="{{$consulta->id}}">
+    @endif
 @endcomponent
 
    @push('js')

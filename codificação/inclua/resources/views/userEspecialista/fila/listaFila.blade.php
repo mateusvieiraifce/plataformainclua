@@ -99,10 +99,11 @@
                                                             {{date('H:i', strtotime($ent->hora_entrou))}}
                                                         </td>
                                                         <td style=" white-space: nowrap;">
-                                                            <a rel="tooltip" title="Iniciar atendimento" class="btn btn-primary" data-original-title="Edit" href="{{route('especialista.iniciarAtendimento', [$ent->id,"prontuarioatual"])}}">
-                                                                Iniciar atendimento
+
+                                                            <a rel="tooltip" title="Iniciar atendimento"  style="max-width: 100px; padding: 0!important;" class="btn btn-primary" data-original-title="Edit" href="{{route('especialista.iniciarAtendimento', [$ent->consulta_id,"prontuarioatual"])}}">
+                                                                Atender
                                                             </a>
-                                                        </td> 
+                                                        </td>
                                                     </tr>
                                                 @endforeach
                                             @endif
@@ -145,7 +146,7 @@
                                                             <a href="#" rel="tooltip" title="Iniciar atendimento" class="btn-primary" data-original-title="Edit" data-target="#modal-form" data-toggle="modal" onclick="setModal('{{ route('especialista.iniciarAtendimento', [$ent->consulta_id, 'prontuarioatual']) }}')">
                                                                 Iniciar atendimento
                                                             </a>
-                                                        </td> 
+                                                        </td>
                                                     </tr>
                                                 @endforeach
                                             @endif
@@ -200,16 +201,16 @@
                     target.parentNode.insertBefore(draggingRow, target.nextSibling);
                 }
             }
-            updateRowNumbers(target.parentNode);         
+            updateRowNumbers(target.parentNode);
         }
 
         // Função para mover linhas entre tabelas
         function handleDrop(event) {
             event.preventDefault();
-            if (draggingRow) {            
-                const targetTable = event.target.closest('table');   
+            if (draggingRow) {
+                const targetTable = event.target.closest('table');
                 const originalTable = draggingRow.closest('table'); // Tabela original
-                    
+
                 if (targetTable && targetTable !== draggingRow.parentNode.parentNode) {
                     const targetBody = targetTable.querySelector('tbody');
                     targetBody.appendChild(draggingRow);
@@ -224,18 +225,18 @@
                         }
                     });
 
-                    updateRowNumbers(targetBody); // Atualiza números na tabela de destino    
-                    updateRowNumbers(originalTable.querySelector('tbody'));          
+                    updateRowNumbers(targetBody); // Atualiza números na tabela de destino
+                    updateRowNumbers(originalTable.querySelector('tbody'));
                     draggingRow = null;
                 }
             }
         }
 
         // Função para atualizar os números das linhas
-        function updateRowNumbers(tbody) { 
+        function updateRowNumbers(tbody) {
             const rows = tbody.querySelectorAll('tr');
             rows.forEach((row, index) => {
-                const cell = row.querySelector('.row-number'); 
+                const cell = row.querySelector('.row-number');
                 if (cell) {
                     cell.textContent = index + 1; // Atualiza o número da linha
                 }
