@@ -44,7 +44,7 @@ class ClinicaController extends Controller
 
            if ($clinica) {
                $especialistas = $clinica->especialistas()->paginate(10);
-               
+
                return view('user_root.clinicas.selecionar_especialista', compact('especialistas'));
            } else {
                // Caso não encontre a clínica associada ao usuário
@@ -53,7 +53,7 @@ class ClinicaController extends Controller
            }
        }
       $especialistas = Especialista::paginate(10);
-      return view('user_root.clinicas.selecionar_especialista', 
+      return view('user_root.clinicas.selecionar_especialista',
          [
             'especialistas' => $especialistas
          ]);
@@ -65,7 +65,7 @@ class ClinicaController extends Controller
 
            if ($especialista) {
                $clinicas = $especialista->clinicas()->paginate(10);
-               
+
                return view('user_root.clinicas.selecionar_clinica2', compact('clinicas'));
            } else {
                // Caso não encontre a clínica associada ao usuário
@@ -74,20 +74,31 @@ class ClinicaController extends Controller
            }
        }
       $clinicas = Clinica::paginate(10);
-      return view('user_root.clinicas.selecionar_clinica2', 
+      return view('user_root.clinicas.selecionar_clinica2',
          [
             'clinicas' => $clinicas
          ]);
    }
    public function limparSessao(Request $request)
    {
-       
+
        session()->forget(['especialista_id', 'clinica_id', 'data_inicio', 'data_fim']);
 
        return response()->json(['message' => 'Sessão limpa com sucesso!']);
    }
 
    public function relatorioCaixa(Request $request) {
+
+       $usuario = Auth::user();
+       $especialista_id = $request->especialista_id;
+
+       if ($usuario->tipo_user == "E"){
+           $especialista = Especialista::where('usuario_id', $usuario->id)->first();
+       }else{
+           $especialista = Especialista::find($especialista_id);
+       }
+
+      /*
        $request->validate([
           'especialista_id' => 'nullable|exists:especialistas,id',
           'clinica_id' => 'nullable|exists:clinicas,id',
@@ -99,7 +110,7 @@ class ClinicaController extends Controller
           'data_fim.required' => 'A data de término é obrigatória.',
           'data_fim.date' => 'A data de término deve ser uma data válida.',
           'data_fim.after_or_equal' => 'A data de término deve ser igual ou posterior à data de início.',
-      ]);
+      ]);*/
        $pagamentos = $request->input('pagamentos', []); // Recebe as opções selecionadas ou um array vazio.
        // Caminho para a imagem
        $imagePath = public_path('images/logo-01.png');
@@ -107,7 +118,7 @@ class ClinicaController extends Controller
        $src = 'data:image/png;base64,' . $imageData;
 
        // Pegando os filtros
-       $especialista = Especialista::find($request->especialista_id);
+
        $clinica = Clinica::find($request->clinica_id);
        $data_inicio = $request->data_inicio;
        $data_fim = $request->data_fim;
@@ -120,9 +131,11 @@ class ClinicaController extends Controller
        session()->put('especialista_id', $especialista);
        session()->put('clinica_id', $clinica);
 
+     //  dd("aqui");
+
        // Iniciando a consulta para filtrar
-       
-      $consultas = Consulta::query();
+
+      $consultas = Consulta::where("status","=","Finalizada")->whereNull("id_usuario_cancelou");
       if ($request->has('especialista_id') && $especialista !== 'Sem filtro') {
           $consultas->where('especialista_id', $especialista->id);
       }
@@ -137,7 +150,9 @@ class ClinicaController extends Controller
 
       if ($request->has('data_fim') && $data_fim !== 'Sem filtro') {
           $consultas->where('horario_agendado', '<=', \Carbon\Carbon::parse($data_fim)->endOfDay());
-      }  
+      }
+
+
 
       if (!empty($pagamentos) && is_array($pagamentos)) {
           // Filtrar consultas com base nos valores fornecidos
@@ -153,41 +168,80 @@ class ClinicaController extends Controller
        ->orderBy('horario_agendado', 'asc')
        ->get();
 
+
       $preco_f = $consultas->sum('preco');
       /// Verificando o filtro para 'PIX'
       $preco_fpix = ($request->has('pagamentos') && in_array('PIX', $request->pagamentos))
-          ? ($consultas->where('forma_pagamento', 'PIX')->sum('preco') > 0 
-              ? $consultas->where('forma_pagamento', 'PIX')->sum('preco') 
+          ? ($consultas->where('forma_pagamento', 'Pix')->sum('preco') > 0
+              ? $consultas->where('forma_pagamento', 'Pix')->sum('preco')
               : "Sem renda na modalidade")
-          : ($consultas->sum('preco', 'forma_pagamento', 'PIX') > 0 
-              ? $consultas->where('forma_pagamento', 'PIX')->sum('preco') 
+          : ($consultas->sum('preco', 'forma_pagamento', 'Pix') > 0
+              ? $consultas->where('forma_pagamento', 'Pix')->sum('preco')
               : "Sem renda na modalidade");
 
       // Verificando o filtro para 'Dinheiro'
       $preco_fd = ($request->has('pagamentos') && in_array('Dinheiro', $request->pagamentos))
-          ? ($consultas->where('forma_pagamento', 'Dinheiro')->sum('preco') > 0 
-              ? $consultas->where('forma_pagamento', 'Dinheiro')->sum('preco') 
+          ? ($consultas->where('forma_pagamento', 'Espécie')->sum('preco') > 0
+              ? $consultas->where('forma_pagamento', 'Espécie')->sum('preco')
               : "Sem renda na modalidade")
-          : ($consultas->sum('preco', 'forma_pagamento', 'Dinheiro') > 0 
-              ? $consultas->where('forma_pagamento', 'Dinheiro')->sum('preco') 
+          : ($consultas->sum('preco', 'forma_pagamento', 'Espécie') > 0
+              ? $consultas->where('forma_pagamento', 'Espécie')->sum('preco')
               : "Sem renda na modalidade");
 
       // Verificando o filtro para 'Cartão de Crédito'
       $preco_fcdc = ($request->has('pagamentos') && in_array('Cartão de Crédito', $request->pagamentos))
-          ? ($consultas->where('forma_pagamento', 'Cartão de Crédito')->sum('preco') > 0 
-              ? $consultas->where('forma_pagamento', 'Cartão de Crédito')->sum('preco') 
+          ? ($consultas->where('forma_pagamento', 'Maquininha')->sum('preco') > 0
+              ? $consultas->where('forma_pagamento', 'Maquininha')->sum('preco')
               : "Sem renda na modalidade")
-          : ($consultas->sum('preco', 'forma_pagamento', 'Cartão de Crédito') > 0 
-              ? $consultas->where('forma_pagamento', 'Cartão de Crédito')->sum('preco') 
+          : ($consultas->sum('preco', 'forma_pagamento', 'Maquininha') > 0
+              ? $consultas->where('forma_pagamento', 'Maquininha')->sum('preco')
               : "Sem renda na modalidade");
+
+       $preco_sitema = ($request->has('pagamentos') && in_array('Inclua', $request->pagamentos))
+           ? ($consultas->where('forma_pagamento', 'Cartão')->sum('preco') > 0
+               ? $consultas->where('forma_pagamento', 'Cartão')->sum('preco')
+               : "Sem renda na modalidade")
+           : ($consultas->sum('preco', 'forma_pagamento', 'Cartão') > 0
+               ? $consultas->where('forma_pagamento', 'Cartão')->sum('preco')
+               : "Sem renda na modalidade");
 
 
       $num_f = $consultas->count();
 
 
       session()->forget(['especialista_id', 'clinica_id']);
+       $totalDescontos = 0;
+       $consultas->each(function ($consulta) use(&$totalDescontos) {
+           $consulta->valor_desconto = 0;
+           if (in_array($consulta->forma_pagamento, ['Espécie', 'Pix'])) {
+               $comicaoInclua = env("COMICAO_INCLUA");
+               $comicaoClinica = env("COMICAO_CLINICA");
+               $comicao = $comicaoInclua+$comicaoClinica;
 
-      $dados = [
+               $consulta->valor_desconto = $consulta->preco * $comicao;
+           } elseif ($consulta->forma_pagamento == 'Cartão')  {
+               $comicaoInclua = env("COMICAO_INCLUA");
+               $comicaoClinica = env("COMICAO_CLINICA");
+               $liquido = $consulta->preco * (1 - env("TAXA_MAQUINETA"));
+               $descontoInclua = $liquido * $comicaoInclua;
+               $descontoClinica = $liquido * $comicaoClinica;
+               $consulta->valor_desconto = $descontoInclua+$descontoClinica;
+           }
+           elseif ($consulta->forma_pagamento == 'Maquininha')  {
+               $comicaoInclua = env("COMICAO_INCLUA");
+               $comicaoClinica = env("COMICAO_CLINICA");
+               $liquido = $consulta->preco * (1 - env("TAXA_MAQUINETA"));
+               $descontoInclua = $liquido * $comicaoInclua;
+               $descontoClinica = $liquido * $comicaoClinica;
+               $consulta->valor_desconto = $descontoInclua+$descontoClinica;
+           }
+           $totalDescontos += $consulta->valor_desconto;
+           $consulta->valor_final = $consulta->preco - $consulta->valor_desconto;
+       });
+     //  dd($totalDescontos);
+
+
+       $dados = [
            'especialista' => $especialista,
            'clinica' => $clinica,
            'data_inicio' => $data_inicio,
@@ -199,6 +253,9 @@ class ClinicaController extends Controller
            'preco_fpix' => $preco_fpix,
            'preco_fd' => $preco_fd,
            'preco_fcdc' => $preco_fcdc,
+           'preco_inclua'=>$preco_sitema,
+           'descontos'=>$totalDescontos,
+           'total_liquido' => $preco_f-$totalDescontos,
        ];
 
        $pdf = \Barryvdh\DomPDF\Facade\Pdf::setOptions([
@@ -228,8 +285,8 @@ class ClinicaController extends Controller
 
    public function relatorioView(Request $request)
    {
-      $data_inicio = Carbon::now()->toDateString(); 
-      $data_fim = Carbon::now()->addMonth()->toDateString(); 
+      $data_inicio = Carbon::now()->toDateString();
+      $data_fim = Carbon::now()->addMonth()->toDateString();
        // Salva os parâmetros na sessão, incluindo data_inicio e data_fim
        if (Auth::user()->tipo_user == 'R') {
          session([
@@ -237,7 +294,7 @@ class ClinicaController extends Controller
            'clinica_id' => $request->clinica_id ?? session('clinica_id'),
          ]);
        }
-       
+
        $especialistaSelecionado = null;
        $clinicaSelecionada = null;
 
@@ -257,10 +314,10 @@ class ClinicaController extends Controller
 
 
    public function enviarConviteEspecialista(Request $request)
-   {  
+   {
 
       Mail::to($request->email_destino)->send(new ConvidarEspecialistaMailable());
-       
+
       $msg = ['valor' => trans("E-mail enviado com sucesso!"), 'tipo' => 'success'];
       $especialistaclinicaController = new EspecialistaclinicaController();
       return $especialistaclinicaController->list($msg);
@@ -299,14 +356,14 @@ class ClinicaController extends Controller
       if ($request->hasFile('image') && $request->file('image')->isValid()) {
          //VERIFICANDO SE EXISTE ALGUMA LOGO JA CADASTRADA PARA DELETAR
          $clinica = Clinica::where('usuario_id', $request->usuario_id)->first();
-         
+
          if(!empty($clinica->logotipo)) {
             //REMOÇÃO DE 'storage/' PARA DELETAR O ARQUIVO NA RAIZ
             $linkStorage = explode('/', $clinica);
             $linkStorage = "$linkStorage[1]/$linkStorage[2]";
             Storage::delete([$linkStorage]);
          }
-         
+
          // Nome do Arquivo
          $requestImage = $request->image;
          // Recupera a extensão do arquivo
@@ -392,7 +449,7 @@ class ClinicaController extends Controller
          $usuario->tipo_user = "C";
          $usuario->etapa_cadastro = "F";
          $usuario->save();
-         
+
          if($request->clinica_id) {
             $clinica = Clinica::find($request->clinica_id);
          } else {
@@ -430,7 +487,7 @@ class ClinicaController extends Controller
 
          return back()->withInput();
       }
-      
+
       return redirect()->route('clinica.list');
    }
 
@@ -458,10 +515,10 @@ class ClinicaController extends Controller
       $clinica = Clinica::find($id);
       $usuario = User::find($clinica->usuario_id);
       $endereco = Endereco::where('user_id', $usuario->id)->where('principal', true)->first();
-      
+
       return view('clinica/form', ['clinica' => $clinica, 'usuario' => $usuario, 'endereco' => $endereco]);
    }
-   
+
    public function createDadosUserClinica($usuario_id)
    {
       return view('cadastro.clinica.form_dados', ['usuario_id' => $usuario_id]);
@@ -503,14 +560,14 @@ class ClinicaController extends Controller
          if ($request->hasFile('logo') && $request->file('logo')->isValid()) {
             //VERIFICANDO SE EXISTE ALGUMA LOGO JA CADASTRADA PARA DELETAR
             $clinica = Clinica::where('usuario_id', $request->usuario_id);
-            
+
             if(!empty($clinica->logotipo)) {
                //REMOÇÃO DE 'storage/' PARA DELETAR O ARQUIVO NA RAIZ
                $linkStorage = explode('/', $clinica);
                $linkStorage = "$linkStorage[1]/$linkStorage[2]";
                Storage::delete([$linkStorage]);
             }
-            
+
             // Nome do Arquivo
             $requestImage = $request->logo;
             // Recupera a extensão do arquivo
@@ -615,8 +672,8 @@ class ClinicaController extends Controller
 
    function marcarConsultaSelecionarPaciente($clinica_id = null, $msg = null)
     {
-      $lista = Paciente::orderBy('nome', 'asc')->paginate(8);  
-      
+      $lista = Paciente::orderBy('nome', 'asc')->paginate(8);
+
       return view('userClinica/marcarConsulta/selecionarPacientePasso1', ['lista' => $lista, 'clinica_id' => $clinica_id, 'msg' => $msg, 'filtro' => null,'cpf' => null]);
    }
 
@@ -637,7 +694,7 @@ class ClinicaController extends Controller
             ->where('cpf', 'like', "%" . $cpf . "%")
             ->orderBy('nome', 'asc')
             ->paginate(8);
-         
+
          if ($lista->isEmpty()) {
             $msg = ['valor' => trans("Não foi encontrado nenhum paciente!"), 'tipo' => 'primary'];
             session()->flash('msg', $msg);
@@ -654,15 +711,15 @@ class ClinicaController extends Controller
          $clinica = Clinica::find($clinica_id);
       }
         //todas as especialidades que eh vinculado a clinica
-        $lista = Especialidadeclinica::join('especialidades', 'especialidades.id', 
+        $lista = Especialidadeclinica::join('especialidades', 'especialidades.id',
         '=', 'especialidadeclinicas.especialidade_id')->
         where('clinica_id', $clinica->id)->
         where('is_vinculado', 1)->
         orderBy('especialidades.descricao', 'asc')->
-        select('especialidades.id', 'especialidades.descricao')->paginate(8);       
+        select('especialidades.id', 'especialidades.descricao')->paginate(8);
         return view('userClinica/marcarConsulta/selecionarEspecialidadePasso2', ['lista' => $lista, 'clinica' => $clinica, 'paciente_id' => $paciente_id]);
    }
-   
+
    function marcarConsultaSelecionarEspecialista($paciente_id, $especialidade_id, $clinica_id = null)
    {
       if (Auth::user()->tipo_user == "E") {
@@ -670,7 +727,7 @@ class ClinicaController extends Controller
       } else {
          $clinica = Clinica::find($clinica_id);
       }
-      
+
        //retornar todos os especialista vinculados a clinica e com a especiladade selecionada
        $lista = Especialistaclinica::join('especialistas', 'especialistas.id', '=',
         'especialistaclinicas.especialista_id')->
@@ -681,7 +738,7 @@ class ClinicaController extends Controller
        return view('userClinica/marcarConsulta/selecionarEspecialistaPasso3', ['lista' => $lista, 'clinica' => $clinica, 'paciente_id' => $paciente_id, 'especialidade_id' =>$especialidade_id]);
    }
 
-   
+
    function marcarConsultaSelecionarHoraConsulta($paciente_id, $especialista_id, $clinica_id = null)
    {
       $especialista = Especialista::find($especialista_id);
@@ -707,7 +764,7 @@ class ClinicaController extends Controller
    }
 
    function marcarConsultaFinalizar(Request $request)
-    {   
+    {
       $paciente =  Paciente::find($request->paciente_id);
       $ent = Consulta::find($request->consulta_id);
       $clinica_id = $ent->clinica_id;
@@ -715,21 +772,21 @@ class ClinicaController extends Controller
       $ent->paciente_id = $paciente->id;
       $ent->save();
       $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
-      
+
       return  $this->marcarConsultaSelecionarPaciente($clinica_id, $msg);
     }
 
 
      //lista dos pacientes que fez alguma consulta com a clinica logada
- 
+
      function listaPacientes($msg = null)
    {
       $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
-     
+
     //  $statusConsulta = "Finalizada";
       // Obter pacientes e o número de consultas que cada um teve
       $lista = Paciente::select('pacientes.id', 'pacientes.nome as nome_paciente',
-      'pacientes.cpf', 'pacientes.data_nascimento', 
+      'pacientes.cpf', 'pacientes.data_nascimento',
       DB::raw('COUNT(consultas.id) as total_consultas'))
          ->leftJoin('consultas', 'pacientes.id', '=', 'consultas.paciente_id')
       //   ->where('status', '=', $statusConsulta)
@@ -739,7 +796,7 @@ class ClinicaController extends Controller
 
       return view('userClinica/listPacientes', [
          'lista' => $lista,
-         'filtro' => null,        
+         'filtro' => null,
          'msg' => $msg
       ]);
    }
@@ -748,7 +805,7 @@ class ClinicaController extends Controller
    function listaPacientesPesquisar($msg = null)
    {
       $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
-      
+
 
       //retonando a lista de pacientes
       $filtro = "";
@@ -764,7 +821,7 @@ class ClinicaController extends Controller
     //  $statusConsulta = "Finalizada";
       // Obter pacientes e o número de consultas que cada um teve
       $lista = Paciente::select('pacientes.id', 'pacientes.nome as nome_paciente',
-      'pacientes.cpf', 'pacientes.data_nascimento', 
+      'pacientes.cpf', 'pacientes.data_nascimento',
       DB::raw('COUNT(consultas.id) as total_consultas'))
          ->leftJoin('consultas', 'pacientes.id', '=', 'consultas.paciente_id')
        //  ->where('status', '=', $statusConsulta)
@@ -780,31 +837,31 @@ class ClinicaController extends Controller
          }
       return view('userClinica/listPacientes', [
          'lista' => $lista,
-         'filtro' => $filtro, 
-         'cpf' => $cpf,       
+         'filtro' => $filtro,
+         'cpf' => $cpf,
          'msg' => $msg
       ]);
    }
 
-   
+
    function canelarconsultaViaClinica(Request $request)
-   {  
+   {
    // dd($request);
     //ver a questao financeira
     $consultaCancelada = Consulta::find($request->consulta_id);
 
     $dataConsultaCancelada = Carbon::parse($consultaCancelada->horario_agendado);
-    $dataAtual = Carbon::now();   
+    $dataAtual = Carbon::now();
     // Verifica se a data da consulta é maior que a data atual para poder duplicar
-    if ($dataConsultaCancelada->gt($dataAtual)) {      
+    if ($dataConsultaCancelada->gt($dataAtual)) {
       $consultaNova = $consultaCancelada->replicate();
       $consultaNova->status="Disponível";
       $consultaNova->isPago= false;
       $consultaNova->forma_pagamento=null;
       $consultaNova->paciente_id = null;
-      $consultaNova->save();  
+      $consultaNova->save();
     }
-    
+
     $consultaCancelada->status="Cancelada";
     $consultaCancelada->motivocancelamento= $request->motivocancelamento;
     $consultaCancelada->id_usuario_cancelou =  Auth::user()->id;
@@ -817,9 +874,9 @@ class ClinicaController extends Controller
       'inicio_data' => $request->inicio_dataM,
       'final_data' => $request->final_dataM,
       'especialista_id' =>  $request->especialista_idM
-    ]);   
+    ]);
 
-   
+
     $consultaController = new ConsultaController();
     return  $consultaController->listConsultaAgendadaUserClinicaPesquisar($request,$msg);
    }
@@ -827,9 +884,9 @@ class ClinicaController extends Controller
 
    function formRelatorioEspecialista()
    {
-      
+
    }
-   
+
    public function getClinicas(Request $request)
    {
       $clinicas = Clinica::join('enderecos', 'enderecos.user_id', 'clinicas.usuario_id')
@@ -841,4 +898,3 @@ class ClinicaController extends Controller
       return response()->json(['data' => $clinicas], 200);
    }
 }
-   

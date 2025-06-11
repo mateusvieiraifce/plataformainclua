@@ -33,9 +33,9 @@
                                                 <div class="input-button-inline">
                                                     <select name="clinica_id" id="clinica_id" class="form-control">
                                                         @foreach($clinicas as $iten)
-                                                            <option value="{{$iten->id}}"
+                                                            <option value="{{$iten->clinica_id}}"
                                                                     @if(isset($clinicaselecionada_id))
-                                                                    @if($iten->id == $clinicaselecionada_id) selected @endif
+                                                                    @if($iten->clinica_id == $clinicaselecionada_id) selected @endif
                                                                 @endif
                                                             >
                                                                 {{$iten->nome}}
