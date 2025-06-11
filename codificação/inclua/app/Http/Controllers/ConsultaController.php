@@ -453,6 +453,7 @@ class ConsultaController extends Controller
       if ($request->clinica_id) {
           $consultas=$consultas->where('clinicas.id', $request->clinica_id);
       }
+
        $consultas=$consultas ->whereBetween('horario_agendado', [$inicioDoDiaFiltro, $fimDoDiaFiltro])
          ->select(
              'consultas.paciente_id',
