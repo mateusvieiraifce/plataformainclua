@@ -497,6 +497,7 @@ class PacienteController extends Controller
             ->select('especialidades.id', 'especialidades.descricao')
             ->paginate(8);
 
+
         return view('userPaciente/marcarConsultaViaClinicaPasso2', ['lista' => $lista, 'clinica_id' => $clinica_id]);
     }
 

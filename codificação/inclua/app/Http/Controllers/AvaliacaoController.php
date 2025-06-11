@@ -16,6 +16,44 @@ use Illuminate\Support\Facades\DB;
 
 class AvaliacaoController extends Controller
 {
+
+    public function storeAvaliacaoEspecialista(Request $request)
+    {
+        try {
+            $consulta = Consulta::find($request->consulta_id);
+            if ($request->comentario_especialista == null) {
+                $request->comentario_especialista = 'SEM COMENTÁRIO';
+            }
+            $comentarioEspecialista = new AvaliacaoComentario();
+            $comentarioEspecialista->avaliador_id = Auth::user()->id;
+            $comentarioEspecialista->comentario = $request->comentario_especialista;
+            $comentarioEspecialista->tipo_avaliado = "P";
+            $comentarioEspecialista->status = "Liberado";
+            $comentarioEspecialista->save();
+
+            $avaliacaoEspecialista = new Avaliacao();
+            $avaliacaoEspecialista->comentario_id = $comentarioEspecialista->id;
+            $avaliacaoEspecialista->categoria = "Pontualidade";
+            $avaliacaoEspecialista->nota = $request->especialista_atendimento;
+            $avaliacaoEspecialista->consulta_id = $consulta->id;
+            $avaliacaoEspecialista->save();
+
+            $avaliacaoEspecialista = new Avaliacao();
+            $avaliacaoEspecialista->comentario_id = $comentarioEspecialista->id;
+            $avaliacaoEspecialista->categoria = "Assiduidade";
+            $avaliacaoEspecialista->nota = $request->especialista_espera;
+            $avaliacaoEspecialista->consulta_id = $consulta->id;
+            $avaliacaoEspecialista->save();
+            $msg = ['valor' => trans("Avaliação realizada com sucesso!"), 'tipo' => 'success'];
+            session()->flash('msg', $msg);
+        }catch (\Exception $e){
+            $msg = ['valor' => trans("Houve algum problema na sua avaliação, tente novamente!"), 'tipo' => 'danger'];
+            session()->flash('msg', $msg);
+        }
+        return redirect()->route('consulta.listConsultaPorEspecialistaPesquisar');
+
+
+    }
     public function store(Request $request)
     {
         $consulta = Consulta::find($request->consulta_id);
@@ -86,14 +124,17 @@ class AvaliacaoController extends Controller
             $avaliacaoClinica->consulta_id = $consulta->id;
             $avaliacaoClinica->comentario_id = $comentarioClinica->id;
             $avaliacaoClinica->save();
-
+            $msg = ['valor' => trans("Avaliação realizada com sucesso!"), 'tipo' => 'success'];
             $response = true;
-            
+
         } catch (QueryException $e) {
-            $response = false;
+            $msg = ['valor' => trans("Houveram problemas na sua avaliação, tente novamente!"), 'tipo' => 'danger'];
         }
 
-        return response()->json($response);
+
+        session()->flash('msg', $msg);
+        return redirect()->route('paciente.historicoconsultas');
+      //  return response()->json($response);
     }
 
     public function reputacaoPaciente()
@@ -127,18 +168,18 @@ class AvaliacaoController extends Controller
 
         $mediaNotasCategoriaPontualidade = AvaliacaoComentario::join('avaliacoes', 'avaliacoes.comentario_id', 'avaliacoes_comentarios.id')
             ->join('consultas', 'consultas.id', 'avaliacoes.consulta_id')
-            ->join('pacientes', 'pacientes.id', 'consultas.clinica_id')
+            ->join('pacientes', 'pacientes.id', 'consultas.paciente_id')
             ->where('pacientes.usuario_id', $user->id)
             ->where('avaliacoes_comentarios.tipo_avaliado', 'P')
             ->where('avaliacoes_comentarios.status', 'Liberado')
             ->where('avaliacoes.categoria', 'Pontualidade')
             ->select(DB::raw('(AVG(avaliacoes.nota)) as total'))
-            ->first()
-            ->total;
+            ->first()->total;
+
 
         $mediaNotasCategoriaAssiduidade = AvaliacaoComentario::join('avaliacoes', 'avaliacoes.comentario_id', 'avaliacoes_comentarios.id')
             ->join('consultas', 'consultas.id', 'avaliacoes.consulta_id')
-            ->join('pacientes', 'pacientes.id', 'consultas.clinica_id')
+            ->join('pacientes', 'pacientes.id', 'consultas.paciente_id')
             ->where('pacientes.usuario_id', $user->id)
             ->where('avaliacoes_comentarios.tipo_avaliado', 'P')
             ->where('avaliacoes_comentarios.status', 'Liberado')
@@ -146,6 +187,7 @@ class AvaliacaoController extends Controller
             ->select(DB::raw('(AVG(avaliacoes.nota)) as total'))
             ->first()
             ->total;
+
 
 
         return view('userPaciente.reputacao.lista', [

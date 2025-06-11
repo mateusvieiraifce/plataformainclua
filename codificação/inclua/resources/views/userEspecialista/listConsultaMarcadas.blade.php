@@ -142,7 +142,8 @@
                                        </a>
 
                                            <br>
-                                           <a rel="tooltip" title="Cancelar" class="btn btn-default button-small-table" data-original-title="Edit" href="{{route('paciente.prontuario',['id_paciente'=>$consulta->paciente_id])}}">
+                                           <a class="btn btn-default button-small-table" href="#" target="_blank" rel="tooltip" title="Avaliar consulta" data-original-title="Avaliar consulta"
+                                              data-target="#modal-form" data-toggle="modal" data-whatever="@mdo" onclick="setModal({{ $consulta->id }})">
                                                Avaliar Paciente
                                            </a>
 
@@ -171,6 +172,8 @@
          </div>
       </div>
    </div>
+
+
 
    {{-- MODAL PAGAMENTO DE CONSULTA --}}
    @component('layouts.modal_form', ["title" => "Favor, informe o método de pagamento", "route" => route('consulta.pagamento'), "textButton" => "Prosseguir", "id" => "modal-form-pagar-consulta"])
@@ -236,6 +239,43 @@
       <input type="hidden" id="consulta_id" name="consulta_id" value="">
    @endcomponent
 
+  @component('layouts.modal_form', ["title" => "Como foi a sua consulta?", "route" => route('especialista.avaliacao.store'), "textButton" => "Salvar"])
+    <div class="form-group multiple-inputs-inline">
+        <div>
+            <label>
+                Pontualidade do Paciente
+            </label>
+            <div class="star-rating avaliacao">
+                <label class="star selected" id="especialista-atendimento-1" data-value="1">&#9733;</label>
+                <label class="star selected" id="especialista-atendimento-2" data-value="2">&#9733;</label>
+                <label class="star selected" id="especialista-atendimento-3" data-value="3">&#9733;</label>
+                <label class="star selected" id="especialista-atendimento-4" data-value="4">&#9733;</label>
+                <label class="star selected" id="especialista-atendimento-5" data-value="5">&#9733;</label>
+            </div>
+            <input id="especialista-atendimento" type="hidden" name="especialista_atendimento" value="5">
+        </div>
+        <div>
+            <label>
+                Assiduidade do Paciente
+            </label>
+            <div class="star-rating avaliacao">
+                <label class="star selected" id="especialista-espera-1" data-value="1">&#9733;</label>
+                <label class="star selected" id="especialista-espera-2" data-value="2">&#9733;</label>
+                <label class="star selected" id="especialista-espera-3" data-value="3">&#9733;</label>
+                <label class="star selected" id="especialista-espera-4" data-value="4">&#9733;</label>
+                <label class="star selected" id="especialista-espera-5" data-value="5">&#9733;</label>
+            </div>
+            <input id="especialista-espera" type="hidden" name="especialista_espera" value="5">
+        </div>
+    </div>
+    <div class="form-group">
+        <textarea id="comentario-especialista" name="comentario_especialista" rows="2" cols="50" maxlength="200" placeholder="Deixe algum comentário para o especialista (opcional)..."></textarea>
+    </div>
+
+
+    <input type="hidden" id="consulta_id" name="consulta_id" value="{{$consulta->id}}">
+@endcomponent
+
    @push('js')
       <script>
          function setModalPagamentoConsulta(consulta_id, valorConsulta) {
@@ -282,6 +322,68 @@
                $("#modal-aviso").modal()
             })
          });
+      </script>
+
+      <script>
+          function setModal(consulta_id) {
+              $("#consulta_id").val(consulta_id);
+          }
+
+          // Gerenciar a seleção das estrelas - para modal
+          document.querySelectorAll('.star').forEach(function (star) {
+              star.addEventListener('click', function () {
+                  var qtd = star.getAttribute('data-value');
+                  console.log(qtd)
+
+                  for (var i = 0; i <= 5; i++) {
+                      var id = star.id.split("-")
+                      id = id[0] + "-" + id[1] + "-" + i;
+                      var estrela = document.getElementById(id);
+                      if (estrela) {
+                          estrela.classList.remove('selected');
+                      }
+                  }
+
+                  for (var i = 0; i <= qtd; i++) {
+                      var namesId = star.id.split("-")
+                      id = namesId[0] + "-" + namesId[1] + "-" + i;
+                      var estrela = document.getElementById(id);
+                      if (estrela) {
+                          estrela.classList.add('selected');
+                          $('#'+ namesId[0] + "-" + namesId[1]).val(qtd)
+                      }
+                  }
+              });
+          });
+
+          $('#form-modal').submit(function (e) {
+              e.preventDefault();
+              $.ajax({
+                  type: 'GET',
+                  url: '{{ route("paciente.avaliacao.store") }}',
+                  data: {
+                      consulta_id: $('#consulta_id').val(),
+                      especialista_atendimento: $('#especialista-atendimento').val(),
+                      especialista_espera: $('#especialista-espera').val(),
+                      comentario_especialista: $('#comentario-especialista').val(),
+                      clinica_localizacao: $('#clinica-localizacao').val(),
+                      clinica_limpeza: $('#clinica-limpeza').val(),
+                      clinica_organizacao: $('#clinica-organizacao').val(),
+                      clinica_espera: $('#clinica-espera').val(),
+                      comentario_clinica: $('#comentario-clinica').val(),
+                  },
+                  success: function(response) {
+                      nowuiDashboard.showNotification('top', 'right', 'A avaliaçao da consulta foi salva com sucesso!', 'success');
+                  },
+                  error: function(error) {
+                      nowuiDashboard.showNotification('top', 'right', 'Houve um erro ao salvar a avaliação da consulta, tente novamente.', 'danger');
+                  }
+              });
+
+              $('#modal-form').modal('toggle');
+              $('.avaliar-' + $('#consulta_id').val() + ' > a').remove()
+          })
+
       </script>
    @endpush
 @endsection

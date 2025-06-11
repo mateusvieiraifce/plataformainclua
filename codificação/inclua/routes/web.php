@@ -274,6 +274,10 @@ Route::middleware('auth')->group(function () {
 
         #ATENDIMENTO
         Route::get("/especialista/atendimento/{consulta_id}/{aba}", [\App\Http\Controllers\EspecialistaController::class, 'inicarAtendimento'])->name('especialista.iniciarAtendimento');
+
+        #avaliaçao
+        Route::post("/especialista/avaliacao/store", [\App\Http\Controllers\AvaliacaoController::class, 'storeAvaliacaoEspecialista'])->name('especialista.avaliacao.store');
+
     });
 
     #CAD_TIPO_EXAMES_USER_ROOT
