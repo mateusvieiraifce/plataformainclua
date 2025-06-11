@@ -271,9 +271,9 @@
     <div class="form-group">
         <textarea id="comentario-especialista" name="comentario_especialista" rows="2" cols="50" maxlength="200" placeholder="Deixe algum comentário para o especialista (opcional)..."></textarea>
     </div>
-
+    <input type="hidden" id="consulta_id_avalicao" name="consulta_id" value="">
     @if (isset($consulta))
-     <input type="hidden" id="consulta_id" name="consulta_id" value="{{$consulta->id}}">
+
     @endif
 @endcomponent
 
@@ -327,7 +327,10 @@
 
       <script>
           function setModal(consulta_id) {
-              $("#consulta_id").val(consulta_id);
+            //  document.getElementById('consulta_id_avalicao').setAttribute("value",consulta_id);
+             // console.log(consulta_id);
+
+              $("#consulta_id_avalicao").val(consulta_id);
           }
 
           // Gerenciar a seleção das estrelas - para modal
