@@ -164,7 +164,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/gerar-pix', [\App\Http\Controllers\PixController::class, 'generatePix'])->name('pix.generate');
     Route::post('/gerar-pix', [\App\Http\Controllers\PixController::class, 'generatePix']);
     Route::get('/pix/status/{paymentId}', [\App\Http\Controllers\PixController::class, 'checkPaymentStatus']);
-    Route::post('/mercadopago/webhook', [\App\Http\Controllers\PixController::class, 'handleWebhook']);
+    Route::any('/mercadopago/webhook', [\App\Http\Controllers\PixController::class, 'handleWebhook']);
 
     #ESPECIALISTA_POR_CLINICA
     Route::get("/especialistaclinica/list/{clinica_id?}", [\App\Http\Controllers\EspecialistaclinicaController::class, 'list'])->name( 'especialistaclinica.list');
