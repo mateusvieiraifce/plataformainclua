@@ -120,8 +120,8 @@ class PixController extends Controller
 
     public function handleWebhook(Request $request)
     {
-        $data = $request->all();
-        Log::info('Webhook recebido', ['data' => $data]);
+       // $data = $request->all();
+        //Log::info('Webhook recebido', ['data' => $data]);
 
         // Aqui você pode processar a notificação
         // Verificar o payment_id e atualizar seu banco de dados
