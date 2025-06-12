@@ -625,7 +625,7 @@ class ConsultaController extends Controller
             'consultas.id', 'status', 'horario_agendado', 'especialistas.nome as nome_especialista',
             'pacientes.nome as nome_paciente', 'clinicas.nome as nome_clinica'
          )
-         ->orderBy('horario_agendado', 'asc')
+         ->orderBy('horario_agendado', 'desc')
          ->paginate(10);
 
       return view('userClinica/listConsulta', [
@@ -691,12 +691,13 @@ class ConsultaController extends Controller
             'consultas.id', 'status', 'horario_agendado', 'especialistas.nome as nome_especialista',
             'pacientes.nome as nome_paciente', 'clinicas.nome as nome_clinica'
          )
-         ->orderBy('horario_agendado', 'asc')
+         ->orderBy('horario_agendado', 'desc')
          ->paginate(10);
 
       return view('userClinica/listConsulta', [
          'lista' => $lista,
          'especialistas' => $especialistas,
+         'especialista_id'=>$request->especialista_id,
          'especialistaSelecionado_id' => $request->especialista_id,
          'status' => $request->status,
          'filtro' => $filter,

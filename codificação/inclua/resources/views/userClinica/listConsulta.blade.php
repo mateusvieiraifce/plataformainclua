@@ -20,7 +20,7 @@
                                     &nbsp;
                                     Data início:
                                  </label>
-                                 <input style="border-color: #C0C0C0" type="date" name="inicio_data" id="inicio_data" 
+                                 <input style="border-color: #C0C0C0" type="date" name="inicio_data" id="inicio_data"
                                     class="form-control" value="{{ old('inicio_data') ?? $inicio_data }}">
                               </div>
                            </div>
@@ -50,7 +50,7 @@
                                  <label style="color: white">
                                     &nbsp;
                                     Status da consulta:
-                                 </label>                                    
+                                 </label>
                                  <select style="border-color: #C0C0C0"  class="form-control" id="status" name="status" required>
                                     <option style="color: #111111" value="todos" @if(old('status') == "Todos" || $status == "Todos") selected @endif>Todos</option>
                                     <option style="color: #111111" value="Aguardando atendimento" @if(old('status') == "Aguardando atendimento" || $status == "Aguardando atendimento") selected @endif>Aguardando atendimento</option>
@@ -67,16 +67,16 @@
                                     Especialistas
                                  </label>
                                  <select name="especialista_id" id="especialista_id" class="form-control" style="border-color: white">
-                                    <option style="color: #2d3748" value="todos" @if(old('especialista_id') == "Todos") selected @endif>Todos</option>
+                                    <option style="color: #2d3748" value="todos">Todos</option>
                                     @foreach($especialistas as $iten)
-                                       <option style="color: #2d3748" value="{{old('especialidade_id', $iten->id)}}" @if($iten->id == old('especialista_id')) <?php echo 'selected'; ?> @endif>
+                                       <option style="color: #2d3748" value="{{ $iten->id}}" @if($iten->id == $especialistaSelecionado_id) <?php echo 'selected'; ?> @endif>
                                           {{$iten->nome}}
                                        </option>
                                     @endforeach
                                  </select>
                               </div>
                            </div>
-                           <div class="col-md-1 ">                       
+                           <div class="col-md-1 ">
                               <button style="max-height: 40px; max-width: 40px;margin-top: 25px" class="btn btn-primary">
                                  <i class="tim-icons icon-zoom-split"></i>
                               </button>
@@ -86,13 +86,13 @@
                   </form>
                </div>
 
-               <h6 class="title d-inline">Lista de consultas </h6>              
+               <h6 class="title d-inline">Lista de consultas </h6>
             </div>
             <div class="card-body">
-               <div class="table-responsive">                  
+               <div class="table-responsive">
                   <table class="table">
                      <thead>
-                        <th>Status</th>                       
+                        <th>Status</th>
                         <th>Horário agendado</th>
                         @if (auth()->user()->tipo_user == "R")
                            <th>Clínica</th>
@@ -122,8 +122,8 @@
                                     {{ $ent->nome_especialista }}
                                  </td>
                               </tr>
-                           @endforeach 
-                        @endif                      
+                           @endforeach
+                        @endif
                      </tbody>
                   </table>
                   {{ $lista->appends(request()->query())->links() }}
