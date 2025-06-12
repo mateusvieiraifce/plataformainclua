@@ -74,22 +74,11 @@
 
                             <div class="collapse" id="relatorioclinica">
                                 <ul class="nav pl-4">
-                                    <li @if ($pageSlug == 'dashboard2') class="active" @endif>
-                                        <a href="#">
-                                            <i class="tim-icons icon-components"></i>
-                                            <p>{{ __('Especialista') }}</p>
-                                        </a>
-                                    </li>
-                                    <li @if ($pageSlug == 'dashboard2') class="active" @endif>
-                                        <a href="#">
-                                            <i class="tim-icons icon-components"></i>
-                                            <p>{{ __('Paciente') }}</p>
-                                        </a>
-                                    </li>
+
                                     <li @if ($pageSlug == 'dashboard2') class="active" @endif>
                                         <a href="{{ route("user.relatorio") }}">
                                             <i class="tim-icons icon-components"></i>
-                                            <p>{{ __('Clínica') }}</p>
+                                            <p>{{ __('Caixa ') }}</p>
                                         </a>
                                     </li>
                                 </ul>

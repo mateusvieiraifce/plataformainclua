@@ -21,8 +21,9 @@
                                     <label id="labelFormulario" style="color: white">
                                        Data início:
                                     </label>
-                                    <input style="border-color: #C0C0C0" type="date" name="inicio_data" id="inicio_data" 
-                                       class="form-control" value="{{ (isset($inicio_data)) ? $inicio_data : date('Y-m-d') }}">
+                                    <input style="border-color: #C0C0C0" type="date" name="inicio_data" id="inicio_data"
+
+                                       class="form-control" value="{{  old("inicio_data",date('Y-m-d'))  }}">
                                  </div>
                               </div>
                               <div class="col-md-2">
@@ -31,7 +32,7 @@
                                        Data final:
                                     </label>
                                     <input style="border-color: #C0C0C0" type="date" name="final_data" id="final_data"
-                                       class="form-control"  value="{{ (isset($final_data)) ? $final_data : date('Y-m-d') }}">
+                                       class="form-control"  value="{{  old("final_data",date('Y-m-d')) }}">
                                  </div>
                               </div>
                               <div class="col-md-3 px-8">
@@ -40,7 +41,7 @@
                                        Paciente:
                                     </label>
                                     <input style="border-color: #C0C0C0" type="text" class="form-control" id="nomepaciente"
-                                       placeholder="Nome do paciente" name="nomepaciente" value="{{ (isset($nomepaciente)) ? $nomepaciente : "" }}">
+                                       placeholder="Nome do paciente" name="nomepaciente" value="{{ (isset($nomepaciente)) ? $nomepaciente : old('nomepaciente') }}">
                                  </div>
                               </div>
                               <div class="col-md-2 px-8">
@@ -49,7 +50,7 @@
                                        CPF Paciente:
                                     </label>
                                     <input style="border-color: #C0C0C0" type="text" class="form-control"
-                                       placeholder="CPF do paciente" name="cpf" id="cpf" value="{{ (isset($cpf)) ? $cpf : "" }}">
+                                       placeholder="CPF do paciente" name="cpf" id="cpf" value="{{ (isset($cpf)) ? $cpf : old('cpf') }}">
                                  </div>
                               </div>
                               <div class="col-md-2 px-8">
@@ -60,14 +61,14 @@
                                     <select name="especialista_id" id="especialista_id" class="form-control" style="border-color: white">
                                        <option style="color: #2d3748" value="todos" @if($especialistaSelecionado_id == "Todos") selected @endif>Todos</option>
                                        @foreach($especialistas as $iten)
-                                          <option style="color: #2d3748" value="{{old('especialidade_id', $iten->id)}}"
-                                             @if($iten->id == $especialistaSelecionado_id) <?php    echo 'selected'; ?> @endif> {{$iten->nome}}
+                                          <option style="color: #2d3748" value="{{ $iten->id}}"
+                                             @if($iten->id == old('especialista_id',$especialistaSelecionado_id)) <?php    echo 'selected'; ?> @endif> {{$iten->nome}}
                                           </option>
                                        @endforeach
                                     </select>
                                  </div>
                               </div>
-                              <div class="col-md-1 ">                       
+                              <div class="col-md-1 ">
                                  <button type="submit" style="max-height: 40px; max-width: 40px;margin-top: 25px" class="btn btn-primary" >
                                     <i class="tim-icons icon-zoom-split"></i>
                                  </button>
@@ -78,13 +79,13 @@
                      </form>
                   </div>
 
-                  <h6 class="title d-inline">Lista de consultas agendadas </h6>              
+                  <h6 class="title d-inline">Lista de consultas agendadas </h6>
                </div>
                <div class="card-body">
-                  <div class="table-responsive">                  
+                  <div class="table-responsive">
                      <table class="table">
                         <thead>
-                           <th> Status </th>                       
+                           <th> Status </th>
                            <th> Horário agendado </th>
                            <th> Paciente </th>
                            <th> Especialista </th>
@@ -109,9 +110,9 @@
                                     <td>
                                        @if($ent->status != 'Sala de espera' && $ent->status != 'Em Atendimento')
                                           <a href="#" target="_blank" class="btn btn-primary button-small-table" data-original-title="Fazer Encaminhamento" title="Fazer Encaminhamento"
-                                             data-target="#modalLocal{{$ent->id}}" data-toggle="modal" onclick="mandaDadosFormPrincipalParaModal({{$ent->id}},'l')" >                        
+                                             data-target="#modalLocal{{$ent->id}}" data-toggle="modal" onclick="mandaDadosFormPrincipalParaModal({{$ent->id}},'l')" >
                                              Fazer Encaminhamento
-                                          </a>    
+                                          </a>
                                           <br>
                                        @else
                                           <button type="button" class="btn btn-info button-small-table encaminhado">
@@ -120,7 +121,7 @@
                                              realizado
                                           </button>
                                           <br>
-                                       @endif   
+                                       @endif
                                        @if(!$ent->isPago)
                                           <a href="#" rel="tooltip" title="Efetuar pagamento" class="btn btn-secundary button-small-table" data-target="#modal-form-pagar-consulta"
                                              data-toggle="modal" onclick="setModalPagamentoConsulta('{{ $ent->id }}', '{{ number_format($ent->preco, 2, ',', '.') }}')">
@@ -221,7 +222,7 @@
                                                       <div class="col-md-12 px-8">
                                                          <div class="form-group">
                                                             <textarea id="motivocancelamento" name="motivocancelamento" rows="8"
-                                                               cols="80" style="width: 100%;" maxlength="200" 
+                                                               cols="80" style="width: 100%;" maxlength="200"
                                                                placeholder="Digite o motivo do cancelamento aqui..." required>
                                                             </textarea>
                                                          </div>
@@ -249,8 +250,8 @@
                                        </div>
                                     </div>
                                  </div>
-                              @endforeach 
-                           @endif                     
+                              @endforeach
+                           @endif
                         </tbody>
                      </table>
                   </div>
@@ -259,7 +260,7 @@
          </div>
       </div>
    </div>
-   
+
    {{-- MODAL PAGAMENTO DE CONSULTA --}}
    @component('layouts.modal_form', ["title" => "Favor, informe o método de pagamento", "route" => route('consulta.pagamento'), "textButton" => "Prosseguir", "id" => "modal-form-pagar-consulta"])
       <div class="form-group">
@@ -353,15 +354,15 @@
                $("#modal-aviso").modal()
             })
          });
-         
-         function mandaDadosFormPrincipalParaModal(consulta_id, tipoModal) {    
+
+         function mandaDadosFormPrincipalParaModal(consulta_id, tipoModal) {
             //pega valores para inviar para os modais e assim apos retorno do modal realizar a pesquisa
             var inicio_data = document.getElementById("inicio_data").value;
             var final_data = document.getElementById("final_data").value;
             var nomepaciente = document.getElementById("nomepaciente").value;
             var cpf = document.getElementById("cpf").value;
             var especialista_id = document.querySelector("#especialista_id").value;
-                  
+
             document.getElementById('inicio_dataM'+consulta_id+tipoModal).value = inicio_data;
             document.getElementById('final_dataM'+consulta_id+tipoModal).value = final_data;
             document.getElementById('nomepacienteM'+consulta_id+tipoModal).value = nomepaciente;

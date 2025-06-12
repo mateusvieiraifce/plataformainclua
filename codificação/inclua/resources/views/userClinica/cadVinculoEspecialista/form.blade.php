@@ -114,7 +114,7 @@
                 @foreach($especialistas as $iten)
                   <option value="{{old('especialista_id', $iten->id)}}"
                     @if($iten->id == $entidade->especialista_id) <?php    echo 'selected'; ?> @endif>
-                      {{$iten->nome}}</option>
+                      {{$iten->nome." - ".$iten->cpf. " - ". $iten->especialidade }}</option>
                 @endforeach
               </select>
 

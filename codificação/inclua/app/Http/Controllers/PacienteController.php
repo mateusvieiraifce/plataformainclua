@@ -438,11 +438,13 @@ class PacienteController extends Controller
             $paciente = Paciente::where('usuario_id', '=', Auth::user()->id)->first();
         }
 
+        $agora = Carbon::now('America/Fortaleza');
+
         //retornar todos a agenda(consutlas) do especialista vinculados a clinica
         $statusConsulta = "Disponível";
         $lista = Consulta::where('especialista_id', '=', $especialista_id)
-            ->where('clinica_id', '=', $clinica_id)->
-            where('status', '=', $statusConsulta)->
+            ->where('clinica_id', '=', $clinica_id)->where('horario_agendado',">=",$agora)
+            ->where('status', '=', $statusConsulta)->
             select('consultas.id', 'horario_agendado', 'status')->orderBy('horario_agendado', 'asc')
             ->get();
         //dd($lista);
@@ -532,9 +534,10 @@ class PacienteController extends Controller
         }
         //retornar todos a agenda(consutlas) do especialista vinculados a clinica
         $statusConsulta = "Disponível";
-
+        $agora = Carbon::now('America/Fortaleza');
         $lista = Consulta::where('especialista_id', '=', $especialista_id)
             ->where('clinica_id', '=', $clinica_id)
+            ->where('horario_agendado',">=",$agora)
             ->where('status', '=', $statusConsulta)
             ->select('consultas.id', 'horario_agendado')
             ->orderBy('horario_agendado', 'asc')

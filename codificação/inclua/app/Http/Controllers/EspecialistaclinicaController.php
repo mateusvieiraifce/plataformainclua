@@ -47,7 +47,11 @@ class EspecialistaclinicaController extends Controller
          $clinica = Clinica::find($clinica_id);
       }
 
-       $especialistas = Especialista::with('especialidade')->get();
+       $especialistas = Especialista::join('especialidades',"especialidade_id","especialidades.id")
+           ->join("users","usuario_id","users.id")->
+           select(["especialistas.*","users.documento as cpf","especialidades.descricao as especialidade"])->
+           get();
+      // dd($especialistas);
 
      //  dd($especialistas[0]->especialidade->descricao);
       return view('userClinica/cadVinculoEspecialista/form', ['entidade' => new Especialistaclinica(), 'clinica' => $clinica, 'especialistas'=>$especialistas]);

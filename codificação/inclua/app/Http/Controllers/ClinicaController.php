@@ -89,6 +89,7 @@ class ClinicaController extends Controller
 
    public function relatorioCaixa(Request $request) {
 
+
        $usuario = Auth::user();
        $especialista_id = $request->especialista_id;
 
@@ -98,19 +99,7 @@ class ClinicaController extends Controller
            $especialista = Especialista::find($especialista_id);
        }
 
-      /*
-       $request->validate([
-          'especialista_id' => 'nullable|exists:especialistas,id',
-          'clinica_id' => 'nullable|exists:clinicas,id',
-          'data_inicio' => 'required|date',
-          'data_fim' => 'required|date|after_or_equal:data_inicio',
-      ], [
-          'data_inicio.required' => 'A data de início é obrigatória.',
-          'data_inicio.date' => 'A data de início deve ser uma data válida.',
-          'data_fim.required' => 'A data de término é obrigatória.',
-          'data_fim.date' => 'A data de término deve ser uma data válida.',
-          'data_fim.after_or_equal' => 'A data de término deve ser igual ou posterior à data de início.',
-      ]);*/
+
        $pagamentos = $request->input('pagamentos', []); // Recebe as opções selecionadas ou um array vazio.
        // Caminho para a imagem
        $imagePath = public_path('images/logo-01.png');
@@ -118,8 +107,15 @@ class ClinicaController extends Controller
        $src = 'data:image/png;base64,' . $imageData;
 
        // Pegando os filtros
+      //
+       if ($usuario->tipo_user == "C"){
+           $clinica = Clinica::where("usuario_id","=", $request->clinica_id)->first();
 
-       $clinica = Clinica::find($request->clinica_id);
+       }else {
+           $clinica = Clinica::find($request->clinica_id);
+       }
+       //dd($clinica);
+
        $data_inicio = $request->data_inicio;
        $data_fim = $request->data_fim;
 
@@ -305,6 +301,7 @@ class ClinicaController extends Controller
        }
 
        if ($request->has('clinica_id')) {
+           //dd("tem clinicaId");
            $clinicaSelecionada = Clinica::find($request->clinica_id);
        }
 
@@ -754,10 +751,11 @@ class ClinicaController extends Controller
       $paciente = Paciente::find($paciente_id);
       //retornar todos a agenda(consultas) do especialista vinculados a clinica
       $statusConsulta = "Disponível";
-
+      $agora = Carbon::now('America/Fortaleza');
       $lista = Consulta::where('especialista_id', '=', $especialista_id)
          ->where('clinica_id', '=', $clinica->id)
          ->where('status', '=', $statusConsulta)
+          ->where('horario_agendado',">=",$agora)
          ->select('consultas.id', 'horario_agendado')
          ->orderBy('horario_agendado', 'asc')
          ->get();

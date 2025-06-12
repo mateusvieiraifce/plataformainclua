@@ -537,7 +537,7 @@ class ConsultaController extends Controller
 
    function listConsultaAgendadaUserClinicaPesquisar(Request $request, $msg = null)
    {
-      // dd($request);
+
 
       $clinica = Clinica::find($request->clinica_id);
       $filter = "";
@@ -545,14 +545,13 @@ class ConsultaController extends Controller
          $filter = $_GET['filtro'];
       }
       //todoas os especialistas que a clinica eh vinculado
-      $especialistas = Especialistaclinica::join('especialistas', 'especialistas.id', '=', 'especialistaclinicas.especialista_id')->
+     /* $especialistas = Especialistaclinica::join('especialistas', 'especialistas.id', '=', 'especialistaclinicas.especialista_id')->
       where('clinica_id', $clinica->id)->orderBy('especialistas.nome', 'asc')->
-      select('especialistas.id', 'especialistas.nome')->get();
+      select('especialistas.id', 'especialistas.nome')->get();*/
 
 
       $inicioDoDiaFiltro = Carbon::parse($request->inicio_data)->startOfDay();
       $fimDoDiaFiltro = Carbon::parse($request->final_data)->endOfDay();
-
 
       if ($request->especialista_id == "todos") {
          $lista = Consulta::join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')->
