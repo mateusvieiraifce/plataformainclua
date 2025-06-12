@@ -130,8 +130,15 @@ class RecebimentosController extends Controller
        // dd($especialista,$selecionado);
         $recebimentos =  $this->calculaRecebimento($especialista, $selecionado);
 
-        $recebimentosList = Recebimento::join("especialistas","especialistas.id","=","especialista_id")->where("clinica_id","=",$selecionado)-> where("especialista_id",$especialista->id)->paginate(12);
-
+        $recebimentosList = Recebimento::select([
+            'user_recebimentos.*',
+            'especialistas.nome as especialista_nome'  // Campo adicional da tabela joined
+        ])
+            ->join('especialistas', 'especialistas.id', '=', 'user_recebimentos.especialista_id')
+            ->where('user_recebimentos.clinica_id', $selecionado)
+            ->where('user_recebimentos.especialista_id', $especialista->id)
+            ->paginate(12);
+       # $recebimentosList = Recebimento::join("especialistas","especialistas.id","=","especialista_id")->where("clinica_id","=",$selecionado)-> where("especialista_id",$especialista->id)->paginate(12);
 
         return view('userEspecialista.recebimentos.listtodasconsultas', ['pageSlug' => 'recebimentos',
             'numero'=>$recebimentos->numero_consultas,
@@ -187,6 +194,7 @@ class RecebimentosController extends Controller
                 Helper::sendEmail("Validar a solicitação de Pagamento " . $solicitacao->id,"Validar a solicitação de Pagamento : ". $solicitacao->id ,env("EMAIL_ROOT"));
             }
             }catch (\Exception $e){
+                //dd($e->getMessage());
                # dd($e->getMessage());
                 session()->flash('msg', ['valor' => trans("Houve um erro ao realizar o cadastro, tente novamente!"), 'tipo' => 'danger']);
             }

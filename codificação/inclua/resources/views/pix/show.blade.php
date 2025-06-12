@@ -50,7 +50,7 @@
         // Verificar status periodicamente (opcional)
         @if($status !== 'approved')
         setInterval(() => {
-            fetch(`/pix/status/{{ $payment_id }}`)
+            fetch(`/pix/recebimento/status/{{ $payment_id }}`)
                 .then(response => response.json())
                 .then(data => {
 
@@ -58,11 +58,9 @@
                         document.getElementById('payment-status').innerHTML =
                             'Status: Aprovado! Obrigado pelo pagamento.';
                         document.getElementById('payment-status').className = 'alert alert-success';
-                        
-
                         // Redireciona após 3 segundos (tempo para o usuário ver a mensagem)
                         setTimeout(() => {
-                            window.history.back();
+                            window.location.href ="{{route('especialista.recebeimentos.list')}}"
                         }, 2000);
                     }
                 });

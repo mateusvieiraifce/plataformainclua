@@ -161,9 +161,9 @@ Route::middleware('auth')->group(function () {
     Route::get("/especialista/edit/{id}", [\App\Http\Controllers\EspecialistaController::class, 'edit'])->name('especialista.edit');
     Route::get("/especialista/recebebimentos/list/{id?}/{clinicaId?}", [\App\Http\Controllers\RecebimentosController::class, 'home'])->name('especialista.recebeimentos.list');
     Route::post("/especialista/recebebimentos/solicitar", [\App\Http\Controllers\RecebimentosController::class, 'criar_solicitacao'])->name('especialista.recebeimentos.create');
-    Route::get('/gerar-pix', [\App\Http\Controllers\PixController::class, 'generatePix'])->name('pix.generate');
-    Route::post('/gerar-pix', [\App\Http\Controllers\PixController::class, 'generatePix']);
-    Route::get('/pix/status/{paymentId}', [\App\Http\Controllers\PixController::class, 'checkPaymentStatus']);
+    Route::get('/especialista/recebebimentos/gerar-pix/{id?}', [\App\Http\Controllers\PixController::class, 'generatePix'])->name('pix.generate');
+    Route::post('/especialista/recebebimentos/gerar-pix/{id?}', [\App\Http\Controllers\PixController::class, 'generatePix'])->name('pix.generate.recebimento');
+    Route::get('/pix/recebimento/status/{paymentId}', [\App\Http\Controllers\PixController::class, 'checkPaymentStatus']);
     Route::any('/mercadopago/webhook', [\App\Http\Controllers\PixController::class, 'handleWebhook']);
 
     #ESPECIALISTA_POR_CLINICA

@@ -208,16 +208,27 @@
                                             <td>{{\App\Helper::padronizaMonetario($ent->total_consultas_credito) }}
                                             <td>{{\App\Helper::padronizaMonetario($ent->total_consultas_maquininha) }}
                                             <td>{{\App\Helper::padronizaMonetario($ent->taxa_inclua) }}
-                                            <td>{{$ent->nome}}</td>
-                                            <td><a style="max-width:160px; text-align: left;padding:10px " rel="tooltip"
+                                            <td>{{$ent->especialista_nome}}</td>
+                                            <td>
+                                                @if ($ent->saldo>0)
+                                                <a style="max-width:160px; text-align: left;padding:10px " rel="tooltip"
                                                    title="Prontuário" class="btn btn-secondary" data-original-title="Edit"
                                                    href="#">
                                                     @if ($ent->saldo>0)
                                                     Ver Comprovante
-                                                    @else
-                                                     Ver Boleto
                                                     @endif
-                                                </a>   </td>
+                                                </a>
+                                                @else
+                                                    @if ($ent->status!="F")
+                                                    <a style="max-width:160px; text-align: left;padding:10px " rel="tooltip"
+                                                       title="Prontuário" class="btn btn-secondary" data-original-title="Edit"
+                                                       href="{{route("pix.generate.recebimento",$ent->id)}}">
+                                                        Pagar
+                                                    </a>
+                                                    @endif
+                                                @endif
+
+                                            </td>
                                         </tr>
                                     @endforeach
                                 @endif

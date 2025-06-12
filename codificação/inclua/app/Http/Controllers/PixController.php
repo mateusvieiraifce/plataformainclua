@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Recebimento;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -25,6 +28,17 @@ class PixController extends Controller
     {
 
 
+
+       // dd($request->id);
+        $recebimento = Recebimento::find($request->id);
+        if ($recebimento == null) {
+            session()->flash('msg', ['valor' => trans("Houve um erro ao realizar o cadastro, tente novamente!"), 'tipo' => 'danger']);
+            return redirect()->route("especialista.recebeimentos.list");
+        }
+        $recebimento->load(['clinica', 'especialista']);
+      //  dd($recebimento);
+
+
         // Validação dos dados de entrada
         /*$validated = $request->validate([
             'amount' => 'required|numeric|min:0.01',
@@ -33,12 +47,19 @@ class PixController extends Controller
             'payer_name' => 'required|string|max:255',
             'payer_cpf' => 'required|string|size:11'
         ]);*/
-        $amout = 6.0;
-        $description = "PAGAMENTO REFERENTE AO ESPECILISTA XXX REFERENTE A CLINICA YYYY";
-        $mail= "mateus.vieira@ifce.edu.br";
-        $first_name = "Mateus";
-        $last_name = "Vieira";
-        $cpf="66664195372";
+        $amout = $recebimento->taxa_inclua;
+        $description = "PAGAMENTO REFERENTE AO RECEIMENTO: ".$recebimento->id." -  ESPECILISTA:  "
+            .$recebimento->especialista->nome."  CLINICA: " .$recebimento->clinica->nome;
+        $usuarioPagante = User::find($recebimento->especialista->usuario_id);
+
+        $NomeCompleto = $usuarioPagante->nome_completo;
+        #dd($NomeCompleto);
+        $partes = explode(' ', $NomeCompleto);
+
+        $mail= $usuarioPagante->email;
+        $first_name = $partes[0];
+        $last_name = isset($partes[1]) ? $partes[1] : '';;
+        $cpf=$usuarioPagante->documento;
 
         // Dados para a requisição
         $payload = [
@@ -55,7 +76,10 @@ class PixController extends Controller
                 ]
             ]
         ];
+
         $idempotencyKey = 'pix_' . now()->format('YmdHis') . '_' . Str::random(8);
+        $recebimento->idempotencyKey = $idempotencyKey;
+
 
         try {
 
@@ -66,12 +90,15 @@ class PixController extends Controller
 
             // Tratamento de erros
             if ($response->failed()) {
-
                 $error = $response->json();
-                dd($error);
+               // dd($error["message"]);
+                session()->flash('msg', ['valor' => trans("Houve um erro ao cancelar a consulta, tente novamente: " .$error["message"] ), 'tipo' => 'danger']);
+
+                //dd($error);
                 Log::error('Erro ao gerar PIX', ['error' => $error]);
                 return back()->withErrors(['message' => $error['message'] ?? 'Erro ao gerar PIX']);
             }
+
 
             $payment = $response->json();
 
@@ -80,6 +107,10 @@ class PixController extends Controller
                 Log::error('Dados do PIX ausentes', ['response' => $payment]);
                 return back()->withErrors(['message' => 'Dados do PIX não recebidos']);
             }
+
+            $recebimento->payment_id_ml = $payment['id'];
+            $recebimento->save();
+
 
             // Retorna a view com os dados
             return view('pix.show', [
@@ -107,13 +138,26 @@ class PixController extends Controller
                 return response()->json(['error' => true], 400);
             }
 
+
             $payment = $response->json();
+            $dadosTransaction = $payment['transaction_details'];
+            //dd();
+            $recebimento =  Recebimento::where("payment_id_ml",$paymentId)->first();
+            $carbonDate = Carbon::parse($payment["date_approved"]);
+            $recebimento->pagamento = $carbonDate;
+            $recebimento->status = "F";
+
+            $recebimento->liquido_ml= $dadosTransaction["net_received_amount"];
+
+            $recebimento->save();
+
             return response()->json([
                 'status' => $payment['status'],
                 'approved' => $payment['status'] === 'approved'
             ]);
 
         } catch (\Exception $e) {
+          //  dd($e->getMessage());
             return response()->json(['error' => true], 500);
         }
     }

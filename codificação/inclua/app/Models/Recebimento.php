@@ -9,6 +9,17 @@ class Recebimento extends Model
 {
     use HasFactory;
     protected $table='user_recebimentos';
+
+
     protected $fillable = ['inicio','fim','numero_consultas','total_consultas_pix','total_consultas_especie','total_consultas_maquininha',
-        'total_consultas_credito','comprovante','vencimento','pagamento','status','especialista_id','taxa_inclua','taxa_cartao','taxa_clinica','clinica_id'];
+        'total_consultas_credito','comprovante','vencimento','pagamento','status','especialista_id','taxa_inclua','taxa_cartao','taxa_clinica','clinica_id','idempotencyKey','payment_id_ml'];
+
+    public function especialista()
+    {
+        return $this->hasOne(Especialista::class, 'id', 'especialista_id');
+    }
+    public function clinica()
+    {
+        return $this->hasOne(Clinica::class, 'id', 'clinica_id');
+    }
 }
