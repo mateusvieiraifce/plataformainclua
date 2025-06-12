@@ -100,7 +100,7 @@ class PixController extends Controller
     public function checkPaymentStatus($paymentId)
     {
         try {
-            $response = Http::withHeaders($this->getMercadoPagoHeaders())
+            $response = Http::withHeaders($this->getMercadoPagoHeaders(""))
                 ->get(env('MERCADOPAGO_API_URL').'/v1/payments/'.$paymentId);
 
             if ($response->failed()) {

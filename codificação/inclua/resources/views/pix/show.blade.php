@@ -53,10 +53,17 @@
             fetch(`/pix/status/{{ $payment_id }}`)
                 .then(response => response.json())
                 .then(data => {
+
                     if(data.approved) {
                         document.getElementById('payment-status').innerHTML =
                             'Status: Aprovado! Obrigado pelo pagamento.';
                         document.getElementById('payment-status').className = 'alert alert-success';
+                        
+
+                        // Redireciona após 3 segundos (tempo para o usuário ver a mensagem)
+                        setTimeout(() => {
+                            window.history.back();
+                        }, 2000);
                     }
                 });
         }, 10000); // A cada 10 segundos
