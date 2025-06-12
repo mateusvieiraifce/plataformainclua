@@ -65,7 +65,7 @@
                             </a>
                         </li>
 
-                        <li>
+                        <li @if ($pageSlug == 'relatorio.caixa') class="active" @endif >
                             <a data-toggle="collapse" href="#relatorioclinica" aria-expanded="false">
                                 <i class="tim-icons icon-single-copy-04"></i>
                                 <span class="nav-link-text">{{ __('Relatórios') }}</span>
@@ -75,7 +75,7 @@
                             <div class="collapse" id="relatorioclinica">
                                 <ul class="nav pl-4">
 
-                                    <li @if ($pageSlug == 'dashboard2') class="active" @endif>
+                                    <li @if ($pageSlug == 'relatorio.caixa') class="active" @endif>
                                         <a href="{{ route("user.relatorio") }}">
                                             <i class="tim-icons icon-components"></i>
                                             <p>{{ __('Caixa ') }}</p>
@@ -88,7 +88,7 @@
                         <li @if ($pageSlug == 'financeiro') class="active" @endif>
                             <a href="{{route('clinica.financeiro')}}">
                                 <i class="tim-icons icon-coins"></i>
-                                <p>{{ __('Financeiro') }}</p>
+                                <p>{{ __('Contas a Pagar/Receber') }}</p>
                             </a>
                         </li>
 
