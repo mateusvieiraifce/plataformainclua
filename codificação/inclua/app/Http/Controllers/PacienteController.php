@@ -800,6 +800,7 @@ class PacienteController extends Controller
         'prontuarios'=>$prontuario
     ]);
 
+
     }
 
     public function relatorioAnamnese($id)

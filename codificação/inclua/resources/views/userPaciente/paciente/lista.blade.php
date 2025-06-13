@@ -58,7 +58,7 @@
 
                                                     @if ($paciente->avatar)
 
-                                                        <img src="{{ asset('storage/avatar-user/paciente/'.$paciente->avatar) }}"
+                                                        <img src="{{ asset('public/storage/avatar-user/paciente/'.$paciente->avatar) }}"
                                                              alt="Descrição da imagem"
                                                              width="50"
                                                              height="auto"
