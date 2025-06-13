@@ -28,7 +28,7 @@ class ClinicaController extends Controller
    public function selectEspecialistaSearch(Request $request)
    {
 
-      $especialistas = Especialista::where('nome', 'like', "%$request->nome%")->paginate(8);
+      $especialistas = Especialista::where('nome', 'like', "%$request->nome%")->paginate(8)->withQueryString();;
       if ($especialistas->isEmpty()) {
          $msg = ['valor' => trans("Não foi encontrado nenhum especialista com os dados informados!"), 'tipo' => 'danger'];
          session()->flash('msg', $msg);

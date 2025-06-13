@@ -344,7 +344,7 @@ Route::middleware('auth')->group(function () {
     Route::get("/consulta/selecionar-clinica/{rota?}", [\App\Http\Controllers\ConsultaController::class, 'selectClinica'])->name('selecionar.clinica');
     Route::get("/consulta/selecionar-clinica/search/result", [\App\Http\Controllers\ConsultaController::class, 'selectClinicaSearch'])->name('selecionar.clinica.search');
 
-    Route::post("/especialista/selecionar-especialista/search/result", [\App\Http\Controllers\ClinicaController::class, 'selectEspecialistaSearch'])->name('selecionar.especialista.search');
+    Route::any("/especialista/selecionar-especialista/search/result", [\App\Http\Controllers\ClinicaController::class, 'selectEspecialistaSearch'])->name('selecionar.especialista.search');
     Route::get("/clinica/selecionar-clinica/", [\App\Http\Controllers\ClinicaController::class, 'listarClinicaRelatorio'])->name('selecionar.clinica.relatorio');
     Route::get('/remover-filtro/{tipo}', [\App\Http\Controllers\ClinicaController::class, 'removerFiltro'])->name('remover.filtro');
     Route::get("/clinica/meu-relatorio/", [\App\Http\Controllers\ClinicaController::class, 'relatorioClinicaView'])->name('relatorio.clinica.view');
