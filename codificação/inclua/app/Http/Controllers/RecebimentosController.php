@@ -10,6 +10,8 @@ use App\Models\Recebimento;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class RecebimentosController extends Controller
 {
@@ -203,5 +205,114 @@ class RecebimentosController extends Controller
             return redirect($urlRoute);
 
     }
+
+    public function listarRecebimentos(Request $request){
+
+        $usuario = Auth::user();
+       // dd(($usuario->tipo_user));
+        if ($usuario->tipo_user!="R"){
+            session()->flash('msg', ['valor' => trans("Usuário não tem autorização!"), 'tipo' => 'danger']);
+             return redirect(route("home"))->withInput();
+        }
+
+
+        $especialistaId = $request->especialista_id;
+        $clinicaId = $request->clinica_id;
+        $situacao = $request->situacao;
+
+        $recebimentosList = Recebimento::select([
+            'user_recebimentos.*',
+            'especialistas.nome as especialista_nome'  // Campo adicional da tabela joined
+        ])
+            ->join('especialistas', 'especialistas.id', '=', 'user_recebimentos.especialista_id');
+
+        if ($clinicaId){
+            $recebimentosList= $recebimentosList ->where("clinica_id","=",$clinicaId);
+        }
+        if ($situacao=="F"){
+            $recebimentosList= $recebimentosList ->whereNotNull("pagamento");
+        }
+        if ($situacao=="A"){
+            $recebimentosList= $recebimentosList ->whereNull("pagamento");
+        }
+
+        if ($especialistaId){
+            $recebimentosList= $recebimentosList ->where("especialista_id","=",$especialistaId);
+        }
+
+        $recebimentosList= $recebimentosList ->where("saldo",">","0")
+            ->paginate(12);
+
+        $clinicas = Clinica::orderBy('nome','asc')->get();
+        if ($clinicaId != null) {
+            $especialistas = Especialista::join("especialistaclinicas","especialistaclinicas.especialista_id","=","especialistas.id")
+                ->where("clinica_id","=",$clinicaId)->select(["especialistas.*"])->get();
+        } else{
+            $especialistas = Especialista::orderBy('nome','asc')->get();
+
+        }
+        return view('user_root.recebimentos.list',
+            ['pageSlug' => 'recebimentos','lista'=>$recebimentosList,
+                'clinicas'=>$clinicas,
+                'especialistas'=>$especialistas,"clinicaId"=>$clinicaId,
+                "especialistaId"=>$especialistaId,
+                "situacao"=>$situacao]);
+    }
+
+    public function downloadComprovante($id)
+    {
+
+        $filename = Recebimento::find($id)->comprovante;
+
+        $filePath = 'public/uploads/' . $filename;
+
+        if (!Storage::exists($filePath)) {
+            abort(404);
+        }
+
+        return Storage::download(
+            $filePath,
+            $filename,
+            [
+                'Content-Disposition' => 'attachment; filename="' . $filename . '"'
+            ]
+        );
+       // dd($id);
+
+    }
+
+    public function uploadComprovante(Request $request){
+        $msg = "Arquivo não encontrado";
+        if ($request->hasFile('receb')) {
+
+            $reb = Recebimento::find($request->recebimentoSelecionado);
+         //   dd($reb);
+            if (!$reb){
+                session()->flash('msg', ['valor' => trans("Selecione um recebimento"), 'tipo' => 'danger']);
+            }
+
+            $extension = $request->file('receb')->getClientOriginalExtension();
+
+            // Criar nome baseado na data e hora atual
+            $fileName = now()->format('Ymd-His') . '.' . $extension;
+           // $imagensRequest->storeAs('public/img', $namefile);
+            $path = $request->file('receb')->storeAs('public/uploads/',$fileName);
+            $reb->comprovante= $fileName;
+            $reb->status= "F";
+            $inicio = Carbon::now();
+            $reb->pagamento=$inicio;
+            $reb->save();
+            session()->flash('msg', ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success']);
+
+
+            return redirect()->back()->withInput();
+        } else{
+            session()->flash('msg', ['valor' => trans($msg), 'tipo' => 'danger']);
+        }
+
+        return redirect()->back()->withInput();
+
+    }
+
     //
 }

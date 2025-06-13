@@ -314,6 +314,10 @@ Route::middleware('auth')->group(function () {
     Route::post("/medicamento/save", [\App\Http\Controllers\MedicamentoController::class, 'store'])->name('medicamento.save')->middleware('auth');
     Route::get("/medicamento/delete/{id}", [\App\Http\Controllers\MedicamentoController::class, 'delete'])->name('medicamento.delete')->middleware('auth');
     Route::get("/medicamento/edit/{id}", [\App\Http\Controllers\MedicamentoController::class, 'edit'])->name('medicamento.edit')->middleware('auth');
+    #RECEBIMENTOS_USER_ROOT
+    Route::any("/recebimentos/solicitacoes", [\App\Http\Controllers\RecebimentosController::class, 'listarRecebimentos'])->name('root.recebimentos.solicitacoes')->middleware('auth');
+    Route::post("/recebimentos/upload", [\App\Http\Controllers\RecebimentosController::class, 'uploadComprovante'])->name('root.recebimentos.upload')->middleware('auth');
+    Route::get("/recebimentos/download/{id}", [\App\Http\Controllers\RecebimentosController::class, 'downloadComprovante'])->name('root.recebimentos.download')->middleware('auth');
 
 
     #ESPECIALISTA

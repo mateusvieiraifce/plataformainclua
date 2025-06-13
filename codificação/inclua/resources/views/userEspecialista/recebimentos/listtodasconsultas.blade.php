@@ -213,7 +213,7 @@
                                                 @if ($ent->saldo>0)
                                                 <a style="max-width:160px; text-align: left;padding:10px " rel="tooltip"
                                                    title="Prontuário" class="btn btn-secondary" data-original-title="Edit"
-                                                   href="#">
+                                                   href="{{route("root.recebimentos.download",$ent->id)}}">
                                                     @if ($ent->saldo>0)
                                                     Ver Comprovante
                                                     @endif
