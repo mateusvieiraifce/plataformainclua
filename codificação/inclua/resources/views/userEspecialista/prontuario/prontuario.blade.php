@@ -12,7 +12,7 @@
                         <div class="col-4 col-lg-2">
                             <div class="photo">
                                 @if($paciente->avatar)
-                                    {!!  Html::image(Storage::url('avatar-user/paciente/'.$paciente->avatar)) !!}
+                                    {!!  Html::image(Storage::url('public/avatar-user/paciente/'.$paciente->avatar)) !!}
                                 @else
                                     @if($usuarioPaciente->avatar)
                                         {!! Html::image($usuarioPaciente->avatar) !!}
