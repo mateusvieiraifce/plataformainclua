@@ -80,6 +80,7 @@ class PagamentoController extends Controller
     {
         $pagamentos = Pagamento::orderBy('data_pagamento', 'desc')->paginate(4, ['*'], 'page_payments');
 
+
         $assinaturas = Assinatura::paginate(4, ['*'], 'page_signature');
 
         return view('user_root.pacientes.financeiro', ['pagamentos' => $pagamentos, 'assinaturas' => $assinaturas]);

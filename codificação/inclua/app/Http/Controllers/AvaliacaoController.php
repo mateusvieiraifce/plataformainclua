@@ -368,6 +368,9 @@ class AvaliacaoController extends Controller
 
     public function reputacaoPacientes()
     {
+
+
+
         $pacientes = User::join('pacientes', 'pacientes.usuario_id', 'users.id')
             ->join('consultas', 'consultas.paciente_id', 'pacientes.id')
             ->join('avaliacoes', 'avaliacoes.consulta_id', 'consultas.id')
@@ -378,11 +381,17 @@ class AvaliacaoController extends Controller
             ->select(
                 'pacientes.cpf', 'pacientes.id', 'pacientes.nome', 'pacientes.usuario_id'
             )
-            ->groupBy('pacientes.cpf', 'pacientes.id', 'pacientes.nome')
+            ->groupBy('pacientes.cpf', 'pacientes.id', 'pacientes.nome',"pacientes.usuario_id")
             ->paginate(8);
+        //dd("a primeira consulta ok");
 
         foreach ($pacientes as $paciente) {
-            $paciente->responsavel = Paciente::where('usuario_id', $paciente->usuario_id)->where('responsavel', 1)->first()->nome;
+            $resp = Paciente::where('usuario_id', $paciente->usuario_id)->where('responsavel', 1)->first();
+            if ($resp) {
+                $paciente->responsavel = $resp->nome;
+            }else{
+                $paciente->responsavel = $paciente->nome;
+            }
 
             $paciente->avaliacoes = AvaliacaoComentario::join('avaliacoes', 'avaliacoes.comentario_id', 'avaliacoes_comentarios.id')
                 ->join('consultas', 'consultas.id', 'avaliacoes.consulta_id')

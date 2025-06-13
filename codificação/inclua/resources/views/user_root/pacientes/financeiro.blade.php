@@ -28,10 +28,14 @@
                                                 {{ $pagamento->getNomeResponsavel($pagamento->user_id) }}
                                             </td>
                                             <td>
+                                                @if($pagamento->getCard)
                                                 {{ \App\Helper::descryptNumberCard($pagamento->getCard->numero_cartao) }}
+                                                @endif
                                             </td>
                                             <td>
+                                                @if($pagamento->valor)
                                                 R$ {{ \App\Helper::padronizaMonetario($pagamento->valor) }}
+                                                @endif
                                             </td>
                                             <td>
                                                 {{ isset($pagamento->data_pagamento) ? date('d/m/Y', strtotime($pagamento->data_pagamento)) : "-" }}
@@ -55,10 +59,10 @@
             </div>
         </div>
     </div>
-    
+
     <div class="row">
         <div class="col-lg-12 col-md-12">
-            <div class="card">                
+            <div class="card">
                 <div class="card-header">
                     <h6 class="title d-inline">Assinatura</h6>
                 </div>

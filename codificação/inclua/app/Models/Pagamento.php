@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Pagamento extends Model
 {
     use HasFactory;
-    
+
     protected $fillables = [
         'user_id',
         'cartao_id',
@@ -19,7 +19,7 @@ class Pagamento extends Model
         'status',
         'servico'
     ];
-    
+
     public $timestamps=false;
 
     public function getCard()
@@ -30,7 +30,10 @@ class Pagamento extends Model
     public function getNomeResponsavel($userId)
     {
         $responsavel = Paciente::where('usuario_id', $userId)->where('responsavel', 1)->first();
+        if ($responsavel) {
+            return $responsavel->nome;
+        }
 
-        return $responsavel->nome;
+        return "";
     }
 }
