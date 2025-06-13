@@ -516,7 +516,7 @@ class EspecialistaController extends Controller
           $prontuario= new Prontuario();
           $prontuario->dados_consulta = "";
       }
-     //   dd($prontuario);
+       //dd($paciente);
       return view('userEspecialista/iniciaratendimento', [
          'consulta' => $consulta,
          'paciente' => $paciente,

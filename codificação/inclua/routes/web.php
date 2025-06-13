@@ -214,6 +214,8 @@ Route::middleware('auth')->group(function () {
     Route::get("/paciente/editar/{id}", [\App\Http\Controllers\PacienteController::class, 'edit'])->name('paciente.edit');
     Route::post("/paciente/update/", [\App\Http\Controllers\PacienteController::class, 'update'])->name('paciente.update');
     Route::get("/paciente/lista", [\App\Http\Controllers\PacienteController::class, 'index'])->name('paciente.index');
+    Route::post("/paciente/editar/foto", [\App\Http\Controllers\PacienteController::class, 'uploadFoto'])->name('paciente.foto.upload');
+
 
     #LISTA DE PEDIDOS DE EXAMES DO PACIENTE
     Route::get("/paciente/exames", [\App\Http\Controllers\PedidoExameController::class, 'pedidoExamesPaciente'])->name('paciente.pedido_exames.lista');

@@ -11,12 +11,15 @@
                     <div class="row">
                         <div class="col-4 col-lg-2">
                             <div class="photo">
-                                @if($usuarioPaciente->avatar)
-                                    {!! Html::image($usuarioPaciente->avatar) !!}
-
+                                @if($paciente->avatar)
+                                    {!!  Html::image(Storage::url('avatar-user/paciente/'.$paciente->avatar)) !!}
                                 @else
+                                    @if($usuarioPaciente->avatar)
+                                        {!! Html::image($usuarioPaciente->avatar) !!}
+                                     @else
                                     <img src="/assets/img/anime3.png" alt="{{ __('Profile Photo') }}"
                                          style="height: 100px; width: 100px;">
+                                    @endif
                                 @endif
 
 

@@ -23,8 +23,9 @@
                                     <th>Nome</th>
                                     <th>Sexo</th>
                                     <th>Data de Nascimento</th>
+                                    <th>Foto</th>
                                     <th>Editar</th>
-                                    <th>Excluir</th>
+                                    <th>Desativar</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -47,11 +48,47 @@
                                         <td>
                                             {{ isset($paciente->data_nascimento) ? date('d/m/Y', strtotime($paciente->data_nascimento)) : "-" }}
                                         </td>
+
+
                                         <td class="td-actions text-left">
+
+                                            <a href="#">
+                                                <button type="button" rel="tooltip" title="Adicionar Foto" class="btn btn-link"
+                                                        data-original-title="Edit Task" style="color: white;" onclick="uploadArquivo({{$paciente->id}})">
+
+                                                    @if ($paciente->avatar)
+
+                                                        <img src="{{ asset('storage/avatar-user/paciente/'.$paciente->avatar) }}"
+                                                             alt="Descrição da imagem"
+                                                             width="50"
+                                                             height="auto"
+                                                             title="Título da imagem"
+                                                             loading="lazy">
+
+                                                    @else
+                                                        <i class="tim-icons icon-upload"></i>
+                                                    @endif
+
+
+                                                </button>
+                                            </a>
+
+                                        </td>
+
+                                        <td class="td-actions text-left">
+
                                             <a href="{{ route('paciente.edit', $paciente->id) }}">
                                                 <button type="button" rel="tooltip" title="Editar" class="btn btn-link"
                                                         data-original-title="Edit Task" style="color: white;">
                                                     <i class="tim-icons icon-pencil"></i>
+                                                </button>
+                                            </a>
+                                        </td>
+                                        <td class="td-actions text-left">
+                                            <a href="{{ route('paciente.edit', $paciente->id) }}">
+                                                <button type="button" rel="tooltip" title="Editar" class="btn btn-link"
+                                                        data-original-title="Desative" style="color: white;">
+                                                    <i class="tim-icons icon-simple-remove"></i>
                                                 </button>
                                             </a>
                                         </td>
@@ -64,4 +101,31 @@
             </div>
         </div>
     </div>
+    <div class="foto">
+        <form name="arquivo" id="arquivo" enctype="multipart/form-data" method="post" action="{{route("paciente.foto.upload")}}">
+            @csrf
+            <div style="visibility: hidden">
+                <input name="receb" type="file" text="incluir documento" class="form-control" id="inputArquivo" accept=",.jpg,.png,.docx">
+                <input type="text" id="recebimentoSelecionado" name="recebimentoSelecionado">
+            </div>
+
+
+        </form>
+    </div>
+
+    <script>
+
+        document.getElementById('inputArquivo').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+                document.getElementById("arquivo").submit();
+             //uploadFile(file);
+        });
+        function uploadArquivo(id){
+                const fileReal = document.getElementById('inputArquivo');
+                document.getElementById("recebimentoSelecionado").setAttribute("value", id);
+                fileReal.click();
+        }
+
+    </script>
 @endsection

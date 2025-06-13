@@ -13,6 +13,7 @@ class Paciente extends Model
         'data_nascimente',
         'sexo',
         'cpf',
-        'responsavel'
+        'responsavel',
+        'avatar'
     ];
 }

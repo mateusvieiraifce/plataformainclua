@@ -15,6 +15,7 @@ use App\Models\Paciente;
 use App\Models\PedidoExame;
 use App\Models\PedidoMedicamento;
 use App\Models\Prontuario;
+use App\Models\Recebimento;
 use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -33,6 +34,36 @@ class PacienteController extends Controller
 
             return view('userPaciente.paciente.lista', ['pacientes' => $pacientes]);
         }
+    }
+
+    public function uploadFoto(Request $request){
+        $msg = "Arquivo não encontrado";
+        if ($request->hasFile('receb')) {
+
+            $paciente = Paciente::find($request->recebimentoSelecionado);
+            //   dd($reb);
+            if (!$paciente){
+                session()->flash('msg', ['valor' => trans("Selecione um Paciente"), 'tipo' => 'danger']);
+            }
+
+            $extension = $request->file('receb')->getClientOriginalExtension();
+
+            // Criar nome baseado na data e hora atual
+            $fileName = now()->format('Ymd-His') . '.' . $extension;
+            // $imagensRequest->storeAs('public/img', $namefile);
+            $path = $request->file('receb')->storeAs('public/avatar-user/paciente/',$fileName);
+            $paciente->avatar= $fileName;
+            $paciente->save();
+            session()->flash('msg', ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success']);
+
+
+            return redirect()->back()->withInput();
+        } else{
+            session()->flash('msg', ['valor' => trans($msg), 'tipo' => 'danger']);
+        }
+
+        return redirect()->back()->withInput();
+
     }
 
     public function create()
@@ -754,11 +785,12 @@ class PacienteController extends Controller
     );
 
 
-     $prontuario = Prontuario::join("consultas","prontuarios.consulta_id","consultas.id")->where('especialista_id','=',$especialista->id )->paginate(15);
+     $prontuario = Prontuario::join("consultas","prontuarios.consulta_id","consultas.id")
+         ->where('especialista_id','=',$especialista->id )->orderBy("consultas.horario_agendado","desc")->paginate(15);
      #dd($prontuario);
     //na tabela de exames fazer a parte de arquivos feito pelo antony
 
-    //  dd($listaPedidosExames);
+    // dd($paciente);
     return view('userEspecialista.prontuario.prontuario', [
         'paciente' => $paciente,
         'usuarioPaciente' => $usuarioPaciente,

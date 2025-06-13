@@ -9,13 +9,18 @@
         <div class="card-header">
             <div class="row">
                 <div class="col-6 col-lg-2">
-                    @if($usuarioPaciente->avatar)
-                        {!! Html::image($usuarioPaciente->avatar) !!}
 
+                    @if($paciente->avatar)
+                        {!!  Html::image(Storage::url('avatar-user/paciente/'.$paciente->avatar)) !!}
                     @else
-                        <img src="/assets/img/anime3.png" alt="{{ __('Profile Photo') }}"
-                             style="height: 100px; width: 100px;">
+                        @if($usuarioPaciente->avatar)
+                            {!! Html::image($usuarioPaciente->avatar) !!}
+                        @else
+                            <img src="/assets/img/anime3.png" alt="{{ __('Profile Photo') }}"
+                                 style="height: 100px; width: 100px;">
+                        @endif
                     @endif
+
                 </div>
                 <div class="col-6 col-lg-3">
                     <h6 class="title d-inline">Paciente: {{$paciente->nome}}</h6>
