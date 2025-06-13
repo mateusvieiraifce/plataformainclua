@@ -6,6 +6,7 @@ use App\Helper;
 use App\Models\Clinica;
 use App\Models\Consulta;
 use App\Models\Especialista;
+use App\Models\Especialistaclinica;
 use App\Models\Recebimento;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -219,6 +220,8 @@ class RecebimentosController extends Controller
         $especialistaId = $request->especialista_id;
         $clinicaId = $request->clinica_id;
         $situacao = $request->situacao;
+        $resultado = $request->resultado;
+       // dd($resultado);
 
         $recebimentosList = Recebimento::select([
             'user_recebimentos.*',
@@ -240,8 +243,14 @@ class RecebimentosController extends Controller
             $recebimentosList= $recebimentosList ->where("especialista_id","=",$especialistaId);
         }
 
-        $recebimentosList= $recebimentosList ->where("saldo",">","0")
-            ->paginate(12);
+        if ($resultado =="P"){
+            $recebimentosList= $recebimentosList ->where("saldo",">",0);
+        }
+        if ($resultado =="R"){
+            $recebimentosList= $recebimentosList ->where("saldo","<",0);
+        }
+
+        $recebimentosList= $recebimentosList->paginate(9);
 
         $clinicas = Clinica::orderBy('nome','asc')->get();
         if ($clinicaId != null) {
@@ -251,12 +260,14 @@ class RecebimentosController extends Controller
             $especialistas = Especialista::orderBy('nome','asc')->get();
 
         }
+        $recebimentosList->appends($request->query());
         return view('user_root.recebimentos.list',
             ['pageSlug' => 'recebimentos','lista'=>$recebimentosList,
                 'clinicas'=>$clinicas,
                 'especialistas'=>$especialistas,"clinicaId"=>$clinicaId,
                 "especialistaId"=>$especialistaId,
-                "situacao"=>$situacao]);
+                "situacao"=>$situacao,
+                "resultado"=>$resultado]);
     }
 
     public function downloadComprovante($id)
@@ -311,6 +322,62 @@ class RecebimentosController extends Controller
         }
 
         return redirect()->back()->withInput();
+
+    }
+
+
+    public function criar_todas_solicitacao(Request $request){
+
+        try{
+
+            $usuario = Auth::user();
+            // dd(($usuario->tipo_user));
+            if ($usuario->tipo_user!="R"){
+                session()->flash('msg', ['valor' => trans("Usuário não tem autorização!"), 'tipo' => 'danger']);
+                return redirect(route("home"))->withInput();
+            }
+
+            $allUserAndClinic = Especialistaclinica::all();
+            foreach ($allUserAndClinic as $userAndClinic){
+
+                $clinica_id = $userAndClinic->clinica_id;
+                $especialista=Especialista::find($userAndClinic->especialista_id);
+                $lastRecep = Recebimento::where('especialista_id', '=', $especialista->id)->where("clinica_id","=",$clinica_id)->orderBy('fim','DESC')->first();
+                if ($lastRecep != null) {
+                    continue;
+                   // session()->flash('msg', ['valor' => trans("Há uma solicitação em aberto, aguarda a finalização!"), 'tipo' => 'danger']);
+                   // return redirect(route('root.recebimentos.solicitacoes'));
+                }
+
+
+                $solicitacao = $this->calculaRecebimento($especialista,$clinica_id);
+
+
+                $solicitacao->vencimento = Helper::getDataDiasUteis();
+                $solicitacao->especialista_id= $especialista->id;
+                $solicitacao->clinica_id = $clinica_id;
+                $consultaCreditoLiquido =$solicitacao->total_consultas_credito * $solicitacao->taxa_cartao;
+                //dd($consultaCreditoLiquido);
+                if ($consultaCreditoLiquido>$solicitacao->taxa_inclua){
+                    $incluaSaldo  =  $consultaCreditoLiquido-$solicitacao->taxa_inclua;
+                    $solicitacao->status = "A Receber do Inclua ". (Helper::padronizaMonetario( $incluaSaldo ));
+                } else{
+
+                    $solicitacao->saldo = $consultaCreditoLiquido-$solicitacao->taxa_inclua;
+                    $solicitacao->status = "A Pagar ao Inclua ". Helper::padronizaMonetario($solicitacao->saldo*-1 );
+                }
+                $solicitacao->save();
+            }
+            session()->flash('msg', ['valor' => trans("Operação Realizada com sucesso!"), 'tipo' => 'success']);
+
+        }catch (\Exception $e){
+            //dd($e->getMessage());
+            # dd($e->getMessage());
+            session()->flash('msg', ['valor' => trans("Houve um erro ao realizar o cadastro, tente novamente!"), 'tipo' => 'danger']);
+        }
+        $urlRoute = route('root.recebimentos.solicitacoes');
+        // dd($urlRoute);
+        return redirect($urlRoute);
 
     }
 

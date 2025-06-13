@@ -9,7 +9,7 @@
                     <div class="card-header">
 
                         <div class="col-lg-12 col-md-12">
-                            <form action="{{route('root.recebimentos.solicitacoes')}}" method="post" id="pesquisar" name="pesquisar">
+                            <form action="{{route('root.recebimentos.solicitacoes')}}" method="get" id="pesquisar" name="pesquisar">
                                 @csrf
 
                                 <fieldset>
@@ -58,7 +58,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-4 px-8">
+                                        <div class="col-md-2 px-8">
                                             <div class="form-group">
                                                 <label for="inicio_data">
                                                     Situaçao
@@ -68,6 +68,22 @@
                                                         <option value=""> Todos</option>
                                                         <option value="A" @if($situacao=="A") selected @endif> Aberto</option>
                                                         <option value="F" @if($situacao=="F") selected @endif> Fechado</option>
+
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-2 px-8">
+                                            <div class="form-group">
+                                                <label for="inicio_data">
+                                                    Resultado
+                                                </label>
+                                                <div class="input-button-inline">
+                                                    <select name="resultado" id="resultado" class="form-control">
+                                                        <option value=""> Todos</option>
+                                                        <option value="P" @if($resultado=="P") selected @endif> A Pagar</option>
+                                                        <option value="R" @if($resultado=="R") selected @endif> A Receber</option>
 
                                                     </select>
                                                 </div>
@@ -127,15 +143,17 @@
 
                                                 @if ($ent->comprovante=="")
                                                     <a style="max-width:160px; text-align: left;padding:10px " rel="tooltip"
-                                                       title="Prontuário" class="btn btn-secondary" data-original-title="Edit"
-                                                       href="#" onclick="uploadArquivo({{$ent->id}})">
+                                                       title="Comprovante" class="btn btn-secondary" data-original-title="Edit"
+                                                       href="#" onclick="uploadArquivo({{$ent->id}}, {{$ent->saldo}})">
                                                         @if ($ent->saldo>0)
                                                             Incluir Comprovante
+                                                        @else
+                                                            Aguad. Pagamento
                                                         @endif
                                                     </a>
                                                 @else
                                                         <a style="max-width:160px; text-align: left;padding:10px " rel="tooltip"
-                                                           title="Prontuário" class="btn btn-secondary" data-original-title="Edit"
+                                                           title="Comprovante" class="btn btn-secondary" data-original-title="Edit"
                                                            href="{{route("root.recebimentos.download",$ent->id)}}">
                                                             Download
                                                         </a>
@@ -158,6 +176,7 @@
             </div>
         </div>
     </div>
+
     <form name="arquivo" id="arquivo" enctype="multipart/form-data" method="post" action="{{route("root.recebimentos.upload")}}">
         @csrf
         <div style="visibility: hidden">
@@ -184,6 +203,11 @@
             document.getElementById('pesquisar').submit();
 
         });
+        document.getElementById('resultado').addEventListener('change', function() {
+            // Só envia se um valor foi selecionado
+            document.getElementById('pesquisar').submit();
+
+        });
     </script>
     <script>
 
@@ -193,10 +217,12 @@
              document.getElementById("arquivo").submit();
            // uploadFile(file);
         });
-        function uploadArquivo(id){
-            const fileReal =  document.getElementById('inputArquivo');
-            document.getElementById("recebimentoSelecionado").setAttribute("value",id);
-            fileReal.click();
+        function uploadArquivo(id, saldo){
+            if (saldo>0) {
+                const fileReal = document.getElementById('inputArquivo');
+                document.getElementById("recebimentoSelecionado").setAttribute("value", id);
+                fileReal.click();
+            }
 
         }
 

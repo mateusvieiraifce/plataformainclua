@@ -400,10 +400,18 @@
                                 <p>{{ __('Meu Perfil') }}</p>
                             </a>
                         </li>
+
+
                         <li @if ($pageSlug == 'dashboard2') class="active" @endif>
                             <a href="{{  route("user.relatorio")  }}">
                                 <i class="tim-icons icon-paper"></i>
                                 <p>{{ __('Relatório de Caixa') }}</p>
+                            </a>
+                        </li>
+                        <li @if ($pageSlug == 'dashboard2') class="active" @endif>
+                            <a href="{{  route("root.recebimentos.criar.todos")  }}">
+                                <i class="tim-icons icon-paper"></i>
+                                <p>{{ __('Gerar Recebimentos') }}</p>
                             </a>
                         </li>
                     @endif
