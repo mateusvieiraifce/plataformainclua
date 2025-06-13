@@ -236,7 +236,11 @@ class ClinicaController extends Controller
        });
      //  dd($totalDescontos);
 
+       $total= $consultas->count();
+      // dd($total);
 
+       ini_set('memory_limit', '512M');
+       ini_set('max_execution_time', 300);
        $dados = [
            'especialista' => $especialista,
            'clinica' => $clinica,
