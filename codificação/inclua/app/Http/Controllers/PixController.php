@@ -27,7 +27,9 @@ class PixController extends Controller
     public function generatePix(Request $request)
     {
 
-
+        if (auth()->user()->tipo_user == 'P') {
+            abort(403);
+        }
 
        // dd($request->id);
         $recebimento = Recebimento::find($request->id);
@@ -130,6 +132,12 @@ class PixController extends Controller
     }
     public function checkPaymentStatus($paymentId)
     {
+
+
+        if (auth()->user()->tipo_user == 'P') {
+            abort(403);
+        }
+
         try {
             $response = Http::withHeaders($this->getMercadoPagoHeaders(""))
                 ->get(env('MERCADOPAGO_API_URL').'/v1/payments/'.$paymentId);

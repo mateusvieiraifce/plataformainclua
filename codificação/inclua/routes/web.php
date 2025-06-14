@@ -20,6 +20,12 @@ Route::get('/sobre', function () {
 })->name('home.sobre');
 
 
+Route::get('/error', function() {
+    return view('errors.custom', [
+        'error_code' => session('error_code', 500),
+        'error_message' => session('error_message', 'Erro desconhecido')
+    ]);
+})->name('error.page');
 
 Route::get('/contato', function () {
     return view('frente/contato');

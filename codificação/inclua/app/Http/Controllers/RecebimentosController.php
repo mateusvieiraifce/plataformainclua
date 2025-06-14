@@ -102,7 +102,9 @@ class RecebimentosController extends Controller
     public function home($id_especialista=null, $clinicaId=null)
     {
 
-
+        if (auth()->user()->tipo_user == 'P') {
+            abort(403);
+        }
 
         if ($id_especialista) {
             $especialista = Especialista::where('id', '=',$id_especialista)->first();
