@@ -442,3 +442,7 @@ Route::get('/users', function () {
 Route::get('/users/index', function () {
     return view('users/index');
 })->name('user.index');
+
+Route::get('/checkout', [\App\Http\Controllers\PaymentController::class, 'showCheckout'])->name('checkout')->middleware('auth');
+Route::post('/api/payment', [\App\Http\Controllers\PaymentController::class, 'processPayment'])->middleware('auth');
+Route::post('/api/payment/notification', [\App\Http\Controllers\PaymentController::class, 'handleNotification'])->name('payment.notification')->middleware('auth');
