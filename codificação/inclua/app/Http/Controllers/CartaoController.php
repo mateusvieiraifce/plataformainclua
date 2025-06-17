@@ -9,6 +9,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Log;
 
 class CartaoController extends Controller
 {
@@ -16,7 +17,7 @@ class CartaoController extends Controller
     {
         return view('cadastro.paciente.form_cartao', ['usuario_id' => $usuario_id]);
     }
-    
+
     public function store($request)
     {
         try {
@@ -30,14 +31,36 @@ class CartaoController extends Controller
             $cartao->nome_titular = $request->nome_titular;
             $cartao->status = "Pendente";
             $cartao->save();
-            
+
             return $cartao;
         } catch (QueryException $e) {
+            Log::error('Payment Error: '.$e->getMessage());
             $msg = ['valor' => trans("Erro ao executar a operação!"), 'tipo' => 'danger'];
             session()->flash('msg', $msg);
         }
     }
-    
+
+    public function storeMp($request)
+    {
+        try {
+            $cartao = new Cartao();
+            $cartao->user_id = $request->usuario_id;
+            $cartao->numero_cartao = Crypt::encrypt(Helper::removerCaractereEspecial($request->card));
+            $cartao->instituicao = "master";
+            $cartao->mes_validade = date("m",strtotime($request->validade));
+            $cartao->ano_validade = date("Y",strtotime($request->validade));
+            $cartao->codigo_seguranca = Crypt::encrypt($request->codigo_seguranca);
+            $cartao->nome_titular = $request->nome_titular;
+            $cartao->status = "Pendente";
+            $cartao->save();
+
+            return $cartao;
+        } catch (QueryException $e) {
+            Log::error('Payment Error: '.$e->getMessage());
+            $msg = ['valor' => trans("Erro ao executar a operação!"), 'tipo' => 'danger'];
+            session()->flash('msg', $msg);
+        }
+    }
     public function update($cartao_id, $status, $principal = null)
     {
         try {
@@ -45,7 +68,7 @@ class CartaoController extends Controller
             $cartao->status = $status;
             $cartao->principal = $principal;
             $cartao->save();
-            
+
             return $cartao;
         } catch (QueryException $e) {
             $msg = ['valor' => trans("Erro ao executar a operação!"), 'tipo' => 'danger'];
