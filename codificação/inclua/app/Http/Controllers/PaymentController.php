@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 
+use App\Helper;
+use App\Models\Cartao;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -24,7 +27,8 @@ class PaymentController extends Controller
         session()->put('idempotencyKey', $idempotencyKey);
         return view('checkout', [
             'publicKey' => env('MERCADOPAGO_PUBLIC_KEY'),
-            'publicKeyIdem'=>$idempotencyKey
+            'publicKeyIdem'=>$idempotencyKey,
+            'usuario_id' =>auth()->user()->id
         ]);
     }
 
@@ -91,6 +95,29 @@ class PaymentController extends Controller
             }
 
             $payment = $response->json();
+            if ($payment['status']=="approved"){
+                $cartaoController = new CartaoController();
+                $cartao = new Cartao();
+                $cartao->user_id = auth()->user()->id;
+                $cartao->numero_cartao = Crypt::encrypt(Helper::removerCaractereEspecial($request["card"]));
+                $cartao->instituicao = "master";
+                
+                $cartao->mes_validade = date("m",strtotime($request->validade));
+                $cartao->ano_validade = date("Y",strtotime($request->validade));
+                $cartao->codigo_seguranca = Crypt::encrypt($request->codigo_seguranca);
+                $cartao->nome_titular = $request->nome_titular;
+                $cartao->status = "Pendente";
+                $cartao->save();
+                Log::error('Payment DATA: '.$request["card"]);
+                Log::error('Payment DATA: '.$request["mes"]);
+                Log::error('Payment DATA: '.$request["ano"]);
+
+
+                $cartaoController->storeMp($request);
+                session()->flash('msg', ['valor' => trans("Assinatura realizada com sucesso@."), 'tipo' => 'success']);
+
+            }
+
 
             return response()->json([
                 'success' => true,

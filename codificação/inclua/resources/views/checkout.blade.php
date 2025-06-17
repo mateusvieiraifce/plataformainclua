@@ -1,75 +1,84 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <title>Checkout Transparente</title>
-    <script src="https://sdk.mercadopago.com/js/v2"></script>
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <style>
-        body { font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input, select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; }
-        button { background: #009ee3; color: white; border: none; padding: 12px 20px; border-radius: 4px; cursor: pointer; }
-        .error { color: #d32f2f; margin-top: 5px; }
-        .success { color: #388e3c; margin-top: 15px; }
-    </style>
-</head>
-<body>
-<h1>Finalizar Compra</h1>
+@extends('layouts.app', ['class' => 'register-page', 'contentClass' => 'register-page', 'pageSlug' => 'registre'])
+@section('title', 'Cadastro de Dados de pagamento')
+@section('content')
 
+
+<div class="row">
+    <div class="card card-register">
+    <div class="col-md-7 mr-auto">
+
+        <h2>Dados de pagamento</h2>
+
+
+        <div class="card-body">
+<div class="row">
 <form id="paymentForm">
+    @csrf
     <div class="form-group">
         <label for="cardNumber">Número do Cartão</label>
-        <input type="text" id="cardNumber" placeholder="4509 9535 6623 3704" value="5200486719358259">
+        <div class="input-group">
+        <input type="text"  name="numero_cartao" class="form-control" id="cardNumber" placeholder="4509 9535 6623 3704" value="5031 4332 1540 6351">
+        </div>
         <div id="cardNumberError" class="error"></div>
     </div>
 
     <div class="form-group">
         <label for="cardholderName">Nome no Cartão</label>
-        <input type="text" id="cardholderName" placeholder="Como no cartão" value="Mateus A V Neto">
+        <div class="input-group">
+        <input type="text" class="form-control" id="cardholderName" placeholder="Como no cartão" value="APRO">
+        </div>
     </div>
 
 
     <div class="form-group">
         <label>Validade</label>
-        <div style="display: flex; gap: 10px;">
-            <input type="text" id="cardExpirationMonth" placeholder="MM" style="width: 20%;" value="04">
-            <input type="text" id="cardExpirationYear" placeholder="AAAA" style="width: 30%;" value="2033">
+        <div style="display: flex; gap: 30px;">
+            <div class="input-group">
+            <input type="text" class="form-control" id="cardExpirationMonth" placeholder="MM" style="width: 20%;"  value="11">
+            <input type="text" class="form-control" id="cardExpirationYear" placeholder="AAAA" style="width: 30%;"  value="2030">
+            </div>
         </div>
     </div>
 
     <div class="form-group">
         <label for="securityCode">Código de Segurança</label>
-        <input type="text" id="securityCode" placeholder="123" value="615">
+        <div class="input-group">
+        <input type="text" class="form-control" id="securityCode" placeholder="123" value="123" >
+        </div>
     </div>
 
-    <div class="form-group">
-        <label for="docType">Tipo de Documento</label>
-        <select id="docType">
-            <option value="CPF" selected >CPF</option>
-        </select>
-    </div>
+    <input type="hidden" id="docType" value="CPF">
 
     <div class="form-group">
         <label for="docNumber">Número do Documento</label>
-        <input type="text" id="docNumber" placeholder="123.456.789-09" value="66664195372">
+        <div class="input-group">
+        <input type="text"  class="form-control" id="docNumber" placeholder="123.456.789-09" value="12345678909">
+        </div>
     </div>
 
     <div class="form-group">
         <label for="email">E-mail</label>
-        <input type="email" id="email" placeholder="seu@email.com" value="mateus.vieira@ifce.edu.br">
+        <div class="input-group">
+        <input type="email" class="form-control" id="email" placeholder="seu@email.com" value="mateus.vieira@ifce.edu.br">
+        </div>
     </div>
-
+    <input type="hidden" name="usuario_id" id="usuario_id" value="{{ $usuario_id ?? $user->id }}">
     <div class="form-group">
         <label for="amount">Valor (R$)</label>
-        <input type="number" id="amount" value="10.50" step="0.01">
+        <div class="input-group">
+        <input type="number"  class="form-control" id="amount" value="10.50" step="0.01">
+        </div>
     </div>
 
-    <button type="button" onclick="processPayment()">Pagar</button>
+    <button type="button" class="btn btn-primary" onclick="processPayment()">Concluir</button>
 </form>
 
 <div id="paymentResult" class="success"></div>
-
+</div>
+        </div>
+    </div>
+        <script src="https://sdk.mercadopago.com/js/v2"></script>
 <script>
     // Inicializa o Mercado Pago com sua public key
     const mp = new MercadoPago('{{ $publicKey }}', {
@@ -103,6 +112,9 @@
                 },
                 body: JSON.stringify({
                     token: token.id,
+                    card:document.getElementById('cardNumber').value,
+                    mes:document.getElementById('cardExpirationMonth').value,
+                    ano:document.getElementById('cardExpirationYear').value,
                     payment_method_id: 'master', // Pode ser dinâmico
                     transaction_amount: parseFloat(document.getElementById('amount').value),
                     installments: 1, // Pode ser selecionável
@@ -120,6 +132,10 @@
             const result = await response.json();
 
             if (result.success) {
+                if (result.payment.status=="approved"){
+                    window.location.href="{{route("checkout")}}"
+
+                }
                 document.getElementById('paymentResult').innerHTML = `
                         <h3>Pagamento realizado com sucesso!</h3>
                         <p>ID: ${result.payment.id}</p>
@@ -138,5 +154,7 @@
         }
     }
 </script>
-</body>
-</html>
+
+</div>
+</div>
+@endsection
