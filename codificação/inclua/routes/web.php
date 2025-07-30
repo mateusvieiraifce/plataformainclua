@@ -308,12 +308,12 @@ Route::middleware('auth')->group(function () {
     Route::get("/exame/edit/{id}", [\App\Http\Controllers\ExameController::class, 'edit'])->name('exame.edit')->middleware('auth');
 
     #CAD_TIPO_MEDICAMENTOS_USER_ROOT
-    Route::get("/tipomedicamento/list", [\App\Http\Controllers\TipomedicamentoController::class, 'list'])->name('tipomedicamento.list')->middleware('auth');
-    Route::get("/tipomedicamento/new", [\App\Http\Controllers\TipomedicamentoController::class, 'create'])->name('tipomedicamento.new')->middleware('auth');
-    Route::post("/tipomedicamento/search", [\App\Http\Controllers\TipomedicamentoController::class, 'search'])->name('tipomedicamento.search')->middleware('auth');
-    Route::post("/tipomedicamento/save", [\App\Http\Controllers\TipomedicamentoController::class, 'store'])->name('tipomedicamento.save')->middleware('auth');
-    Route::get("/tipomedicamento/delete/{id}", [\App\Http\Controllers\TipomedicamentoController::class, 'delete'])->name('tipomedicamento.delete')->middleware('auth');
-    Route::get("/tipomedicamento/edit/{id}", [\App\Http\Controllers\TipomedicamentoController::class, 'edit'])->name('tipomedicamento.edit')->middleware('auth');
+    Route::get("/tipomedicamento/list", [\App\Http\Controllers\TipoMedicamentoController::class, 'list'])->name('tipomedicamento.list')->middleware('auth');
+    Route::get("/tipomedicamento/new", [\App\Http\Controllers\TipoMedicamentoController::class, 'create'])->name('tipomedicamento.new')->middleware('auth');
+    Route::post("/tipomedicamento/search", [\App\Http\Controllers\TipoMedicamentoController::class, 'search'])->name('tipomedicamento.search')->middleware('auth');
+    Route::post("/tipomedicamento/save", [\App\Http\Controllers\TipoMedicamentoController::class, 'store'])->name('tipomedicamento.save')->middleware('auth');
+    Route::get("/tipomedicamento/delete/{id}", [\App\Http\Controllers\TipoMedicamentoController::class, 'delete'])->name('tipomedicamento.delete')->middleware('auth');
+    Route::get("/tipomedicamento/edit/{id}", [\App\Http\Controllers\TipoMedicamentoController::class, 'edit'])->name('tipomedicamento.edit')->middleware('auth');
 
     #CAD_MEDICAMENTOS_USER_ROOT
     Route::get("/medicamento/list", [\App\Http\Controllers\MedicamentoController::class, 'list'])->name('medicamento.list')->middleware('auth');
