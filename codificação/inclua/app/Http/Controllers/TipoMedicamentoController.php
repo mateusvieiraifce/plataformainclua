@@ -13,6 +13,8 @@ class TipoMedicamentoController extends Controller
       if (isset($_GET['filtro'])) {
          $filter = $_GET['filtro'];
       }
+
+      
       $lista = TipoMedicamento::where('descricao', 'like', "%" . "%")->orderBy('id', 'desc')->paginate(8);
       return view('tipomedicamento/list', ['lista' => $lista, 'filtro' => $filter, 'msg' => $msg]);
    }
