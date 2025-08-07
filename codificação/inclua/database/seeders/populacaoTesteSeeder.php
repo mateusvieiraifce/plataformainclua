@@ -53,7 +53,7 @@ class populacaoTesteSeeder extends Seeder
         ]);
 
         //usuario paciente 01
-       /* $userPaciente01 = User::create([
+        $userPaciente01 = User::create([
             'nome_completo' => "Paciente 01",
             'password' => bcrypt("1"),
             'email' => "p@p",
@@ -107,7 +107,7 @@ class populacaoTesteSeeder extends Seeder
         ]);
 
         //usuario especialista 02
-      /*  $userEspecialista02 = User::create([
+       $userEspecialista02 = User::create([
             'nome_completo' => "Especialista 02",
             'password' => bcrypt("1"),
             'email' => "e2@e",
@@ -116,10 +116,10 @@ class populacaoTesteSeeder extends Seeder
             'telefone' => "88981544865",
             'tipo_user' => 'E',
             'etapa_cadastro' => 'F',
-        ]);*/
+        ]);
 
 
-        /* $especialista02 = Especialista::create([
+         $especialista02 = Especialista::create([
              'nome' => "Especialista 02",
              'usuario_id' => $userEspecialista02->id,
              'especialidade_id' => $especialidade02->id,
@@ -186,7 +186,7 @@ class populacaoTesteSeeder extends Seeder
              'clinica_id' => $clinica02->id,
              'especialista_id' => $especialista02->id,
              'is_vinculado' => true,
-         ]);*/
+         ]);
 
         //cad medicamentos
          $tipoMedicamento = TipoMedicamento::create([

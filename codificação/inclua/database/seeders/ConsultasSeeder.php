@@ -55,8 +55,8 @@ class ConsultasSeeder extends Seeder
         // Gerar 1000 consultas com data no futuro (até 1 mês à frente)
         for ($i = 0; $i < 1000; $i++) {
             $horario_agendado = $faker->dateTimeBetween('now', '+1 month')->format('Y-m-d H:i:s');
-            $horario_iniciado = date('Y-m-d H:i:s', strtotime($horario_agendado . ' +1 hour'));
-            $horario_finalizado = date('Y-m-d H:i:s', strtotime($horario_iniciado . ' +1 hour'));
+          //  $horario_iniciado = date('Y-m-d H:i:s', strtotime($horario_agendado . ' +1 hour'));
+           // $horario_finalizado = date('Y-m-d H:i:s', strtotime($horario_iniciado . ' +1 hour'));
 
             $isCancelled = $faker->boolean(30);
             $id_usuario_cancelou = null;
@@ -68,8 +68,8 @@ class ConsultasSeeder extends Seeder
             Consulta::create([
                 'status' => "Finalizada",
                 'horario_agendado' => $horario_agendado,
-                'horario_iniciado' => $horario_iniciado,
-                'horario_finalizado' => $horario_finalizado,
+               // 'horario_iniciado' => $horario_iniciado,
+                //'horario_finalizado' => $horario_finalizado,
                 'preco' => $faker->numberBetween(200, 500),
                 'isPago' => true,
                 'forma_pagamento' => collect(['Espécie', 'Pix', 'Cartão','Maquininha'])->random(),
