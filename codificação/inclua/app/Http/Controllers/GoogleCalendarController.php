@@ -29,7 +29,7 @@ class GoogleCalendarController extends Controller
         $client->addScope(Calendar::CALENDAR);
 
         // Para G Suite domains, descomente e defina o usuário a ser impersonado
-        // $client->setSubject('admin@seudominio.com');
+        $client->setSubject('admin@plataformainclua.com');
 
         $this->service = new Calendar($client);
     }
