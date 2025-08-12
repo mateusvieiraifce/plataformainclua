@@ -39,7 +39,7 @@ Route::get("/inclua/licenca", [\App\Http\Controllers\LicencaController::class, '
 
 Route::get("/", [\App\Http\Controllers\LandingPageController::class, 'index'])->name('landing.page');
 Route::get("/login", [\App\Http\Controllers\UsuarioController::class, 'index'])->name('index');
-Route::post("/sendmailback", [\App\Http\Controllers\MailController::class, 'sendEmailBack'])->name('sendMailBack')->middleware('check.domain');
+Route::post("/sendmailback", [\App\Http\Controllers\MailController::class, 'sendEmailBack'])->name('sendMailBack')->middleware('check.domain')->middleware('throttle:3,1');;
 
 Route::post('/mail', [\App\Http\Controllers\MailController::class, "sendMail"])->name('sendmail');
 
