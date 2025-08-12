@@ -66,15 +66,15 @@ class GoogleCalendarController extends Controller
         $agora = Carbon::now();
        // $validated = $this->validateEventRequest($request);
         $validated = [];
-        $validated['title'] = "Teste";
+        $validated['title'] = "Consulta";
         $validated['location'] = "";
-        $validated['description'] = "";
+        $validated['description'] = " Consulta com o Pisiquiatra - DOidainha do Arroz";
         $validated['start_time'] = $agora->toIso8601String();
         $final = Carbon::now()->addMinute(30);
       //  $final->modify('+30 minutes');
         $validated['end_time'] = $final->toIso8601String();
 
-        $validated['attendees'] = ["mentrixmax@gmail.com"];
+        $validated['attendees'] = ["mentrixmax@gmail.com","mateus.vieira@ifce.edu.br","raianedarlavieira@gmail.com"];
        // dd($validated);
         try {
             $event = $this->buildEvent($validated);
