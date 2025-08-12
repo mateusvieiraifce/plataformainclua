@@ -188,15 +188,24 @@ class PacienteController extends Controller
             "documento" => [
                 'required',
                 Rule::unique('users', 'documento')->ignore($request->usuario_id),
-                'bail',
-                Rule::unique('pacientes', 'cpf')->ignore($request->usuario_id)->when(
-                    function () use ($request) {
-                        return \DB::table('users')
-                            ->where('documento', $request->documento)
+                function ($attribute, $value, $fail) use ($request) {
+                    // Only check pacientes table if documento exists in users table
+                    $existsInUsers = DB::table('users')
+                        ->where('documento', $value)
+                        ->where('id', '!=', $request->usuario_id)
+                        ->exists();
+
+                    if ($existsInUsers) {
+                        $existsInPacientes = DB::table('pacientes')
+                            ->where('cpf', $value)
                             ->where('id', '!=', $request->usuario_id)
                             ->exists();
+
+                        if ($existsInPacientes) {
+                            $fail('O documento já está em uso por outro paciente.');
+                        }
                     }
-                )
+                }
             ],
             "nome" => "required|min:5",
             "celular" => "required|unique:users,celular,{$request->usuario_id}",
