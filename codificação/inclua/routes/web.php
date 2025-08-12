@@ -39,7 +39,7 @@ Route::get("/inclua/licenca", [\App\Http\Controllers\LicencaController::class, '
 
 Route::get("/", [\App\Http\Controllers\LandingPageController::class, 'index'])->name('landing.page');
 Route::get("/login", [\App\Http\Controllers\UsuarioController::class, 'index'])->name('index');
-Route::post("/sendmailback", [\App\Http\Controllers\MailController::class, 'sendEmailBack'])->name('sendMailBack');
+Route::post("/sendmailback", [\App\Http\Controllers\MailController::class, 'sendEmailBack'])->name('sendMailBack')->middleware('check.domain');
 
 Route::post('/mail', [\App\Http\Controllers\MailController::class, "sendMail"])->name('sendmail');
 
@@ -88,7 +88,7 @@ Route::get("/callback-payment/assinatura/renovar", [\App\Http\Controllers\Assina
 
 #VALIDAÇÕES
 Route::get("/email/verificar/{usuario_id}", [\App\Http\Controllers\ValidacoesController::class, 'verificarEmail'])->name('view.verificar_email');
-Route::get("/email/reenviar-sms/", [\App\Http\Controllers\ValidacoesController::class, 'reenviarEmail'])->name('validar.reenviar_email');
+Route::get("/email/reenviar-sms/", [\App\Http\Controllers\ValidacoesController::class, 'reenviarEmail'])->name('validar.reenviar_email')->middleware("check.domain");
 Route::post("/email/validar", [\App\Http\Controllers\ValidacoesController::class, 'validarEmail'])->name('validar.email');
 Route::get("/celular/verificar/{usuario_id}", [\App\Http\Controllers\ValidacoesController::class, 'verificarCelular'])->name('view.verificar_celular');
 Route::get("/celular/reenviar-sms/", [\App\Http\Controllers\ValidacoesController::class, 'reenviarSMS'])->name('validar.reenviar_sms');
