@@ -49,15 +49,17 @@ class MailController extends Controller
             'g-recaptcha-response.required' => 'Preencha o recaptcha', // Mensagem personalizada
         ]);
 
+
         $host = $req->getHost();
 
         if ( true) {
+
             $email = $req->email;
             $nome = $req->name;
             $tel = $req->phone;
             // $msg = $req->msg;
             $texto = " O Cliente: " . $nome . " Tel:" . $tel . " Email: " . $email . " \n Sugeriu: " . $req->message;
-            Helper::sendEmailSite("Contato pelo site", $texto, env('EMAIL_ROOT'), $nome);
+            Helper::sendEmail("Contato pelo site", $texto, env('EMAIL_ROOT'), $nome);
             return view('msg.msg', ['msg_compra' => 'Menssagem enviada com sucessos!']);
         } else {
             $response = array(
