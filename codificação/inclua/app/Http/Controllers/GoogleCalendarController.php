@@ -8,6 +8,7 @@ use Google\Service\Calendar;
 use Google\Service\Calendar\Event;
 use Google\Service\Calendar\EventDateTime;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 
 class GoogleCalendarController extends Controller
 {
@@ -27,6 +28,7 @@ class GoogleCalendarController extends Controller
         // Configuração do Service Account
         $client->setAuthConfig(storage_path('app/google-calendar/service-account.json'));
         $client->addScope(Calendar::CALENDAR);
+
 
         // Para G Suite domains, descomente e defina o usuário a ser impersonado
         $client->setSubject('admin@plataformainclua.com');
@@ -48,6 +50,41 @@ class GoogleCalendarController extends Controller
             return response()->json([
                 'success' => true,
                 'event' => $this->formatEventResponse($createdEvent)
+            ]);
+
+        } catch (\Exception $e) {
+            return $this->handleError($e);
+        }
+    }
+
+    public function createEventGet()
+    {
+
+        date_default_timezone_set('America/Sao_Paulo');
+
+// Obter data/hora atual
+        $agora = Carbon::now();
+       // $validated = $this->validateEventRequest($request);
+        $validated = [];
+        $validated['title'] = "Teste";
+        $validated['location'] = "";
+        $validated['description'] = "";
+        $validated['start_time'] = $agora->toIso8601String();
+        $final = Carbon::now()->addMinute(30);
+      //  $final->modify('+30 minutes');
+        $validated['end_time'] = $final->toIso8601String();
+
+        $validated['attendees'] = ["mentrixmax@gmail.com"];
+       // dd($validated);
+        try {
+            $event = $this->buildEvent($validated);
+
+            $createdEvent = $this->service->events->insert($this->calendarId, $event, ['conferenceDataVersion' => 1]);
+            $meetLink = $createdEvent->getConferenceData()->getEntryPoints()[0]->getUri();
+
+            return response()->json([
+                'success' => true,
+                'event' => $this->formatEventResponseMeet($createdEvent)
             ]);
 
         } catch (\Exception $e) {
@@ -168,6 +205,16 @@ class GoogleCalendarController extends Controller
             $event->setAttendees($attendees);
         }
 
+            $event->setConferenceData(new \Google_Service_Calendar_ConferenceData([
+                'createRequest' => new \Google_Service_Calendar_CreateConferenceRequest([
+                    'requestId' => uniqid(), // ID único para cada solicitação
+                    'conferenceSolutionKey' => new \Google_Service_Calendar_ConferenceSolutionKey([
+                        'type' => 'hangoutsMeet' // Tipo de conferência (Google Meet)
+                    ])
+                ])
+            ]));
+
+
         return $event;
     }
 
@@ -186,7 +233,24 @@ class GoogleCalendarController extends Controller
             'htmlLink' => $event->getHtmlLink(),
             'attendees' => array_map(function ($attendee) {
                 return $attendee->getEmail();
-            }, $event->getAttendees() ?: [])
+            }, $event->getAttendees() ?: []),
+            // 'meet_link' => $event->getConferenceData()->getEntryPoints()[0]->getUri(),
+        ];
+    }
+    private function formatEventResponseMeet(Event $event)
+    {
+        return [
+            'id' => $event->getId(),
+            'title' => $event->getSummary(),
+            'description' => $event->getDescription(),
+            'location' => $event->getLocation(),
+            'start' => $event->getStart()->getDateTime(),
+            'end' => $event->getEnd()->getDateTime(),
+            'htmlLink' => $event->getHtmlLink(),
+            'attendees' => array_map(function ($attendee) {
+                return $attendee->getEmail();
+            }, $event->getAttendees() ?: []),
+             'meet_link' => $event->getConferenceData()->getEntryPoints()[0]->getUri(),
         ];
     }
 
