@@ -43,6 +43,10 @@ class MailController extends Controller
 
     function sendEmailBack(Request $req)
     {
+        if (!empty($req->input('honeypot'))) {
+            return response()->json(['success' => true]); // Engana o spammer
+        }
+
         $validated = $req->validate([
             'g-recaptcha-response' => 'required', // Validação do reCAPTCHA
         ], [
