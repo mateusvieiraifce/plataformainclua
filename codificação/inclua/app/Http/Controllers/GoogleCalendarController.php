@@ -2,6 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Clinica;
+use App\Models\Consulta;
+use App\Models\Endereco;
+use App\Models\Especialista;
+use App\Models\Paciente;
 use Illuminate\Http\Request;
 use Google\Client;
 use Google\Service\Calendar;
@@ -57,30 +62,87 @@ class GoogleCalendarController extends Controller
         }
     }
 
-    public function createEventGet()
+    public function createEventGet($idConsulta=1)
     {
+
+
 
         date_default_timezone_set('America/Sao_Paulo');
 
+        $consulta = Consulta::find($idConsulta);
+
+        if  ($consulta == null){
+            return "";
+        }
+
+        if  ($consulta->convite){
+            return "";
+        }
+
+        $clinica = Clinica::find($consulta->clinica_id);
+        if ($clinica == null){
+            return  "";
+        }
+        $paciente = Paciente::find($consulta->paciente_id);
+        //dd();
+        if ($paciente == null){
+            return "";
+        }
+        //dd($consulta);
+
+        $endereco = Endereco::where("user_id",$clinica->usuario_id)->where('principal',true)->first();
+        $especialista = Especialista::find($consulta->especialista_id);
+      //  dd($especialista->especialidade->descricao, );
+      //  dd();
 // Obter data/hora atual
-        $agora = Carbon::now();
+
+        $agora = Carbon::parse($consulta->horario_agendado);
+       // dd($agora);
        // $validated = $this->validateEventRequest($request);
         $validated = [];
-        $validated['title'] = "Consulta";
-        $validated['location'] = "";
-        $validated['description'] = " Consulta com o Pisiquiatra - DOidainha do Arroz";
+        $validated['title'] = "Consulta com  " .  $especialista->especialidade->descricao  ;
+
+        if (!$consulta->remota) {
+
+            $enderecoCompleto = sprintf(
+                "%s, %s, %s - %s",
+                $endereco->rua,
+                $endereco['numero'],
+                $endereco['cidade'],
+                $endereco['estado']
+            );
+         //   dd($enderecoCompleto);
+            $validated['location'] = $enderecoCompleto;
+            $validated["remota"] = false;
+        }else{
+            $validated["remota"] = true;
+        }
+        $validated['description'] = $validated['title']  . ", ". $especialista->user->nome_completo .", na clínica " .$clinica->nome ;
         $validated['start_time'] = $agora->toIso8601String();
-        $final = Carbon::now()->addMinute(30);
+        $final = $agora->addMinute($consulta->tempo);
+
       //  $final->modify('+30 minutes');
         $validated['end_time'] = $final->toIso8601String();
-
-        $validated['attendees'] = ["mentrixmax@gmail.com","mateus.vieira@ifce.edu.br","raianedarlavieira@gmail.com"];
+        $emailPaciente =$paciente->user->email;
+        $emailClinica = $clinica->getUser->email;
+        $emailEspecialista = $especialista->user->email;
+        $validated['attendees'] = [$emailPaciente, $emailClinica, $emailEspecialista];
        // dd($validated);
+        // dd($validated);
         try {
             $event = $this->buildEvent($validated);
-
             $createdEvent = $this->service->events->insert($this->calendarId, $event, ['conferenceDataVersion' => 1]);
-            $meetLink = $createdEvent->getConferenceData()->getEntryPoints()[0]->getUri();
+
+            if ($validated["remota"]) {
+                $meetLink = $createdEvent->getConferenceData()->getEntryPoints()[0]->getUri();
+            }
+            $consulta->convite = $createdEvent->getHtmlLink();
+           // dd($consulta);
+            if ($validated["remota"]){
+                $consulta->linkmeet = $createdEvent->getConferenceData()->getEntryPoints()[0]->getUri();
+            }
+            $consulta->save();
+           // dd($validated["remota"]);
 
             return response()->json([
                 'success' => true,
@@ -204,16 +266,17 @@ class GoogleCalendarController extends Controller
 
             $event->setAttendees($attendees);
         }
+       if  ($data["remota"]) {
 
-            $event->setConferenceData(new \Google_Service_Calendar_ConferenceData([
-                'createRequest' => new \Google_Service_Calendar_CreateConferenceRequest([
-                    'requestId' => uniqid(), // ID único para cada solicitação
-                    'conferenceSolutionKey' => new \Google_Service_Calendar_ConferenceSolutionKey([
-                        'type' => 'hangoutsMeet' // Tipo de conferência (Google Meet)
-                    ])
-                ])
-            ]));
-
+           $event->setConferenceData(new \Google_Service_Calendar_ConferenceData([
+               'createRequest' => new \Google_Service_Calendar_CreateConferenceRequest([
+                   'requestId' => uniqid(), // ID único para cada solicitação
+                   'conferenceSolutionKey' => new \Google_Service_Calendar_ConferenceSolutionKey([
+                       'type' => 'hangoutsMeet' // Tipo de conferência (Google Meet)
+                   ])
+               ])
+           ]));
+       }
 
         return $event;
     }
@@ -237,7 +300,7 @@ class GoogleCalendarController extends Controller
             // 'meet_link' => $event->getConferenceData()->getEntryPoints()[0]->getUri(),
         ];
     }
-    private function formatEventResponseMeet(Event $event)
+    private function formatEventResponseMeet(Event $event, $remota=false)
     {
         return [
             'id' => $event->getId(),
@@ -250,7 +313,7 @@ class GoogleCalendarController extends Controller
             'attendees' => array_map(function ($attendee) {
                 return $attendee->getEmail();
             }, $event->getAttendees() ?: []),
-             'meet_link' => $event->getConferenceData()->getEntryPoints()[0]->getUri(),
+            'meet_link' => $remota? $event->getConferenceData()->getEntryPoints()[0]->getUri():"",
         ];
     }
 

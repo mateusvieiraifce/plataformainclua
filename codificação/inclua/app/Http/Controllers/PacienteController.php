@@ -597,6 +597,7 @@ class PacienteController extends Controller
             ->orderBy('horario_agendado', 'asc')
             ->get();
 
+
         return view('userPaciente/marcarConsultaViaClinicaPasso4', ['lista' => $lista, 'especialista' => $especialista, 'clinica' => $clinica, 'especialidade' => $especialidade, 'paciente' => $paciente]);
     }
 
@@ -617,6 +618,9 @@ class PacienteController extends Controller
         $consulta->id_usuario_cancelou=null;
         $consulta->motivocancelamento="";
         $consulta->save();
+
+        $gc = new GoogleCalendarController();
+        $gc->createEventGet($consulta->id);
 
 
         $anamnese = Anamnese::where('paciente_id', $paciente->id)->first();

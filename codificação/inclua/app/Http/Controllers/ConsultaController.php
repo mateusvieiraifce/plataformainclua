@@ -297,6 +297,7 @@ class ConsultaController extends Controller
             $request->duracao_media = $tempoDuracaoConsulta + $request->intervalo_consulta;
             //  dd( $request->duracao_media);
             $termino->modify("-$request->duracao_media minutes");
+          //  dd( $request->duracao_media);
             while ($termino >= $inicio) {
                $entidade = Consulta::create([
                   'status' => "Disponível",
@@ -305,7 +306,9 @@ class ConsultaController extends Controller
                   'porcetagem_repasse_clinica' => $request->porcetagem_repasse_clinica,
                   'porcetagem_repasse_plataforma' => $request->porcetagem_repasse_plataforma,
                   'clinica_id' => $request->clinica_id,
-                  'especialista_id' => $especialista_id
+                  'especialista_id' => $especialista_id,
+                   'tempo' => $request->duracao_media,
+                   'remota'=>$request->remota
                ]);
 
                $inicio->modify("+$request->duracao_media minutes");

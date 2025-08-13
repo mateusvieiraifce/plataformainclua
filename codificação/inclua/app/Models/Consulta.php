@@ -10,7 +10,7 @@ class Consulta extends Model
   protected $fillable = ['status', 'horario_agendado', 'horario_iniciado',
    'horario_finalizado', 'preco', 'porcetagem_repasse_clinica', 'porcetagem_repasse_plataforma',
     'paciente_id', 'especialista_id', 'clinica_id','motivocancelamento',
-    'isPago','forma_pagamento','id_usuario_cancelou'
+    'isPago','forma_pagamento','id_usuario_cancelou', 'tempo', 'linkmeet', 'convite','remota'
   ];
 
   public function noHasAvaliacao()

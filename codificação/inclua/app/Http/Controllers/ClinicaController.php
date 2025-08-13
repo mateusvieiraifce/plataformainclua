@@ -779,6 +779,8 @@ class ClinicaController extends Controller
       $ent->status = "Aguardando atendimento";
       $ent->paciente_id = $paciente->id;
       $ent->save();
+      $gc = new GoogleCalendarController();
+      $gc->createEventGet($ent->id);
       $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
 
       return  $this->marcarConsultaSelecionarPaciente($clinica_id, $msg);
