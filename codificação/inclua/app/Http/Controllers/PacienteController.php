@@ -677,6 +677,10 @@ class PacienteController extends Controller
         $consulta = Consulta::find($request->consulta_id);
         $consultaController = new ConsultaController();
         $userLogged = Auth::user();
+        if ($consulta->calendarId) {
+            $gc = new GoogleCalendarController();
+            $gc->deleteEvent($consulta->calendarId);
+        }
 
         if (Helper::verificarPrazoCancelamentoGratuito($consulta->horario_agendado)) {
             $retornoConsultaCancelada = $consultaController->cancelarConsultaSemTaxa($request);
@@ -731,6 +735,10 @@ class PacienteController extends Controller
                         $consultaNova = $consulta->replicate();
                         $consultaNova->status = "Disponível";
                         $consultaNova->paciente_id = null;
+                        $consultaNova->convite = null;
+                        $consultaNova->linkmeet =null;
+                        $consultaNova->calendarId =null;
+
                         $consultaNova->save();
                     }
 

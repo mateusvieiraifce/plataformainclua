@@ -18,6 +18,7 @@ class AlterConsultaTable extends Migration
             $table->string('linkmeet', 100)->nullable()->comment('link do convite');
             $table->string('convite', 300)->nullable()->comment('link do convite');
             $table->boolean('remota')->nullable()->default(false)->comment('diferenciar consulta presencial de remota');
+            $table->string('calendarId')->nullable()->comment('idDoCalendario');
         });
     }
 
@@ -33,6 +34,7 @@ class AlterConsultaTable extends Migration
             $table->dropColumn('convite');
             $table->dropColumn('remota');
             $table->dropColumn('tempo');
+            $table->dropColumn('calendarId');
         });
     }
 }

@@ -64,10 +64,8 @@ class GoogleCalendarController extends Controller
 
     public function createEventGet($idConsulta=1)
     {
-
-
-
         date_default_timezone_set('America/Sao_Paulo');
+
 
         $consulta = Consulta::find($idConsulta);
 
@@ -78,6 +76,7 @@ class GoogleCalendarController extends Controller
         if  ($consulta->convite){
             return "";
         }
+        //dd("aqui");
 
         $clinica = Clinica::find($consulta->clinica_id);
         if ($clinica == null){
@@ -88,7 +87,7 @@ class GoogleCalendarController extends Controller
         if ($paciente == null){
             return "";
         }
-        //dd($consulta);
+
 
         $endereco = Endereco::where("user_id",$clinica->usuario_id)->where('principal',true)->first();
         $especialista = Especialista::find($consulta->especialista_id);
@@ -132,17 +131,19 @@ class GoogleCalendarController extends Controller
         try {
             $event = $this->buildEvent($validated);
             $createdEvent = $this->service->events->insert($this->calendarId, $event, ['conferenceDataVersion' => 1]);
-
+      //      dd($createdEvent);
             if ($validated["remota"]) {
                 $meetLink = $createdEvent->getConferenceData()->getEntryPoints()[0]->getUri();
             }
             $consulta->convite = $createdEvent->getHtmlLink();
-           // dd($consulta);
             if ($validated["remota"]){
                 $consulta->linkmeet = $createdEvent->getConferenceData()->getEntryPoints()[0]->getUri();
             }
+            $consulta->calendarId = $createdEvent["id"];
             $consulta->save();
-           // dd($validated["remota"]);
+//            dd($createdEvent["id"]);
+
+            // dd($validated["remota"]);
 
             return response()->json([
                 'success' => true,
