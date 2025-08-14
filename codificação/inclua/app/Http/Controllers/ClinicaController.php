@@ -875,7 +875,6 @@ class ClinicaController extends Controller
       $consultaNova->convite = null;
       $consultaNova->calendarId =  null;
 
-
       $consultaNova->save();
     }
 
