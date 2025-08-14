@@ -1,3 +1,32 @@
+Politicas de Pagamentos:
+
+CLINICA - taxa 0
+Pagamento em Credito - Usando Inclua - 15%   - lançados na sua conta Stripe
+Pagamento em Credito - Maquina Própria - 10% - lançados na sua conta Stripe 
+Pagamento em PIX - Somente no Inclua  - 11% - lançados na sua conta Stripe
+Pagamento em Dinheiro - Parceiro Recebe e é lançado uma cobrança de 10% na sua conta Stripe
+
+CLINICA - com taxa
+Pagamento em Credito - Usando Inclua - 15% + porcentagem_clinica  - lançados na sua conta Stripe
+Pagamento em Credito - Maquina Própria - 10% + porcentagem_clinica - lançados na sua conta Stripe 
+Pagamento em PIX - Somente no Inclua  - 11% + porcentagem_clinica - lançados na sua conta Stripe
+Pagamento em Dinheiro - Parceiro Recebe e é lançado uma cobrança de 10% na sua conta Stripe
+
+
+Politica de Cancelamento
+Usuário que faltando 24 horas antes nao paga multa
+Menos de 24 horas paga 20% do valor da consulta 
+DOS QUAIS 5 % para STRIPE, 10% profissional, 5% inclua
+  
+
+TeleConsulta
+Pagamento - Obrigatório via cartão no agendamento da consulta
+Cancelamento - Usuário que cancelar faltando 24 horas taxas referente a devolução do stripe. 
+Menos de 24 horas paga 20% do valor da consulta 
+DOS QUAIS 5 % para STRIPE, 10% profissional, 5% inclua
+
+
+
 Clinicas (CNPJ da clínica*, Razão Social*,
 	Nome Fantasia*, CEP*, Rua*, Bairro*, Número*,
 	Telefone*, 
