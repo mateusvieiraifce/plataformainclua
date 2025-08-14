@@ -47,7 +47,7 @@ class ConsultaController extends Controller
          ->where('especialista_id', '=', $especialista_id)
          ->where('status', '=', $statusConsulta)
          ->whereBetween('horario_agendado', [$hoje, $dataUmMesFrente])
-         ->select('consultas.id', 'status', 'horario_agendado', 'clinicas.nome as nome_clinica')
+         ->select('consultas.id', 'status', 'horario_agendado', 'clinicas.nome as nome_clinica','remota')
          ->orderBy('horario_agendado', 'asc')
          ->paginate(8);
 
@@ -252,7 +252,8 @@ class ConsultaController extends Controller
                   'porcetagem_repasse_clinica' => $request->porcetagem_repasse_clinica,
                   'porcetagem_repasse_plataforma' => $request->porcetagem_repasse_plataforma,
                   'clinica_id' => $clinica->id,
-                  'especialista_id' => $especialista_id
+                  'especialista_id' => $especialista_id,
+                   'remota'=>$request->remota=="R"
                ]);
 
                $inicio->modify("+$request->duracao_media minutes");
@@ -297,6 +298,8 @@ class ConsultaController extends Controller
             $request->duracao_media = $tempoDuracaoConsulta + $request->intervalo_consulta;
             //  dd( $request->duracao_media);
             $termino->modify("-$request->duracao_media minutes");
+
+          //  dd( $request->duracao_media);
             while ($termino >= $inicio) {
                $entidade = Consulta::create([
                   'status' => "Disponível",
@@ -305,7 +308,9 @@ class ConsultaController extends Controller
                   'porcetagem_repasse_clinica' => $request->porcetagem_repasse_clinica,
                   'porcetagem_repasse_plataforma' => $request->porcetagem_repasse_plataforma,
                   'clinica_id' => $request->clinica_id,
-                  'especialista_id' => $especialista_id
+                  'especialista_id' => $especialista_id,
+                   'tempo' => $request->duracao_media,
+                   'remota'=>$request->remota == "R"
                ]);
 
                $inicio->modify("+$request->duracao_media minutes");
@@ -511,17 +516,18 @@ class ConsultaController extends Controller
          ->join('especialistas', 'especialistas.id', '=', 'consultas.especialista_id')
          ->join('especialistaclinicas', 'especialistaclinicas.especialista_id', '=', 'consultas.especialista_id')
          ->where('consultas.clinica_id', '=', $clinica->id)
+          ->where('consultas.remota', false)
          ->where('especialistaclinicas.clinica_id', '=', $clinica->id)
          ->where('status', '!=', 'Finalizada')
          ->where('status', '!=', 'Cancelada')
          ->whereBetween('horario_agendado', [$inicioDoDia, $fimDoDia])
          ->select(
             'consultas.id', 'status', 'horario_agendado', 'especialistas.nome as nome_especialista',
-            'pacientes.cpf as cpf', 'preco', 'isPago', 'pacientes.nome as nome_paciente')->distinct()
+            'pacientes.cpf as cpf', 'preco', 'isPago', 'pacientes.nome as nome_paciente', 'consultas.remota')->distinct()
          ->orderBy('horario_agendado', 'asc')
          ->get();
 
-
+   //   dd($lista);
       return view('userClinica/listConsultaAgenda', [
          'lista' => $lista,
          'especialistas' => $especialistas,
@@ -539,6 +545,7 @@ class ConsultaController extends Controller
    {
 
 
+     // dd($request->clinica_id);
       $clinica = Clinica::find($request->clinica_id);
       $filter = "";
       if (isset($_GET['filtro'])) {
@@ -560,6 +567,7 @@ class ConsultaController extends Controller
          join('especialistaclinicas', 'especialistaclinicas.especialista_id', '=', 'consultas.especialista_id')->
          where('consultas.clinica_id', '=', $clinica->id)->
          where('status', '!=', 'Finalizada')->
+         where('remota', '=', false)->
          where('status', '!=', 'Cancelada')->
          where('pacientes.nome', 'like', '%' . $request->nomepaciente . "%")->
          where('pacientes.cpf', 'like', '%' . $request->cpf . "%")->
@@ -618,6 +626,7 @@ class ConsultaController extends Controller
 
       if(auth()->user()->tipo_user == "C") {
          $lista = $lista->where('clinica_id', '=', $clinica->id);
+          $lista = $lista->where('remota', '=', false);
       }
 
       $lista = $lista->whereBetween('horario_agendado', [$inicioDoDia, $fimDoDia])
