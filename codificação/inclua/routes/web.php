@@ -263,6 +263,12 @@ Route::middleware('auth')->group(function () {
         Route::post("/paciente/marcar-consulta/via-clinica/finalizar/", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaClinicaFinalizar'])->name('paciente.marcarConsultaViaClinicaFinalizar');
         Route::post("/paciente/via-clinica/search/", [\App\Http\Controllers\PacienteController::class, 'pesquisarclinicamarcarconsulta'])->name('paciente.pesquisarclinicamarcarconsulta');
 
+        #VIA TELE ATENDIMENTO
+        Route::get("/paciente/marcar-consulta/teleatendimento/etapa2", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaTeleAtendimentoPasso1'])->name('paciente.marcarConsultaTeleAtendimentoPasso1')->middleware('auth');
+        Route::get("/paciente/marcar-consulta/teleatendimento/etapa3/{especialidade_id}", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaTeleAtendimentoidadePasso2'])->name('paciente.marcarConsultaTeleAtendimentoPasso2')->middleware('auth');
+        Route::get("/paciente/marcar-consulta/teleatendimento/etapa4/{especialista_id}", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaTeleAtendimentoPasso4'])->name('paciente.marcarConsultaTeleAtendimentoPasso4')->middleware('auth');
+
+
         #VIA_ESPECIALIDADE
         Route::get("/paciente/marcar-consulta/via-especialidade/etapa2", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaEspecialidadePasso1'])->name('paciente.marcarConsultaViaEspecialidadePasso1')->middleware('auth');
         Route::get("/paciente/marcar-consulta/via-especialidade/etapa3/{especialidade_id}", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaEspecialidadePasso2'])->name('paciente.marcarConsultaViaEspecialidadePasso2')->middleware('auth');

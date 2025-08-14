@@ -13,6 +13,7 @@ use Google\Service\Calendar;
 use Google\Service\Calendar\Event;
 use Google\Service\Calendar\EventDateTime;
 use Illuminate\Support\Facades\Storage;
+use Google\Service\Calendar\EventReminders;
 use Carbon\Carbon;
 
 class GoogleCalendarController extends Controller
@@ -100,7 +101,7 @@ class GoogleCalendarController extends Controller
        // $validated = $this->validateEventRequest($request);
         $validated = [];
         $validated['title'] = "Consulta com  " .  $especialista->especialidade->descricao  ;
-
+        $clinicaName = ", na clínica " .$clinica->nome;
         if (!$consulta->remota) {
 
             $enderecoCompleto = sprintf(
@@ -115,8 +116,9 @@ class GoogleCalendarController extends Controller
             $validated["remota"] = false;
         }else{
             $validated["remota"] = true;
+            $clinicaName = ", Via meet ";
         }
-        $validated['description'] = $validated['title']  . ", ". $especialista->user->nome_completo .", na clínica " .$clinica->nome ;
+        $validated['description'] = $validated['title']  . ", ". $especialista->user->nome_completo .$clinicaName ;
         $validated['start_time'] = $agora->toIso8601String();
         $final = $agora->addMinute($consulta->tempo);
 
@@ -279,6 +281,15 @@ class GoogleCalendarController extends Controller
            ]));
        }
 
+        // Configurar lembretes
+        $reminders = new EventReminders();
+        $reminders->setUseDefault(false);
+        $reminders->setOverrides([
+            ['method' => 'email', 'minutes' => 24 * 60],
+            ['method' => 'popup', 'minutes' => 120],
+            ['method' => 'popup', 'minutes' => 60]
+        ]);
+        $event->setReminders($reminders);
         return $event;
     }
 

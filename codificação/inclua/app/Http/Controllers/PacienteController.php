@@ -457,6 +457,17 @@ class PacienteController extends Controller
         return view('userPaciente/marcarConsultaViaEspecialidadePasso1', ['lista' => $lista, 'filtro' => $filter]);
     }
 
+    function marcarConsultaTeleAtendimentoPasso1()
+    {
+        //retonando a lista de especialidades
+        $filter = "";
+        if (isset($_GET['filtro'])) {
+            $filter = $_GET['filtro'];
+        }
+        $lista = Especialidade::where('descricao', 'like', "%" . "%")->orderBy('descricao', 'asc')->paginate(8);
+        return view('userPaciente/marcarConsultaViaEspecialidadePasso1', ['lista' => $lista, 'filtro' => $filter,'teleatendimento'=>true]);
+    }
+
     function marcarConsultaViaEspecialidadePasso2($especialidade_id)
     {
         //retonando a lista de clinicas que possui a especialidade selecionada na opcao anterior
@@ -475,6 +486,20 @@ class PacienteController extends Controller
             ->paginate(8);
 
         return view('userPaciente/marcarConsultaViaEspecialidadePasso2', ['clinicas' => $clinicas, 'filtro' => $filter, 'especialidade_id' => $especialidade_id]);
+    }
+
+    function marcarConsultaTeleAtendimentoidadePasso2($especialidade_id)
+    {
+      // dd("aqui");
+        //retonando a lista de especialista que esta vinculado a clinica selecionada na opcao anterior
+        $filter = "";
+        if (isset($_GET['filtro'])) {
+            $filter = $_GET['filtro'];
+        }
+
+        $lista = Especialista::where('especialidade_id', $especialidade_id)->
+        orderBy('especialistas.nome', 'asc')->select('especialistas.id', 'especialistas.nome')->paginate(8);
+        return view('userPaciente/marcarConsultaViaEspecialidadePasso3', ['lista' => $lista, 'clinica_id' => null, 'especialidade_id' => $especialidade_id]);
     }
 
     function marcarConsultaViaEspecialidadePasso3($especialidade_id, $clinica_id)
@@ -517,6 +542,37 @@ class PacienteController extends Controller
         //dd($lista);
         return view('userPaciente/marcarConsultaViaEspecialidadePasso4', ['lista' => $lista, 'especialista' => $especialista, 'clinica' => $clinica, 'especialidade' => $especialidade, 'paciente' => $paciente]);
     }
+
+    function marcarConsultaTeleAtendimentoPasso4($especialista_id)
+    {
+        //dd("aqui estamos");
+        $especialista = Especialista::find($especialista_id);
+        //$clinica = Clinica::find($clinica_id);
+        $especialidade = Especialidade::find($especialista->especialidade_id);
+
+        $paciente_id = session()->get('paciente_id');
+        // Verifica se a variável existe
+        if ($paciente_id) {
+            $paciente = Paciente::find($paciente_id);
+        }else{
+            $paciente = Paciente::where('usuario_id', '=', Auth::user()->id)->first();
+        }
+
+        $agora = Carbon::now('America/Fortaleza');
+
+        //retornar todos a agenda(consutlas) do especialista vinculados a clinica
+        $statusConsulta = "Disponível";
+        $lista = Consulta::where('especialista_id', '=', $especialista_id)
+            ->where('horario_agendado',">=",$agora)
+            ->where('status', '=', $statusConsulta)->
+            where("remota",'=',true)->
+            select('consultas.id', 'horario_agendado', 'status')->orderBy('horario_agendado', 'asc')
+            ->get();
+        //dd($lista);
+        return view('userPaciente/marcarConsultaViaEspecialidadePasso4', ['lista' => $lista, 'especialista' => $especialista, 'clinica' => null, 'especialidade' => $especialidade, 'paciente' => $paciente]);
+    }
+
+
     function marcarConsultaViaClinicaPasso1()
     {
         //retonando a lista de clinicas
