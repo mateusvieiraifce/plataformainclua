@@ -248,7 +248,12 @@ Route::middleware('auth')->group(function () {
     Route::middleware('verify.signature')->group(function() {
         #MARCAR_CONSULTA_USUARIO_PACIENTE
         Route::get("/paciente/marcar-consulta/{paciente_id?}", [\App\Http\Controllers\PacienteController::class, 'marcarconsulta'])->name('paciente.marcarconsulta');
+        Route::get("/paciente/marcar-consulta/presencial/{paciente_id?}", [\App\Http\Controllers\PacienteController::class, 'marcarconsultaPresencial'])->name('paciente.marcarconsulta.presencial');
+
+
         Route::get("/paciente/marcar-consultas/pacientes", [\App\Http\Controllers\PacienteController::class, 'marcarconsultaSelecionarPaciente'])->name('paciente.marcarconsultaSelecionarPaciente');
+        Route::get("/paciente/marcar-consultas/pacientes", [\App\Http\Controllers\PacienteController::class, 'marcarconsultaSelecionarPaciente'])->name('paciente.marcarconsultaSelecionarPaciente');
+
 
         #VIA_CLINICA
         Route::get("/paciente/marcar-consulta/via-clinica/etapa2", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaClinicaPasso1'])->name('paciente.marcarConsultaViaClinicaPasso1');

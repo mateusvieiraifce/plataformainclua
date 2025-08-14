@@ -413,13 +413,25 @@ class PacienteController extends Controller
 
    function marcarconsulta($paciente_id = null)
    {
+     //  dd("marcar consulta");
       if(isset($paciente_id)){
         //estou armazenando em uma sessao o id do paciente selecionado para ser usado no finalizar consulta
         // Armazena a variável na sessão
          session()->put('paciente_id', $paciente_id);
       }
-      return view('userPaciente/marcarconsulta');
+      return view('userPaciente/selecionemodalidade');
    }
+
+    function marcarconsultaPresencial($paciente_id = null)
+    {
+       // dd("aqui");
+        if(isset($paciente_id)){
+            //estou armazenando em uma sessao o id do paciente selecionado para ser usado no finalizar consulta
+            // Armazena a variável na sessão
+            session()->put('paciente_id', $paciente_id);
+        }
+        return view('userPaciente/marcarconsulta');
+    }
 
     function marcarconsultaSelecionarPaciente()
     {

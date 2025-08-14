@@ -1,4 +1,4 @@
-@extends('layouts.app', ['page' => __('Marcar Consulta'),'exibirPesquisa' => false, 'pageSlug' => 'marcarconsulta', 'class' => 'especialidade'])
+@extends('layouts.app', ['page' => __('Marcar Consulta - Modalidade'),'exibirPesquisa' => false, 'pageSlug' => 'marcarconsulta', 'class' => 'especialidade'])
 @section('title', 'Marcar Consulta')
 @section('content')
 <script>
@@ -14,8 +14,14 @@
         <div class="card">
 
             <div class="card-header">
-                <h6 class="title d-inline">Marcar consulta</h6>
+                <h6 class="title d-inline">Selecione a Modalidade</h6>
             </div>
+            <!-- retorna para a tela dos pacientes, caso exista mais que 1-->
+            <?php
+            $pacientes = session()->get('paciente_id');
+             //   App\Models\Paciente::where('usuario_id', '=', Auth::user()->id)->first();
+
+            ?>
 
             <div class="card-body">
                 <div class="form-group">
@@ -24,20 +30,14 @@
                         <div class="input-group">
                             <select id="selectRota" class="form-control" onchange="redirecionar()">
                                 <option value="">Selecionar...</option>
-                                <option value="{{route('paciente.marcarConsultaViaClinicaPasso1')}}">Escolher pela clínica</option>
-                                <option value="{{route('paciente.marcarConsultaViaEspecialidadePasso1')}}">Escolher pela Especialidade</option>
+                                <option value="{{route('paciente.marcarconsulta.presencial', $pacientes)}}">Presencial</option>
+                                <option value="#">Teleatendimento</option>
                             </select>
                             @include('alerts.feedback', ['field' => 'gravidez_programada'])
                         </div>
                     </div>
                 </div>
-                <!-- retorna para a tela dos pacientes, caso exista mais que 1-->
-                <?php
-                    $pacientes = App\Models\Paciente::where('usuario_id', '=', Auth::user()->id)->get();
-                ?>
-                @if(sizeof($pacientes) > 1)
-                    <a href="{{ route('paciente.marcarconsultaSelecionarPaciente') }}" class="btn btn-primary"><i class="fa fa-reply"></i> Voltar</a>
-                @endif
+
             </div>
         </div>
     </div>
