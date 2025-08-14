@@ -499,6 +499,7 @@ class PacienteController extends Controller
         $lista = Consulta::where('especialista_id', '=', $especialista_id)
             ->where('clinica_id', '=', $clinica_id)->where('horario_agendado',">=",$agora)
             ->where('status', '=', $statusConsulta)->
+                where("remota",'=',false)->
             select('consultas.id', 'horario_agendado', 'status')->orderBy('horario_agendado', 'asc')
             ->get();
         //dd($lista);
@@ -593,6 +594,7 @@ class PacienteController extends Controller
             ->where('clinica_id', '=', $clinica_id)
             ->where('horario_agendado',">=",$agora)
             ->where('status', '=', $statusConsulta)
+            ->where('remota', '=', false)
             ->select('consultas.id', 'horario_agendado')
             ->orderBy('horario_agendado', 'asc')
             ->get();

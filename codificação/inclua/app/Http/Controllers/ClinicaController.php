@@ -762,7 +762,7 @@ class ClinicaController extends Controller
       $agora = Carbon::now('America/Fortaleza');
       $lista = Consulta::where('especialista_id', '=', $especialista_id)
          ->where('clinica_id', '=', $clinica->id)
-         ->where('status', '=', $statusConsulta)
+         ->where('status', '=', $statusConsulta)->where("remota",false)
           ->where('horario_agendado',">=",$agora)
          ->select('consultas.id', 'horario_agendado')
          ->orderBy('horario_agendado', 'asc')
@@ -859,6 +859,8 @@ class ClinicaController extends Controller
    // dd($request);
     //ver a questao financeira
     $consultaCancelada = Consulta::find($request->consulta_id);
+    $gc = new GoogleCalendarController();
+    $gc->deleteEvent($consultaCancelada->calendarId);
 
     $dataConsultaCancelada = Carbon::parse($consultaCancelada->horario_agendado);
     $dataAtual = Carbon::now();
@@ -869,6 +871,11 @@ class ClinicaController extends Controller
       $consultaNova->isPago= false;
       $consultaNova->forma_pagamento=null;
       $consultaNova->paciente_id = null;
+      $consultaNova->linkmeet =null;
+      $consultaNova->convite = null;
+      $consultaNova->calendarId =  null;
+
+
       $consultaNova->save();
     }
 

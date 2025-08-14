@@ -47,7 +47,7 @@ class ConsultaController extends Controller
          ->where('especialista_id', '=', $especialista_id)
          ->where('status', '=', $statusConsulta)
          ->whereBetween('horario_agendado', [$hoje, $dataUmMesFrente])
-         ->select('consultas.id', 'status', 'horario_agendado', 'clinicas.nome as nome_clinica')
+         ->select('consultas.id', 'status', 'horario_agendado', 'clinicas.nome as nome_clinica','remota')
          ->orderBy('horario_agendado', 'asc')
          ->paginate(8);
 
@@ -252,7 +252,8 @@ class ConsultaController extends Controller
                   'porcetagem_repasse_clinica' => $request->porcetagem_repasse_clinica,
                   'porcetagem_repasse_plataforma' => $request->porcetagem_repasse_plataforma,
                   'clinica_id' => $clinica->id,
-                  'especialista_id' => $especialista_id
+                  'especialista_id' => $especialista_id,
+                   'remota'=>$request->remota=="R"
                ]);
 
                $inicio->modify("+$request->duracao_media minutes");
@@ -297,6 +298,7 @@ class ConsultaController extends Controller
             $request->duracao_media = $tempoDuracaoConsulta + $request->intervalo_consulta;
             //  dd( $request->duracao_media);
             $termino->modify("-$request->duracao_media minutes");
+
           //  dd( $request->duracao_media);
             while ($termino >= $inicio) {
                $entidade = Consulta::create([
@@ -308,7 +310,7 @@ class ConsultaController extends Controller
                   'clinica_id' => $request->clinica_id,
                   'especialista_id' => $especialista_id,
                    'tempo' => $request->duracao_media,
-                   'remota'=>$request->remota
+                   'remota'=>$request->remota == "R"
                ]);
 
                $inicio->modify("+$request->duracao_media minutes");
