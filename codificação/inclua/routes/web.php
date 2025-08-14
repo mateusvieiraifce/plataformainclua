@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
+/*
 Route::prefix('calendar')->group(function () {
     Route::post('/events', [\App\Http\Controllers\GoogleCalendarController::class, 'createEvent']);
     Route::get('/events/create/{idConsulta}', [\App\Http\Controllers\GoogleCalendarController::class, 'createEventGet']);
@@ -24,6 +24,7 @@ Route::prefix('calendar')->group(function () {
     Route::put('/events/{eventId}', [\App\Http\Controllers\GoogleCalendarController::class, 'updateEvent']);
     Route::delete('/events/{eventId}', [\App\Http\Controllers\GoogleCalendarController::class, 'deleteEvent']);
 });
+*/
 
 Route::get('/sobre', function () {
     return view('frente/about');

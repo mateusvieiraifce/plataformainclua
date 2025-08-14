@@ -516,17 +516,18 @@ class ConsultaController extends Controller
          ->join('especialistas', 'especialistas.id', '=', 'consultas.especialista_id')
          ->join('especialistaclinicas', 'especialistaclinicas.especialista_id', '=', 'consultas.especialista_id')
          ->where('consultas.clinica_id', '=', $clinica->id)
+          ->where('consultas.remota', false)
          ->where('especialistaclinicas.clinica_id', '=', $clinica->id)
          ->where('status', '!=', 'Finalizada')
          ->where('status', '!=', 'Cancelada')
          ->whereBetween('horario_agendado', [$inicioDoDia, $fimDoDia])
          ->select(
             'consultas.id', 'status', 'horario_agendado', 'especialistas.nome as nome_especialista',
-            'pacientes.cpf as cpf', 'preco', 'isPago', 'pacientes.nome as nome_paciente')->distinct()
+            'pacientes.cpf as cpf', 'preco', 'isPago', 'pacientes.nome as nome_paciente', 'consultas.remota')->distinct()
          ->orderBy('horario_agendado', 'asc')
          ->get();
 
-
+   //   dd($lista);
       return view('userClinica/listConsultaAgenda', [
          'lista' => $lista,
          'especialistas' => $especialistas,
@@ -544,6 +545,7 @@ class ConsultaController extends Controller
    {
 
 
+     // dd($request->clinica_id);
       $clinica = Clinica::find($request->clinica_id);
       $filter = "";
       if (isset($_GET['filtro'])) {
@@ -565,6 +567,7 @@ class ConsultaController extends Controller
          join('especialistaclinicas', 'especialistaclinicas.especialista_id', '=', 'consultas.especialista_id')->
          where('consultas.clinica_id', '=', $clinica->id)->
          where('status', '!=', 'Finalizada')->
+         where('remota', '=', false)->
          where('status', '!=', 'Cancelada')->
          where('pacientes.nome', 'like', '%' . $request->nomepaciente . "%")->
          where('pacientes.cpf', 'like', '%' . $request->cpf . "%")->
@@ -623,6 +626,7 @@ class ConsultaController extends Controller
 
       if(auth()->user()->tipo_user == "C") {
          $lista = $lista->where('clinica_id', '=', $clinica->id);
+          $lista = $lista->where('remota', '=', false);
       }
 
       $lista = $lista->whereBetween('horario_agendado', [$inicioDoDia, $fimDoDia])
