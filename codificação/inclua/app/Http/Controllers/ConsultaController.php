@@ -463,7 +463,7 @@ class ConsultaController extends Controller
          ->select(
              'consultas.paciente_id',
             'consultas.id', 'status', 'horario_agendado', 'clinicas.nome as nome_clinica', 'id_usuario_cancelou',
-            'pacientes.nome as nome_paciente', 'especialistas.nome as nome_especialista', 'isPago', 'consultas.preco', 'status'
+            'pacientes.nome as nome_paciente', 'especialistas.nome as nome_especialista', 'isPago', 'consultas.preco', 'status', 'remota','linkmeet'
          )
          ->orderBy('horario_agendado', 'asc')
          ->get();

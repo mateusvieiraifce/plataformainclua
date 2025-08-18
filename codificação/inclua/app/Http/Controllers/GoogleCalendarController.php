@@ -37,7 +37,7 @@ class GoogleCalendarController extends Controller
 
 
         // Para G Suite domains, descomente e defina o usuário a ser impersonado
-        $client->setSubject('admin@plataformainclua.com');
+        $client->setSubject('mateus.vieira@plataformainclua.com');
 
         $this->service = new Calendar($client);
     }
@@ -250,6 +250,7 @@ class GoogleCalendarController extends Controller
             'summary' => $data['title'],
             'location' => $data['location'] ?? null,
             'description' => $data['description'] ?? null,
+            'visibility' => 'public',
         ]);
 
         $event->setStart(new EventDateTime([
@@ -268,18 +269,45 @@ class GoogleCalendarController extends Controller
             }, $data['attendees']);
 
             $event->setAttendees($attendees);
-        }
-       if  ($data["remota"]) {
 
-           $event->setConferenceData(new \Google_Service_Calendar_ConferenceData([
-               'createRequest' => new \Google_Service_Calendar_CreateConferenceRequest([
-                   'requestId' => uniqid(), // ID único para cada solicitação
-                   'conferenceSolutionKey' => new \Google_Service_Calendar_ConferenceSolutionKey([
-                       'type' => 'hangoutsMeet' // Tipo de conferência (Google Meet)
-                   ])
-               ])
-           ]));
-       }
+            // Permite que convidados convidem outros
+            $event->setGuestsCanInviteOthers(true);
+
+            // Permite que convidados modifiquem o evento (opcional)
+            $event->setGuestsCanModify(false); // Defina como `true` se quiser permitir edição
+
+            // Permite que convidados vejam outros participantes
+            $event->setGuestsCanSeeOtherGuests(true);
+
+        }
+        if ($data["remota"]) {
+            $event->setConferenceData(new \Google_Service_Calendar_ConferenceData([
+                'createRequest' => new \Google_Service_Calendar_CreateConferenceRequest([
+                    'requestId' => uniqid(),
+                    'conferenceSolutionKey' => [
+                        'type' => 'hangoutsMeet'
+                    ],
+                ]),
+                'entryPoints' => [
+                    [
+                        'entryPointType' => 'video',
+                        'uri' => 'https://meet.google.com/new', // Será substituído pelo link real
+                        'label' => 'Meet Link',
+                        'accessCode' => '', // Pode ser usado para restringir acesso
+                        'allowEntryPoints' => ['video'], // Permite entrada direta
+                    ],
+                ],
+                'conferenceSolution' => [
+                    'key' => [
+                        'type' => 'hangoutsMeet'
+                    ],
+                    'name' => 'Google Meet',
+                    'iconUri' => 'https://fonts.gstatic.com/s/i/productlogos/meet_2020q4/v1/web-96dp/logo_meet_2020q4_color_2x_web_96dp.png',
+                ],
+                'conferenceId' => uniqid(), // ID único para a conferência
+                'notes' => 'Reunião criada via API',
+            ]));
+        }
 
         // Configurar lembretes
         $reminders = new EventReminders();
