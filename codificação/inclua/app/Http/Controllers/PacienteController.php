@@ -346,7 +346,7 @@ class PacienteController extends Controller
                 'horario_agendado',
                 'especialistas.nome as nome_especialista',
                 'clinicas.nome as nome_clinica',
-                'especialidades.descricao as descricao_especialidade'
+                'especialidades.descricao as descricao_especialidade','remota', 'linkMeet'
             )
             ->orderBy('horario_agendado', 'asc')
             ->paginate(8);
@@ -728,13 +728,14 @@ class PacienteController extends Controller
         ->join('especialidades', 'especialidades.id', 'especialistas.especialidade_id')
         ->join('pacientes', 'pacientes.id', 'consultas.paciente_id')
         ->where('pacientes.usuario_id', $paciente->usuario_id)->where('status', $statusConsulta)
+        ->where('horario_agendado','>=',Carbon::now()->startOfDay())
         ->select(
             'consultas.id',
             'horario_agendado',
             'especialistas.nome as nome_especialista',
             'clinicas.nome as nome_clinica',
             'especialidades.descricao as descricao_especialidade',
-            'pacientes.nome as nome_paciente',
+            'pacientes.nome as nome_paciente','consultas.remota',"consultas.linkmeet"
         )
         ->orderBy('horario_agendado', 'asc')
         ->paginate(8);

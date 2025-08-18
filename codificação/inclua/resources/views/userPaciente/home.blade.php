@@ -48,7 +48,7 @@
                                     <th>Paciente</th>
                                     <th>Horário</th>
                                     <th>Dia</th>
-                                    <th>Médico</th>
+                                    <th>Especialista</th>
                                     <th>Especialidade</th>
                                     <th>Clínica</th>
                                 </thead>
@@ -70,12 +70,23 @@
                                             <td>
                                                 {{ $consulta->descricao_especialidade }}
                                             </td>
+                                            @if (!$consulta->remota)
                                             <td>
                                                 {{ $consulta->nome_clinica }}
                                             </td>
+                                            @else
+                                                <td>
+                                                    TeleAtendimento
+                                                </td>
+                                            @endif
+
                                             <td>
+                                                @if ($consulta->remota)
+                                                <a href="{{ $consulta->linkmeet }}" title="Cancelar consulta" class="btn btn-info" data-original-title="Cancelar consulta" target="_blank" rel="noopener noreferrer" style="min-width: 150px"> Iniciar </a>
+                                                @endif
+
                                                 <a href="#" target="_blank" rel="tooltip" title="Cancelar consulta" class="btn btn-danger" data-original-title="Cancelar consulta"
-                                                    href="#" data-target="#modal-form-cancelar-consulta" data-toggle="modal" data-whatever="@mdo" onclick="setModalCancelarConsulta({{ $consulta->id }}, {{ \App\Helper::verificarPrazoCancelamentoGratuito($consulta->horario_agendado) }})">
+                                                    href="#" data-target="#modal-form-cancelar-consulta" data-toggle="modal" data-whatever="@mdo" style="min-width: 150px" onclick="setModalCancelarConsulta({{ $consulta->id }}, {{ \App\Helper::verificarPrazoCancelamentoGratuito($consulta->horario_agendado) }})">
                                                     Cancelar
                                                 </a>
                                             </td>

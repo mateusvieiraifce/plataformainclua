@@ -1,3 +1,12 @@
+<style>
+
+    /* Media query para smartphones (telas menores que 768px) */
+    @media only screen and (max-width: 767px) {
+        .header_responsivo {
+            font-size: 11px !important; /* Sobrescreve qualquer outro estilo */
+        }
+    }
+</style>
 <nav class="navbar navbar-expand-lg navbar-absolute navbar-transparent">
     <div class="container-fluid">
         <div class="navbar-wrapper">
@@ -12,7 +21,7 @@
             <br/>
             <p>
                 <img src="{{ !empty($configuracao->getIcon()) ? asset($configuracao->getIcon()) : asset('assets/img/Icone2t.png') }}" style="max-width: 40px; height: auto;"/>
-                <a class="navbar-brand" href="#">{{ $page ?? __('Dashboard') }}</a>
+                <a class="navbar-brand header_responsivo" href="#" >{{ $page ?? __('Dashboard') }}</a>
             </p>
 
         </div>

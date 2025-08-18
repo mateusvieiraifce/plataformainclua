@@ -37,11 +37,17 @@
                                             <td>
                                                 {{ $consulta->descricao_especialidade }}
                                             </td>
+
                                             <td>
-                                                {{ $consulta->nome_clinica }}
+                                                {{ $consulta->remota?"TeleAtendimento":$consulta->nome_clinica }}
                                             </td>
+
                                             <td>
-                                                <a href="#" target="_blank" rel="tooltip" title="Cancelar consulta" class="btn btn-danger" data-original-title="Cancelar consulta"
+                                                @if ($consulta->remota)
+                                                    <a href="{{ $consulta->linkmeet }}" title="Cancelar consulta" class="btn btn-info" data-original-title="Cancelar consulta" target="_blank" rel="noopener noreferrer" style="min-width: 150px"> Iniciar </a>
+
+                                                @endif
+                                                <a href="#" target="_blank" rel="tooltip" title="Cancelar consulta" class="btn btn-danger" data-original-title="Cancelar consulta" style="min-width: 150px"
                                                     href="#" data-target="#modal-form" data-toggle="modal" data-whatever="@mdo" onclick="setModal({{ $consulta->id }}, {{ \App\Helper::verificarPrazoCancelamentoGratuito($consulta->horario_agendado) }})">
                                                     Cancelar
                                                 </a>
