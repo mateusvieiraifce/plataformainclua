@@ -346,7 +346,7 @@ class PacienteController extends Controller
                 'horario_agendado',
                 'especialistas.nome as nome_especialista',
                 'clinicas.nome as nome_clinica',
-                'especialidades.descricao as descricao_especialidade'
+                'especialidades.descricao as descricao_especialidade','remota', 'linkMeet'
             )
             ->orderBy('horario_agendado', 'asc')
             ->paginate(8);
