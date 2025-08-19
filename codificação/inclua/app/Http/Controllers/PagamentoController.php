@@ -171,6 +171,32 @@ class PagamentoController extends Controller
             }
         }
     }
+    public function pagarConsultaStripe(Request $request)
+    {
+        $stripController = new  StripeControllerCartao();
+        $consulta = Consulta::find($request->consulta_id);
+        $usuario = User::join('pacientes', 'pacientes.usuario_id', 'users.id')
+            ->where('pacientes.id', $consulta->paciente_id)
+            ->select('users.*')
+            ->first();
+        $userLogged = Auth::user();
+
+
+        if ($request->metodo_pagamento == "null") {
+            session()->flash('msg',  ['valor' => trans("Selecione a forma de pagamento"), 'tipo' => 'danger']);
+
+            return back();
+        }
+       // dd($request->metodo_pagamento);
+        if ($request->metodo_pagamento == "Pix") {
+            session()->flash('msg',  ['valor' => trans("Forma de pagamento ainda não disponível"), 'tipo' => 'danger']);
+
+            return back();
+        }
+         return $stripController->checkout($consulta->id,"paciente.home");
+
+
+    }
 
     public function callbackPagamentoConsulta(Request $request)
     {

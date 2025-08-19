@@ -19,7 +19,8 @@
         "laravel/tinker": "^2.5",
         "laravelcollective/html": "^6.3",
         "phpmailer/phpmailer": "^6.6",
-        "sendgrid/sendgrid": "~7"
+        "sendgrid/sendgrid": "~7",
+        "stripe/stripe-php": "^17.5"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

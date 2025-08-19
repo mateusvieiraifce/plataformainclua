@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PixSripeController;
 
 /*
 |----------------------------------                                CNPJ <span class="required">*</span>
@@ -25,6 +26,17 @@ use Illuminate\Support\Facades\Route;
     Route::delete('/events/{eventId}', [\App\Http\Controllers\GoogleCalendarController::class, 'deleteEvent']);
 });*/
 
+
+Route::get('/checkout/stripe/{id?}', [\App\Http\Controllers\StripeControllerCartao::class, 'checkout'])->name('checkout_stripe');
+Route::post('/checkout/stripe/payment-intent', [\App\Http\Controllers\StripeControllerCartao::class, 'createPaymentIntent'])->name('createPaymentIntent.stripe');
+Route::post('/checkout/stripe/confirm-payment', [\App\Http\Controllers\StripeControllerCartao::class, 'confirmPayment'])->name('createPaymentIntent.stripe');
+Route::post('/stripe/webhook', [\App\Http\Controllers\StripeControllerCartao::class, 'handleWebhook'])->name('handleWebhook.stripe');;
+
+Route::get('/pix/checkout/{id?}', [PixSripeController::class, 'showCheckout'])->name('pix.checkout');
+Route::post('/pix/create-payment', [PixSripeController::class, 'createPaymentIntent']);
+Route::get('/pix/success/{paymentIntent}', [PixSripeController::class, 'success'])->name('pix.success');
+Route::get('/pix/pending/{paymentIntent}', [PixSripeController::class, 'pending'])->name('pix.pending');
+Route::post('/stripe/webhook/pix', [PixSripeController::class, 'handleWebhook']);
 
 Route::get('/sobre', function () {
     return view('frente/about');
@@ -115,6 +127,8 @@ Route::post("/recuperar", [\App\Http\Controllers\UsuarioController::class, 'reco
 Route::post("/updatepassword", [\App\Http\Controllers\UsuarioController::class, 'recoverPassword'])->name('update.password');
 
 Route::post("/clinicas/get", [\App\Http\Controllers\ClinicaController::class, 'getClinicas'])->name('clinicas.get-all');
+
+
 
 Route::middleware('auth')->group(function () {
     #DASHBORD
@@ -446,6 +460,7 @@ Route::middleware('auth')->group(function () {
     Route::get("/configuracao/layout", [\App\Http\Controllers\ConfiguracaoController::class, 'index'])->name('configuracao.layout');
     Route::post("/configuracao/layout/store", [\App\Http\Controllers\ConfiguracaoController::class, 'store'])->name('configuracao.layout.store');
 
+    Route::post("/consulta/paciente/pagar", [\App\Http\Controllers\PagamentoController::class, 'pagarConsultaStripe'])->name('consulta.pagamento.paciente');
     Route::post("/consulta/pagar", [\App\Http\Controllers\PagamentoController::class, 'pagarConsulta'])->name('consulta.pagamento');
     Route::get("/consulta/pagamento/callback", [\App\Http\Controllers\PagamentoController::class, 'callbackPagamentoConsulta'])->name('callback.pagamento.consulta');
 });
