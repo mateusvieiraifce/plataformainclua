@@ -745,6 +745,13 @@ class PacienteController extends Controller
 
     public function cancelarConsulta(Request $request)
     {
+
+        if ($request->motivo_cancelamento==null || trim($request->motivo_cancelamento) == ""){
+            $msg = ['valor' => trans("Cancelamento não efetivado, um motivo é obrigatório!"), 'tipo' => 'danger'];
+            session()->flash('msg', $msg);
+            return back()->withInput();
+
+        }
         $consulta = Consulta::find($request->consulta_id);
         $consultaController = new ConsultaController();
         $userLogged = Auth::user();

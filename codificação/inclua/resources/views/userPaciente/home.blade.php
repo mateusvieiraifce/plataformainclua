@@ -82,7 +82,8 @@
 
                                             <td>
                                                 @if ($consulta->remota)
-                                                <a href="{{ $consulta->linkmeet }}" title="Cancelar consulta" class="btn btn-info" data-original-title="Cancelar consulta" target="_blank" rel="noopener noreferrer" style="min-width: 150px"> Iniciar </a>
+                                                <a href="{{ $consulta->linkmeet }}" title="Iniciar Consulta" class="btn btn-info" data-original-title="Iniciar Consulta" target="_blank" rel="noopener noreferrer" style="min-width: 150px"> Iniciar </a>
+                                               <br/>
                                                 @endif
 
                                                 <a href="#" target="_blank" rel="tooltip" title="Cancelar consulta" class="btn btn-danger" data-original-title="Cancelar consulta"
