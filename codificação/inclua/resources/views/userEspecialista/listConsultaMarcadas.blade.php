@@ -156,8 +156,8 @@
                                                 @else
                                                     <a rel="tooltip" title="Consulta finalizada"
                                                        class="btn btn-success button-small-table"
-                                                       data-original-title="Edit" href="#">
-                                                        Consulta finalizada
+                                                       data-original-title="Edit" href="{{route('especialista.marcarconsulta', $consulta->paciente_id)}}">
+                                                        Nova Consulta?
                                                     </a>
                                                 @endif
 
