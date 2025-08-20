@@ -17,14 +17,14 @@
                   <div class="row">
                      <div class="col-sm-6 ">
                         <div class="form-group">
-                           <h6 class="title d-inline">Pesquise pelo nome ou cpf do paciente </h6>                           
+                           <h6 class="title d-inline">Pesquise pelo nome ou cpf do paciente </h6>
                            <input type="text" name="filtro" style="margin-left:10px;margin-top:5px;" id="filtro"
                             placeholder="Pesquise pelo nome..." class="form-control" @if(isset($filtro)) value="{{$filtro}}" @endif>
                         </div>
                      </div>
                      <div class="col-sm-3 ">
                         <div class="form-group">
-                           <h6 class="title d-inline"> </h6>                           
+                           <h6 class="title d-inline"> </h6>
                            <input type="text" name="cpf" style="margin-left:10px;margin-top:5px;" id="cpf"
                             placeholder="Pesquise pelo cpf..." class="form-control" @if(isset($cpf)) value="{{$cpf}}" @endif>
                         </div>
@@ -34,25 +34,26 @@
                            <i class="tim-icons icon-zoom-split">
                            </i></button>
                      </div>
-                    
+
                   </div>
 
                </fieldset>
             </form>
                </div>
 
-               <h6 class="title d-inline">Lista de pacientes </h6>              
+               <h6 class="title d-inline">Lista de pacientes </h6>
             </div>
             <div class="card-body">
 
-               <div class="table-responsive">                  
+               <div class="table-responsive">
                <table class="table">
-                     <thead>                     
+                     <thead>
                         <th> Paciente </th>
                         <th> cpf </th>
                         <th> Data Nascimento </th>
                         <th> Total de consultas </th>
-                        <th>  </th>
+                        <th> Ação </th>
+
                      </thead>
                      <tbody>
                         @if(sizeof($lista) > 0)
@@ -61,18 +62,25 @@
                         <td>{{$ent->nome_paciente}}</td>
                         <td>{{$ent->cpf}}</td>
                         <td>{{date( 'd/m/Y' , strtotime($ent->data_nascimento))}}
-                        <td>{{$ent->total_consultas}}</td> 
-                        <td><a style="max-width:120px; text-align: left;padding:10px " rel="tooltip" 
+                        <td>{{$ent->total_consultas}}</td>
+                        <td><a style="max-width:120px; text-align: left;padding:10px " rel="tooltip"
                         title="Prontuário" class="btn btn-secondary" data-original-title="Edit"
                            href="{{route('paciente.prontuario', $ent->id)}}">
                           Prontuário
-                        </a>   </td>                 
+                        </a>
+                            <a style="max-width:120px; text-align: left;padding:10px " rel="tooltip"
+                               title="Marcar Consulta" class="btn btn-secondary" data-original-title="Edit"
+                               href="{{route('especialista.marcarconsulta', $ent->id)}}">
+                                Marcar Consulta
+                            </a>
+                        </td>
+
                      </tr>
-                  @endforeach 
+                  @endforeach
                         @endif                       </tbody>
                   </table>
                   <div>
-                       {{$lista->appends(request()->query())->links()}}  
+                       {{$lista->appends(request()->query())->links()}}
                   </div>
                </div>
             </div>

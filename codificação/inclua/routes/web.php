@@ -186,6 +186,17 @@ Route::middleware('auth')->group(function () {
     #ESPECIALISTA
     Route::get("/especialista/list", [\App\Http\Controllers\EspecialistaController::class, 'list'])->name('especialista.list');
     Route::get("/especialista/new", [\App\Http\Controllers\EspecialistaController::class, 'new'])->name('especialista.new');
+    #CUDEGALINHA
+    Route::get("/especialista/marcar-consulta/{paciente_id}", [\App\Http\Controllers\EspecialistaController::class, 'marcarconsultaSelecionarPaciente'])->name('especialista.marcarconsulta');
+    Route::get("/especialista/marcar-consulta/clinica/{paciente_id}", [\App\Http\Controllers\EspecialistaController::class, 'marcarConsultaEspecialistaPresencialEscolheClinica'])->name('especialista.marcarconsulta.clinica.presencial');
+    Route::get("/especialista/marcar-consulta/data/{clinica_id}/{especialidade_id}", [\App\Http\Controllers\EspecialistaController::class, 'marcarConsultaViaEspecialistaData'])->name('especialista.marcarConsulta.clinica.presencial.data');
+    Route::post("/especialista/marcar-consulta/finalizar/", [\App\Http\Controllers\EspecialistaController::class, 'marcarConsultaFinalizar'])->name('especialista.marcarConsulta.finalizar');
+
+    Route::get("/especialista/marcar-consulta/teleconsulta/data/{clinica_id}/{especialidade_id}/{remota?}", [\App\Http\Controllers\EspecialistaController::class, 'marcarConsultaViaEspecialistaData'])->name('especialista.marcarConsulta.clinica.presencial.data');
+
+
+
+
     Route::post("/especialista/search", [\App\Http\Controllers\EspecialistaController::class, 'search'])->name('especialista.search');
     Route::post("/especialista/save", [\App\Http\Controllers\EspecialistaController::class, 'save'])->name('especialista.save');
     Route::get("/especialista/delete/{id}", [\App\Http\Controllers\EspecialistaController::class, 'delete'])->name('especialista.delete');
