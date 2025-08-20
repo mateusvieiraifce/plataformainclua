@@ -95,7 +95,7 @@
                                         </td>
 
                                         <td class="td-actions text-left">
-                                            <a href="{{ route('anamnese.create', $paciente->id) }}">
+                                            <a href="{{ route('anamnese.create', [$paciente->id,"0"]) }}">
                                                 <button type="button" rel="tooltip" title="Anaminese" class="btn btn-link"
                                                         data-original-title="Desative" style="color: white;">
                                                     <i class="tim-icons icon-bullet-list-67"></i>

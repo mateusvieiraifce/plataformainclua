@@ -1307,6 +1307,13 @@
                         </div>
                     </div>
                     <input type="hidden" name="paciente_id" value="{{ $paciente_id }}">
+                    @if (isset($returnroute))
+                    <input type="hidden" name="returnroute" value="{{ $returnroute }}">
+                    @endif
+
+                    @if (isset($consulta_id))
+                        <input type="hidden" name="consulta_id" value="{{ $consulta_id }}">
+                    @endif
                 </form>
             </div>
         </div>

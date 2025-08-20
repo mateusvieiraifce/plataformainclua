@@ -516,6 +516,8 @@ class EspecialistaController extends Controller
           $prontuario= new Prontuario();
           $prontuario->dados_consulta = "";
       }
+      $anaminese = Anamnese::where("paciente_id", $consulta->paciente_id)->count();
+
        //dd($paciente);
       return view('userEspecialista/iniciaratendimento', [
          'consulta' => $consulta,
@@ -535,7 +537,8 @@ class EspecialistaController extends Controller
          'atestado' => $atestado,
          'prontuario' => $prontuario,
          'prontuarioCompleto' => $prontuarioCompleto,
-         'especialidades' => $especialidades
+         'especialidades' => $especialidades,
+          'hasAnamnese'=>$anaminese>0
       ]);
 
    }

@@ -291,7 +291,7 @@ Route::middleware('auth')->group(function () {
         Route::get("/paciente/marcar-consulta/via-especialidade/etapa4/{clinica_id}/{especialista_id}", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaEspecialidadePasso4'])->name('paciente.marcarConsultaViaEspecialidadePasso4')->middleware('auth');
 
         #ANAMNESE
-        Route::get("/paciente/anamnese/{paciente_id}", [\App\Http\Controllers\AnamneseController::class, 'create'])->name('anamnese.create');
+        Route::get("/paciente/anamnese/{paciente_id}/{consultaId?}", [\App\Http\Controllers\AnamneseController::class, 'create'])->name('anamnese.create');
         Route::post("/paciente/anamnese/store", [\App\Http\Controllers\AnamneseController::class, 'store'])->name('anamnese.store');
 
         #CANCELAR CONSULTA
@@ -379,7 +379,7 @@ Route::middleware('auth')->group(function () {
     Route::post("/especialista/novoexame/", [\App\Http\Controllers\EspecialistaController::class, 'salvaNovoExame'])->name('especialista.salvaNovoExame');
     Route::post("/especialista/novomedicamento/", [\App\Http\Controllers\EspecialistaController::class, 'salvaNovoMedicamento'])->name('especialista.salvaNovoMedicamento');
     Route::post("/especialista/prontuario-completo/filter", [\App\Http\Controllers\ProntuarioController::class, 'filter'])->name('prontuario_completo.filter');
-    Route::get("/anamnese/relatorio/{id}", [\App\Http\Controllers\PacienteController::class, 'relatorioAnamnese'])->name('relatorio.anamnese');
+    Route::get("/anamnese/relatorio/{id}/{consulta_id}", [\App\Http\Controllers\PacienteController::class, 'relatorioAnamnese'])->name('relatorio.anamnese');
 
     #ATESTADO
     Route::post("/especialista/atestado/store", [\App\Http\Controllers\AtestadoController::class, 'store'])->name('atestado.store');

@@ -10,8 +10,9 @@ use Illuminate\Support\Facades\Auth;
 
 class AnamneseController extends Controller
 {
-    public function create($paciente_id)
+    public function create($paciente_id,  $consulta_id=null)
     {
+       // dd($consulta_id);
         $paciente = Paciente::find($paciente_id);
         $anamneses = Anamnese::where('paciente_id', $paciente_id)->first();
         if ($anamneses){
@@ -19,8 +20,12 @@ class AnamneseController extends Controller
             session()->flash('msg', $msg);
             return back()->withInput();
         }
+        $route = 0;
+        if ($consulta_id){
+            $route = 1;
+        }
 
-        return view('userPaciente.anamnese.form', ['paciente_id' => $paciente_id, 'paciente' => $paciente]);
+        return view('userPaciente.anamnese.form', ['paciente_id' => $paciente_id, 'consulta_id'=>$consulta_id, 'paciente' => $paciente, 'returnroute' => $route]);
     }
 
     public function store(Request $request)
@@ -142,6 +147,14 @@ class AnamneseController extends Controller
 
             return back()->withInput();
         }
+        if ($request->returnroute){
+            if ($request->returnroute == "0"){
+                return redirect()->route('paciente.index');
+            } else if(($request->returnroute == "1")) {
+                return redirect()->route('especialista.iniciarAtendimento',[$request->consulta_id,"prontuarioatual"]);
+            }
+        }
+       // return back()->withInput();
         return redirect()->route('paciente.index');
     }
 }

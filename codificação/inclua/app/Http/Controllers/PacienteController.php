@@ -909,11 +909,16 @@ class PacienteController extends Controller
 
     }
 
-    public function relatorioAnamnese($id)
+    public function relatorioAnamnese($id, $consultaId)
     {
         $paciente = Paciente::find($id);
         $paciente->cpf = Helper::mascaraCPF($paciente->cpf);
         $anamnese = Anamnese::where('paciente_id', $paciente->id)->first();
+       // dd($consultaId);
+        if ($anamnese == null)
+        {
+            return redirect(route('anamnese.create',[$id, $consultaId]));
+        }
 
         $pdf = Pdf::loadView('pdf.anamnese', ['anamnese' => $anamnese, 'paciente' => $paciente]);
         $pdf->add_info('Title', 'Relatório anamnese');
