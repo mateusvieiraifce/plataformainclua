@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Anamnese;
+use App\Models\Paciente;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -11,7 +12,15 @@ class AnamneseController extends Controller
 {
     public function create($paciente_id)
     {
-        return view('userPaciente.anamnese.form', ['paciente_id' => $paciente_id]);
+        $paciente = Paciente::find($paciente_id);
+        $anamneses = Anamnese::where('paciente_id', $paciente_id)->first();
+        if ($anamneses){
+            $msg = ['valor' => trans("Paciente já possui uma Anamnese"), 'tipo' => 'danger'];
+            session()->flash('msg', $msg);
+            return back()->withInput();
+        }
+
+        return view('userPaciente.anamnese.form', ['paciente_id' => $paciente_id, 'paciente' => $paciente]);
     }
 
     public function store(Request $request)
@@ -133,11 +142,6 @@ class AnamneseController extends Controller
 
             return back()->withInput();
         }
-
-        if (Auth::user()->tipo_user == "R") {
-            return redirect()->route('paciente.marcarconsultaSelecionarPaciente');
-        } else {
-            return redirect()->route('paciente.minhasconsultas');
-        }
+        return redirect()->route('paciente.index');
     }
 }

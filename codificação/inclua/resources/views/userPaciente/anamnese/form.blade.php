@@ -1,4 +1,4 @@
-@extends('layouts.app', ['page' => __('Anamnese'),'exibirPesquisa' => false, 'pageSlug' => 'marcarconsulta', 'class' => 'anamnese'])
+@extends('layouts.app', ['page' => __('Anamnese'),'exibirPesquisa' => false, 'pageSlug' => 'pacientes', 'class' => 'anamnese'])
 @section('title', 'Anamnese')
 @section('content')
 <div class="row">
@@ -21,6 +21,7 @@
                 </div>
                 <h4 class="title" id="subTitle"></h4>
             </div>
+            <input type="hidden" id="paciente_nome" value="{{$paciente->nome}}">
             <div class="card-body">
                 <form id="formAnamnese" method="post" action="{{ route("anamnese.store")}}">
                     @csrf
@@ -244,7 +245,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="amamentacao">
-                                            A criança foi amamentada? Por quanto tempo? 
+                                            A criança foi amamentada? Por quanto tempo?
                                         </label>
                                         <div class="input-group {{ $errors->has('amamentacao') ? 'has-danger' : '' }}">
                                             <input id="amamentacao" type="text" class="form-control" name="amamentacao" value="{{ old('amamentacao') }}">
@@ -283,7 +284,7 @@
                                 <div class="col-md-7">
                                     <div class="form-group">
                                         <label for="permanencia_tres_anos">
-                                            Nos três primeiros anos de vida, permaneceu mais tempo em casa com quem? 
+                                            Nos três primeiros anos de vida, permaneceu mais tempo em casa com quem?
                                         </label>
                                         <div class="input-group {{ $errors->has('permanencia_tres_anos') ? 'has-danger' : '' }}">
                                             <input id="permanencia_tres_anos" type="text" class="form-control" name="permanencia_tres_anos" value="{{ old('permanencia_tres_anos') }}">
@@ -427,7 +428,7 @@
                                         <div class="input-group{{ $errors->has('atividade_fisicas') ? ' has-danger' : '' }}">
                                             <div class="form-check text-left">
                                                 <label class="form-check-label {{ $errors->has('atividade_fisicas') ? 'is-invalid' : '' }}">
-                                                    <input class="form-check-input" type="checkbox" name="atividade_fisicas[]" 
+                                                    <input class="form-check-input" type="checkbox" name="atividade_fisicas[]"
                                                         @if(is_array(old('atividade_fisicas')) && in_array("Jogar Bola", old('atividade_fisicas'))) checked @endif value="Jogar Bola">
                                                     <span class="form-check-sign"></span>
                                                     Jogar Bola
@@ -1323,18 +1324,19 @@
 
         function showTab(n) {
             var x = document.getElementsByClassName("tab");
+            var paciente = document.getElementById("paciente_nome").value;
 
             if (x.length > 0) {
                 x[n].style.display = "block";
                 if (n >= 0 && n < 7) {
-                    title.innerHTML = "Histórico (antecedente e atual)"
+                    title.innerHTML = "Histórico (antecedente e atual) do paciente : " + paciente
                     subTitle.style.display = "block"
                 } else if (n == 7) {
-                    title.innerHTML = "Relacionamento familiar"
+                    title.innerHTML = "Relacionamento familiar do paciente: " + paciente
                     subTitle.style.display = "none"
                     buttonNext.innerHTML = 'Próximo <i class="fa fa-arrow-right"></i>'
                 } else if (n == 8) {
-                    title.innerHTML = "Relacionamento social"
+                    title.innerHTML = "Relacionamento social do paciente: " + paciente
                     buttonNext.innerHTML = 'Salvar <i class="fa fa-save"></i>'
                 }
 
@@ -1361,15 +1363,15 @@
 
         function nextPrev(n) {
             var x = document.getElementsByClassName("tab");
-            
+
             x[currentTab].style.display = "none";
             currentTab = currentTab + n;
-            
+
             if (currentTab >= x.length) {
                 document.getElementById("formAnamnese").submit();
                 return false;
             }
-            
+
             showTab(currentTab);
             window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
         }
@@ -1377,7 +1379,7 @@
         var stepPrevious = currentTab;
         function fixStepIndicator(n) {
             var i, x = document.getElementsByClassName("step");
-            
+
             //x[n].className = x[n].className.replace("step", "step active");
             for (i = 0; i < x.length; i++) {
                 if (stepPrevious >= n && n <= i) {

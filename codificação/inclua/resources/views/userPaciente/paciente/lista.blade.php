@@ -26,6 +26,7 @@
                                     <th>Foto</th>
                                     <th>Editar</th>
                                     <th>Desativar</th>
+                                    <th>Anaminese</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -49,6 +50,14 @@
                                             {{ isset($paciente->data_nascimento) ? date('d/m/Y', strtotime($paciente->data_nascimento)) : "-" }}
                                         </td>
 
+                                        <td class="td-actions >
+                                            <a href="{{ route('paciente.edit', $paciente->id) }}">
+                                                <button type="button" rel="tooltip" title="Editar" class="btn btn-link"
+                                                        data-original-title="Desative" style="color: white;">
+                                                    <i class="tim-icons icon-simple-remove"></i>
+                                                </button>
+                                            </a>
+                                        </td>
 
                                         <td class="td-actions text-left">
 
@@ -84,14 +93,16 @@
                                                 </button>
                                             </a>
                                         </td>
+
                                         <td class="td-actions text-left">
-                                            <a href="{{ route('paciente.edit', $paciente->id) }}">
-                                                <button type="button" rel="tooltip" title="Editar" class="btn btn-link"
+                                            <a href="{{ route('anamnese.create', $paciente->id) }}">
+                                                <button type="button" rel="tooltip" title="Anaminese" class="btn btn-link"
                                                         data-original-title="Desative" style="color: white;">
-                                                    <i class="tim-icons icon-simple-remove"></i>
+                                                    <i class="tim-icons icon-bullet-list-67"></i>
                                                 </button>
                                             </a>
                                         </td>
+
                                     </tr>
                                 @endforeach
                             </tbody>

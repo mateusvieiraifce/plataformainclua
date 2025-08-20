@@ -128,7 +128,7 @@ class StripeControllerCartao extends Controller
         $pagamento->user_id = $paymentIntent->metadata->user_id;
         $pagamento->data_pagamento = Carbon::now();
         $pagamento->servico= " REFERENTE A CONSULTA " .$consulta->id;
-
+        $consulta->forma_pagamento="Cartão";
         $pagamento->save();
         $consulta->pagamento_id = $pagamento->id;
         $consulta->isPago = true;
