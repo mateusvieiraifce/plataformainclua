@@ -814,6 +814,7 @@ class ConsultaController extends Controller
              $consultaNova->forma_pagamento = null;
              $consultaNova->isPago = null;
              $consultaNova->reenbolsado = null;
+             $consultaNova->pagamento_id = null;
             $consultaNova->save();
          }
 
@@ -867,6 +868,7 @@ class ConsultaController extends Controller
                $consultaNova->forma_pagamento = null;
                $consultaNova->isPago = null;
                 $consultaNova->reenbolsado = null;
+                $consultaNova->pagamento_id = null;
                $consultaNova->save();
             }
 
