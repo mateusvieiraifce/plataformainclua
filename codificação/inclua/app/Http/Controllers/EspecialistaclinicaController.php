@@ -39,7 +39,7 @@ class EspecialistaclinicaController extends Controller
          ->select(
             'especialistaclinicas.especialista_id as id', 'especialistas.nome',
             'especialidades.descricao as especialidade','is_vinculado as isVinculado'
-         )
+         )->distinct('especialistas.id')
          ->paginate(8);
 
       return view('userClinica/cadVinculoEspecialista/list', ['lista' => $lista, 'filtro' => $filter, 'clinica' => $clinica, 'msg' => $msg]);
