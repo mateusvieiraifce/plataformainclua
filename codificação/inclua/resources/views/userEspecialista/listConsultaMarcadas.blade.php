@@ -276,7 +276,7 @@
     {{-- MODAL CANCELAR CONSULTA --}}
     @component('layouts.modal_form', ["title" => "Favor inserir o motivo do cancelamento!", "route" => route('paciente.consulta.cancelar'), "textButton" => "Cancelar consulta", "id" => "modal-form-cancelar-consulta"])
         <div class="form-group">
-            <label id="subTitle_cancelar" class="title td-inline"> Ao cancelar a consulta será cobrado uma taxa de
+            <label id="subTitle_cancelar" class="title td-inline"> Se o consulta estiver sendo cancelada com prazo de menos de 24 horas  será cobrado uma taxa de
                 R$ {{ env('TAXA_CANCELAMENTO_CONSULTA') }}</label>
 
             <textarea id="motivoCancelamento" name="motivo_cancelamento" rows="5" cols="50" maxlength="500"
@@ -449,7 +449,7 @@
                 document.getElementById("motivoCancelamento").setAttribute("disabled",true);
                 document.getElementById("motivoCancelamento").value = "Não compareceu";
                 const label = document.getElementById('subTitle_cancelar');
-                const texto = "Ao cancelar a consulta será cobrado uma taxa de R$ {{ env('TAXA_CANCELAMENTO_CONSULTA') }} "
+                const texto = "Se o consulta estiver sendo cancelada com prazo de menos de 24 horas  será cobrado uma taxa de {{ env('TAXA_CANCELAMENTO_CONSULTA') }} "
                 if (this.checked) {
                     const texto = "Será cobrado uma taxa ao Paciente de não comparecimento, conforme os	Termos e condições de uso da plataforma. "
                     label.textContent = texto;
@@ -459,8 +459,9 @@
             });
             document.getElementById('statusCheckboxComp').addEventListener('change', function() {
                 document.getElementById("motivoCancelamento").disabled = false;
+                document.getElementById("motivoCancelamento").value = "";
                 const label = document.getElementById('subTitle_cancelar');
-                const texto = "Ao cancelar a consulta será cobrado uma taxa de R$ {{ env('TAXA_CANCELAMENTO_CONSULTA') }} "
+                const texto = "Se o consulta estiver sendo cancelada com prazo de menos de 24 horas  será cobrado uma taxa de R$ {{ env('TAXA_CANCELAMENTO_CONSULTA') }} "
                 if (this.checked) {
                     label.textContent = texto;
                 }
