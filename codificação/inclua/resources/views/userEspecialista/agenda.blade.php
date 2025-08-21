@@ -104,6 +104,16 @@
                                     <input type="number" step="0.01" class="form-control" name="preco" id="preco" value="" required>
                                 </div>
                             </div>
+
+                            <div class="col-md-2 px-8">
+                                <div class="form-group">
+                                    <label id="labelFormulario">Formato</label>
+                                    <select name="remota" class="form-control">
+                                        <option value="P">Presencial </option>
+                                        <option value="R">Teleatendimento </option>
+                                    </select>
+                                </div>
+                            </div>
                             <div class="col-md-7 px-8">
                                 <div class="form-group">
                                     <label id="labelFormulario">

@@ -21,7 +21,11 @@ class ValidacoesController extends Controller
     }
 
     public function reenviarEmail(Request $request)
+
     {
+      
+
+
         $user = User::find($request->usuario);
         $user->codigo_validacao = Helper::generateRandomNumberString(5);
         $user->save();
@@ -35,6 +39,9 @@ class ValidacoesController extends Controller
 
     public function validarEmail(Request $request)
     {
+
+        // Verifica se a requisição vem do domínio permitido
+
         $rules = [
             "codigo" => "required",
         ];

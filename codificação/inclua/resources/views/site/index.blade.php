@@ -482,6 +482,7 @@
                                                 <input type="tel" placeholder="Insira seu telefone (ex. (00) 00000-0000)" id="phone-5e95" name="phone" class="u-border-2 u-border-grey-10 u-grey-5 u-input u-input-rectangle u-radius-5" required="">
                                                 <br>
                                             </div>
+                                            <input type="text" name="honeypot" style="display:none !important" tabindex="-1" autocomplete="off">
                                             <div class="u-form-group u-form-message u-label-top">
                                                 <label for="message-5a14" class="u-label">
                                                     Como podemos ajudar?
