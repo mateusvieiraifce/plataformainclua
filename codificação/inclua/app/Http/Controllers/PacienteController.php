@@ -885,6 +885,8 @@ class PacienteController extends Controller
             $consultaNova->debito = null;
             $consultaNova->forma_pagamento = null;
             $consultaNova->isPago = null;
+            $consultaNova->reenbolsado = null;
+
 
            // dd($consultaNova);
             $consultaNova->save();
