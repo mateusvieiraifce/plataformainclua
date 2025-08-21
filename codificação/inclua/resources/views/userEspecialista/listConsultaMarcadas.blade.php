@@ -276,10 +276,18 @@
     {{-- MODAL CANCELAR CONSULTA --}}
     @component('layouts.modal_form', ["title" => "Favor inserir o motivo do cancelamento!", "route" => route('paciente.consulta.cancelar'), "textButton" => "Cancelar consulta", "id" => "modal-form-cancelar-consulta"])
         <div class="form-group">
-            <label id="subTitle" class="title td-inline">Ao cancelar a consulta será cobrado uma taxa de
+            <label id="subTitle_cancelar" class="title td-inline"> Ao cancelar a consulta será cobrado uma taxa de
                 R$ {{ env('TAXA_CANCELAMENTO_CONSULTA') }}</label>
-            <textarea id="motivoCancelamento" name="motivo_cancelamento" rows="5" cols="55" maxlength="500"
+
+            <textarea id="motivoCancelamento" name="motivo_cancelamento" rows="5" cols="50" maxlength="500"
                       placeholder="Digite o motivo do cancelamento aqui..." required></textarea>
+
+
+        </div>
+        <div class="form-group">
+            <input type="radio" value="Compareceu"  id="statusCheckboxComp" name="compareceu" checked> <label> Compareceu </label>
+            <input type="radio" value="Não Compareceu" id="statusCheckbox" name="compareceu"> <label> Não compareceu </label>
+
         </div>
         <input type="hidden" id="consulta_id" name="consulta_id" value="">
     @endcomponent
@@ -435,6 +443,28 @@
                 $('.avaliar-' + $('#consulta_id').val() + ' > a').remove()
             })
 
+        </script>
+        <script>
+            document.getElementById('statusCheckbox').addEventListener('change', function() {
+                document.getElementById("motivoCancelamento").setAttribute("disabled",true);
+                document.getElementById("motivoCancelamento").value = "Não compareceu";
+                const label = document.getElementById('subTitle_cancelar');
+                const texto = "Ao cancelar a consulta será cobrado uma taxa de R$ {{ env('TAXA_CANCELAMENTO_CONSULTA') }} "
+                if (this.checked) {
+                    const texto = "Será cobrado uma taxa ao Paciente de não comparecimento, conforme os	Termos e condições de uso da plataforma. "
+                    label.textContent = texto;
+                } else {
+                    label.textContent = texto;
+                }
+            });
+            document.getElementById('statusCheckboxComp').addEventListener('change', function() {
+                document.getElementById("motivoCancelamento").disabled = false;
+                const label = document.getElementById('subTitle_cancelar');
+                const texto = "Ao cancelar a consulta será cobrado uma taxa de R$ {{ env('TAXA_CANCELAMENTO_CONSULTA') }} "
+                if (this.checked) {
+                    label.textContent = texto;
+                }
+            });
         </script>
     @endpush
 @endsection

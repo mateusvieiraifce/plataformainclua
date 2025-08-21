@@ -65,6 +65,10 @@ class GoogleCalendarController extends Controller
 
     public function createEventGet($idConsulta=1)
     {
+
+        if (env('APP_ENV') === 'local') {
+            return response()->json([]);
+        }
         date_default_timezone_set('America/Sao_Paulo');
 
 

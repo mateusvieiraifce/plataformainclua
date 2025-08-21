@@ -25,7 +25,12 @@
 
 
 <div class="container">
-    <h1>Finalizar Compra</h1>
+    @if($retorno=="finalizar.cancelar.paciente")
+        <h1>Finalizar Pagamento de Cancelamento de Consulta</h1>
+    @else
+        <h1>Finalizar Pagamento de Consulta</h1>
+    @endif
+
 
     <form id="payment-form">
         @csrf
@@ -39,7 +44,7 @@
         <input type="hidden" name="amount" value="{{$order->preco}}">
         <input type="hidden" name="order_id" value="{{ $order->id }}">
 
-        <button type="submit" id="submit-button">Pagar R$ {{$order->preco}}
+        <button type="submit"  class="btn btn-primary" id="submit-button">Pagar R$ {{$order->preco}}
         </button>
     </form>
 </div>
@@ -119,7 +124,7 @@
                     console.log(result);
                     if (result.success) {
                         alert('Pagamento realizado com sucesso!');
-                        window.location.href = '{{route($retorno)}}';
+                        window.location.href = '{{ $retorno=="finalizar.cancelar.paciente"? route($retorno, $order->id):route($retorno)}}';
                     } else {
                         alert('Erro ao processar pagamento');
                     }

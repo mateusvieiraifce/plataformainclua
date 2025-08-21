@@ -1,5 +1,6 @@
 @extends('layouts.app', ['page' => __('home'), 'exibirPesquisa' => false, 'pageSlug' => 'home', 'class' => 'home'])
 @section('title', 'Dashboard')
+
 @section('content')
     <div class="row">
         <div class="col-lg-12 col-md-12">
@@ -122,7 +123,7 @@
     @component('layouts.modal_form', ["title" => "Favor inserir o motivo do cancelamento!", "route" => route('paciente.consulta.cancelar'), "textButton" => "Cancelar consulta", "id" => "modal-form-cancelar-consulta"])
         <div class="form-group">
             <label id="subTitle" class="title td-inline">Ao cancelar a consulta será cobrado uma taxa de R$ {{ env('TAXA_CANCELAMENTO_CONSULTA') }}</label>
-            <textarea id="motivoCancelamento" name="motivo_cancelamento" rows="5" cols="55" maxlength="500" placeholder="Digite o motivo do cancelamento aqui..." required></textarea>
+            <textarea id="motivoCancelamento" name="motivo_cancelamento" rows="5" cols="53" maxlength="500" placeholder="Digite o motivo do cancelamento aqui..." required></textarea>
         </div>
         <input type="hidden" id="consulta_id" name="consulta_id" value="">
     @endcomponent

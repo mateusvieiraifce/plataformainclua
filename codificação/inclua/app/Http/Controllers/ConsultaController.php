@@ -794,7 +794,7 @@ class ConsultaController extends Controller
 
    public function cancelarConsultaSemTaxa(Request $request)
    {
-       dd("aqui");
+   //    dd("aqui");
       //ver a questao financeira
       $consulta = Consulta::find($request->consulta_id);
 
@@ -809,6 +809,10 @@ class ConsultaController extends Controller
             $consultaNova->isPago = false;
             $consultaNova->forma_pagamento = null;
             $consultaNova->paciente_id = null;
+            $consulta->motivocancelamento =null;
+            $consulta->debito = null;
+             $consultaNova->forma_pagamento = null;
+             $consultaNova->isPago = null;
             $consultaNova->save();
          }
 
@@ -857,6 +861,10 @@ class ConsultaController extends Controller
                $consultaNova->isPago = false;
                $consultaNova->forma_pagamento = null;
                $consultaNova->paciente_id = null;
+               $consultaNova->motivocancelamento = null;
+               $consultaNova->debito = null;
+               $consultaNova->forma_pagamento = null;
+               $consultaNova->isPago = null;
                $consultaNova->save();
             }
 

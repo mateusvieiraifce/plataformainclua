@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helper;
 use App\Models\Consulta;
 use App\Models\Pagamento;
 use Carbon\Carbon;
@@ -22,6 +23,9 @@ class StripeControllerCartao extends Controller
     public function checkout($id=null, $retorno)
     {
         $consulta = Consulta::find($id);
+        if ($retorno=="finalizar.cancelar.paciente"){
+            $consulta->preco= Helper::converterMonetario( env("TAXA_CANCELAMENTO_CONSULTA"));
+        }
         return view('payments/checkout',['order'=>$consulta,'retorno'=>$retorno]);
     }
 
