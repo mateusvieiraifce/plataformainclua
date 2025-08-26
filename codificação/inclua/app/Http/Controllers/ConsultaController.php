@@ -509,6 +509,7 @@ class ConsultaController extends Controller
       $inicioDoDia = $dataAtual->startOfDay();
       $fimDoDia = Carbon::today()->endOfDay();
 
+
       // selecionar as consultas na qual o status diferente de
       // FINALIZADA, CANCELADA
       $lista = Consulta::join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')
