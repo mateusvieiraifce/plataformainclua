@@ -1,0 +1,29 @@
+{
+  "expo": {
+    "name": "inclua",
+    "slug": "inclua",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/2.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/1.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+      
+        "backgroundColor": "#ffffff"
+      },
+      "edgeToEdgeEnabled": true
+    },
+    "web": {
+      "favicon": "./assets/1.png"
+    }
+  }
+}
