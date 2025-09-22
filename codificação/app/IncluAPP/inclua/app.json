@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "inclua",
-    "slug": "inclua",
+    "slug": "plataformainclua",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/2.png",
@@ -17,13 +17,19 @@
     },
     "android": {
       "adaptiveIcon": {
-      
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.incluaplataforma.plataformainclua"
     },
     "web": {
       "favicon": "./assets/1.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "60b938a0-18e4-4ae1-8736-ed3f16e07055"
+      }
+    },
+    "owner": "incluaplataforma"
   }
 }
