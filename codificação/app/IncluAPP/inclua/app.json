@@ -20,7 +20,8 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.incluaplataforma.plataformainclua"
+      "package": "com.incluaplataforma.plataformainclua",
+      "versionCode": 2
     },
     "web": {
       "favicon": "./assets/1.png"
