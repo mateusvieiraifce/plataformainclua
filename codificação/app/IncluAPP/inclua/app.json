@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "inclua",
+    "name": "Inclua",
     "slug": "plataformainclua",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -20,7 +20,7 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.incluaplataforma.plataformainclua",
+      "package": "com.plataformainclua.app",
       "versionCode": 3
     },
     "web": {
