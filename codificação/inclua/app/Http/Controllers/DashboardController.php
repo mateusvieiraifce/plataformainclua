@@ -37,14 +37,14 @@ class DashboardController extends Controller
         $year = Carbon::now()->year;
 
         // Consulta que conta os pacientes criados por mês
-        $usersByMonth = DB::table('pacientes')
+        $usersByMonth = DB::table('users')
             ->selectRaw('MONTH(created_at) as month, COUNT(*) as total')
             ->whereYear('created_at', $year)
-            // Filtra pelo ano atual
+            ->where('tipo_user', 'P') // Filtra pelo ano atual
             ->groupByRaw('MONTH(created_at)')
             ->orderByRaw('MONTH(created_at) DESC')
             ->pluck('total', 'month');
-        $totalUsers = DB::table('pacientes')->count();
+        $totalUsers = DB::table('users')->where('tipo_user', 'P')->count();
         $monthlyCountsUsers = array_fill(1, 12, 0);
 
         foreach ($usersByMonth as $month => $count) {

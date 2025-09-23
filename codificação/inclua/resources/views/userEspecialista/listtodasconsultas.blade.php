@@ -18,7 +18,7 @@
                               <div class="col-md-3 ">
                                  <div class="form-group">
                                     <label id="labelFormulario" style="color: white">&nbsp;Data início:</label>
-                                    <input style="border-color: #C0C0C0" type="date" name="inicio_data" id="inicio_data"
+                                    <input style="border-color: #C0C0C0" type="date" name="inicio_data" id="inicio_data" 
                                     class="form-control"
                                              @if(isset($inicio_data))
                                                 value="{{$inicio_data}}"
@@ -47,7 +47,7 @@
                                  <div class="form-group">
                                     <label id="labelFormulario">Clínica(s) vinculada(s)</label>
                                     <select name="clinica_id" id="clinica_id" class="form-control"
-                                     style="border-color: white">
+                                     style="border-color: white">                                   
                                     @foreach($clinicas as $iten)
                                     <option style="color: #2d3748" value="{{old('especialidade_id', $iten->id)}}"
                                        @if($iten->id == $clinicaselecionada_id) <?php    echo 'selected'; ?> @endif> {{$iten->nome}}
@@ -57,7 +57,7 @@
                                  </div>
                               </div>
 
-                              <div class="col-md-1 ">
+                              <div class="col-md-1 ">                       
                                  <button style="max-height: 40px; max-width: 40px;margin-top: 25px" class="btn btn-primary" >
                                     <i  class="tim-icons icon-zoom-split" >
                                     </i></button>
@@ -84,13 +84,12 @@
             </div>
             <div class="card-body">
 
-               <div class="table-responsive">
+               <div class="table-responsive">                  
                   <table class="table">
                      <thead>
                         <th> Status </th>
                         <th> Horário agendado </th>
                         <th> Clínica </th>
-                        <th> Formato </th>
                         <th> </th>
                      </thead>
                      <tbody>
@@ -101,8 +100,7 @@
                      <td>{{date( 'd/m/Y H:i' , strtotime($ent->horario_agendado))}}
                   </td>
                      <td>{{$ent->nome_clinica}}</td>
-                         <td>{{ $ent->remota?"Teleatendimento":"Presencial"}}</td>
-
+                     
                      <td>
                         <a href="{{route('consulta.delete', $ent->id)}}"
                            onclick="return confirm('Deseja relamente excluir?')" rel="tooltip" title="Excluir"
@@ -111,12 +109,12 @@
                         </a>
                      </td>
                      </tr>
-                  @endforeach
-                        @endif
+                  @endforeach 
+                        @endif                      
                       </tbody>
                   </table>
                   <div>
-                            {{$lista->appends(request()->query())->links()}}
+                            {{$lista->appends(request()->query())->links()}}                               
                   </div>
                </div>
             </div>

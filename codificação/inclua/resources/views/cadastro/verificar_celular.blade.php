@@ -8,9 +8,9 @@
                     <img class="img-card" src="{{ asset('assets/img/logo-01.png') }}" alt="Card image" >
                 </div>
                 <div class="card-header">
-                    <h2 class="title">Verificar celular</h2>
+                    <h2 class="title">Verificar Whatsapp</h2>
                 </div>
-                <div class="card-body">                    
+                <div class="card-body">
                     <form class="form" method="post" action="{{ route('validar.celular') }}">
                         @csrf
                         <div class="form-group">
@@ -26,7 +26,7 @@
 
                         <div class="form-group">
                             <label for="codigo">
-                                Digite o código recebido por SMS <span class="required">*</span>
+                                Digite o código recebido por Whatsapp <span class="required">*</span>
                             </label>
                             <div class="input-group input-medium{{ $errors->has('codigo') ? ' has-danger' : '' }}">
                                 <input type="text" id="codigo" class="form-control border-full only-numbers {{ $errors->has('codigo') ? ' is-invalid' : '' }}"
@@ -34,8 +34,8 @@
                                 @include('alerts.feedback', ['field' => 'codigo'])
                             </div>
                             <div >
-                                <a id="reenviar-sms" href="#" class="input-group input-medium justify-content-end">re-enviar código via sms</a>
-                                <label id="wait" class="input-group input-medium justify-content-end link hidden">solice um novo código em&nbsp;<label id="timer" class="link"></label></label>
+                                <a id="reenviar-sms" href="#" class="input-group input-medium justify-content-end">re-enviar código via Whatsapp</a>
+                                <label id="wait" class="input-group input-medium justify-content-end link hidden">solicite um novo código em&nbsp;<label id="timer" class="link"></label></label>
                             </div>
                         </div>
 
@@ -51,7 +51,7 @@
                         </div>
                         <input type="hidden" id="usuario_id" name="usuario_id" value="{{ $user->id }}">
                     </form>
-                </div>                    
+                </div>
             </div>
         </div>
     </div>
@@ -65,7 +65,7 @@
                     usuario: $('#usuario_id').val()
                 },
                 success: function(response) {
-                    nowuiDashboard.showNotification('top', 'right', 'Código enviado! Um novo código foi enviado por SMS, verifique em seu smartphone.', 'success');
+                    nowuiDashboard.showNotification('top', 'right', 'Código enviado! Um novo código foi enviado para o seu Whatsapp, verifique em seu smartphone.', 'success');
                 },
                 error: function(error) {
                     nowuiDashboard.showNotification('top', 'right', 'Código não enviado! "Não foi possível enviar um novo código, verifique o número informado.', 'danger');
@@ -76,16 +76,16 @@
             $('#reenviar-sms').hide();
             temporizador(120);
             $("#wait").css("display", "flex");
-            
+
             //EXIBIR NOVAMENTE A OPÇÃO DE SOLICITAR CÓDIGO
             setInterval(function () {
                 $("#wait").css("display", "none");
                 $("#reenviar-sms").css("display", "flex");
             }, 120000);
         });
-        
+
         var tempo = 0 // tempo em segundos
-        var working = false; // sinaliza se o timer está ativado    
+        var working = false; // sinaliza se o timer está ativado
         var intervaloID = 0; // identificação do intervalo que permite limpá-lo
 
         function temporizador(t) {
@@ -96,17 +96,17 @@
                 exibeTempo();
             }
         }
-        
+
         function exibeTempo() {
-            let min = parseInt(tempo / 60); // Pega a parte inteira dos minutos     
+            let min = parseInt(tempo / 60); // Pega a parte inteira dos minutos
             let seg = tempo % 60; // Calcula os segundos restantes
             let smin = min.toString().padStart(2, '0'); // Formata o número em duas casas
             let sseg = seg.toString().padStart(2, '0');
-            
+
             let tempoTela = smin + ':' + sseg; // Variável para formatar no estilo cronômetro
             document.querySelector("#timer").textContent = tempoTela;
             tempo--;
-    
+
             if (tempo < 0){ // zera temporizador
                 working = false;
                 clearInterval(intervaloID);

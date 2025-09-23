@@ -182,10 +182,6 @@ class UsuarioController extends Controller
         }
     }
 
-    if (!empty($request->input('honeypot'))) {
-        return response()->json(['success' => true]); // Engana o spammer
-    }
-
     $rules = [
         "email" => "required|unique:users,email,{$request->usuario_id}",
         'password' => 'required|min:8|confirmed',

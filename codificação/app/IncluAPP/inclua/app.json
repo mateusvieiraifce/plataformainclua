@@ -1,0 +1,36 @@
+{
+  "expo": {
+    "name": "Inclua",
+    "slug": "plataformainclua",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/2.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/1.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#ffffff"
+      },
+      "edgeToEdgeEnabled": true,
+      "package": "com.plataformainclua.app",
+      "versionCode": 5
+    },
+    "web": {
+      "favicon": "./assets/1.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "60b938a0-18e4-4ae1-8736-ed3f16e07055"
+      }
+    },
+    "owner": "incluaplataforma"
+  }
+}

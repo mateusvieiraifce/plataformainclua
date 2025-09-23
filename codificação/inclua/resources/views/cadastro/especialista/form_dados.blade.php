@@ -53,7 +53,7 @@
 
                         <div class="form-group">
                             <label for="celular">
-                                Celular <span class="required">*</span>
+                                Celular(Whatsapp) <span class="required">*</span>
                             </label>
                             <div class="input-group input-medium{{ $errors->has('celular') ? ' has-danger' : '' }}">
                                 <input type="text" id="celular" class="form-control border-full {{ $errors->has('celular') ? 'is-invalid' : '' }}"

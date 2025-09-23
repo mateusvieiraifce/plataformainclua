@@ -65,7 +65,7 @@ Route::get("/inclua/licenca", [\App\Http\Controllers\LicencaController::class, '
 
 Route::get("/", [\App\Http\Controllers\LandingPageController::class, 'index'])->name('landing.page');
 Route::get("/login", [\App\Http\Controllers\UsuarioController::class, 'index'])->name('index');
-Route::post("/sendmailback", [\App\Http\Controllers\MailController::class, 'sendEmailBack'])->name('sendMailBack')->middleware('check.domain')->middleware('throttle:3,1');;
+Route::post("/sendmailback", [\App\Http\Controllers\MailController::class, 'sendEmailBack'])->name('sendMailBack');
 
 Route::post('/mail', [\App\Http\Controllers\MailController::class, "sendMail"])->name('sendmail');
 
@@ -74,7 +74,7 @@ Route::get('/google/redirect', [\App\Http\Controllers\UsuarioController::class, 
 Route::get('/auth/google/callback', [\App\Http\Controllers\UsuarioController::class, 'handleProviderCallback'])->name('google.callback');
 
 #CADASTRO DE USUARIO
-Route::get("/cadastrar/usuario/create", [\App\Http\Controllers\UsuarioController::class, 'createUser'])->name('usuario.create')->middleware('check.domain')->middleware('throttle:3,1');
+Route::get("/cadastrar/usuario/create", [\App\Http\Controllers\UsuarioController::class, 'createUser'])->name('usuario.create');
 Route::post("/cadastrar/usuario/store", [\App\Http\Controllers\UsuarioController::class, 'storeUser'])->name('usuario.store');
 Route::get("/cadastrar/usuario/edit/{usuario_id}", [\App\Http\Controllers\UsuarioController::class, 'editUser'])->name('usuario.edit');
 
@@ -114,7 +114,7 @@ Route::get("/callback-payment/assinatura/renovar", [\App\Http\Controllers\Assina
 
 #VALIDAÇÕES
 Route::get("/email/verificar/{usuario_id}", [\App\Http\Controllers\ValidacoesController::class, 'verificarEmail'])->name('view.verificar_email');
-Route::get("/email/reenviar-sms/", [\App\Http\Controllers\ValidacoesController::class, 'reenviarEmail'])->name('validar.reenviar_email')->middleware("check.domain");
+Route::get("/email/reenviar-sms/", [\App\Http\Controllers\ValidacoesController::class, 'reenviarEmail'])->name('validar.reenviar_email');
 Route::post("/email/validar", [\App\Http\Controllers\ValidacoesController::class, 'validarEmail'])->name('validar.email');
 Route::get("/celular/verificar/{usuario_id}", [\App\Http\Controllers\ValidacoesController::class, 'verificarCelular'])->name('view.verificar_celular');
 Route::get("/celular/reenviar-sms/", [\App\Http\Controllers\ValidacoesController::class, 'reenviarSMS'])->name('validar.reenviar_sms');
@@ -125,7 +125,7 @@ Route::post("/aprovar/especialista/store", [\App\Http\Controllers\ValidacoesCont
 Route::post("/auth/user", [\App\Http\Controllers\UsuarioController::class, 'logar'])->name('login.do');
 Route::get("/logout", [\App\Http\Controllers\UsuarioController::class, 'logout'])->name('logout');
 Route::get("/recuperar", [\App\Http\Controllers\UsuarioController::class, 'recover'])->name('recover');
-Route::get("/recuperar/{id?}", [\App\Http\Controllers\UsuarioController::class, 'recoverID'])->name('recover.mail')->middleware("check.domain");
+Route::get("/recuperar/{id?}", [\App\Http\Controllers\UsuarioController::class, 'recoverID'])->name('recover.mail');
 Route::post("/recuperar", [\App\Http\Controllers\UsuarioController::class, 'recoverDo'])->name('recover.do');
 Route::post("/updatepassword", [\App\Http\Controllers\UsuarioController::class, 'recoverPassword'])->name('update.password');
 
@@ -277,12 +277,7 @@ Route::middleware('auth')->group(function () {
     Route::middleware('verify.signature')->group(function() {
         #MARCAR_CONSULTA_USUARIO_PACIENTE
         Route::get("/paciente/marcar-consulta/{paciente_id?}", [\App\Http\Controllers\PacienteController::class, 'marcarconsulta'])->name('paciente.marcarconsulta');
-        Route::get("/paciente/marcar-consulta/presencial/{paciente_id?}", [\App\Http\Controllers\PacienteController::class, 'marcarconsultaPresencial'])->name('paciente.marcarconsulta.presencial');
-
-
         Route::get("/paciente/marcar-consultas/pacientes", [\App\Http\Controllers\PacienteController::class, 'marcarconsultaSelecionarPaciente'])->name('paciente.marcarconsultaSelecionarPaciente');
-        Route::get("/paciente/marcar-consultas/pacientes", [\App\Http\Controllers\PacienteController::class, 'marcarconsultaSelecionarPaciente'])->name('paciente.marcarconsultaSelecionarPaciente');
-
 
         #VIA_CLINICA
         Route::get("/paciente/marcar-consulta/via-clinica/etapa2", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaClinicaPasso1'])->name('paciente.marcarConsultaViaClinicaPasso1');
@@ -291,12 +286,6 @@ Route::middleware('auth')->group(function () {
         Route::get("/paciente/marcar-consulta/via-clinica/etapa5/{clinica_id}/{especialidade_id}", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaClinicaPasso4'])->name('paciente.marcarConsultaViaClinicaPasso4');
         Route::post("/paciente/marcar-consulta/via-clinica/finalizar/", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaClinicaFinalizar'])->name('paciente.marcarConsultaViaClinicaFinalizar');
         Route::post("/paciente/via-clinica/search/", [\App\Http\Controllers\PacienteController::class, 'pesquisarclinicamarcarconsulta'])->name('paciente.pesquisarclinicamarcarconsulta');
-
-        #VIA TELE ATENDIMENTO
-        Route::get("/paciente/marcar-consulta/teleatendimento/etapa2", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaTeleAtendimentoPasso1'])->name('paciente.marcarConsultaTeleAtendimentoPasso1')->middleware('auth');
-        Route::get("/paciente/marcar-consulta/teleatendimento/etapa3/{especialidade_id}", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaTeleAtendimentoidadePasso2'])->name('paciente.marcarConsultaTeleAtendimentoPasso2')->middleware('auth');
-        Route::get("/paciente/marcar-consulta/teleatendimento/etapa4/{especialista_id}", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaTeleAtendimentoPasso4'])->name('paciente.marcarConsultaTeleAtendimentoPasso4')->middleware('auth');
-
 
         #VIA_ESPECIALIDADE
         Route::get("/paciente/marcar-consulta/via-especialidade/etapa2", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaEspecialidadePasso1'])->name('paciente.marcarConsultaViaEspecialidadePasso1')->middleware('auth');

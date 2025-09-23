@@ -203,7 +203,7 @@ class EspecialistaclinicaController extends Controller
 
       $lista = Consulta::where('especialista_id', '=', $especialista_id)
          ->where('clinica_id', '=', $clinica->id)
-         ->where('status', '=', $statusConsulta)->where("remota",false)
+         ->where('status', '=', $statusConsulta)
          ->select('consultas.id', 'horario_agendado')
          ->orderBy('horario_agendado', 'asc')
          ->get();
