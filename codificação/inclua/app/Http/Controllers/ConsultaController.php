@@ -468,7 +468,7 @@ class ConsultaController extends Controller
          ->orderBy('horario_agendado', 'asc')
          ->get();
    //  dd($inicioDoDiaFiltro,$fimDoDiaFiltro,$statusConsulta);
-     // dd($consultas);
+      //dd($consultas);
       return view('userEspecialista/listConsultaMarcadas', [
          'consultas' => $consultas,
          'clinicas' => $clinicas,
