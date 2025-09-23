@@ -7,12 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Consulta extends Model
 {
   use HasFactory;
-  protected $fillable = ['status', 'horario_agendado', 'horario_iniciado',
+ protected $fillable = ['status', 'horario_agendado', 'horario_iniciado',
    'horario_finalizado', 'preco', 'porcetagem_repasse_clinica', 'porcetagem_repasse_plataforma',
     'paciente_id', 'especialista_id', 'clinica_id','motivocancelamento',
-    'isPago','forma_pagamento','id_usuario_cancelou'
+    'isPago','forma_pagamento','id_usuario_cancelou', 'tempo', 'linkmeet', 'convite','remota','calendarId','reenbolsado','debito','pagamento_id'
   ];
-
   public function noHasAvaliacao()
   {
     $avaliacao = AvaliacaoComentario::join('avaliacoes', 'avaliacoes.comentario_id', 'avaliacoes_comentarios.id')

@@ -267,7 +267,7 @@
                             </div>
                             <div id="anamnese" class="tab-pane {{ $aba == "anamnese" ?  "active" : "" }}">
                                 <div class="col-md-12">
-                                    <a title="Relatório anamnese" class="btn btn-default" href="{{ route('relatorio.anamnese', ['id' => $consulta->paciente_id]) }}" target="_blank" rel="noopener noreferrer">
+                                    <a title="Relatório anamnese" class="btn btn-default" href="{{ route('relatorio.anamnese', ['id' => $consulta->paciente_id,'consulta_id'=>$consulta->id]) }}" @if($hasAnamnese) target="_blank" rel="noopener noreferrer" @endif>
                                         Anamnese
                                     </a>
                                 </div>
