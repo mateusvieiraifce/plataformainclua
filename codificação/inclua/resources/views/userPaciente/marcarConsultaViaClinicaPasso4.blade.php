@@ -193,17 +193,17 @@
          return new Date(data.getFullYear(), data.getMonth(), data.getDate());
     }
 
-     //funcao para poder verificar se existe consulta na data criada 
+     //funcao para poder verificar se existe consulta na data criada
      function existeConsulta(dataTela) {
-        @foreach($lista as $consulta) 
-            var dataString ={!! json_encode(date( 'd/m/Y' , strtotime($consulta->horario_agendado))) !!}; 
-            var partesData = dataString.split('/');    
+        @foreach($lista as $consulta)
+            var dataString ={!! json_encode(date( 'd/m/Y' , strtotime($consulta->horario_agendado))) !!};
+            var partesData = dataString.split('/');
             // Constrói um objeto Date no formato esperado (mês-1 porque o mês no objeto Date é baseado em zero)
             var data = new Date(partesData[2], partesData[1] - 1, partesData[0]);
-            var data = normalizarDataParaComparacao(data);     
+            var data = normalizarDataParaComparacao(data);
             if(data.getTime() === dataTela.getTime())
             {
-                return true;               
+                return true;
             }
         @endforeach
         return false;
@@ -211,15 +211,15 @@
 
     function geraDias(currentWeekStart, daysContainer) {
         // Loop para gerar os dias da semana
-        for (var i = 0; i < 7; i++) {            
-            var day = new Date(currentWeekStart);        
+        for (var i = 0; i < 7; i++) {
+            var day = new Date(currentWeekStart);
             var data1  =  new Date(day.setDate(currentWeekStart.getDate() + i));
             var data1 = normalizarDataParaComparacao(data1);
             //aqui desenhar o dia apenas se tiver consulta disponível
-            if(existeConsulta(data1)){        
+            if(existeConsulta(data1)){
                 var dayElement = document.createElement('div');
                 dayElement.id = "" + day.getDate() + '/' + (day.getMonth() + 1) + "/" + day.getFullYear();
-                dayElement.classList.add('day');  
+                dayElement.classList.add('day');
                 var dayName = getDayName(day.getDay());
                 var dayText = dayName + '<br>' + day.getDate() + '/' + (day.getMonth() + 1);
                 dayElement.innerHTML = dayText;
@@ -248,24 +248,24 @@
 
 
         //desenhando as divs dos horarios das consultas
-        @foreach($lista as $consulta)     
+        @foreach($lista as $consulta)
 
-            var hora ={!! json_encode(date( 'H:i' , strtotime($consulta->horario_agendado))) !!};   
-            var dataString ={!! json_encode(date( 'd/m/Y' , strtotime($consulta->horario_agendado))) !!}; 
-            var partesData = dataString.split('/');    
+            var hora ={!! json_encode(date( 'H:i' , strtotime($consulta->horario_agendado))) !!};
+            var dataString ={!! json_encode(date( 'd/m/Y' , strtotime($consulta->horario_agendado))) !!};
+            var partesData = dataString.split('/');
             // Constrói um objeto Date no formato esperado (mês-1 porque o mês no objeto Date é baseado em zero)
             var data = new Date(partesData[2], partesData[1] - 1, partesData[0]);
-            var data ="" + data.getDate() + '/' + (data.getMonth() + 1) + "/" + data.getFullYear();  
+            var data ="" + data.getDate() + '/' + (data.getMonth() + 1) + "/" + data.getFullYear();
             var diaselecionado = dayElement.id;
             if(diaselecionado === data)
             {
-                console.log("As datas são iguais."+dia+" "+data);                     
+                console.log("As datas são iguais."+dia+" "+data);
                 var horaElemento = document.createElement('div');
                 horaElemento.id =  {{$consulta->id}};
                 horaElemento.classList.add('day');
-                //aqui desenhar as consulta disponíveis no dia       
+                //aqui desenhar as consulta disponíveis no dia
 
-                horaElemento.innerHTML = " "+ hora+" ";         
+                horaElemento.innerHTML = " "+ hora+" ";
                 horaElemento.onclick = function() {
                     finalizar(this,diaselecionado);
                 };

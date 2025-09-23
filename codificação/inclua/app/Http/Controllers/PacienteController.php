@@ -580,6 +580,7 @@ class PacienteController extends Controller
         if (isset($_GET['filtro'])) {
             $filter = $_GET['filtro'];
         }
+        $especialidades = Especialidade::paginate(8);
 
         $clinicas = Clinica::join('consultas', 'consultas.clinica_id', 'clinicas.id')
             ->where('ativo', '1')
@@ -589,7 +590,7 @@ class PacienteController extends Controller
             ->groupBy('clinicas.id','nome')
             ->paginate(8);
        // dd($clinicas);
-        return view('userPaciente/marcarConsultaViaClinicaPasso1', ['clinicas' => $clinicas, 'filtro' => $filter]);
+        return view('userPaciente/marcarConsultaViaClinicaPasso1', ['clinicas' => $clinicas, 'filtro' => $filter,'lista'=> $especialidades ]);
     }
 
     function pesquisarclinicamarcarconsulta(Request $request)
