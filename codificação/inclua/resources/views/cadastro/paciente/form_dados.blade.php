@@ -53,7 +53,7 @@
 
                         <div class="form-group">
                             <label for="celular">
-                                Celular <span class="required">*</span>
+                                Whatsapp <span class="required">*</span>
                             </label>
                             <div class="input-group input-medium{{ $errors->has('celular') ? ' has-danger' : '' }}">
                                 <input type="text" id="celular" class="form-control border-full {{ $errors->has('celular') ? 'is-invalid' : '' }}"
@@ -146,7 +146,7 @@
                 var retorno = validarDocumento(this, 'cpf')
             }
         });
-        
+
         document.getElementById('image').addEventListener('change', function() {
             var fileName = $(this).val().split('\\').pop();
             //  $(this).next('.custom-file-label').html(fileName);

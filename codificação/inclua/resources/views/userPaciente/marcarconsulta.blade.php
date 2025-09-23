@@ -12,11 +12,9 @@
 <div class="row">
     <div class="col-md-12">
         <div class="card">
-
             <div class="card-header">
                 <h6 class="title d-inline">Marcar consulta</h6>
             </div>
-
             <div class="card-body">
                 <div class="form-group">
                     <label for="selectRota"  style="font-size: 15px;">Selecione a forma de escolha da consulta: </label>
@@ -33,8 +31,8 @@
                 </div>
                 <!-- retorna para a tela dos pacientes, caso exista mais que 1-->
                 <?php
-                    $pacientes = App\Models\Paciente::where('usuario_id', '=', Auth::user()->id)->get();
-                ?>
+                    $pacientes = App\Models\Paciente::where('usuario_id', '=', Auth::user()->id)->get();                    
+                ?>  
                 @if(sizeof($pacientes) > 1)
                     <a href="{{ route('paciente.marcarconsultaSelecionarPaciente') }}" class="btn btn-primary"><i class="fa fa-reply"></i> Voltar</a>
                 @endif

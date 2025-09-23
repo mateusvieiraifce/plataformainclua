@@ -16,8 +16,4 @@ class Paciente extends Model
         'responsavel',
         'avatar'
     ];
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'usuario_id');
-    }
 }

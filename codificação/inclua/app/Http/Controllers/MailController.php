@@ -43,27 +43,21 @@ class MailController extends Controller
 
     function sendEmailBack(Request $req)
     {
-        if (!empty($req->input('honeypot'))) {
-            return response()->json(['success' => true]); // Engana o spammer
-        }
-
         $validated = $req->validate([
             'g-recaptcha-response' => 'required', // Validação do reCAPTCHA
         ], [
             'g-recaptcha-response.required' => 'Preencha o recaptcha', // Mensagem personalizada
         ]);
 
-
         $host = $req->getHost();
 
-        if ( true) {
-
+        if ( $host == "plataformainclua.com"|| $host == "app.plataformainclua.com") {
             $email = $req->email;
             $nome = $req->name;
             $tel = $req->phone;
             // $msg = $req->msg;
             $texto = " O Cliente: " . $nome . " Tel:" . $tel . " Email: " . $email . " \n Sugeriu: " . $req->message;
-            Helper::sendEmail("Contato pelo site", $texto, env('EMAIL_ROOT'), $nome);
+            Helper::sendEmailSite("Contato pelo site", $texto, "atendimento@plataformainclua.com", $nome);
             return view('msg.msg', ['msg_compra' => 'Menssagem enviada com sucessos!']);
         } else {
             $response = array(

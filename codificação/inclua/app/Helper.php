@@ -12,11 +12,65 @@ class Helper
 
     public static function sendSms($phone, $msg){
         error_log('aqui');
-        $mensagem = urlencode(mb_convert_encoding($msg, "UTF-8", mb_detect_encoding($msg)));
-        $url_api = "https://api.iagentesms.com.br/webservices/http.php?metodo=envio&usuario=mentrixmax@gmail.com&senha=Windows2000@&celular={$phone}&mensagem={$mensagem}";
-        error_log($url_api);
-        $response = Http::get($url_api);
-        error_log($response);
+       // $mensagem = urlencode(mb_convert_encoding($msg, "UTF-8", mb_detect_encoding($msg)));
+        //$url_api = "https://api.iagentesms.com.br/webservices/http.php?metodo=envio&usuario=mentrixmax@gmail.com&senha=Windows2000@&celular={$phone}&mensagem={$mensagem}";
+        //error_log($url_api);
+     //   $response = Http::get($url_api);
+       // error_log($response);
+     $phone = Helper::formatWhatsapp($phone);
+     Helper::callWebrook($msg, $phone);
+    }
+
+    public static function formatWhatsapp($numero){
+        $numero = Helper::removeMascFone($numero);
+        $numero =  preg_replace('/ /', '', $numero);
+        $numero =  preg_replace('/[\(\)]/', '', $numero);
+        $ddd =  preg_replace('/[0-9]{9}$/', '', $numero);
+        $contato = preg_replace("/^[0-9]{2}[9]{1}/", '', $numero);
+        $contato = "55$numero";
+
+        return $contato;
+    }
+    public static function removeMascFone($fone)
+    {
+        if ($fone) {
+            $cep = str_replace("-", "", $fone);
+            $cep = str_replace("(", "", $cep);
+            $cep = str_replace(")", "", $cep);
+            $cep = str_replace(".", "", $cep);
+            $cep = str_replace(" ", "", $cep);
+            return trim($cep);
+        }
+        return "";
+    }
+
+    public static function callWebrook($msg, $phone, $file="")
+    {
+
+        try {
+            // Fazendo uma requisição POST com dados
+            $response = Http::withHeaders([
+                'Authorization' => 'apikey:  429683C4C977415CAAFCCE10F7D57E24' ,
+                'Accept' => 'application/json',
+            ])->post(env("URL_ZAP"), [
+                'phone' => $phone,
+                'msg' => $msg,
+                'relatorio'=>$file,
+                "instance"=>"mateus"
+            ]);
+            if ($response->successful()) {
+                return response()->json($response->json(), 201);
+            } else {
+                return response()->json([
+                    'error' => 'Erro na criação do usuário',
+                    'details' => $response->json()
+                ], $response->status());
+            }
+
+        } catch (\Exception $e) {
+            Log::error('Erro ao fazer POST: ' . $e->getMessage());
+            return response()->json(['error' => 'Erro interno do servidor'], 500);
+        }
     }
 
     public static function generateRandomNumberString($length) {

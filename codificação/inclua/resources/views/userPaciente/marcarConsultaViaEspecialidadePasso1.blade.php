@@ -20,15 +20,9 @@
                                         <tr>
                                             <td>{{ $ent->descricao }}</td>
                                             <td>
-                                                @if(isset($teleatendimento) &&  $teleatendimento)
-                                                    <a href="{{ route('paciente.marcarConsultaTeleAtendimentoPasso2', $ent->id) }}" class="btn btn-primary">
-                                                        Próximo <i class="fa fa-arrow-right"></i>
-                                                    </a>
-                                                @else
                                                 <a href="{{ route('paciente.marcarConsultaViaEspecialidadePasso2', $ent->id) }}" class="btn btn-primary">
                                                     Próximo <i class="fa fa-arrow-right"></i>
                                                 </a>
-                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach

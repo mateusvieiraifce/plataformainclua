@@ -71,9 +71,4 @@ class Especialista extends Model
     {
         return $this->belongsTo(Especialidade::class, 'especialidade_id');
     }
-
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'usuario_id');
-    }
 }

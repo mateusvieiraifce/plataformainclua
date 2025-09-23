@@ -22,7 +22,6 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \App\Http\Middleware\HandleExceptions::class,
-
     ];
 
     /**
@@ -67,6 +66,5 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'verify.signature' => \App\Http\Middleware\VerifyPaymentSignature::class,
         'verify.especialista.active' => \App\Http\Middleware\VerifyEspecialistaActive::class,
-        'check.domain' => \App\Http\Middleware\CheckDomainMiddleware::class,
     ];
 }

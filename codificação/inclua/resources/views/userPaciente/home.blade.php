@@ -5,18 +5,17 @@
         <div class="col-lg-12 col-md-12">
             <div class="card">
                 <div class="card-header">
-
                     <!-- caso o paciente nao possua dependete abrir loga a tela de selecionar clinica/especialista-->
                     <?php
-                        $pacientes = App\Models\Paciente::where('usuario_id', '=', Auth::user()->id)->get();
-                    ?>
+                        $pacientes = App\Models\Paciente::where('usuario_id', '=', Auth::user()->id)->get();                    
+                    ?>  
                     @if(sizeof($pacientes) > 1)
                         <a href="{{ route('paciente.marcarconsultaSelecionarPaciente') }}"
                             class="btn btn-secundary btn-round btn-lg header-links">
-                    @else
+                    @else                       
                         <a href="{{ route('paciente.marcarconsulta') }}"
                             class="btn btn-secundary btn-round btn-lg header-links">
-                    @endif
+                    @endif                 
                             <i class="tim-icons icon-calendar-60 "></i>
                             <br>
                             Marcar consulta
@@ -36,8 +35,6 @@
                         <br>
                         Financeiro
                     </a>
-
-
                 </div>
                 <div class="card-body">
                     <div class="table-full-width table-responsive">
@@ -48,7 +45,7 @@
                                     <th>Paciente</th>
                                     <th>Horário</th>
                                     <th>Dia</th>
-                                    <th>Especialista</th>
+                                    <th>Médico</th>
                                     <th>Especialidade</th>
                                     <th>Clínica</th>
                                 </thead>
@@ -57,7 +54,7 @@
                                         <tr>
                                             <td>
                                                 {{ $consulta->nome_paciente }}
-                                            </td>
+                                            </td>                                    
                                             <td>
                                                 {{ date( 'H:i' , strtotime($consulta->horario_agendado)) }}
                                             </td>
@@ -70,23 +67,12 @@
                                             <td>
                                                 {{ $consulta->descricao_especialidade }}
                                             </td>
-                                            @if (!$consulta->remota)
                                             <td>
                                                 {{ $consulta->nome_clinica }}
                                             </td>
-                                            @else
-                                                <td>
-                                                    TeleAtendimento
-                                                </td>
-                                            @endif
-
                                             <td>
-                                                @if ($consulta->remota)
-                                                <a href="{{ $consulta->linkmeet }}" title="Cancelar consulta" class="btn btn-info" data-original-title="Cancelar consulta" target="_blank" rel="noopener noreferrer" style="min-width: 150px"> Iniciar </a>
-                                                @endif
-
                                                 <a href="#" target="_blank" rel="tooltip" title="Cancelar consulta" class="btn btn-danger" data-original-title="Cancelar consulta"
-                                                    href="#" data-target="#modal-form-cancelar-consulta" data-toggle="modal" data-whatever="@mdo" style="min-width: 150px" onclick="setModalCancelarConsulta({{ $consulta->id }}, {{ \App\Helper::verificarPrazoCancelamentoGratuito($consulta->horario_agendado) }})">
+                                                    href="#" data-target="#modal-form-cancelar-consulta" data-toggle="modal" data-whatever="@mdo" onclick="setModalCancelarConsulta({{ $consulta->id }}, {{ \App\Helper::verificarPrazoCancelamentoGratuito($consulta->horario_agendado) }})">
                                                     Cancelar
                                                 </a>
                                             </td>
