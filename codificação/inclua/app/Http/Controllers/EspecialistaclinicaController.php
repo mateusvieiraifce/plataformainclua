@@ -1,11 +1,9 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Models\Especialidade;
 use App\Models\Especialidadeclinica;
 use App\Models\Especialistaclinica;
 use App\Models\Especialista;
-use App\Models\Paciente;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,9 +13,6 @@ use Carbon\Carbon;
 
 class EspecialistaclinicaController extends Controller
 {
-
-
-
    function list($clinica_id = null, $msg = null)
    {
       if (Auth::user()->tipo_user == "C") {
@@ -39,7 +34,7 @@ class EspecialistaclinicaController extends Controller
          ->select(
             'especialistaclinicas.especialista_id as id', 'especialistas.nome',
             'especialidades.descricao as especialidade','is_vinculado as isVinculado'
-         )->distinct('especialistas.id')
+         )
          ->paginate(8);
 
       return view('userClinica/cadVinculoEspecialista/list', ['lista' => $lista, 'filtro' => $filter, 'clinica' => $clinica, 'msg' => $msg]);
@@ -72,17 +67,14 @@ class EspecialistaclinicaController extends Controller
    {
        #verificar se na clinica está associado a especialidade do especialista, se nao incluir.
 
-
        $especialista = Especialista::find($request->especialista_id);
-       $especialidadeValor = Especialidade::find($especialista->especialidade_id)->valorpadrao;
-     //  dd($especialidadeValor);
        $espcialidadeClinica = Especialidadeclinica::where("especialidade_id","=",$especialista->especialidade_id)->first();
        if (!$espcialidadeClinica) {
          //  dd("aqui");
            $associaEspecilidade = new Especialidadeclinica();
            $associaEspecilidade->especialidade_id=$especialista->especialidade_id;
            $associaEspecilidade->clinica_id= $request->clinica_id;
-           $associaEspecilidade->valor=$especialidadeValor;
+           $associaEspecilidade->valor=60;
            $associaEspecilidade->is_vinculado=true;
            $associaEspecilidade->save();
        }

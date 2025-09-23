@@ -163,7 +163,7 @@ class DashboardController extends Controller
         'especialistaclinicas.especialista_id')->
         where('clinica_id', $clinica->id)->
         orderBy('especialistas.nome', 'asc')->
-        select('especialistas.id', 'especialistas.nome')->distinct('especialistas.id')->get();
+        select('especialistas.id', 'especialistas.nome')->get();
 
         $dataAtual = \Carbon\Carbon::now();
         $mesInicial = $dataAtual->copy()->subMonths(11)->startOfMonth(); // Primeiro mês da janela (12 meses atrás)

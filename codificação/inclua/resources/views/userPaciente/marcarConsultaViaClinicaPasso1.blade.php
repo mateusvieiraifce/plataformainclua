@@ -89,15 +89,9 @@
                                         <tr>
                                             <td>{{ $clinica->nome }}</td>
                                             <td>
-                                                @if (isset($proximo))
-                                                    <a href="{{route('especialista.marcarConsulta.clinica.presencial.data',[$clinica->id,$especialista_id])}}" class="btn btn-primary">
-                                                        Próximo <i class="fa fa-arrow-right"></i>
-                                                    </a>
-                                                @else
                                                 <a href="{{ route('paciente.marcarConsultaViaClinicaPasso2', $clinica->id) }}" class="btn btn-primary">
                                                     Próximo <i class="fa fa-arrow-right"></i>
                                                 </a>
-                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach

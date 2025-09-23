@@ -3,29 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Anamnese;
-use App\Models\Paciente;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AnamneseController extends Controller
 {
-    public function create($paciente_id,  $consulta_id=null)
+    public function create($paciente_id)
     {
-       // dd($consulta_id);
-        $paciente = Paciente::find($paciente_id);
-        $anamneses = Anamnese::where('paciente_id', $paciente_id)->first();
-        if ($anamneses){
-            $msg = ['valor' => trans("Paciente já possui uma Anamnese"), 'tipo' => 'danger'];
-            session()->flash('msg', $msg);
-            return back()->withInput();
-        }
-        $route = 0;
-        if ($consulta_id){
-            $route = 1;
-        }
-
-        return view('userPaciente.anamnese.form', ['paciente_id' => $paciente_id, 'consulta_id'=>$consulta_id, 'paciente' => $paciente, 'returnroute' => $route]);
+        return view('userPaciente.anamnese.form', ['paciente_id' => $paciente_id]);
     }
 
     public function store(Request $request)
@@ -147,14 +133,11 @@ class AnamneseController extends Controller
 
             return back()->withInput();
         }
-        if ($request->returnroute){
-            if ($request->returnroute == "0"){
-                return redirect()->route('paciente.index');
-            } else if(($request->returnroute == "1")) {
-                return redirect()->route('especialista.iniciarAtendimento',[$request->consulta_id,"prontuarioatual"]);
-            }
+
+        if (Auth::user()->tipo_user == "R") {
+            return redirect()->route('paciente.marcarconsultaSelecionarPaciente');
+        } else {
+            return redirect()->route('paciente.minhasconsultas');
         }
-       // return back()->withInput();
-        return redirect()->route('paciente.index');
     }
 }

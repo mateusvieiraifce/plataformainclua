@@ -637,7 +637,7 @@ class PacienteController extends Controller
             'especialistas.nome as nome_especialista',
             'clinicas.nome as nome_clinica',
             'especialidades.descricao as descricao_especialidade',
-            'pacientes.nome as nome_paciente','consultas.remota',"consultas.linkmeet", "consultas.isPago"
+            'pacientes.nome as nome_paciente',
         )
         ->orderBy('horario_agendado', 'asc')
         ->paginate(8);
@@ -647,40 +647,14 @@ class PacienteController extends Controller
 
     public function cancelarConsulta(Request $request)
     {
-        $naoCompareceu = false;
-        if($request->compareceu!="Compareceu"){
-            $request->motivo_cancelamento = "Não compareceu";
-            $naoCompareceu = true;
-        }
-
-
-        if ($request->motivo_cancelamento==null || trim($request->motivo_cancelamento) == ""){
-            $msg = ['valor' => trans("Cancelamento não efetivado, um motivo é obrigatório!"), 'tipo' => 'danger'];
-            session()->flash('msg', $msg);
-            return back()->withInput();
-        }
-
-        session()->put("motivo_cancelamento_$request->consulta_id", $request->motivo_cancelamento);
-
         $consulta = Consulta::find($request->consulta_id);
         $consultaController = new ConsultaController();
         $userLogged = Auth::user();
-        if ($consulta->calendarId) {
-            $gc = new GoogleCalendarController();
-            $gc->deleteEvent($consulta->calendarId);
-        }
 
         if (Helper::verificarPrazoCancelamentoGratuito($consulta->horario_agendado)) {
             $retornoConsultaCancelada = $consultaController->cancelarConsultaSemTaxa($request);
         } else {
-            if ($userLogged->tipo_user == "P") {
-                return redirect( route('checkout_stripe',  ["id"=>$consulta->id , "retorno"=>"finalizar.cancelar.paciente"] ));
-            }
-            if ($userLogged->tipo_user == "E") {
-                $this->cancelarFinalizar($consulta->id);
-            }
-        }
-           /* $cartao = Paciente::join('consultas', 'consultas.paciente_id', 'pacientes.id')
+            $cartao = Paciente::join('consultas', 'consultas.paciente_id', 'pacientes.id')
                 ->join('users', 'users.id', 'pacientes.usuario_id')
                 ->join('assinaturas', 'assinaturas.user_id', 'users.id')
                 ->join('cartoes', 'cartoes.id', 'assinaturas.cartao_id')
@@ -733,66 +707,17 @@ class PacienteController extends Controller
                         $consultaNova->save();
                     }
 
-
+                    $msg = ['valor' => trans("Operação Realizada com sucesso!"), 'tipo' => 'success'];
                 }
            }
-        }*/
+        }
+        session()->flash('msg', $msg);
 
         if ($userLogged->tipo_user == "E") {
             return redirect()->route('consulta.listconsultaporespecialista');
         } elseif ($userLogged->tipo_user == "P") {
             return redirect()->route('paciente.minhasconsultas');
         }
-    }
-
-    public function cancelarFinalizar($id)
-    {
-
-
-        $motivo = session()->get("motivo_cancelamento_$id");
-
-        $consulta = Consulta::find($id);
-
-        $consulta->status="Cancelada";
-        $consulta->motivocancelamento = $motivo;
-        $consulta->id_usuario_cancelou = Auth::user()->id;
-        $consulta->save();
-
-        date_default_timezone_set('America/Sao_Paulo');
-        $dataConsultaCancelada = Carbon::parse($consulta->horario_agendado);
-        $dataAtual = Carbon::now();
-
-
-        if ($dataConsultaCancelada->gt($dataAtual)) {
-            $consultaNova = $consulta->replicate();
-            $consultaNova->status = "Disponível";
-            $consultaNova->paciente_id = null;
-            $consultaNova->convite = null;
-            $consultaNova->linkmeet =null;
-            $consultaNova->calendarId =null;
-            $consultaNova->motivocancelamento=null;
-            $consultaNova->debito = null;
-            $consultaNova->forma_pagamento = null;
-            $consultaNova->isPago = null;
-            $consultaNova->reenbolsado = null;
-            $consultaNova->pagamento_id = null;
-            $consultaNova->id_usuario_cancelou = null;
-
-
-           // dd($consultaNova);
-            $consultaNova->save();
-
-        }
-        $msg = ['valor' => trans("Operação Realizada com sucesso!"), 'tipo' => 'success'];
-        session()->flash('msg', $msg);
-        $userLogged = Auth::user();
-
-        if ($userLogged->tipo_user == "P") {
-        return redirect(route('paciente.minhasconsultas'));
-        }else{
-            return back()->withInput();
-        }
-
     }
 
 
@@ -878,16 +803,11 @@ class PacienteController extends Controller
 
     }
 
-    public function relatorioAnamnese($id, $consultaId)
+    public function relatorioAnamnese($id)
     {
         $paciente = Paciente::find($id);
         $paciente->cpf = Helper::mascaraCPF($paciente->cpf);
         $anamnese = Anamnese::where('paciente_id', $paciente->id)->first();
-       // dd($consultaId);
-        if ($anamnese == null)
-        {
-            return redirect(route('anamnese.create',[$id, $consultaId]));
-        }
 
         $pdf = Pdf::loadView('pdf.anamnese', ['anamnese' => $anamnese, 'paciente' => $paciente]);
         $pdf->add_info('Title', 'Relatório anamnese');
