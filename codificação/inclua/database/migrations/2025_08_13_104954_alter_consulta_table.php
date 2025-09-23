@@ -12,7 +12,8 @@ class AlterConsultaTable extends Migration
      * @return void
      */
     public function up()
-    {
+    { 
+
         Schema::table('consultas', function (Blueprint $table) {
             $table->integer('tempo')->default(30)->nullable()->comment('tempo da consulta');
             $table->string('linkmeet', 100)->nullable()->comment('link do convite');
@@ -29,6 +30,7 @@ class AlterConsultaTable extends Migration
      */
     public function down()
     {
+        
         Schema::table('consultas', function (Blueprint $table) {
             $table->dropColumn('linkmeet');
             $table->dropColumn('convite');
