@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PixSripeController;
 
 /*
 |----------------------------------                                CNPJ <span class="required">*</span>
@@ -15,31 +14,6 @@ use App\Http\Controllers\PixSripeController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-
-/*Route::prefix('calendar')->group(function () {
-    Route::post('/events', [\App\Http\Controllers\GoogleCalendarController::class, 'createEvent']);
-    Route::get('/events/create/{idConsulta}', [\App\Http\Controllers\GoogleCalendarController::class, 'createEventGet']);
-
-    Route::get('/events', [\App\Http\Controllers\GoogleCalendarController::class, 'listEvents']);
-    Route::put('/events/{eventId}', [\App\Http\Controllers\GoogleCalendarController::class, 'updateEvent']);
-    Route::delete('/events/{eventId}', [\App\Http\Controllers\GoogleCalendarController::class, 'deleteEvent']);
-});*/
-
-
-Route::get('/checkout/stripe/{id?}/{retorno?}', [\App\Http\Controllers\StripeControllerCartao::class, 'checkout'])->name('checkout_stripe');
-Route::post('/checkout/stripe/payment-intent', [\App\Http\Controllers\StripeControllerCartao::class, 'createPaymentIntent'])->name('createPaymentIntent.stripe');
-Route::post('/checkout/stripe/confirm-payment', [\App\Http\Controllers\StripeControllerCartao::class, 'confirmPayment'])->name('createPaymentIntent.stripe');
-Route::post('/stripe/webhook', [\App\Http\Controllers\StripeControllerCartao::class, 'handleWebhook'])->name('handleWebhook.stripe');;
-
-Route::get('/paciente/minhas-consultas/finalizar/cancelar/{id}', [\App\Http\Controllers\PacienteController::class, 'cancelarFinalizar'])->name('finalizar.cancelar.paciente');
-
-
-Route::get('/pix/checkout/{id?}', [PixSripeController::class, 'showCheckout'])->name('pix.checkout');
-Route::post('/pix/create-payment', [PixSripeController::class, 'createPaymentIntent']);
-Route::get('/pix/success/{paymentIntent}', [PixSripeController::class, 'success'])->name('pix.success');
-Route::get('/pix/pending/{paymentIntent}', [PixSripeController::class, 'pending'])->name('pix.pending');
-Route::post('/stripe/webhook/pix', [PixSripeController::class, 'handleWebhook']);
 
 Route::get('/sobre', function () {
     return view('frente/about');
@@ -131,8 +105,6 @@ Route::post("/updatepassword", [\App\Http\Controllers\UsuarioController::class, 
 
 Route::post("/clinicas/get", [\App\Http\Controllers\ClinicaController::class, 'getClinicas'])->name('clinicas.get-all');
 
-
-
 Route::middleware('auth')->group(function () {
     #DASHBORD
     Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'home'])->name('home')->middleware('verify.signature');
@@ -189,17 +161,6 @@ Route::middleware('auth')->group(function () {
     #ESPECIALISTA
     Route::get("/especialista/list", [\App\Http\Controllers\EspecialistaController::class, 'list'])->name('especialista.list');
     Route::get("/especialista/new", [\App\Http\Controllers\EspecialistaController::class, 'new'])->name('especialista.new');
-    #CUDEGALINHA
-    Route::get("/especialista/marcar-consulta/{paciente_id}", [\App\Http\Controllers\EspecialistaController::class, 'marcarconsultaSelecionarPaciente'])->name('especialista.marcarconsulta');
-    Route::get("/especialista/marcar-consulta/clinica/{paciente_id}", [\App\Http\Controllers\EspecialistaController::class, 'marcarConsultaEspecialistaPresencialEscolheClinica'])->name('especialista.marcarconsulta.clinica.presencial');
-    Route::get("/especialista/marcar-consulta/data/{clinica_id}/{especialidade_id}", [\App\Http\Controllers\EspecialistaController::class, 'marcarConsultaViaEspecialistaData'])->name('especialista.marcarConsulta.clinica.presencial.data');
-    Route::post("/especialista/marcar-consulta/finalizar/", [\App\Http\Controllers\EspecialistaController::class, 'marcarConsultaFinalizar'])->name('especialista.marcarConsulta.finalizar');
-
-    Route::get("/especialista/marcar-consulta/teleconsulta/data/{clinica_id}/{especialidade_id}/{remota?}", [\App\Http\Controllers\EspecialistaController::class, 'marcarConsultaViaEspecialistaData'])->name('especialista.marcarConsulta.clinica.presencial.data');
-
-
-
-
     Route::post("/especialista/search", [\App\Http\Controllers\EspecialistaController::class, 'search'])->name('especialista.search');
     Route::post("/especialista/save", [\App\Http\Controllers\EspecialistaController::class, 'save'])->name('especialista.save');
     Route::get("/especialista/delete/{id}", [\App\Http\Controllers\EspecialistaController::class, 'delete'])->name('especialista.delete');
@@ -294,7 +255,7 @@ Route::middleware('auth')->group(function () {
         Route::get("/paciente/marcar-consulta/via-especialidade/etapa4/{clinica_id}/{especialista_id}", [\App\Http\Controllers\PacienteController::class, 'marcarConsultaViaEspecialidadePasso4'])->name('paciente.marcarConsultaViaEspecialidadePasso4')->middleware('auth');
 
         #ANAMNESE
-        Route::get("/paciente/anamnese/{paciente_id}/{consultaId?}", [\App\Http\Controllers\AnamneseController::class, 'create'])->name('anamnese.create');
+        Route::get("/paciente/anamnese/{paciente_id}", [\App\Http\Controllers\AnamneseController::class, 'create'])->name('anamnese.create');
         Route::post("/paciente/anamnese/store", [\App\Http\Controllers\AnamneseController::class, 'store'])->name('anamnese.store');
 
         #CANCELAR CONSULTA
@@ -382,7 +343,7 @@ Route::middleware('auth')->group(function () {
     Route::post("/especialista/novoexame/", [\App\Http\Controllers\EspecialistaController::class, 'salvaNovoExame'])->name('especialista.salvaNovoExame');
     Route::post("/especialista/novomedicamento/", [\App\Http\Controllers\EspecialistaController::class, 'salvaNovoMedicamento'])->name('especialista.salvaNovoMedicamento');
     Route::post("/especialista/prontuario-completo/filter", [\App\Http\Controllers\ProntuarioController::class, 'filter'])->name('prontuario_completo.filter');
-    Route::get("/anamnese/relatorio/{id}/{consulta_id}", [\App\Http\Controllers\PacienteController::class, 'relatorioAnamnese'])->name('relatorio.anamnese');
+    Route::get("/anamnese/relatorio/{id}", [\App\Http\Controllers\PacienteController::class, 'relatorioAnamnese'])->name('relatorio.anamnese');
 
     #ATESTADO
     Route::post("/especialista/atestado/store", [\App\Http\Controllers\AtestadoController::class, 'store'])->name('atestado.store');
@@ -463,7 +424,6 @@ Route::middleware('auth')->group(function () {
     Route::get("/configuracao/layout", [\App\Http\Controllers\ConfiguracaoController::class, 'index'])->name('configuracao.layout');
     Route::post("/configuracao/layout/store", [\App\Http\Controllers\ConfiguracaoController::class, 'store'])->name('configuracao.layout.store');
 
-    Route::post("/consulta/paciente/pagar", [\App\Http\Controllers\PagamentoController::class, 'pagarConsultaStripe'])->name('consulta.pagamento.paciente');
     Route::post("/consulta/pagar", [\App\Http\Controllers\PagamentoController::class, 'pagarConsulta'])->name('consulta.pagamento');
     Route::get("/consulta/pagamento/callback", [\App\Http\Controllers\PagamentoController::class, 'callbackPagamentoConsulta'])->name('callback.pagamento.consulta');
 });

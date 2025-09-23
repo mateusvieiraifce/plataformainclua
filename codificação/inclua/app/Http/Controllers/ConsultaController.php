@@ -504,7 +504,6 @@ class ConsultaController extends Controller
       $inicioDoDia = $dataAtual->startOfDay();
       $fimDoDia = Carbon::today()->endOfDay();
 
-
       // selecionar as consultas na qual o status diferente de
       // FINALIZADA, CANCELADA
       $lista = Consulta::join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')
@@ -786,7 +785,7 @@ class ConsultaController extends Controller
 
    public function cancelarConsultaSemTaxa(Request $request)
    {
-   //    dd("aqui");
+       dd("aqui");
       //ver a questao financeira
       $consulta = Consulta::find($request->consulta_id);
 
@@ -801,13 +800,6 @@ class ConsultaController extends Controller
             $consultaNova->isPago = false;
             $consultaNova->forma_pagamento = null;
             $consultaNova->paciente_id = null;
-            $consulta->motivocancelamento =null;
-            $consulta->debito = null;
-             $consultaNova->forma_pagamento = null;
-             $consultaNova->isPago = null;
-             $consultaNova->reenbolsado = null;
-             $consultaNova->pagamento_id = null;
-             $consultaNova->id_usuario_cancelou = null;
             $consultaNova->save();
          }
 
@@ -856,13 +848,6 @@ class ConsultaController extends Controller
                $consultaNova->isPago = false;
                $consultaNova->forma_pagamento = null;
                $consultaNova->paciente_id = null;
-               $consultaNova->motivocancelamento = null;
-               $consultaNova->debito = null;
-               $consultaNova->forma_pagamento = null;
-               $consultaNova->isPago = null;
-                $consultaNova->reenbolsado = null;
-                $consultaNova->pagamento_id = null;
-                $consultaNova->id_usuario_cancelou = null;
                $consultaNova->save();
             }
 

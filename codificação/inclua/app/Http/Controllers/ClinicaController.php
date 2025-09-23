@@ -741,7 +741,7 @@ class ClinicaController extends Controller
        where('clinica_id', $clinica->id)->
        where('especialidade_id', $especialidade_id)->
        orderBy('especialistas.nome', 'asc')->
-       select('especialistas.id', 'especialistas.nome')->distinct('especialistas.id')-> paginate(8);
+       select('especialistas.id', 'especialistas.nome')->paginate(8);
        return view('userClinica/marcarConsulta/selecionarEspecialistaPasso3', ['lista' => $lista, 'clinica' => $clinica, 'paciente_id' => $paciente_id, 'especialidade_id' =>$especialidade_id]);
    }
 

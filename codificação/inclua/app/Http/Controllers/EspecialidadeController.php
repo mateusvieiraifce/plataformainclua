@@ -54,7 +54,7 @@ class EspecialidadeController extends Controller
             $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
          }
       } catch (QueryException $exp) {
-         $msg = ['valor' => "Especialidade em Uso, não pode ser excluída!", 'tipo' => 'primary'];
+         $msg = ['valor' => $exp->getMessage(), 'tipo' => 'primary'];
       }
       return $this->list($msg);
    }
