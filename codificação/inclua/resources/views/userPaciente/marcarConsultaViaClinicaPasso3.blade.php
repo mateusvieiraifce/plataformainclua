@@ -1,5 +1,10 @@
 @extends('layouts.app', ['page' => __('Marcar Consulta'), 'exibirPesquisa' => false,'pageSlug' => 'marcarconsulta', 'class' => 'marcar-consulta'])
 @section('title', 'Marcar Consulta')
+<script>
+    function voltar(){
+        window.history.back()
+    }
+</script>
 @section('content')
     <div class="row">
         <div class="col-lg-12 col-md-12">
@@ -20,9 +25,16 @@
                                         <tr>
                                             <td>{{ $ent->nome }}</td>
                                             <td>
-                                                <a href="{{ route('paciente.marcarConsultaViaClinicaPasso4',[$clinica_id, $ent->id]) }}" class="btn btn-primary">
+                                                @if ($clinica_id)
+                                                <a href="{{ route('paciente.marcarConsultaViaEspecialidadePasso4', [$clinica_id, $ent->id]) }}" class="btn btn-primary">
                                                     Próximo <i class="fa fa-arrow-right"></i>
                                                 </a>
+                                                @else
+                                                    <a href="{{ route('paciente.marcarConsultaTeleAtendimentoPasso4', [$ent->id]) }}" class="btn btn-primary">
+                                                        Próximo <i class="fa fa-arrow-right"></i>
+                                                    </a>
+                                                @endif
+
                                             </td>
                                         </tr>
                                     @endforeach
@@ -30,14 +42,21 @@
                             </table>
                             {{ $lista->appends(request()->query())->links() }}
                         @else
-                            Não nenhum especialista cadastrado.
+                            <h5>Não há nenhum especialista cadastrada.</h5>
                         @endif
                     </div>
-                    <a href="{{ route('paciente.marcarConsultaViaClinicaPasso2', $clinica_id) }}" class="btn btn-primary">
+                    @if ($clinica_id)
+                    <a href="{{ route('paciente.marcarConsultaViaEspecialidadePasso2', $especialidade_id) }}" class="btn btn-primary">
                         <i class="fa fa-reply"></i> Voltar
                     </a>
+                    @else
+                        <a href="#" class="btn btn-primary" onclick="voltar()">
+                            <i class="fa fa-reply"></i> Voltar
+                        </a>
+                    @endif
                 </div>
             </div>
         </div>
     </div>
+
 @endsection
