@@ -25,7 +25,7 @@
                             @include('alerts.feedback', ['field' => 'type_user'])
                         </div>
                     </div>
-                    
+
                     <form id="formUser" class="form hidden" method="post" action="{{ route('usuario.store') }}">
                         @csrf
                         <div class="form-group hidden user-name">
@@ -49,7 +49,7 @@
                                 @include('alerts.feedback', ['field' => 'email'])
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="password">
                                 Senha <span class="required">*</span>
@@ -60,7 +60,7 @@
                                 @include('alerts.feedback', ['field' => 'password'])
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="password_confirmation">
                                 Confirme a senha <span class="required">*</span>
@@ -71,7 +71,10 @@
                                 @include('alerts.feedback', ['field' => 'password_confirmation'])
                             </div>
                         </div>
-                        
+                        <div style="display: none;">
+                            <input type="text" name="honeypot" id="honeypot">
+                        </div>
+
                         <div class="input-group">
                             <button type="submit" class="btn btn-primary btn-round btn-lg">{{ __('Próximo') }}</button>
                         </div>
@@ -79,7 +82,7 @@
                         <input type="hidden" id="tipo_user" name="tipo_user" value="">
                         <input type="hidden" id="usuario_id" name="usuario_id" value="{{ isset($user) ? $user->id : '' }}">
                     </form>
-                </div>                    
+                </div>
             </div>
         </div>
     </div>
@@ -103,7 +106,7 @@
                     $("#tipo_pessoa").val( "J");
                     $("#tipo_user").val("C");
                 }
-            });            
+            });
         });
 
         @if (old('tipo_user') == "P" || (isset($user) && $user->tipo_user == "P"))

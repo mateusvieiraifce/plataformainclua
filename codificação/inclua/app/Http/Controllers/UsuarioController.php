@@ -206,6 +206,12 @@ class UsuarioController extends Controller
             $user = new User();
         }
 
+        return response()->json([
+            'success' => true,
+            'message' => 'Criado com sucesso.',
+        ], 200);
+
+
         $user->email = $request->email;
         $user->nome_completo = $request->nome ?? null;
         $user->password = bcrypt($request->password);
