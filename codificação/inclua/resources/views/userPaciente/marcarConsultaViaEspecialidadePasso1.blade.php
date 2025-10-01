@@ -12,20 +12,26 @@
                         @if($lista->count())
                             <table class="table">
                                 <thead>
-                                    <th>Especialidade</th>
-                                    <th></th>
+                                <th>Especialidade</th>
+                                <th></th>
                                 </thead>
                                 <tbody>
-                                    @foreach($lista as $ent)
-                                        <tr>
-                                            <td>{{ $ent->descricao }}</td>
-                                            <td>
+                                @foreach($lista as $ent)
+                                    <tr>
+                                        <td>{{ $ent->descricao }}</td>
+                                        <td>
+                                            @if(isset($teleatendimento) &&  $teleatendimento)
+                                                <a href="{{ route('paciente.marcarConsultaTeleAtendimentoPasso2', $ent->id) }}" class="btn btn-primary">
+                                                    Próximo <i class="fa fa-arrow-right"></i>
+                                                </a>
+                                            @else
                                                 <a href="{{ route('paciente.marcarConsultaViaEspecialidadePasso2', $ent->id) }}" class="btn btn-primary">
                                                     Próximo <i class="fa fa-arrow-right"></i>
                                                 </a>
-                                            </td>
-                                        </tr>
-                                    @endforeach
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endforeach
                                 </tbody>
                             </table>
                             {{ $lista->appends(request()->query())->links() }}

@@ -418,6 +418,8 @@ class PacienteController extends Controller
         //estou armazenando em uma sessao o id do paciente selecionado para ser usado no finalizar consulta
         // Armazena a variável na sessão
          session()->put('paciente_id', $paciente_id);
+      }else{
+          return $this->marcarconsultaSelecionarPaciente();
       }
       return view('userPaciente/selecionemodalidade');
    }
