@@ -779,6 +779,7 @@ class ClinicaController extends Controller
       $ent->paciente_id = $paciente->id;
       $ent->save();
       $gc = new GoogleCalendarController();
+
       $gc->createEventGet($ent->id);
       $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
 

@@ -350,6 +350,7 @@ class PacienteController extends Controller
             )
             ->orderBy('horario_agendado', 'asc')
             ->paginate(8);
+      //  dd($consultas);
       return view('userPaciente/minhasconsultas', ['consultas' => $consultas,  'msg' => $msg,'filtro' => $filtro]);
    }
 
@@ -693,6 +694,7 @@ class PacienteController extends Controller
         $consulta->save();
 
         $gc = new GoogleCalendarController();
+
         $gc->createEventGet($consulta->id);
 
 

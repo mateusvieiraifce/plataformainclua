@@ -37,7 +37,7 @@ class GoogleCalendarController extends Controller
 
 
         // Para G Suite domains, descomente e defina o usuário a ser impersonado
-        $client->setSubject('mateus.vieira@plataformainclua.com');
+        $client->setSubject('admin@plataformainclua.com');
 
         $this->service = new Calendar($client);
     }
@@ -69,14 +69,15 @@ class GoogleCalendarController extends Controller
 
 
         $consulta = Consulta::find($idConsulta);
+       // dd($consulta);
 
         if  ($consulta == null){
             return "";
         }
 
-        if  ($consulta->convite){
+        /*if  ($consulta->convite){
             return "";
-        }
+        }*/
         //dd("aqui");
 
         $clinica = Clinica::find($consulta->clinica_id);
@@ -102,6 +103,7 @@ class GoogleCalendarController extends Controller
         $validated = [];
         $validated['title'] = "Consulta com  " .  $especialista->especialidade->descricao  ;
         $clinicaName = ", na clínica " .$clinica->nome;
+
         if (!$consulta->remota) {
 
             $enderecoCompleto = sprintf(
@@ -118,22 +120,27 @@ class GoogleCalendarController extends Controller
             $validated["remota"] = true;
             $clinicaName = ", Via meet ";
         }
+
         $validated['description'] = $validated['title']  . ", ". $especialista->user->nome_completo .$clinicaName ;
         $validated['start_time'] = $agora->toIso8601String();
         $final = $agora->addMinute($consulta->tempo);
 
       //  $final->modify('+30 minutes');
         $validated['end_time'] = $final->toIso8601String();
+        $emailInclua = "incluaplataforma@gmail.com";
         $emailPaciente =$paciente->user->email;
         $emailClinica = $clinica->getUser->email;
         $emailEspecialista = $especialista->user->email;
-        $validated['attendees'] = [$emailPaciente, $emailClinica, $emailEspecialista];
+        $validated['attendees'] = [$emailInclua,$emailPaciente, $emailClinica, $emailEspecialista];
+
+       // dd("aqui",);
        // dd($validated);
         // dd($validated);
         try {
             $event = $this->buildEvent($validated);
+          //  dd($event);
             $createdEvent = $this->service->events->insert($this->calendarId, $event, ['conferenceDataVersion' => 1]);
-      //      dd($createdEvent);
+          //  dd($createdEvent);
             if ($validated["remota"]) {
                 $meetLink = $createdEvent->getConferenceData()->getEntryPoints()[0]->getUri();
             }
@@ -142,6 +149,7 @@ class GoogleCalendarController extends Controller
                 $consulta->linkmeet = $createdEvent->getConferenceData()->getEntryPoints()[0]->getUri();
             }
             $consulta->calendarId = $createdEvent["id"];
+           // dd($consulta);
             $consulta->save();
 //            dd($createdEvent["id"]);
 
@@ -153,6 +161,7 @@ class GoogleCalendarController extends Controller
             ]);
 
         } catch (\Exception $e) {
+            dd("aqui",$e->getMessage());
             return $this->handleError($e);
         }
     }
@@ -318,6 +327,7 @@ class GoogleCalendarController extends Controller
             ['method' => 'popup', 'minutes' => 60]
         ]);
         $event->setReminders($reminders);
+       // dd($event);
         return $event;
     }
 
