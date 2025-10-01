@@ -332,14 +332,14 @@ class PacienteController extends Controller
             $filtro = $_GET['filtro'];
         }
         $paciente = Paciente::where('usuario_id', '=', Auth::user()->id)->first();
-        $statusConsulta = "Aguardando atendimento";
+        $statusConsulta = ["Aguardando atendimento","Em Atendimento"];
         $consultas = Consulta::join('especialistas', 'especialistas.id', '=', 'consultas.especialista_id')
             ->join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')
             ->join('especialidades', 'especialidades.id', '=', 'especialistas.especialidade_id')
             ->join('pacientes', 'pacientes.id', 'consultas.paciente_id')
             ->join('users', 'users.id', 'pacientes.usuario_id')
             ->where('users.id', $paciente->usuario_id)
-            ->where('status', '=', $statusConsulta)
+            ->whereIn('status', $statusConsulta)
             ->select(
                 'pacientes.nome',
                 'consultas.id',
@@ -500,8 +500,15 @@ class PacienteController extends Controller
             $filter = $_GET['filtro'];
         }
 
+
+        $especialistas  = Especialista::where('especialidade_id', $especialidade_id)
+            ->join('consultas', 'especialistas.id', '=', 'consultas.especialista_id')
+            ->where("consultas.status","=","Disponivel")->where("consultas.horario_agendado",">=",Carbon::now())
+            ->select('especialistas.id')->distinct()->get();
+
+
         $lista = Especialista::where('especialidade_id', $especialidade_id)->
-        orderBy('especialistas.nome', 'asc')->select('especialistas.id', 'especialistas.nome')->paginate(8);
+        orderBy('especialistas.nome', 'asc')->select('especialistas.id', 'especialistas.nome')->whereIn('especialistas.id',$especialistas)->paginate(8);
         return view('userPaciente/marcarConsultaViaEspecialidadePasso3', ['lista' => $lista, 'clinica_id' => null, 'especialidade_id' => $especialidade_id]);
     }
 
