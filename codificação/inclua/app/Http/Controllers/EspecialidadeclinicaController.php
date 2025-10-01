@@ -2,205 +2,180 @@
 namespace App\Http\Controllers;
 
 use App\Models\Especialidadeclinica;
-use App\Models\Especialistaclinica;
-use App\Models\Especialista;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Clinica;
-use App\Models\Consulta;
-use Carbon\Carbon;
+use App\Models\Especialidade;
 
-class EspecialistaclinicaController extends Controller
+class EspecialidadeclinicaController extends Controller
 {
-   function list($clinica_id = null, $msg = null)
+   function listUserClinica($clinica_id = null, $msg = null)
    {
-      if (Auth::user()->tipo_user == "C") {
-         $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
-      } else {
-         $clinica = Clinica::find($clinica_id);
-      }
-
-      $clinica_id = $clinica->id;
       $filter = "";
       if (isset($_GET['filtro'])) {
          $filter = $_GET['filtro'];
       }
 
-      $lista = Especialistaclinica::join('especialistas', 'especialistas.id', '=', 'especialista_id')
-         ->join('especialidades', 'especialidades.id', '=', 'especialistas.especialidade_id')
-         ->where('clinica_id', '=', $clinica_id)
-         ->orderBy('especialistas.nome', 'asc')
-         ->select(
-            'especialistaclinicas.especialista_id as id', 'especialistas.nome',
-            'especialidades.descricao as especialidade','is_vinculado as isVinculado'
-         )
-         ->paginate(8);
-
-      return view('userClinica/cadVinculoEspecialista/list', ['lista' => $lista, 'filtro' => $filter, 'clinica' => $clinica, 'msg' => $msg]);
-   }
-   function new($clinica_id = null)
-   {
       if (Auth::user()->tipo_user == "C") {
          $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
       } else {
          $clinica = Clinica::find($clinica_id);
       }
 
-       $especialistas = Especialista::join('especialidades',"especialidade_id","especialidades.id")
-           ->join("users","usuario_id","users.id")->
-           select(["especialistas.*","users.documento as cpf","especialidades.descricao as especialidade"])->
-           get();
-      // dd($especialistas);
-
-     //  dd($especialistas[0]->especialidade->descricao);
-      return view('userClinica/cadVinculoEspecialista/form', ['entidade' => new Especialistaclinica(), 'clinica' => $clinica, 'especialistas'=>$especialistas]);
+      $lista = Especialidadeclinica::join('especialidades', 'especialidades.id', '=', 'especialidade_id')->
+         where('clinica_id', '=', $clinica->id)->
+         orderBy('especialidades.descricao', 'asc')->
+         select('especialidadeclinicas.id', 'especialidades.descricao', 'valor', 'especialidadeclinicas.is_vinculado as isVinculado')->
+         paginate(8);
+      return view('userClinica/cadEspecialidade/list', [
+         'lista' => $lista,
+         'filtro' => $filter,
+         'msg' => $msg, 
+         'clinica' => $clinica
+      ]);
    }
+
+   function list($clinica_id, $msg = null)
+   {
+      $filter = "";
+      if (isset($_GET['filtro'])) {
+         $filter = $_GET['filtro'];
+      }
+
+      $clinica = Clinica::find($clinica_id);
+
+
+      $lista = Especialidadeclinica::join('especialidades', 'especialidades.id', '=', 'especialidade_id')->
+         where('clinica_id', '=', $clinica_id)->
+         orderBy('id', 'desc')->
+         select('especialidadeclinicas.id', 'especialidades.descricao', 'valor')->
+         paginate(8);
+      return view('especialidadeclinica/list', ['lista' => $lista, 'filtro' => $filter, 'clinica' => $clinica, 'msg' => $msg]);
+   }
+
+   function new($clinica_id)
+   {
+      $clinica = Clinica::find($clinica_id);
+      return view('especialidadeclinica/form', ['entidade' => new Especialidadeclinica(), 'clinica' => $clinica, 'especialidades' => Especialidade::all()]);
+   }
+
+   function newUserClinica()
+   {
+      $clinica = Clinica::where('usuario_id', Auth::user()->id)->first();
+      return view('userClinica/cadEspecialidade/form', ['entidade' => new Especialidadeclinica(), 'clinica' => $clinica, 'especialidades' => Especialidade::all()]);
+   }
+
+   function editUserClinica($id, $clinica_id = null)
+   {
+      $entidade = Especialidadeclinica::find($id);
+      if (Auth::user()->tipo_user == "C") {
+         $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
+      } else {
+         $clinica = Clinica::find($clinica_id);
+      }
+      return view(
+         'userClinica/cadEspecialidade/form',
+         [
+            'entidade' => $entidade,
+            'clinica' => $clinica,
+            'especialidades' => Especialidade::all()
+         ]
+      );
+   }
+
+
    function search(Request $request, $clinica_id)
    {
       $clinica = Clinica::find($clinica_id);
-      $filter = $request->query('filtro');
-      $lista = Especialistaclinica::where('nome', 'like', "%" . $request->filtro . "%")->orderBy('id', 'desc')->paginate(8);
-      return view('userClinica/cadVinculoEspecialista/list', ['lista' => $lista, 'filtro' => $request->filtro, 'clinica' => $clinica])->with('filter', $filter);
+      $lista = Especialidadeclinica::where('clinica_id', '=', $clinica_id)->orderBy('id', 'desc')->paginate(8);
+      return view('especialidadeclinica/list', ['lista' => $lista, 'filtro' => $request->filtro, 'clinica' => $clinica])->with('filter', $filter);
    }
    function save(Request $request)
    {
-       #verificar se na clinica está associado a especialidade do especialista, se nao incluir.
-
-       $especialista = Especialista::find($request->especialista_id);
-       $espcialidadeClinica = Especialidadeclinica::where("especialidade_id","=",$especialista->especialidade_id)->first();
-       if (!$espcialidadeClinica) {
-         //  dd("aqui");
-           $associaEspecilidade = new Especialidadeclinica();
-           $associaEspecilidade->especialidade_id=$especialista->especialidade_id;
-           $associaEspecilidade->clinica_id= $request->clinica_id;
-           $associaEspecilidade->valor=60;
-           $associaEspecilidade->is_vinculado=true;
-           $associaEspecilidade->save();
-       }
-
-
-
       $clinica_id = $request->clinica_id;
       if ($request->id) {
-         $ent = Especialistaclinica::find($request->id);
-         $ent->especialista_id = $request->especialista_id;
+         $ent = Especialidadeclinica::find($request->id);
+         $ent->especialidade_id = $request->especialidade_id;
+         $ent->valor = $request->valor;
          $ent->clinica_id = $clinica_id;
          $ent->save();
       } else {
-
-         $entidade = Especialistaclinica::create([
-            'especialista_id' => $request->especialista_id,
+         $entidade = Especialidadeclinica::create([
+            'especialidade_id' => $request->especialidade_id,
+            'valor' => $request->valor,
             'clinica_id' => $clinica_id,
             'is_vinculado' => true
-
          ]);
       }
       $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
-      return $this->list($request->clinica_id, $msg);
+      return $this->list($clinica_id, $msg);
    }
 
-   //funcao para cancelar vículo - user Clinica
-   function delete($id, $clinica_id = null)
+   function saveUserClinica(Request $request)
    {
-      $especialista = Especialista::find($id);
-      $clinica = Clinica::find($clinica_id);
-      $relacaoEspecialistaClinica = Especialistaclinica::
-      where('clinica_id', $clinica->id)->
-      where('especialista_id', $especialista->id)->first();
+     
+      $clinica_id = $request->clinica_id;
+      if ($request->id) {
+         $ent = Especialidadeclinica::find($request->id);
+         $ent->valor = $request->valor;
+         $ent->save();
+      } else {
+         $entidade = Especialidadeclinica::create([
+            'especialidade_id' => $request->especialidade_id,
+            'valor' => $request->valor,
+            'clinica_id' => $clinica_id,
+            'is_vinculado' => true
+         ]);
+      }
+      $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
+      return $this->listUserClinica( $clinica_id, $msg);
+   }
 
+
+   function delete($id)
+   {
+      $clinica_id = 0;
       try {
-         if ($relacaoEspecialistaClinica) {
-            $relacaoEspecialistaClinica->is_vinculado = !$relacaoEspecialistaClinica->is_vinculado;
-            $relacaoEspecialistaClinica->save();
-            $msg = ['valor' => trans("Vínculo alterado com sucesso!"), 'tipo' => 'success'];
-     }
+         $entidade = Especialidadeclinica::find($id);
+         if ($entidade) {
+            $clinica_id = $entidade->clinica_id;
+            $entidade->delete();
+            $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
+         } else {
+            $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
+         }
       } catch (QueryException $exp) {
          $msg = ['valor' => $exp->getMessage(), 'tipo' => 'primary'];
       }
-      return $this->list($clinica->id, $msg);
+      return $this->list($clinica_id, $msg);
    }
 
- //funcao para cancelar vículo - user Especialista
- function cancelarVinculo($clinica_id, $especialista_id)
- {
-   $clinica = Clinica::find($clinica_id);
-   if (Auth::user()->tipo_user == "E") {
-      $especialista = Especialista::where('usuario_id', '=', Auth::user()->id)->first();
-   } else {
-      $especialista = Especialista::find($especialista_id);
+   function alterarvinculo($id)
+   {
+      try {
+         $entidade = Especialidadeclinica::find($id);
+         $clinica_id = $entidade->clinica_id;
+         if ($entidade) {
+            $entidade->is_vinculado = !$entidade->is_vinculado;
+            $msg = ['valor' => trans("Vínculo alterado com sucesso!"), 'tipo' => 'success'];
+            $entidade->save();
+         }
+      } catch (QueryException $exp) {
+         $msg = ['valor' => $exp->getMessage(), 'tipo' => 'primary'];
+      }
+      return $this->listUserClinica($clinica_id, $msg);
    }
 
-   $relacaoEspecialistaClinica = Especialistaclinica::
-    where('clinica_id', $clinica->id)->
-    where('especialista_id', $especialista->id)->first();
 
-
-    try {
-       if ($relacaoEspecialistaClinica) {
-          $relacaoEspecialistaClinica->is_vinculado = !$relacaoEspecialistaClinica->is_vinculado;
-          $relacaoEspecialistaClinica->save();
-          $msg = ['valor' => trans("Vínculo alterado com sucesso!"), 'tipo' => 'success'];
-   }
-    } catch (QueryException $exp) {
-       $msg = ['valor' => $exp->getMessage(), 'tipo' => 'primary'];
-    }
-    return $this->clinicasdoespecilista($especialista->id,$msg);
- }
 
 
    function edit($id)
    {
-
-      $entidade = Especialistaclinica::find($id);
+      $entidade = Especialidadeclinica::find($id);
       $clinica_id = $entidade->clinica_id;
       $clinica = Clinica::find($clinica_id);
-      return view('userClinica/cadVinculoEspecialista/form', ['entidade' => $entidade, 'clinica' => $clinica]);
+      return view('especialidadeclinica/form', ['entidade' => $entidade, 'clinica' => $clinica, 'especialidades' => Especialidade::all()]);
    }
 
-   function clinicasdoespecilista($especialista_id = null, $msg = null)
-
-   {
-      if (Auth::user()->tipo_user == "E") {
-         $especialista = Especialista::where('usuario_id', '=', Auth::user()->id)->first();
-      } else {
-         $especialista = Especialista::find($especialista_id);
-      }
-
-      //todoas as clinicas que o especialista eh vinculado
-      $lista =  Especialistaclinica:: join('clinicas', 'clinicas.id','=','especialistaclinicas.clinica_id')
-         ->where('especialista_id',$especialista->id)
-         ->orderBy('clinicas.nome', 'asc')
-         ->select('clinicas.id','clinicas.nome','is_vinculado as isVinculado')
-         ->paginate(8);
-
-      return view('userEspecialista/listClinicasVinculadas', ['lista' => $lista,
-        'especialista' => $especialista,
-        'msg' => $msg]);
-   }
-
-   function agendaEspecialista($especialista_id, $clinica_id = null)
-   {
-      //retornar todos a agenda(consultas) do especialista vinculados a clinica a partir da data de hoje
-      //retorna todas as consultas, exceto as finalizadas e canceladas
-      $especialista = Especialista::find($especialista_id);
-      if (Auth::user()->tipo_user == "C") {
-         $clinica = Clinica::where('usuario_id', '=', Auth::user()->id)->first();
-      } else {
-         $clinica = Clinica::find($clinica_id);
-      }
-
-      $inicioDoDia = Carbon::today()->startOfDay();
-      $statusConsulta = "Disponível";
-
-      $lista = Consulta::where('especialista_id', '=', $especialista_id)
-         ->where('clinica_id', '=', $clinica->id)
-         ->where('status', '=', $statusConsulta)->where("remota",false)
-         ->select('consultas.id', 'horario_agendado')
-         ->orderBy('horario_agendado', 'asc')
-         ->get();
-
-      // dd($especialista,$lista);
-      return view('userClinica/cadVinculoEspecialista/agendaEspecialista',['lista' => $lista, 'especialista' => $especialista, 'clinica' => $clinica]);
-   }
 } ?>
