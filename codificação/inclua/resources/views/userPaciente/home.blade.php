@@ -8,15 +8,15 @@
                 <div class="card-header">
                     <!-- caso o paciente nao possua dependete abrir loga a tela de selecionar clinica/especialista-->
                     <?php
-                        $pacientes = App\Models\Paciente::where('usuario_id', '=', Auth::user()->id)->get();                    
-                    ?>  
+                        $pacientes = App\Models\Paciente::where('usuario_id', '=', Auth::user()->id)->get();
+                    ?>
                     @if(sizeof($pacientes) > 1)
                         <a href="{{ route('paciente.marcarconsultaSelecionarPaciente') }}"
                             class="btn btn-secundary btn-round btn-lg header-links">
-                    @else                       
+                    @else
                         <a href="{{ route('paciente.marcarconsulta') }}"
                             class="btn btn-secundary btn-round btn-lg header-links">
-                    @endif                 
+                    @endif
                             <i class="tim-icons icon-calendar-60 "></i>
                             <br>
                             Marcar consulta
@@ -55,7 +55,7 @@
                                         <tr>
                                             <td>
                                                 {{ $consulta->nome_paciente }}
-                                            </td>                                    
+                                            </td>
                                             <td>
                                                 {{ date( 'H:i' , strtotime($consulta->horario_agendado)) }}
                                             </td>
@@ -71,11 +71,11 @@
                                             <td>
                                                 {{ $consulta->nome_clinica }}
                                             </td>
-                                            @else
+
                                                 <td>
                                                     TeleAtendimento
                                                 </td>
-                                            @endif
+
 
                                             <td>
                                                 @if ($consulta->remota)
