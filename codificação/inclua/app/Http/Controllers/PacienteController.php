@@ -341,7 +341,7 @@ class PacienteController extends Controller
             ->where('users.id', $paciente->usuario_id)
             ->whereIn('status', $statusConsulta)
             ->select(
-                'pacientes.nome',
+                'pacientes.nome', 'consultas.isPago',
                 'consultas.id',
                 'horario_agendado',
                 'especialistas.nome as nome_especialista',
@@ -742,7 +742,7 @@ class PacienteController extends Controller
         ->where('pacientes.usuario_id', $paciente->usuario_id)->where('status', $statusConsulta)
         ->where('horario_agendado','>=',Carbon::now()->startOfDay())
         ->select(
-            'consultas.id',
+            'consultas.id','consultas.isPago',
             'horario_agendado',
             'especialistas.nome as nome_especialista',
             'clinicas.nome as nome_clinica',

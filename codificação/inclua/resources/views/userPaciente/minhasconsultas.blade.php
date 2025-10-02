@@ -43,9 +43,15 @@
                                             </td>
 
                                             <td>
-                                                @if ($consulta->remota)
-                                                    <a href="{{ $consulta->linkMeet }}" title="Iniciar" class="btn btn-info" data-original-title="Iniciar consulta" target="_blank" rel="noopener noreferrer" style="min-width: 150px"> Iniciar </a>
-
+                                                @if ($consulta->isPago)
+                                                    @if ($consulta->remota)
+                                                        <a href="{{ $consulta->linkmeet }}" title="Link consulta" class="btn btn-info" data-original-title="Link consulta" target="_blank" rel="noopener noreferrer" style="min-width: 150px"> Iniciar </a>
+                                                    @endif
+                                                @else
+                                                    <a href="{{route('consulta.pagamento.paciente',$consulta->id)}}"  rel="tooltip" title="Pagar consulta" class="btn btn-primary" data-original-title="Pagar consulta"
+                                                       data-whatever="@mdo" style="min-width: 150px" >
+                                                        Pagar
+                                                    </a>
                                                 @endif
                                                 <a href="#" target="_blank" rel="tooltip" title="Cancelar consulta" class="btn btn-danger" data-original-title="Cancelar consulta" style="min-width: 150px"
                                                     href="#" data-target="#modal-form" data-toggle="modal" data-whatever="@mdo" onclick="setModal({{ $consulta->id }}, {{ \App\Helper::verificarPrazoCancelamentoGratuito($consulta->horario_agendado) }})">
