@@ -931,7 +931,7 @@ class PacienteController extends Controller
         $pdf->add_info('Title', 'Relatório anamnese');
 
         return $pdf->stream();
-        dd($anamnese);
+       // dd($anamnese);
     }
 }
 

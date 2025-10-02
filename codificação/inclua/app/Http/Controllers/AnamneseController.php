@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Helper;
 use App\Models\Anamnese;
+use App\Models\Paciente;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,6 +15,20 @@ class AnamneseController extends Controller
     public function create($paciente_id)
     {
         return view('userPaciente.anamnese.form', ['paciente_id' => $paciente_id]);
+    }
+
+    public function view($paciente_id)
+    {
+        $anamnese = Anamnese::where("paciente_id", $paciente_id)->first();
+        if ($anamnese){
+            $paciente = Paciente::find($anamnese->paciente_id);
+            $paciente->cpf = Helper::mascaraCPF($paciente->cpf);
+            $pdf = Pdf::loadView('pdf.anamnese', ['anamnese' => $anamnese, 'paciente' => $paciente]);
+            $pdf->add_info('Title', 'Relatório anamnese');
+           return $pdf->stream();
+        }else {
+            return view('userPaciente.anamnese.form', ['paciente_id' => $paciente_id]);
+        }
     }
 
     public function store(Request $request)

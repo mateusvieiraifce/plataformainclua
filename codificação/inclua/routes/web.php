@@ -278,6 +278,8 @@ Route::middleware('auth')->group(function () {
 
         #ANAMNESE
         Route::get("/paciente/anamnese/{paciente_id}", [\App\Http\Controllers\AnamneseController::class, 'create'])->name('anamnese.create');
+        Route::get("/paciente/anamnese/view/{paciente_id}", [\App\Http\Controllers\AnamneseController::class, 'view'])->name('anamnese.view');
+
         Route::post("/paciente/anamnese/store", [\App\Http\Controllers\AnamneseController::class, 'store'])->name('anamnese.store');
 
         #CANCELAR CONSULTA

@@ -26,6 +26,7 @@
                                     <th>Foto</th>
                                     <th>Editar</th>
                                     <th>Desativar</th>
+                                    <th>Anamnese</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -89,6 +90,14 @@
                                                 <button type="button" rel="tooltip" title="Editar" class="btn btn-link"
                                                         data-original-title="Desative" style="color: white;">
                                                     <i class="tim-icons icon-simple-remove"></i>
+                                                </button>
+                                            </a>
+                                        </td>
+                                        <td class="td-actions text-left">
+                                            <a href="{{ route('anamnese.view', $paciente->id) }}">
+                                                <button type="button" rel="tooltip" title="Anamnese" class="btn btn-link"
+                                                        data-original-title="Anamnese" style="color: white;">
+                                                    <i class="tim-icons icon-notes"></i>
                                                 </button>
                                             </a>
                                         </td>
