@@ -424,11 +424,17 @@ class ConsultaController extends Controller
 
 
       // dd($inicioDoDiaFiltro,$fimDoDiaFiltro);
-      if ($request->status == "todos") {
-         $statusConsulta = "%%";
-      } else {
-         $statusConsulta = $request->status;
-      }
+
+       if (!$request->status){
+           $statusConsulta = "Aguardando atendimento";
+
+       }else{
+           if ($request->status == "todos") {
+               $statusConsulta = "%%";
+           } else {
+               $statusConsulta = $request->status;
+           }
+       }
 
 
       $consultas = Consulta::join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')
@@ -469,11 +475,12 @@ class ConsultaController extends Controller
          ->get();
    //  dd($inicioDoDiaFiltro,$fimDoDiaFiltro,$statusConsulta);
       //dd($consultas);
+
       return view('userEspecialista/listConsultaMarcadas', [
          'consultas' => $consultas,
          'clinicas' => $clinicas,
          'clinicaselecionada_id' => $request->clinica_id,
-         'status' => $request->status,
+         'status' => $statusConsulta,
          'filtro' => $filter,
          'especialista' => $especialista,
          'inicio_data' => $request->inicio_data,

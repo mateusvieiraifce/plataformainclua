@@ -81,7 +81,7 @@ class RecebimentosController extends Controller
 
         $commissaoClinica = $comissaoClinicaEspecie+$comissaoClinicaMaquineta+$comissaoClinicaPix+$comissaoClinicaSistema;
 
-        $saldo=  $totalPix +$totalCartao + $totalMaquininha + $totalEspecie - $commissaoClinica - $comissaoInclua;
+        $saldo =  $totalPix +$totalCartao + $totalMaquininha + $totalEspecie - $commissaoClinica - $comissaoInclua;
 
         $recebimento = new Recebimento();
         $recebimento->inicio =  $inicio;
