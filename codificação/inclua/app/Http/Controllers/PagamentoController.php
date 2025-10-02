@@ -171,10 +171,16 @@ class PagamentoController extends Controller
             }
         }
     }
-    public function pagarConsultaStripe(Request $request)
+    public function pagarConsultaStripe(Request $request, $idConsulta=1025)
     {
+      //  $idConsulta = 1025;
+
+        if ($request->method()=="POST"){
+            $idConsulta =$request->consulta_id;
+        }
+       // dd($idConsulta);
         $stripController = new  StripeControllerCartao();
-        $consulta = Consulta::find($request->consulta_id);
+        $consulta = Consulta::find($idConsulta);
         $usuario = User::join('pacientes', 'pacientes.usuario_id', 'users.id')
             ->where('pacientes.id', $consulta->paciente_id)
             ->select('users.*')

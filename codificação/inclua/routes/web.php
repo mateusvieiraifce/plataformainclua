@@ -452,7 +452,7 @@ Route::middleware('auth')->group(function () {
     Route::get("/consulta/pagamento/callback", [\App\Http\Controllers\PagamentoController::class, 'callbackPagamentoConsulta'])->name('callback.pagamento.consulta');
 });
 
-    Route::post("/consulta/paciente/pagar", [\App\Http\Controllers\PagamentoController::class, 'pagarConsultaStripe'])->name('consulta.pagamento.paciente');
+    Route::any("/consulta/paciente/pagar/{id?}", [\App\Http\Controllers\PagamentoController::class, 'pagarConsultaStripe'])->name('consulta.pagamento.paciente');
     Route::post("/consulta/pagar", [\App\Http\Controllers\PagamentoController::class, 'pagarConsulta'])->name('consulta.pagamento');
     Route::get("/consulta/pagamento/callback", [\App\Http\Controllers\PagamentoController::class, 'callbackPagamentoConsulta'])->name('callback.pagamento.consulta');
 
