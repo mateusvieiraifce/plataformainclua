@@ -34,6 +34,14 @@ class Clinica extends Model
     return $telefone;
   }
 
+    public function getEndereco($user_id)
+    {
+        $user = User::find($user_id);
+        $endereco = Endereco::where('user_id', $user_id)->where("principal",true)->first();
+        //$telefone = isset($user->telefone) ? Helper::mascaraTelefone($user->telefone) : null;
+        return $endereco;
+    }
+
   public function getCelular($user_id)
   {
     $user = User::find($user_id);

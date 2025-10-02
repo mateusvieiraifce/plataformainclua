@@ -11,7 +11,7 @@
                     <h4 class="title">Escolha onde consultar</h4>
                     <form action="{{ route('paciente.pesquisarclinicamarcarconsulta') }}" method="post" id="pesquisar">
                         @csrf
-                        <div class="row search">                        
+                        <div class="row search">
                             <div class="col-lg-3 col-md-3">
                                 <div class="form-group">
                                     <label for="estado">
@@ -69,7 +69,7 @@
                                             placeholder="Nome da clínica" value="{{ old('nome') }}">
                                         <button class="btn btn-primary">
                                             <i class="tim-icons icon-zoom-split"></i>
-                                        </button> 
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -88,6 +88,12 @@
                                     @foreach($clinicas as $clinica)
                                         <tr>
                                             <td>{{ $clinica->nome }}</td>
+                                            @php
+                                            $endereco = $clinica->getEndereco($clinica->id)
+                                            @endphp
+                                            <td>{{ $endereco->cidade }}</td>
+                                            <td>{{ $endereco->estado }}</td>
+
                                             <td>
                                                 <a href="{{ route('paciente.marcarConsultaViaEspecialidadePasso3', [$especialidade_id, $clinica->id]) }}" class="btn btn-primary">
                                                     Próximo <i class="fa fa-arrow-right"></i>
