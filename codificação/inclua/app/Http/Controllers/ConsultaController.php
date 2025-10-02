@@ -794,7 +794,7 @@ class ConsultaController extends Controller
 
    public function cancelarConsultaSemTaxa(Request $request)
    {
-       dd("aqui");
+     //  dd("aqui");
       //ver a questao financeira
       $consulta = Consulta::find($request->consulta_id);
 
