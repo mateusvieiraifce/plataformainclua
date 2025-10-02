@@ -459,6 +459,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/checkout/stripe/payment-intent', [\App\Http\Controllers\StripeControllerCartao::class, 'createPaymentIntent'])->name('createPaymentIntent.stripe');
     Route::post('/checkout/stripe/confirm-payment', [\App\Http\Controllers\StripeControllerCartao::class, 'confirmPayment'])->name('createPaymentIntent.stripe');
     Route::post('/stripe/webhook', [\App\Http\Controllers\StripeControllerCartao::class, 'handleWebhook'])->name('handleWebhook.stripe');;
+    Route::get('/paciente/minhas-consultas/finalizar/cancelar/{id}', [\App\Http\Controllers\PacienteController::class, 'cancelarFinalizar'])->name('finalizar.cancelar.paciente');
 
 
 /* ROTAS PARA SEREM ANALISADAS */
