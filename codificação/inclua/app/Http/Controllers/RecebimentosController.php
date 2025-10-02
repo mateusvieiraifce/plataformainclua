@@ -31,7 +31,7 @@ class RecebimentosController extends Controller
             $inicio = $data->endOfDay();
         }
 
-        $fimDoDiaFiltro = Carbon::now()->subDays(1)->endOfDay();
+        $fimDoDiaFiltro = Carbon::now()->endOfDay();
 
         // dd("especialista".$especialista->id, "clinica".$clinicaId);
         $consultasBase = Consulta::whereBetween('horario_agendado', [$inicio, $fimDoDiaFiltro])
