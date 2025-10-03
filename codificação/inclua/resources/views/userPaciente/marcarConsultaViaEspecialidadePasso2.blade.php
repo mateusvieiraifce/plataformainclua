@@ -91,8 +91,8 @@
                                             @php
                                             $endereco = $clinica->getEndereco($clinica->id)
                                             @endphp
-                                            <td>{{ $endereco->cidade }}</td>
-                                            <td>{{ $endereco->estado }}</td>
+                                            <td>{{ $endereco?$endereco->cidade:"" }}</td>
+                                            <td>{{ $endereco?$endereco->estado:"" }}</td>
 
                                             <td>
                                                 <a href="{{ route('paciente.marcarConsultaViaEspecialidadePasso3', [$especialidade_id, $clinica->id]) }}" class="btn btn-primary">
