@@ -82,13 +82,14 @@ class DashboardController extends Controller
         }
 
         // Consulta que conta as consultas criadas por mês
-        $queriesByMonth = DB::table('consultas')
+        $queriesByMonth = DB::table('consultas')->whereNotNull("paciente_id")->where("isPago",true)
             ->selectRaw('MONTH(created_at) as month, COUNT(*) as total')
             ->whereYear('created_at', $year) // Filtra pelo ano atual
             ->groupByRaw('MONTH(created_at)')
             ->orderByRaw('MONTH(created_at) DESC')
             ->take(6)
             ->pluck('total', 'month');
+
         $queriesByMonth = $queriesByMonth->sortKeys();
         $totalQueries = DB::table('consultas')->count();
 
@@ -99,13 +100,14 @@ class DashboardController extends Controller
         }
 
         // Consulta que conta as o total de reais das consultas criadas por mês
-        $queriesSaleByMonth = DB::table('consultas')
+        $queriesSaleByMonth = DB::table('consultas')->whereNotNull('paciente_id')
             ->selectRaw('MONTH(created_at) as month, SUM(preco) as total')
             ->whereYear('created_at', $year)
             ->groupByRaw('MONTH(created_at)')
             ->orderByRaw('MONTH(created_at) DESC')
             ->take(6)
             ->pluck('total', 'month');
+
         $queriesSaleByMonth = $queriesByMonth->sortKeys();
         $totalSale = DB::table('consultas')
             ->whereYear('created_at', $year)
