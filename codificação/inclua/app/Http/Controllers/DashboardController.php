@@ -91,7 +91,7 @@ class DashboardController extends Controller
             ->pluck('total', 'month');
 
         $queriesByMonth = $queriesByMonth->sortKeys();
-        $totalQueries = DB::table('consultas')->count();
+        $totalQueries = DB::table('consultas')->whereNotNull("paciente_id")->where("isPago",true)->count();
 
         $monthlyCountsQueries = array_fill(7, 6, 0);
 
