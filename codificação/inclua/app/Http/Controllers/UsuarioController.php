@@ -221,8 +221,28 @@ class UsuarioController extends Controller
         $user->tipo_user = $request->tipo_user;
         $user->save();
 
+            $html = <<<HTML
+<p>Recebemos uma solicitação para verificar sua conta na <strong>Plataforma Inclua </strong>.</p>
+<div style="background: #f8f9fa; border: 2px dashed #007bff; padding: 20px; text-align: center; margin: 25px 0; border-radius: 8px;">
+    <h3 style="margin: 0; font-size: 32px; letter-spacing: 8px; color: #007bff; font-weight: bold;">
+        {$user->codigo_validacao}
+    </h3>
+</div>
+
+<p><strong>Este código expira em 15 minutos</strong> por motivos de segurança.</p>
+
+<div style="background: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 5px; margin: 20px 0;">
+    <strong>⚠️ Importante:</strong>
+    <ul style="margin: 10px 0; padding-left: 20px;">
+        <li>Nunca compartilhe este código com ninguém</li>
+        <li>Nossa equipe nunca solicitará seu código por e-mail ou telefone</li>
+        <li>Se não foi você que solicitou este código, ignore este e-mail</li>
+    </ul>
+</div>
+HTML;
+
         // ENVIAR O EMAIL COM CÓDIGO DE CONFIRMAÇÃO
-        Helper::sendEmail("Validação de Código", "Seu Código de Verificação é: " . $user->codigo_validacao, $user->email);
+        Helper::sendEmail("Caro novo usuário: ", $html, $user->email);
 
         $msg = ['valor' => trans("Cadastro do usuário realizado com sucesso!"), 'tipo' => 'success'];
         session()->flash('msg', $msg);
