@@ -1018,12 +1018,24 @@ class PacienteController extends Controller
     {
         $paciente = Paciente::find($id);
         $paciente->cpf = Helper::mascaraCPF($paciente->cpf);
+
         $anamnese = Anamnese::where('paciente_id', $paciente->id)->first();
+        if($anamnese){
+            $pdf = Pdf::loadView('pdf.anamnese', ['anamnese' => $anamnese, 'paciente' => $paciente]);
+            $pdf->add_info('Title', 'Relatório anamnese');
 
-        $pdf = Pdf::loadView('pdf.anamnese', ['anamnese' => $anamnese, 'paciente' => $paciente]);
-        $pdf->add_info('Title', 'Relatório anamnese');
+            return $pdf->stream();
 
-        return $pdf->stream();
+        }else{
+
+            $msg = ['valor' => trans("Anamnese não foi preenchida pelo usuário para este paciente! Solicite o preenchimento!"), 'tipo' => 'danger'];
+            session()->flash('msg', $msg);
+            $previous = url()->previous();
+            return redirect($previous);
+         //   return back()->withInput();
+        }
+
+
        // dd($anamnese);
     }
 }

@@ -106,6 +106,7 @@ class GoogleCalendarController extends Controller
 
         if (!$consulta->remota) {
 
+            if ($endereco){
             $enderecoCompleto = sprintf(
                 "%s, %s, %s - %s",
                 $endereco->rua,
@@ -115,6 +116,7 @@ class GoogleCalendarController extends Controller
             );
          //   dd($enderecoCompleto);
             $validated['location'] = $enderecoCompleto;
+            }
             $validated["remota"] = false;
         }else{
             $validated["remota"] = true;
