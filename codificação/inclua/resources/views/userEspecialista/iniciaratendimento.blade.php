@@ -267,9 +267,16 @@
                             </div>
                             <div id="anamnese" class="tab-pane {{ $aba == "anamnese" ?  "active" : "" }}">
                                 <div class="col-md-12">
-                                    <a title="Relatório anamnese" class="btn btn-default" href="{{ route('relatorio.anamnese', ['id' => $consulta->paciente_id]) }}" target="_blank" rel="noopener noreferrer">
+
+                                    @if($anaminese)
+                                        <a title="Relatório anamnese" class="btn btn-default" href="{{ route('relatorio.anamnese', ['id' => $consulta->paciente_id]) }}"  target="_blank" rel="noopener noreferrer">
+                                            Anamnese
+                                        </a>
+                                    @else
+                                    <a title="Relatório anamnese" class="btn btn-default" href="{{ route('relatorio.anamnese', ['id' => $consulta->paciente_id]) }}"  rel="noopener noreferrer">
                                         Anamnese
                                     </a>
+                                    @endif
                                 </div>
                             </div>
                         </div>
