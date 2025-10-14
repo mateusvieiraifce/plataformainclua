@@ -95,6 +95,7 @@
                                     <option value="S" @if ((isset($user) && $user->estado_civil == 'S') || old('estado_civil') == 'S') selected @endif>Solteiro(a)</option>
                                     <option value="C" @if ((isset($user) && $user->estado_civil == 'C') || old('estado_civil') == 'C') selected @endif>Casado(a)</option>
                                     <option value="D" @if ((isset($user) && $user->estado_civil == 'D') || old('estado_civil') == 'D') selected @endif>Divorciado(a)</option>
+                                    <option value="V" @if ((isset($user) && $user->estado_civil == 'V') || old('estado_civil') == 'V') selected @endif>Viúvo(a)</option>
                                 </select>
                                 @include('alerts.feedback', ['field' => 'estado_civil'])
                             </div>
