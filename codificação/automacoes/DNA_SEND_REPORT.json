@@ -1,0 +1,152 @@
+{
+  "name": "DNA_SEND_REPORT",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "test",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "0eb6aa7f-00f6-4e31-aede-ef41afd8b281",
+      "name": "Webhook",
+      "webhookId": "3359af6a-9af2-4069-aef8-c7e711b9b32a"
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "={{ $json.body.instance }}",
+        "remoteJid": "={{ $json.body.phone }}",
+        "messageText": "={{ $json.body.msg }}",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        464,
+        -128
+      ],
+      "id": "7ea36fc8-b002-498e-a657-e38a31296324",
+      "name": "Enviar texto",
+      "credentials": {
+        "evolutionApi": {
+          "id": "FggyIz39xUjjZ47W",
+          "name": "api_evl"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "operation": "send-document",
+        "instanceName": "={{ $('Webhook').item.json.body.instance }}",
+        "remoteJid": "={{ $('Webhook').item.json.body.phone }}",
+        "media": "={{ $('Webhook').item.json.body.relatorio }}",
+        "caption": "Olá. O seu relatório do DNA ASSESSMENT acabou de ficar pronto.\nEm caso de dúvidas, clicar no link abaixo.\nbit.ly/ExecuteLabs",
+        "fileName": "RelatorioDna.pdf",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        480,
+        64
+      ],
+      "id": "9b069303-5e7b-46b2-861f-f599af8068a5",
+      "name": "Enviar documento",
+      "credentials": {
+        "evolutionApi": {
+          "id": "FggyIz39xUjjZ47W",
+          "name": "api_evl"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "1709e47b-c46f-411e-b59e-2c60ff0b1f25",
+              "leftValue": "={{ $json.body.relatorio }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        208,
+        -32
+      ],
+      "id": "0d4bcd23-9d5a-49c0-b690-aae511e4a1ed",
+      "name": "If"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar texto": {
+      "main": [
+        []
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Enviar texto",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Enviar documento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "b6fa93e9-7aaa-492a-874b-aced0cea7423",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "e183b8ad658a16730ef3ea8d35916b7d82eefb4acea1e9f65c5c9548d8b4b149"
+  },
+  "id": "2dP5PIe0toICaChV",
+  "tags": []
+}
