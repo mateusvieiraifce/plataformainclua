@@ -21,7 +21,7 @@
       },
       "edgeToEdgeEnabled": true,
       "package": "com.plataformainclua.app",
-      "versionCode": 6
+      "versionCode": 7
     },
     "web": {
       "favicon": "./assets/1.png"
