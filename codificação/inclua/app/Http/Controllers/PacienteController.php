@@ -181,11 +181,11 @@ class PacienteController extends Controller
 
     public function storeDadosUserPaciente(Request $request)
     {
+
         //REMOÇÃO DA MASCARA DO CELULAR E DOCUMENTO PARA COMPARAR COM O BD
         $request->request->set('celular', Helper::removerCaractereEspecial($request->celular));
         $request->request->set('documento', Helper::removerCaractereEspecial($request->documento));
         $rules = [
-            "image" => "required",
             "documento" => [
                 'required',
                 Rule::unique('users', 'documento')->ignore($request->usuario_id),
@@ -216,7 +216,7 @@ class PacienteController extends Controller
             'consentimento' => 'required',
         ];
         $feedbacks = [
-            "image.required" => "O campo Imagem é obrigatório.",
+
             "documento.required" => "O campo CPF é obrigatório.",
             "documento.unique" => "Este CPF já foi utilizado.",
             "nome.required" => "O campo Nome é obrigatório.",
@@ -251,6 +251,7 @@ class PacienteController extends Controller
             $msg = ['valor' => trans("Cadastro de dados realizado com sucesso!"), 'tipo' => 'success'];
             session()->flash('msg', $msg);
         } catch (QueryException $e) {
+            dd($e);
             session()->flash('msg', ['valor' => trans("Erro ao realizar o cadastro do paciente!"), 'tipo' => 'danger']);
 
             return back();

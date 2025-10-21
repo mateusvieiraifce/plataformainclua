@@ -13,20 +13,7 @@
                 <div class="card-body">
                     <form class="form" method="post" action="{{ route('usuario.paciente.dados.store') }}" enctype="multipart/form-data">
                         @csrf
-                        <div class="form-group">
-                            <label for="image">
-                                Imagem de perfil <span class="required">*</span>
-                            </label>
-                            <br>
-                            <img class="img-avatar" src="{{ asset('assets/img/default-avatar.png') }}" id="preview" alt="Avatar">
-                            <div class="input-group input-medium{{ $errors->has('especialidade') ? ' has-danger' : '' }}">
-                                <div class="custom-file">
-                                    <input class="custom-file-input hidden" type="file" id="image" name="image" onchange="visualizarImagem(event)" accept="image/jpeg,image/jpg,image/png">
-                                    <label class="btn custom-file-label input-medium {{ $errors->has('image') ? 'is-invalid' : '' }}" for="image"></label>
-                                </div>
-                                @include('alerts.feedback', ['field' => 'image'])
-                            </div>
-                        </div>
+
 
                         <div class="form-group">
                             <label for="documento">
