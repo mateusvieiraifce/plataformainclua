@@ -1,0 +1,16 @@
+  999  open .
+ 1000  ip add
+ 1001  composer update
+ 1002  php artisan migrate
+ 1003  php artisan db:seed
+ 1004  php artisan serve
+ 1005  php artisan db:seed typeSeeder.php
+ 1006  php artisan db:seed typeSeeder
+ 1007  php artisan serve
+ 1008  php artisan serve
+ 1009  composer update
+ 1010  php artisan serve
+ 1011  php artisan serve
+ 1012  history
+ 1013  history |grep eas
+ 1014  history |grep expo
