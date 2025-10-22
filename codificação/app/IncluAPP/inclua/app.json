@@ -3,7 +3,10 @@
     "name": "Inclua",
     "slug": "plataformainclua",
     "version": "1.0.2",
-    "orientation": ["portrait", "landscape"],
+    "orientation": [
+      "portrait",
+      "landscape"
+    ],
     "icon": "./assets/2.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
@@ -21,7 +24,7 @@
       },
       "edgeToEdgeEnabled": true,
       "package": "com.plataformainclua.app",
-      "versionCode": 8
+      "versionCode": 9
     },
     "web": {
       "favicon": "./assets/1.png"
