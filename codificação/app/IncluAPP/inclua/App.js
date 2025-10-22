@@ -64,8 +64,6 @@ export default function App() {
           style={styles.container} // Define que o webview deve ocupar todo o espaço disponível
           source={{ uri: 'https://app.plataformainclua.com/login' }} // Substitua 'https://www.example.com' pela URL do site que você deseja exibir
         >
-
-      <StatusBar style="auto" />
       </WebView>
     
   );
@@ -74,7 +72,7 @@ export default function App() {
 const styles = StyleSheet.create({
 
   container: {
-    marginTop: 40,
+    marginTop: 50,
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',

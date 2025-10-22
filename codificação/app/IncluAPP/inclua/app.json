@@ -3,7 +3,7 @@
     "name": "Inclua",
     "slug": "plataformainclua",
     "version": "1.0.2",
-    "orientation": "portrait",
+    "orientation": ["portrait", "landscape"],
     "icon": "./assets/2.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
