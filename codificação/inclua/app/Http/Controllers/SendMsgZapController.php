@@ -19,7 +19,8 @@ class SendMsgZapController extends Controller
         $inicioDia = Carbon::now()->startOfDay();
         $finDia = Carbon::now()->endOfDay();
         $allConsultsAgenda = Consulta::whereNotNull(["horario_agendado","paciente_id"])->whereNull("id_usuario_cancelou")
-            ->where("horario_agendado",">=", $inicioDia)->wherewhere("horario_agendado","<=", $finDia)->get();
+            ->where("horario_agendado",">=", $inicioDia)->where("horario_agendado","<=", $finDia)->get();
+    //    return $allConsultsAgenda;
 
         foreach ($allConsultsAgenda as $consulta) {
             $paciente = Paciente::find($consulta->paciente_id);
