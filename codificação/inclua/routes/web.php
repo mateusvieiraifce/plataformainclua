@@ -48,8 +48,10 @@ Route::get("/teste", function () {
     return view('teste');
 });
 
-Route::get("/inclua/msgzap", [\App\Http\Controllers\SendMsgZapController::class, 'getAllMsg'])->name('inclua.licenca')->middleware('check.domain')->middleware("verify.apiKey");
-Route::post("/inclua/updatemsg/{id}", [\App\Http\Controllers\SendMsgZapController::class, 'updateMsg'])->name('inclua.licenca')->middleware('check.domain')->middleware("verify.apiKey");
+Route::get("/inclua/msgzap", [\App\Http\Controllers\SendMsgZapController::class, 'getAllMsg'])->name('inclua.allMsg')->middleware('check.domain')->middleware("verify.apiKey");
+Route::post("/inclua/updatemsg/{id}", [\App\Http\Controllers\SendMsgZapController::class, 'updateMsg'])->name('inclua.updateMsg')->middleware('check.domain')->middleware("verify.apiKey");
+
+Route::get("/inclua/notificaday", [\App\Http\Controllers\SendMsgZapController::class, 'notificationDay'])->name('inclua.licenca')->middleware('check.domain')->middleware("verify.apiKey");
 
 
 Route::get("/inclua/licenca", [\App\Http\Controllers\LicencaController::class, 'getLicence'])->name('inclua.licenca');
