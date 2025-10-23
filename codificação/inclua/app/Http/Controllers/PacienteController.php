@@ -16,6 +16,7 @@ use App\Models\PedidoExame;
 use App\Models\PedidoMedicamento;
 use App\Models\Prontuario;
 use App\Models\Recebimento;
+use App\Models\SendMsgZap;
 use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -890,7 +891,7 @@ class PacienteController extends Controller
         $motivo = session()->get("motivo_cancelamento_$id");
 
         $consulta = Consulta::find($id);
-
+        $agora = Carbon::parse($consulta->horario_agendado);
         $consulta->status="Cancelada";
         $consulta->motivocancelamento = $motivo;
         $consulta->id_usuario_cancelou = Auth::user()->id;
@@ -921,6 +922,31 @@ class PacienteController extends Controller
             $consultaNova->save();
 
         }
+        $paciente = Paciente::find($consulta->paciente_id);
+        $especialista = Especialista::find($consulta->especialista_id);
+        $celularPaciente = $paciente->user->celular;
+        $celularEspecialista = $especialista->user->celular;
+
+        $clinica = Clinica::find($consulta->clinica_id);
+
+        $local = " na clínica:". $clinica->nome;
+        if ($consulta->remota){
+            $local = "Remota";
+        }
+
+        $msgZAPEspe = new SendMsgZap();
+        $msgZAPEspe->msg =  "Foi cancelada a consulta com: ". $paciente->nome. ", no : " .$agora->format('d/m/Y H:i'). $local;
+        $msgZAPEspe->phone = "55".$celularEspecialista;
+        $msgZAPEspe->instance ="mateus";
+        $msgZAPEspe->enviado =false;
+        $msgZAPEspe->save();
+
+        $msgZAPPaciente = new SendMsgZap();
+        $msgZAPPaciente->msg =  "Foi cancelada a consulta com especialista: ". $especialista->nome. ", Agendada para : " .$agora->format('d/m/Y H:i'). $local;
+        $msgZAPPaciente->phone = "55".$celularPaciente;
+        $msgZAPPaciente->instance ="mateus";
+        $msgZAPPaciente->enviado =false;
+        $msgZAPPaciente->save();
         $msg = ['valor' => trans("Operação Realizada com sucesso!"), 'tipo' => 'success'];
         session()->flash('msg', $msg);
         $userLogged = Auth::user();

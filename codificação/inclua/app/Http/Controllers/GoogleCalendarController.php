@@ -144,14 +144,14 @@ class GoogleCalendarController extends Controller
             $local = "Remota";
         }
         $msgZAPEspe->msg =  "Consulta com: ". $paciente->nome. ", Agendada para : " .$agora->format('d/m/Y H:i'). $local;
-        $msgZAPEspe->phone = $celularEspecialista;
+        $msgZAPEspe->phone = "55".$celularEspecialista;
         $msgZAPEspe->instance ="mateus";
         $msgZAPEspe->enviado =false;
         $msgZAPEspe->save();
 
         $msgZAPPaciente = new SendMsgZap();
         $msgZAPPaciente->msg =  "Consulta com especialista: ". $especialista->nome. ", Agendada para : " .$agora->format('d/m/Y H:i'). $local;
-        $msgZAPPaciente->phone = $celularPaciente;
+        $msgZAPPaciente->phone = "55".$celularPaciente;
         $msgZAPPaciente->instance ="mateus";
         $msgZAPPaciente->enviado =false;
         $msgZAPPaciente->save();
