@@ -947,6 +947,7 @@ class PacienteController extends Controller
         $msgZAPPaciente->instance ="mateus";
         $msgZAPPaciente->enviado =false;
         $msgZAPPaciente->save();
+
         $msg = ['valor' => trans("Operação Realizada com sucesso!"), 'tipo' => 'success'];
         session()->flash('msg', $msg);
         $userLogged = Auth::user();

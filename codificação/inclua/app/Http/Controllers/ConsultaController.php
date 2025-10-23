@@ -8,6 +8,8 @@ use App\Models\Clinica;
 use App\Models\Fila;
 use App\Models\Especialidadeclinica;
 use App\Models\Especialistaclinica;
+use App\Models\Paciente;
+use App\Models\SendMsgZap;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -818,6 +820,33 @@ class ConsultaController extends Controller
             $consultaNova->paciente_id = null;
             $consultaNova->save();
          }
+          $paciente = Paciente::find($consulta->paciente_id);
+          $especialista = Especialista::find($consulta->especialista_id);
+          $celularPaciente = $paciente->user->celular;
+          $celularEspecialista = $especialista->user->celular;
+
+          $clinica = Clinica::find($consulta->clinica_id);
+
+          $local = " na clínica:". $clinica->nome;
+          if ($consulta->remota){
+              $local = "Remota";
+          }
+
+          $agora = Carbon::parse($consulta->horario_agendado);
+
+          $msgZAPEspe = new SendMsgZap();
+          $msgZAPEspe->msg =  "Foi cancelada a consulta com: ". $paciente->nome. ", no : " .$agora->format('d/m/Y H:i'). $local;
+          $msgZAPEspe->phone = "55".$celularEspecialista;
+          $msgZAPEspe->instance ="mateus";
+          $msgZAPEspe->enviado =false;
+          $msgZAPEspe->save();
+
+          $msgZAPPaciente = new SendMsgZap();
+          $msgZAPPaciente->msg =  "Foi cancelada a consulta com especialista: ". $especialista->nome. ", Agendada para : " .$agora->format('d/m/Y H:i'). $local;
+          $msgZAPPaciente->phone = "55".$celularPaciente;
+          $msgZAPPaciente->instance ="mateus";
+          $msgZAPPaciente->enviado =false;
+          $msgZAPPaciente->save();
 
          $consulta->status = "Cancelada";
          $consulta->motivocancelamento = $request->motivo_cancelamento;
