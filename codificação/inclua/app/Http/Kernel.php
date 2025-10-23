@@ -68,5 +68,6 @@ class Kernel extends HttpKernel
         'verify.signature' => \App\Http\Middleware\VerifyPaymentSignature::class,
         'verify.especialista.active' => \App\Http\Middleware\VerifyEspecialistaActive::class,
         'check.domain' => \App\Http\Middleware\CheckDomainMiddleware::class,
+        'verify.apiKey' => \App\Http\Middleware\ApiKeyMiddleware::class,
     ];
 }

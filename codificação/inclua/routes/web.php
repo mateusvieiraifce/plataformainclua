@@ -31,6 +31,8 @@ Route::get('/sobre', function () {
 })->name('home.sobre');
 
 
+
+
 Route::get('/error', function() {
     return view('errors.custom', [
         'error_code' => session('error_code', 500),
@@ -45,6 +47,10 @@ Route::get('/contato', function () {
 Route::get("/teste", function () {
     return view('teste');
 });
+
+Route::get("/inclua/msgzap", [\App\Http\Controllers\SendMsgZapController::class, 'getAllMsg'])->name('inclua.licenca')->middleware('check.domain')->middleware("verify.apiKey");
+Route::post("/inclua/updatemsg/{id}", [\App\Http\Controllers\SendMsgZapController::class, 'updateMsg'])->name('inclua.licenca')->middleware('check.domain')->middleware("verify.apiKey");
+
 
 Route::get("/inclua/licenca", [\App\Http\Controllers\LicencaController::class, 'getLicence'])->name('inclua.licenca');
 

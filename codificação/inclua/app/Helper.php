@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\SendMsgZap;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Http;
@@ -49,7 +50,7 @@ class Helper
 
         try {
             // Fazendo uma requisição POST com dados
-            $response = Http::withHeaders([
+         /*   $response = Http::withHeaders([
                 'Authorization' => 'apikey:  429683C4C977415CAAFCCE10F7D57E24' ,
                 'Accept' => 'application/json',
             ])->post(env("URL_ZAP"), [
@@ -66,6 +67,14 @@ class Helper
                     'details' => $response->json()
                 ], $response->status());
             }
+         */
+
+         $sendZap = new SendMsgZap();
+         $sendZap->phone =$phone;
+         $sendZap->msg = $msg;
+         $sendZap->instance = "mateus";
+         $sendZap->enviado = false;
+         $sendZap->save();
 
         } catch (\Exception $e) {
             Log::error('Erro ao fazer POST: ' . $e->getMessage());

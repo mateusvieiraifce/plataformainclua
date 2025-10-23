@@ -230,6 +230,7 @@ class PacienteController extends Controller
         ];
         $request->validate($rules, $feedbacks);
 
+
         try {
             if ($request->id_paciente) {
                 $paciente = Paciente::find($request->id_paciente);
@@ -251,7 +252,7 @@ class PacienteController extends Controller
             $msg = ['valor' => trans("Cadastro de dados realizado com sucesso!"), 'tipo' => 'success'];
             session()->flash('msg', $msg);
         } catch (QueryException $e) {
-           // dd($e);
+            dd($e);
             session()->flash('msg', ['valor' => trans("Erro ao realizar o cadastro do paciente!"), 'tipo' => 'danger']);
 
             return back();
