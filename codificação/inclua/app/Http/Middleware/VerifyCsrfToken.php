@@ -15,7 +15,8 @@ class VerifyCsrfToken extends Middleware
         'sendMailBack',
         '/sendmailback',
         'processPayment',
-        '/api/payment'
+        '/api/payment',
+        'inclua/updatemsg/*'
 
         //
     ];
