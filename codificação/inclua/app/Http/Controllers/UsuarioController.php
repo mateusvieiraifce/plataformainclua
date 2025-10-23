@@ -97,7 +97,9 @@ class UsuarioController extends Controller
                 'password' => 'required|between :5,15',
                 'password_confirmation' => 'required|between :5,15|in:'.$variable,
              ]);
-
+           if (!$usuario->etapa_cadastro){
+               $usuario->etapa_cadastro = 2;
+           }
 
             $usuario->password = bcrypt($request->password);
             $usuario->save();
