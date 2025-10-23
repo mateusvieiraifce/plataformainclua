@@ -7,6 +7,7 @@ use App\Models\Consulta;
 use App\Models\Endereco;
 use App\Models\Especialista;
 use App\Models\Paciente;
+use App\Models\SendMsgZap;
 use Illuminate\Http\Request;
 use Google\Client;
 use Google\Service\Calendar;
@@ -134,6 +135,28 @@ class GoogleCalendarController extends Controller
         $emailClinica = $clinica->getUser->email;
         $emailEspecialista = $especialista->user->email;
         $validated['attendees'] = [$emailInclua,$emailPaciente, $emailClinica, $emailEspecialista];
+        $celularPaciente = $paciente->user->celular;
+        $celularEspecialista = $especialista->user->celular;
+
+        $msgZAPEspe = new SendMsgZap();
+        $local = " na clínica:". $clinica->nome;
+        if ($consulta->remota){
+            $local = "Remota";
+        }
+        $msgZAPEspe->msg =  "Consulta com: ". $paciente->nome. ", Agendada para : " .$agora->format('d/m/Y H:i'). $local;
+        $msgZAPEspe->phone = $celularEspecialista;
+        $msgZAPEspe->instance ="mateus";
+        $msgZAPEspe->enviado =false;
+        $msgZAPEspe->save();
+
+        $msgZAPPaciente = new SendMsgZap();
+        $msgZAPPaciente->msg =  "Consulta com especialista: ". $especialista->nome. ", Agendada para : " .$agora->format('d/m/Y H:i'). $local;
+        $msgZAPPaciente->phone = $celularPaciente;
+        $msgZAPPaciente->instance ="mateus";
+        $msgZAPPaciente->enviado =false;
+        $msgZAPPaciente->save();
+
+      //  dd($celularPaciente,$celularEspecialista);
 
        // dd("aqui",);
        // dd($validated);
