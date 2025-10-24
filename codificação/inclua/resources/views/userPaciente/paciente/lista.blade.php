@@ -86,12 +86,22 @@
                                             </a>
                                         </td>
                                         <td class="td-actions text-left">
-                                            <a href="{{ route('paciente.edit', $paciente->id) }}">
-                                                <button type="button" rel="tooltip" title="Editar" class="btn btn-link"
-                                                        data-original-title="Desative" style="color: white;">
+                                           @if ($paciente->ativo)
+                                            <a href="{{ route('paciente.desativar', $paciente->id) }}">
+                                                <button type="button" rel="tooltip" title="Desativar" class="btn btn-link"
+                                                        data-original-title="Desative" style="color: white;" onclick="return confirm('Deseja desativar o paciente? ')">
                                                     <i class="tim-icons icon-simple-remove"></i>
                                                 </button>
                                             </a>
+                                            @else
+                                                <a href="{{ route('paciente.ativado', $paciente->id) }}">
+                                                    <button type="button" rel="tooltip" title="Ativar" class="btn btn-link"
+                                                            data-original-title="Desative" style="color: white;" onclick="return confirm('Deseja ativar o paciente? ')">
+                                                        <i class="tim-icons icon-check-2"></i>
+                                                    </button>
+                                                </a>
+                                            @endif
+
                                         </td>
                                         <td class="td-actions text-left">
                                             <a href="{{ route('anamnese.view', $paciente->id) }}">

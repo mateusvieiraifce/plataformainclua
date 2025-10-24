@@ -127,6 +127,26 @@ class PacienteController extends Controller
         return view('userPaciente.paciente.edit', ['paciente' => $paciente]);
     }
 
+    public function desativar($id) {
+        $paciente = Paciente::find($id);
+        $paciente->ativo = false;
+        $paciente->save();
+        $msg = ['valor' => trans("Paciente desativado com sucesso!"), 'tipo' => 'success'];
+        session()->flash('msg', $msg);
+        return redirect()->route('paciente.index');
+       // return view('userPaciente.paciente.edit', ['paciente' => $paciente]);
+    }
+
+    public function reativar($id) {
+        $paciente = Paciente::find($id);
+        $paciente->ativo = true;
+        $paciente->save();
+        $msg = ['valor' => trans("Paciente ativado com sucesso!"), 'tipo' => 'success'];
+        session()->flash('msg', $msg);
+        return redirect()->route('paciente.index');
+        // return view('userPaciente.paciente.edit', ['paciente' => $paciente]);
+    }
+
     public function update(Request $request) {
         $request->request->set('documento', Helper::removerCaractereEspecial($request->documento));
         $rules = [

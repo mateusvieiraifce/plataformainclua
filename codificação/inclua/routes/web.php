@@ -237,6 +237,10 @@ Route::middleware('auth')->group(function () {
 
     #LISTA PACIENTES E CADASTRO
     Route::get("/paciente/editar/{id}", [\App\Http\Controllers\PacienteController::class, 'edit'])->name('paciente.edit');
+    Route::get("/paciente/desativar/{id}", [\App\Http\Controllers\PacienteController::class, 'desativar'])->name('paciente.desativar');
+    Route::get("/paciente/ativar/{id}", [\App\Http\Controllers\PacienteController::class, 'reativar'])->name('paciente.ativado');
+
+
     Route::post("/paciente/update/", [\App\Http\Controllers\PacienteController::class, 'update'])->name('paciente.update');
     Route::get("/paciente/lista", [\App\Http\Controllers\PacienteController::class, 'index'])->name('paciente.index');
     Route::post("/paciente/editar/foto", [\App\Http\Controllers\PacienteController::class, 'uploadFoto'])->name('paciente.foto.upload');

@@ -14,7 +14,8 @@ class Paciente extends Model
         'sexo',
         'cpf',
         'responsavel',
-        'avatar'
+        'avatar',
+        'ativo'
     ];
     public function user()
     {
