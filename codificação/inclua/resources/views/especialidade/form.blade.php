@@ -14,8 +14,9 @@
             <div class="col-md-12 px-8">
               <div class="form-group">
                 <label id="labelFormulario">Descrição</label>
-                <input style="border-color: #C0C0C0" type="text" class="form-control" name="descricao" required
-                  value="{{$entidade->descricao}}" maxlength="150">
+                <input style="border-color: #C0C0C0" type="text"  name="descricao" required class="form-control {{ $errors->has('descricao') ? ' is-invalid' : '' }}"
+                  maxlength="150" value="{{ (isset($entidade) ? $entidade->descricao : null) ?? old('descricao') }}">
+                  @include('alerts.feedback', ['field' => 'descricao'])
 
               </div>
             </div>

@@ -29,17 +29,29 @@ class EspecialidadeController extends Controller
    }
    function save(Request $request)
    {
+
       if ($request->id) {
+          $validated = $request->validate([
+              'descricao' => 'required|unique:especialidades,descricao,' . $request->id,
+              'valorpadrao' => 'required'
+          ]);
+
          $ent = Especialidade::find($request->id);
          $ent->descricao = $request->descricao;
          $ent->valorpadrao = $request->valorpadrao;
          $ent->save();
       } else {
+          $validated = $request->validate([
+              'descricao' => 'required|unique:especialidades',
+              'valorpadrao' => 'required'
+          ]);
+
          $entidade = Especialidade::create([
             'descricao' => $request->descricao,
             'valorpadrao' => $request->valorpadrao
          ]);
       }
+
       $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
       return $this->list($msg);
    }
