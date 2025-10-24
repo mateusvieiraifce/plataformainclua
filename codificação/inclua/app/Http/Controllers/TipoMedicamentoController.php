@@ -53,7 +53,7 @@ class TipoMedicamentoController extends Controller
             $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
          }
       } catch (QueryException $exp) {
-         $msg = ['valor' => $exp->getMessage(), 'tipo' => 'primary'];
+         $msg = ['valor' => 'Tipo de medicamento em uso', 'tipo' => 'primary'];
       }
       return $this->list($msg);
    }
