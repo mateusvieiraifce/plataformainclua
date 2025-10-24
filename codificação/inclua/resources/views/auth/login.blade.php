@@ -3,6 +3,7 @@
 @section('content')
     @inject('configuracao', 'App\Models\Configuracao')
 
+
     <style>
         .cookie-banner {
             position: fixed;
@@ -41,6 +42,9 @@
             $('.cookie-banner').delay(2000).fadeIn();
             localStorage.setItem('cookieSeen','shown')
         };
+
+
+
     </script>
 
     <div class="col-md-10 text-center ml-auto mr-auto">
@@ -72,10 +76,10 @@
                     <div class="input-group{{ $errors->has('password') ? ' has-danger' : '' }}">
                         <div class="input-group-prepend">
                             <div class="input-group-text">
-                                <i class="tim-icons icon-lock-circle"></i>
+                                <i class="tim-icons icon-lock-circle" onclick="togglePasswordVisibility('passwordLogin')"></i>
                             </div>
                         </div>
-                        <input type="password" placeholder="{{ __('Password') }}" name="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}">
+                        <input id="passwordLogin" type="password" placeholder="{{ __('Password') }}" name="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}">
                         @include('alerts.feedback', ['field' => 'password'])
                     </div>
                 </div>

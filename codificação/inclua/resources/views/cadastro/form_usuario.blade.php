@@ -44,7 +44,13 @@
                                 Email <span class="required">*</span>
                             </label>
                             <div class="input-group input-medium{{ $errors->has('email') ? ' has-danger' : '' }}">
-                                <input type="email" id="email" class="form-control border-full {{ $errors->has('email') ? ' is-invalid' : '' }}"
+                                <div class="input-group-prepend">
+                                <div class="input-group-text">
+                                    <i class="tim-icons icon-email-85"></i>
+                                </div>
+                                </div>
+
+                                <input style="border-left-style: none" type="email" id="email" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}"
                                     name="email" autocomplete="email" placeholder="Email" value="{{ (isset($user) ? $user->email : null) ?? old('email') }}" required>
                                 @include('alerts.feedback', ['field' => 'email'])
                             </div>
@@ -54,8 +60,17 @@
                             <label for="password">
                                 Senha <span class="required">*</span>
                             </label>
+
+
                             <div class="input-group input-medium{{ $errors->has('password') ? ' has-danger' : '' }}">
-                                <input type="password" id="password" class="form-control border-full {{ $errors->has('password') ? ' is-invalid' : '' }}"
+
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <i class="tim-icons icon-lock-circle" onclick="togglePasswordVisibility('password')"></i>
+                                    </div>
+                                </div>
+
+                                <input style="border-left-style: none" type="password" id="password" class="form-control border-full {{ $errors->has('password') ? ' is-invalid' : '' }}"
                                     name="password" autocomplete="password" placeholder="Senha" minlength="8" maxlength="15" value="{{ old('password') }}" required>
                                 @include('alerts.feedback', ['field' => 'password'])
                             </div>
@@ -65,8 +80,16 @@
                             <label for="password_confirmation">
                                 Confirme a senha <span class="required">*</span>
                             </label>
+
+
                             <div class="input-group input-medium{{ $errors->has('password_confirmation') ? ' has-danger' : '' }}">
-                                <input type="password" id="password_confirmation" class="form-control border-full {{ $errors->has('password_confirmation') ? ' is-invalid' : '' }}"
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <i class="tim-icons icon-lock-circle" onclick="togglePasswordVisibility('confimation')"></i>
+                                    </div>
+                                </div>
+
+                                <input style="border-left-style: none"  id="confimation" type="password" id="password_confirmation" class="form-control border-full {{ $errors->has('password_confirmation') ? ' is-invalid' : '' }}"
                                     name="password_confirmation" autocomplete="password_confirmation" minlength="8" maxlength="15" placeholder="Confirmar senha" value="{{ old('password_confirmation') }}" required>
                                 @include('alerts.feedback', ['field' => 'password_confirmation'])
                             </div>

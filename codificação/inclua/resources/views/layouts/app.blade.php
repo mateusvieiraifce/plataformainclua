@@ -72,6 +72,22 @@
 
 
                 };
+
+                function togglePasswordVisibility(inputId) {
+                    const input = document.getElementById(inputId);
+                    // const button = document.getElementById(buttonId);
+
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        //   button.textContent = '👁️'; // Ícone de olho aberto
+                        //  button.title = 'Ocultar senha';
+                    } else {
+                        input.type = 'password';
+                        //    button.textContent = '👁️‍🗨️'; // Ícone de olho fechado
+                        //  button.title = 'Mostrar senha';
+                    }
+                }
+
             </script>
 
         @if(!empty($msg))
@@ -194,7 +210,7 @@
                                 white_color = true;
                             }
                     });
-                    
+
                     $('.select2').select2();
                 });
             });
