@@ -30,9 +30,20 @@ class TipoexameController extends Controller
    {
       if ($request->id) {
          $ent = Tipoexame::find($request->id);
+
+          $validated = $request->validate([
+              'descricao' => 'required|unique:tipoexames,descricao,' . $request->id
+
+          ]);
+
          $ent->descricao = $request->descricao;
          $ent->save();
       } else {
+          $validated = $request->validate([
+              'descricao' => 'required|unique:tipoexames',
+
+          ]);
+
          $entidade = Tipoexame::create([
             'descricao' => $request->descricao
          ]);
@@ -47,7 +58,7 @@ class TipoexameController extends Controller
          if ($entidade) {
             $entidade->delete();
             $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
-         } 
+         }
       } catch (QueryException $exp) {
          $msg = ['valor' => $exp->getMessage(), 'tipo' => 'primary'];
       }
