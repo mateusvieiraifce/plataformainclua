@@ -464,7 +464,7 @@ class PacienteController extends Controller
         $user = Auth::user();
 
         if ($user->tipo_user == "P") {
-            $pacientes = Paciente::where('usuario_id', $user->id)->paginate(8);
+            $pacientes = Paciente::where('usuario_id', $user->id)->where('ativo',true)->paginate(8);
         } elseif ($user->tipo_user = "R") {
             $pacientes = Paciente::paginate(8);
         }

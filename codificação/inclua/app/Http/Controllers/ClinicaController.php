@@ -678,7 +678,7 @@ class ClinicaController extends Controller
 
    function marcarConsultaSelecionarPaciente($clinica_id = null, $msg = null)
     {
-      $lista = Paciente::orderBy('nome', 'asc')->paginate(8);
+      $lista = Paciente::where('ativo',true)->orderBy('nome', 'asc')->paginate(8);
 
       return view('userClinica/marcarConsulta/selecionarPacientePasso1', ['lista' => $lista, 'clinica_id' => $clinica_id, 'msg' => $msg, 'filtro' => null,'cpf' => null]);
    }
@@ -697,7 +697,7 @@ class ClinicaController extends Controller
          }
 
          $lista = Paciente::where('nome', 'like', "%" . $filtro . "%")
-            ->where('cpf', 'like', "%" . $cpf . "%")
+            ->where('cpf', 'like', "%" . $cpf . "%")->where('ativo',true)
             ->orderBy('nome', 'asc')
             ->paginate(8);
 
