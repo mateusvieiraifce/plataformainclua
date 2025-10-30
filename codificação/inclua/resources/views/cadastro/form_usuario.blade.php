@@ -24,6 +24,9 @@
                             </select>
                             @include('alerts.feedback', ['field' => 'type_user'])
                         </div>
+
+
+
                     </div>
 
                     <form id="formUser" class="form hidden" method="post" action="{{ route('usuario.store') }}">
@@ -62,6 +65,8 @@
                             </label>
 
 
+
+
                             <div class="input-group input-medium{{ $errors->has('password') ? ' has-danger' : '' }}">
 
                                 <div class="input-group-prepend">
@@ -94,6 +99,20 @@
                                 @include('alerts.feedback', ['field' => 'password_confirmation'])
                             </div>
                         </div>
+
+                        <div style="margin-top: 25px;">
+                            {!!htmlFormSnippet()!!}
+
+                            @if($errors->has('g-recaptcha-response'))
+                                <div>
+                                    <small style="color: red; text-align: left; margin-right: 21rem;">
+                                        {{$errors->first('g-recaptcha-response')}}
+                                    </small>
+                                </div>
+                            @endif
+
+                        </div>
+
                         <div style="display: none;">
                             <input type="text" name="honeypot" id="honeypot">
                         </div>

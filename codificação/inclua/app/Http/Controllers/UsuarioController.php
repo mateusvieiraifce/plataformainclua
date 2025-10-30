@@ -188,11 +188,13 @@ class UsuarioController extends Controller
         "email" => "required|unique:users,email,{$request->usuario_id}",
         'password' => 'required|min:8|confirmed',
         'password_confirmation' => 'required',
+        'g-recaptcha-response'=>'required',
     ];
 
     $feedbacks = [
         "email.required" => "O campo Email é obrigatório.",
         "email.unique" => "O email utilizado já foi cadastrado.",
+        "g-recaptcha-response" => "O Captcha é o obrigatório.",
         "password.required" => "O campo Senha é obrigatório.",
         "password.confirmed" => "As senhas não são correspondentes.",
         "password.min" => "O campo senha deve ter no mínimo 8 caracteres.",

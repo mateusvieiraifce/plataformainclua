@@ -24,6 +24,7 @@
         <link href="/assets/css/theme.css" rel="stylesheet" />
         <link href="{{ asset('assets/css/custom.css') }}" rel="stylesheet" />
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
         <!-- CSS do Select2 via CDN -->
         <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     </head>
