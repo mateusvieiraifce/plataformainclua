@@ -111,7 +111,7 @@
 
                                     <span class="form-check-sign"></span>
                                     {{ __('Eu Aceito') }}
-                                    <a href="/docs/termos.pdf">{{ __('termos e condições de uso') }}</a>.
+                                    <a href="{{route('app.inclua.privacidade')}}>{{ __('termos e condições de uso') }}</a>.
                                 </label>
                                  @include('alerts.feedback', ['field' => 'consentimento'])
                             </div>
