@@ -562,8 +562,8 @@ class Helper
         $appName = config('app.name', env('MAIL_OWNER'));
         $supportEmail = config('app.support_email', env('MAIL_USERNAME'));
         $companyAddress = config('app.company_address', 'Rua Ezio Lima Verde, 108');
-        $termsUrl = config('app.terms_url', 'https://app.plataformainclua.com/docs/privacidade.pdf');
-        $privacyUrl = config('app.privacy_url', 'https://app.plataformainclua.com/docs/privacidade.pdf');
+        $termsUrl = config('app.terms_url', 'https://app.plataformainclua.com/privacidade');
+        $privacyUrl = config('app.privacy_url', 'https://app.plataformainclua.com/privacidade');
         $helpUrl = config('app.help_url', 'https://app.plataformainclua.com/');
 
         $logoBase64 = self::getImageLogo();

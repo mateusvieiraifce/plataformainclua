@@ -31,7 +31,7 @@
     <div class='cookie-banner' style=''>
         <p>
             Para usar nossa plataforma, você aceita nossa
-            <a href='/docs/privacidade.pdf'>Política de privacidade</a>
+            <a href='{{route('app.inclua.privacidade')}}'>Política de privacidade</a>
         </p>
         <button class='close' onclick="$('.cookie-banner').fadeOut();">&times;</button>
     </div>

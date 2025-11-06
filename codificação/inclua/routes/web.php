@@ -31,6 +31,11 @@ Route::get('/sobre', function () {
 })->name('home.sobre');
 
 
+Route::get('/privacidade', function () {
+    return view('site/privacidade');
+})->name('app.inclua.privacidade');
+
+
 
 
 Route::get('/error', function() {
