@@ -1046,7 +1046,7 @@ class PacienteController extends Controller
 
 
      $prontuario = Prontuario::join("consultas","prontuarios.consulta_id","consultas.id")
-         ->where('especialista_id','=',$especialista->id )->orderBy("consultas.horario_agendado","desc")->paginate(15);
+         ->where('especialista_id','=',$especialista->id )->where('consultas.paciente_id','=',$paciente->id )->orderBy("consultas.horario_agendado","desc")->paginate(15);
      #dd($prontuario);
     //na tabela de exames fazer a parte de arquivos feito pelo antony
 
