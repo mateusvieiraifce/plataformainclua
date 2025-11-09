@@ -18,7 +18,7 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $fillable = [       
+    protected $fillable = [
         'email',
         'password',
         'google_id',
@@ -83,7 +83,7 @@ class User extends Authenticatable
             return null;
         }
     }
-    
+
     public function getIdEspecialista($usuario_id)
     {
         $especialista = Especialista::where('usuario_id', $usuario_id)->first();
@@ -93,18 +93,29 @@ class User extends Authenticatable
             return null;
         }
     }
-    
+
     public function getCertificadoEspecialista()
     {
         $especialista = Especialista::where('usuario_id', $this->id)->first();
-        
+
         if ($especialista) {
             return $especialista->path_certificado;
         } else {
             return null;
         }
     }
-    
+
+    public function getCertificadoPart($index)
+    {
+        $certificado = $this->getCertificadoEspecialista();
+        if (!$certificado) {
+            return null;
+        }
+
+        $parts = explode('/', $certificado);
+        return $parts[$index] ?? null;
+    }
+
     public function getEspecialidadeEspecialista()
     {
         $especialista = Especialista::join('especialidades', 'especialidades.id', 'especialistas.especialidade_id')
