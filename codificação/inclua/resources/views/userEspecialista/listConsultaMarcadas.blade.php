@@ -121,7 +121,8 @@
                                                 </td>
                                             @endif
                                             <td>
-                                                {{ $consulta->nome_paciente }}
+
+                                                <a href="https://wa.me/55{{$consulta->celular}}" target="_blank"> {{ $consulta->nome_paciente }}</a>
                                             </td>
                                             <td>
                                                 {{ $consulta->nome_clinica }}

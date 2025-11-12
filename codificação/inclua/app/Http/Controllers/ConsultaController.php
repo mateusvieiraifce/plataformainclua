@@ -360,6 +360,7 @@ class ConsultaController extends Controller
       $statusConsulta = "Todos";
       $consultas = Consulta::join('clinicas', 'clinicas.id', 'consultas.clinica_id')
          ->join('pacientes', 'pacientes.id', 'consultas.paciente_id')
+          ->join('users', 'pacientes.usuario_id', '=', 'users.id')
          ->join('especialistas', 'especialistas.id', 'consultas.especialista_id');
 
       if (auth()->user()->tipo_user == "P" || auth()->user()->tipo_user == "E") {
@@ -371,7 +372,7 @@ class ConsultaController extends Controller
          ->whereBetween('horario_agendado', [$inicioDoDia, $fimDoDia])
          ->select(
             'consultas.id', 'status', 'horario_agendado', 'clinicas.nome as nome_clinica', 'id_usuario_cancelou',
-            'pacientes.nome as nome_paciente', 'especialistas.nome as nome_especialista', 'isPago', 'consultas.preco', 'status'
+            'pacientes.nome as nome_paciente', 'especialistas.nome as nome_especialista', 'isPago', 'consultas.preco', 'status', 'users.celular'
          )
          ->orderBy('horario_agendado', 'asc')
          ->get();
@@ -441,7 +442,8 @@ class ConsultaController extends Controller
 
       $consultas = Consulta::join('clinicas', 'clinicas.id', '=', 'consultas.clinica_id')
          ->join('pacientes', 'pacientes.id', '=', 'consultas.paciente_id')
-         ->join('especialistas', 'especialistas.id', 'consultas.especialista_id');
+         ->join('especialistas', 'especialistas.id', 'consultas.especialista_id')
+          ->join('users', 'pacientes.usuario_id', '=', 'users.id');
 
       if (auth()->user()->tipo_user == "P" || auth()->user()->tipo_user == "E") {
          $consultas = $consultas->where('especialista_id', '=', $especialista->id);
@@ -469,7 +471,7 @@ class ConsultaController extends Controller
 
        $consultas=$consultas ->whereBetween('horario_agendado', [$inicioDoDiaFiltro, $fimDoDiaFiltro])
          ->select(
-             'consultas.paciente_id',
+             'consultas.paciente_id', 'users.celular',
             'consultas.id', 'status', 'horario_agendado', 'clinicas.nome as nome_clinica', 'id_usuario_cancelou',
             'pacientes.nome as nome_paciente', 'especialistas.nome as nome_especialista', 'isPago', 'consultas.preco', 'status', 'remota','linkmeet'
          )
