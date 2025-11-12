@@ -583,12 +583,13 @@ class EspecialistaController extends Controller
 
       // Obter pacientes e o número de consultas que cada um teve
       $lista = Paciente::select('pacientes.id', 'pacientes.nome as nome_paciente',
-      'pacientes.cpf', 'pacientes.data_nascimento',
+      'pacientes.cpf', 'pacientes.data_nascimento','users.celular',
       DB::raw('COUNT(consultas.id) as total_consultas'))
          ->leftJoin('consultas', 'pacientes.id', '=', 'consultas.paciente_id')
+          ->join('users', 'pacientes.usuario_id', '=', 'users.id')
       //   ->where('status', '=', $statusConsulta)
          ->where('especialista_id', '=', $especialista->id)
-         ->groupBy('pacientes.id', 'pacientes.nome','pacientes.cpf','pacientes.data_nascimento')
+         ->groupBy('pacientes.id', 'pacientes.nome','pacientes.cpf','pacientes.data_nascimento', 'users.celular')
          ->paginate(8);
 
       return view('userEspecialista/listTodosPacientes', [
@@ -615,14 +616,15 @@ class EspecialistaController extends Controller
 
       // Obter pacientes e o número de consultas que cada um teve
       $lista = Paciente::select('pacientes.id', 'pacientes.nome as nome_paciente',
-      'pacientes.cpf', 'pacientes.data_nascimento',
+      'pacientes.cpf', 'pacientes.data_nascimento','uses.celular',
       DB::raw('COUNT(consultas.id) as total_consultas'))
          ->leftJoin('consultas', 'pacientes.id', '=', 'consultas.paciente_id')
+          ->join('users', 'pacientes.usuario_id', '=', 'users.id')
       //   ->where('status', '=', $statusConsulta)
          ->where('especialista_id', '=', $especialista->id)
          ->where('nome', 'like', "%" . $filtro . "%")
          -> where('cpf', 'like', "%" . $cpf . "%")
-         ->groupBy('pacientes.id', 'pacientes.nome','pacientes.cpf','pacientes.data_nascimento')
+         ->groupBy('pacientes.id', 'pacientes.nome','pacientes.cpf','pacientes.data_nascimento', 'users.celular')
          ->paginate(8);
 
          $msg = null;
