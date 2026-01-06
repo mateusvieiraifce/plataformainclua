@@ -723,9 +723,9 @@ class PacienteController extends Controller
         $consulta->motivocancelamento="";
         $consulta->save();
 
-        $gc = new GoogleCalendarController();
+       // $gc = new GoogleCalendarController();
 
-        $gc->createEventGet($consulta->id);
+       // $gc->createEventGet($consulta->id);
 
 
         $anamnese = Anamnese::where('paciente_id', $paciente->id)->first();
@@ -784,8 +784,8 @@ class PacienteController extends Controller
         $consultaController = new ConsultaController();
         $userLogged = Auth::user();
         if ($consulta->calendarId) {
-            $gc = new GoogleCalendarController();
-            $gc->deleteEvent($consulta->calendarId);
+          //  $gc = new GoogleCalendarController();
+           // $gc->deleteEvent($consulta->calendarId);
         }
 
         if (Helper::verificarPrazoCancelamentoGratuito($consulta->horario_agendado)) {
@@ -882,8 +882,8 @@ class PacienteController extends Controller
         $userLogged = Auth::user();
         if ($consulta->calendarId) {
 
-            $gc = new GoogleCalendarController();
-            $gc->deleteEvent($consulta->calendarId);
+          //  $gc = new GoogleCalendarController();
+           // $gc->deleteEvent($consulta->calendarId);
         }
 
         if (Helper::verificarPrazoCancelamentoGratuito($consulta->horario_agendado)) {

@@ -778,9 +778,9 @@ class ClinicaController extends Controller
       $ent->status = "Aguardando atendimento";
       $ent->paciente_id = $paciente->id;
       $ent->save();
-      $gc = new GoogleCalendarController();
+     // $gc = new GoogleCalendarController();
 
-      $gc->createEventGet($ent->id);
+     // $gc->createEventGet($ent->id);
       $msg = ['valor' => trans("Operação realizada com sucesso!"), 'tipo' => 'success'];
 
       return  $this->marcarConsultaSelecionarPaciente($clinica_id, $msg);
@@ -859,8 +859,8 @@ class ClinicaController extends Controller
    // dd($request);
     //ver a questao financeira
     $consultaCancelada = Consulta::find($request->consulta_id);
-    $gc = new GoogleCalendarController();
-    $gc->deleteEvent($consultaCancelada->calendarId);
+  //  $gc = new GoogleCalendarController();
+  //  $gc->deleteEvent($consultaCancelada->calendarId);
 
     $dataConsultaCancelada = Carbon::parse($consultaCancelada->horario_agendado);
     $dataAtual = Carbon::now();
